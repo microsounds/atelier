@@ -1,0 +1,6 @@
+[user]
+	name = microsounds
+	email = microsounds@users.noreply.github.com
+
+[alias]
+	summary = "!f() { git log --oneline --decorate --graph -n $(($(tput lines) - 4)); }; f"

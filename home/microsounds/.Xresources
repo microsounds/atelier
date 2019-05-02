@@ -1,0 +1,24 @@
+! ~/.Xresources
+
+! xclock rice
+XClock.Clock.hourColor: #CD749C
+XClock.Clock.minuteColor: #A9D1DF
+XClock.Clock.secondColor: #000000
+XClock.Clock.majorColor: #FFFFFF
+XClock.Clock.minorColor: #FFFFFF
+XClock.Clock.background: #272727
+
+! xload rice
+xload*foreground: #FFFFFF
+xload*background: #272727
+xload*highlight: #849DA2
+xload*label:
+
+! xlogo rice
+xlogo*foreground: #646464
+xlogo*background: #272727
+
+! xterm rice
+xterm*foreground: #FFFFFF
+xterm*background: #272727
+

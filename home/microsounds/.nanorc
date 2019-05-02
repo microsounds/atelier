@@ -1,0 +1,32 @@
+## ~/.nanorc
+
+## general
+set unix
+set tabsize 4
+set autoindent
+set justifytrim
+set matchbrackets "(<[{)>]}"
+set smooth
+set softwrap
+set multibuffer
+set constantshow
+unset suspend
+unset positionlog
+unset linenumbers
+
+## syntax highlighting
+include "~/.nano/*.nanorc"
+
+## key bindings
+bind M-` complete main
+bind M-1 findbracket main
+bind M-2 whitespacedisplay main
+bind M-3 comment main
+bind M-4 nosyntax main
+
+## interface color
+set numbercolor white
+set titlecolor black,cyan
+set statuscolor black,white
+set keycolor brightblue
+set functioncolor white
