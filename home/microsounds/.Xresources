@@ -1,6 +1,67 @@
 ! ~/.Xresources
 
-! xclock rice
+! night drive v.1 ~microsounds
+
+! special
+*.foreground: #FFFFFF
+*.background: #272727
+*.cursorColor: #FFFFFF
+
+! black
+*.color0: #222827
+*.color8: #5D6F74
+
+! red
+*.color1: #D5A8E3
+*.color9: #CD749C
+
+! green
+*.color2: #9C75DD
+*.color10: #63B0B0
+
+! yellow
+*.color3: #9898AE
+*.color11: #C0C0DD
+
+! blue
+*.color4: #654A96
+*.color12: #5786BC
+
+! magenta
+*.color5: #FFC4FF
+*.color13: #7E62B7
+
+! cyan
+*.color6: #A9D1DF
+*.color14: #849DA2
+
+! white
+*.color7: #B0B0B0
+*.color15: #D9D6CF
+
+! xft
+Xft.dpi:        96
+Xft.antialias:  true
+Xft.rgba:       rgb
+Xft.hinting:    true
+Xft.hintstyle:  hintslight
+
+! urxvt appearance
+URxvt.font: xft:Noto Mono:size=10
+URxvt.letterSpace: -2
+URxvt.lineSpace: -1
+URxvt.geometry: 94x24
+URxvt.internalBorder: 3
+URxvt.cursorBlink: false
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 24
+URxvt.iso14755: false
+
+! xclock
 XClock.Clock.hourColor: #CD749C
 XClock.Clock.minuteColor: #A9D1DF
 XClock.Clock.secondColor: #000000
@@ -8,17 +69,12 @@ XClock.Clock.majorColor: #FFFFFF
 XClock.Clock.minorColor: #FFFFFF
 XClock.Clock.background: #272727
 
-! xload rice
+! xload
 xload*foreground: #FFFFFF
 xload*background: #272727
 xload*highlight: #849DA2
 xload*label:
 
-! xlogo rice
+! xlogo
 xlogo*foreground: #646464
 xlogo*background: #272727
-
-! xterm rice
-xterm*foreground: #FFFFFF
-xterm*background: #272727
-
