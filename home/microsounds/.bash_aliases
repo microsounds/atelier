@@ -29,9 +29,10 @@ set_prompt() {
 }
 
 # git-root
-# version control with / directory as the work-tree
+# sets / directory as the work tree for version control purposes
 # for git status, use '-u no' or '--untracked-files=no'
-alias git-root="git --git-dir=/home/microsounds/Git/atelier --work-tree=/"
+git_repo="$HOME/Git/atelier" # must be a bare repository
+alias git-root="git --git-dir='$git_repo' --work-tree=/"
 
 # useful functions
 
