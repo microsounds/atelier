@@ -47,8 +47,9 @@ Xft.hinting:    true
 Xft.hintstyle:  hintslight
 
 ! urxvt appearance
+! font kerning may vary depending on machine (???)
 URxvt.font: xft:Noto Mono:size=10
-URxvt.letterSpace: -1
+URxvt.letterSpace: -2
 URxvt.lineSpace: -1
 URxvt.geometry: 94x24
 URxvt.internalBorder: 3
