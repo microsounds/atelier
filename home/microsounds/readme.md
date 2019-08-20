@@ -1,8 +1,8 @@
 # ![miku]quick ![miku] start ![miku]
 * Create a user with the correct name and install `git`.
 * `git clone --bare [remote] ~/Git/atelier`
-	* This is your local copy.
-* Make local clone from this repo and copy .bash_aliases to home directory.
+	* _This is your local copy._
+* Make local clone from this repo and copy `.bash_aliases` to home directory.
 * `source .bashrc`
 * `git-root reset --hard`
 ## On committing changes
