@@ -4,10 +4,18 @@
 	* _This is your local copy._
 * Make local clone from this repo and copy `.bash_aliases` to home directory.
 * `source .bashrc`
-* `git-root reset --hard`
-## On committing changes
+* `git-root reset --hard` and log back in.
+
+## On committing and restoring changes
 * `git-root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
 	* `git-root status` -- Ignore unmonitored files with `-u no`
-* Push changes back to remote on occasion.
+* All normal git commands _(diff, checkout, etc.)_ should work.
+	* _Keep things simple and **DO NOT** stage files that require root file permissions._
+	* Push changes back to remote on occasion.
 
+## Current comforts
+```
+git gcc make xorg rxvt-unicode-256color wmctrl sudo htop
+
+```
 [miku]: https://i.imgur.com/Nr7HV9a.png
