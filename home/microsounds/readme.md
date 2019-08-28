@@ -15,11 +15,10 @@
 
 ## Current comforts
 ```
-git gcc make xorg rxvt-unicode-256color wmctrl sudo htop screenfetch
-```
-## Tentative
-```
-dwm suckless-tools pulseaudio alsa-tools alsa-utils network-manager
+sudo htop git gcc make xorg wmctrl screenfetch fonts-noto-mono rxvt-unicode-256color
+# tentative
+dwm dmenu st tabbed pulseaudio alsa-utils network-manager
+libx11-dev libxinerama-dev libxft-dev
 ```
 
 [miku]: https://i.imgur.com/Nr7HV9a.png
