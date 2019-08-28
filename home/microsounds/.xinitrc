@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-## ~/.xinitrc
+## ~/.xinitrc: xinit user configuration
 
 xrdb $HOME/.Xresources
 
