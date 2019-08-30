@@ -8,17 +8,16 @@
 
 ## On committing and restoring changes
 * `git-root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
-	* `git-root status` -- Ignore unmonitored files with `-u no`
+	* `git-root status` -- Ignore unmonitored files with `-uno`
 * All normal git commands _(diff, checkout, etc.)_ should work.
+	* `git-root add -u` and push changes back to remote on occasion.
 	* _Keep things simple and **DO NOT** stage files that require root file permissions._
-	* Push changes back to remote on occasion.
 
-## Current comforts
+## Required packages
 ```
-sudo htop git gcc make xorg wmctrl screenfetch fonts-noto-mono rxvt-unicode-256color
-# tentative
-dwm dmenu st tabbed pulseaudio alsa-utils network-manager
-libx11-dev libxinerama-dev libxft-dev
+sudo htop git gcc make xorg feh wmctrl screenfetch ranger fonts-noto-mono rxvt-unicode-256color
+libx11-dev libxinerama-dev libxft-dev suckless-tools dwm pulseaudio alsa-utils network-manager
+fonts-unifont
 ```
 
 [miku]: https://i.imgur.com/Nr7HV9a.png

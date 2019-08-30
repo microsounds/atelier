@@ -1,6 +1,5 @@
 ! ~/.Xresources: ancient x window configs
 
-
 ! night drive v.1 ~microsounds
 ! 気付かなかったーー
 
@@ -50,7 +49,7 @@ Xft.hintstyle:  hintslight
 
 ! rxvt-unicode
 ! near-zero kerning causes font breakage without fallbacks
-URxvt.font: xft:Noto Mono:size=10,xft:Monospace:size=10
+URxvt.font: xft:Noto Mono:size=10,xft:Monospace:size=10,xft:Unifont:size=10
 URxvt.letterSpace: -2
 URxvt.lineSpace: -1
 URxvt.geometry: 94x24

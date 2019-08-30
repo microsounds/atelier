@@ -1,15 +1,16 @@
 #!/usr/bin/env sh
-# launch xload and xclock in top-right corner
+# launch xload and xclock in a corner somewhere
 
 LIST="xload xclock"
 COUNT=$(echo "$LIST" | wc -w)
-SCREEN=$(xdpyinfo | grep 'dim' | grep -Eo '([0-9]+x?)+' | sed -n '1p')
+SCREEN=$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | sed -n 1p)
 WIDTH=${SCREEN%x*} HEIGHT=${SCREEN#*x}
 SIZE=130  # window size
 GAP=15    # gap between windows
-EDGE=25   # distance from screen border
+EDGE=15   # distance from screen border
 XPOS=$(((WIDTH - EDGE) - ((SIZE + GAP) * COUNT)))
-YPOS=$EDGE
+# YPOS=$EDGE # top-right
+YPOS=$(((HEIGHT - (SIZE + GAP)) - EDGE)) # bottom-right
 
 for PROG in $LIST; do
 	if ! ps -xc | grep "$PROG" > /dev/null; then
