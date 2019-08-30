@@ -15,9 +15,10 @@
 
 ## Required packages
 ```
-sudo htop git gcc make xorg feh wmctrl screenfetch ranger fonts-noto-mono rxvt-unicode-256color
-libx11-dev libxinerama-dev libxft-dev suckless-tools dwm pulseaudio alsa-utils network-manager
-fonts-unifont
+sudo htop git gcc make rxvt-unicode-256color wmctrl screenfetch ranger
+fonts-liberation fonts-noto-mono fonts-vlgothic
+xorg wmctrl suckless-tools dwm libx11-dev libxinerama-dev
+pulseaudio alsa-utils network-manager
 ```
 
 [miku]: https://i.imgur.com/Nr7HV9a.png
