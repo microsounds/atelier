@@ -43,8 +43,8 @@ static const int resizehints = 0;    /* ignore column limitations in terminals *
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "~tile",      tile },    /* tiling */
-	{ "~float",      NULL },    /* floating */
+	{ "堅い",      tile },    /* tiling */
+	{ "浮く",      NULL },    /* floating */
 	{ "[M]",      monocle },
 };
 
@@ -75,7 +75,7 @@ static const char *vol_mute[] = { "amixer", "-q", "-D", "pulse", "sset", "Master
 
 static Key keys[] = {
 	/* modifiers	+ key		action		args */
-	{ META,			XK_r,		spawn,			{ .v = dmenucmd } },	/* dmenu */
+	{ META,			XK_p,		spawn,			{ .v = dmenucmd } },	/* dmenu */
 	{ META,			XK_Return,	spawn,			{ .v = termcmd } },		/* termi */
 	{ ALT,			XK_F4,		killclient,		{0} },					/* ALT+F4 */
 	{ CTRL | SHIFT, XK_q,		quit,			{0} },					/* exit dwm */

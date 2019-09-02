@@ -13,12 +13,13 @@
 	* `git-root add -u` and push changes back to remote on occasion.
 	* _Keep things simple and **DO NOT** stage files that require root file permissions._
 
-## Required packages
+## Comforts
 ```
-sudo htop git gcc make rxvt-unicode-256color wmctrl screenfetch ranger
-fonts-liberation fonts-noto-mono fonts-vlgothic
-xorg wmctrl suckless-tools dwm libx11-dev libxinerama-dev
-pulseaudio alsa-utils network-manager
+sudo htop git gcc make xorg wmctrl rxvt-unicode-256color screenfetch ranger
+ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager fonts-liberation
+fonts-noto-mono fonts-vlgothic
+libx11-dev libxinerama-dev # required by dwm
+libdbus-glib-1-2 libgtk-3-0 # required by google-chrome/firefox
 ```
 
 [miku]: https://i.imgur.com/Nr7HV9a.png
