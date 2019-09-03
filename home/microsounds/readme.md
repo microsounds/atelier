@@ -15,10 +15,10 @@
 
 ## Comforts
 ```
-sudo htop git gcc make xorg wmctrl rxvt-unicode-256color screenfetch ranger
-ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager fonts-liberation
-fonts-noto-mono fonts-vlgothic
-libx11-dev libxinerama-dev # required by dwm
+sudo htop git gcc make xorg wmctrl acpi rxvt-unicode-256color screenfetch ranger
+feh ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager
+fonts-liberation fonts-noto-mono fonts-vlgothic unifont
+libx11-dev libxft-dev libxinerama-dev # required by dwm
 libdbus-glib-1-2 libgtk-3-0 # required by google-chrome/firefox
 ```
 

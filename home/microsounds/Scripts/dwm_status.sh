@@ -12,7 +12,7 @@ while true; do
 			FAN="$(acpi -tf | egrep -o '[0-9]+\.[0-9]')" # fans off
 			[ -z "$FAN" ] && FAN="N/A" || FAN="${FAN}˚F"
 		else
-			FAN=" ${FAN}%"
+			FAN=" Fan ${FAN}%"
 		fi
 	fi
 	NET="$(nmcli | grep -w 'connected' | sed 's/connected to //g')"
@@ -21,7 +21,7 @@ while true; do
 	amixer get 'Master' | grep 'off' && VOL="${VOL}, muted"
 	BAT="Bat $(acpi -b | cut -d ' ' -f 4-6 | sed 's/,$//g' | sed 's/[0]+\://g')"
 	TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
-	DAY="$(date '+%e')"
+	DAY="$(date '+%e' | sed 's/^ //g')"
 	case $DAY in
 		1 | 21 | 31) DAY="${DAY}st";;
 		2 | 22) DAY="${DAY}nd";;
