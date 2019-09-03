@@ -34,6 +34,12 @@ set_prompt() {
 git_repo="$HOME/Git/atelier" # must be a bare repository
 alias git-root="git --git-dir='$git_repo' --work-tree=/"
 
+# display manager functionality
+# logs out after quitting X
+if [ "$(tty)" = "/dev/tty1" ]; then
+	exec startx
+fi
+
 # useful functions
 
 shell() {

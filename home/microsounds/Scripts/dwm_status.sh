@@ -19,7 +19,7 @@ while true; do
 		[ ! -z "$NET" ] || NET="No Network"
 	VOL="Vol $(amixer get 'Master' | egrep -o [[0-9]+%] | sed 1q | tr -d '[]')"
 	amixer get 'Master' | grep 'off' && VOL="${VOL}, muted"
-	BAT="Bat $(acpi -b | cut -d ' ' -f 4-6 | sed 's/,$//g' | sed 's/[0]+\://g')"
+	BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
 	TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
 	DAY="$(date '+%e' | sed 's/^ //g')"
 	case $DAY in
