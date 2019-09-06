@@ -57,8 +57,8 @@ static const char *termcmd[]  = { "urxvt", NULL };
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* volume functions */
-static const char *vol_up[] = { "amixer", "-q", "sset", "Master", "2%+", NULL };
-static const char *vol_dn[] = { "amixer", "-q", "sset", "Master", "2%-", NULL };
+static const char *vol_up[] = { "amixer", "-q", "sset", "Master", "5%+", NULL };
+static const char *vol_dn[] = { "amixer", "-q", "sset", "Master", "5%-", NULL };
 static const char *vol_mute[] = { "amixer", "-q", "-D", "pulse", "sset", "Master", "toggle", NULL };
 
 /* modifier keys */

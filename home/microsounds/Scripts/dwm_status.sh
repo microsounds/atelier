@@ -5,18 +5,15 @@
 
 while true; do
 	_='・' # separator
-	if [ ! -f '/proc/acpi/ibm/fan' ]; then FAN="N/A"; # strange environment
+	FAN_DATA='/proc/acpi/ibm/fan'
+	TEMP="$(acpi -tf | egrep -o '[0-9]+\.[0-9]+')˚F"
+	if [ ! -f $FAN_DATA ]; then FAN="$TEMP"; # not a thinkpad
 	else
-		FAN="$((($(cat /proc/acpi/ibm/fan | egrep -o '[0-9]+') * 100) / 5300))"
-		if [ "$FAN" -eq 0 ]; then
-			FAN="$(acpi -tf | egrep -o '[0-9]+\.[0-9]')" # fans off
-			[ -z "$FAN" ] && FAN="N/A" || FAN="${FAN}˚F"
-		else
-			FAN=" Fan ${FAN}%"
-		fi
+		FAN="$((($(cat $FAN_DATA | egrep -o '[0-9]+') * 100) / 5300))"
+		[ ! "$FAN" -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP"
 	fi
 	NET="$(nmcli | grep -w 'connected' | sed 's/connected to //g')"
-		[ ! -z "$NET" ] || NET="No Network"
+	[ ! -z "$NET" ] || NET="No Network"
 	VOL="Vol $(amixer get 'Master' | egrep -o [[0-9]+%] | sed 1q | tr -d '[]')"
 	amixer get 'Master' | grep 'off' && VOL="${VOL}, muted"
 	BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
