@@ -15,7 +15,7 @@
 
 ## Comforts
 ```
-sudo htop git gcc make xorg wmctrl acpi rxvt-unicode-256color screenfetch ranger
+sudo htop git gcc make xorg wmctrl acpi rxvt-unicode-256color screenfetch
 feh ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager
 fonts-liberation fonts-noto-mono fonts-vlgothic unifont
 libx11-dev libxft-dev libxinerama-dev # required by dwm
