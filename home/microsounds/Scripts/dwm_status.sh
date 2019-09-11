@@ -1,31 +1,37 @@
 #!/usr/bin/env sh
-
 # dwm status bar
-# returns system information
+# provides formatted system information
+
+_='・' # separator
+fan_data='/proc/acpi/ibm/fan' # thinkpad acpi
+first_run=1
 
 while true; do
-	_='・' # separator
-	FAN_DATA='/proc/acpi/ibm/fan'
-	TEMP="$(acpi -tf | egrep -o '[0-9]+\.[0-9]+')˚F"
-	if [ ! -f $FAN_DATA ]; then FAN="$TEMP"; # not a thinkpad
-	else
-		FAN="$((($(cat $FAN_DATA | egrep -o '[0-9]+') * 100) / 5300))"
-		[ ! "$FAN" -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP"
-	fi
-	NET="$(nmcli | grep -w 'connected' | sed 's/connected to //g')"
-	[ ! -z "$NET" ] || NET="No Network"
-	VOL="Vol $(amixer get 'Master' | egrep -o [[0-9]+%] | sed 1q | tr -d '[]')"
+	# updates every second
+	VOL="Vol $(amixer get 'Master' | egrep -o '[0-9]+%' | sed 1q)"
 	amixer get 'Master' | grep 'off' && VOL="${VOL}, muted"
-	BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
-	TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
-	DAY="$(date '+%e' | sed 's/^ //g')"
-	case $DAY in
-		1 | 21 | 31) DAY="${DAY}st";;
-		2 | 22) DAY="${DAY}nd";;
-		3 | 23) DAY="${DAY}rd";;
-		*) DAY="${DAY}th"
-	esac
-	DATE="$(date "+%a, %b $DAY")"
+	# infrequent updates
+	if [ ! -z $first_run ] || [ $(date '+%s' | egrep -o '.$') -eq 0 ]; then
+		unset first_run
+		TEMP="$(acpi -tf | egrep -o '([0-9]+\.?){2}')˚F"
+		if [ ! -f $fan_data ]; then FAN="$TEMP"; # get fan speed
+		else
+			FAN="$((($(egrep -o '[0-9]+' $fan_data) * 100) / 5300))"
+			[ ! $FAN -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP"
+		fi
+		NET="$(nmcli | grep 'connected' | sed 's/connected to //g')"
+		[ ! -z "$NET" ] || NET="No Network"
+		BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
+		TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
+		DAY="$(date '+%e' | sed 's/^ //g')"
+		case $DAY in
+			1 | 21 | 31) DAY="${DAY}st";;
+			2 | 22) DAY="${DAY}nd";;
+			3 | 23) DAY="${DAY}rd";;
+			*) DAY="${DAY}th"
+		esac
+		DATE="$(date "+%a, %b $DAY")"
+	fi
 	xsetroot -name " ${FAN} $_ ${NET} $_ ${BAT} $_ ${VOL} $_ ${DATE} $_ ${TIME} "
-	sleep 10
+	sleep 1
 done
