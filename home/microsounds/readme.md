@@ -2,9 +2,11 @@
 * Create a user with the correct name and install `git`.
 * `git clone --bare [remote] ~/Git/atelier`
 	* _This is your local copy._
-* Make local clone from this repo and copy `.bash_aliases` to home directory.
+* `git --work-tree=/ --git-dir=Git/atelier checkout .bash_aliases`
 * `source .bashrc`
-* `git-root reset --hard` and log back in.
+* `git-root reset --hard`
+* Do not log out, you will be kicked from tty1.
+* Initialize `~/.config/dwm', pull from `https://git.suckless.org/dwm` and then `make install`.
 
 ## On committing and restoring changes
 * `git-root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
