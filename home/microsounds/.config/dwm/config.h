@@ -7,7 +7,7 @@ static const int showbar = 1;			/* 0 means no bar */
 static const int topbar = 1;			/* 0 means bottom bar */
 static const char *fonts[] = {
 	"Liberation Serif:size=12",
-	"Unifont:size=12"	/* japanese serifs */
+	"Dejima:size=12" /* japanese serifs */
 };
 static const char dmenufont[] = "Liberation Serif:size=12";
 static const char col_gray1[] = "#272727";
