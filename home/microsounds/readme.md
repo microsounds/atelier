@@ -5,8 +5,8 @@
 * `git --work-tree=/ --git-dir=Git/atelier checkout .bash_aliases`
 * `source .bashrc`
 * `git-root reset --hard`
-* Do not log out, you will be kicked from tty1.
-* Initialize `~/.config/dwm', pull from `https://git.suckless.org/dwm` and then `make install`.
+	* _Do not log out, you will be kicked from `tty1`._
+* Initialize `~/.config/dwm`, pull from `https://git.suckless.org/dwm` and then `make install`.
 
 ## On committing and restoring changes
 * `git-root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
