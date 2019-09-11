@@ -12,7 +12,7 @@ while true; do
 		FAN="$((($(egrep -o '[0-9]+' $fan_data) * 100) / 5300))"
 		[ ! $FAN -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP"
 	fi
-	NET="$(nmcli | grep 'connected' | sed 's/connected to //g')"
+	NET="$(nmcli | grep 'connected' | sed 's/connected to //g' | sed -n 1p)"
 	[ ! -z "$NET" ] || NET="No Network"
 	BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
 	VOL="Vol $(amixer get 'Master' | egrep -o '[0-9]+%' | sed 1q)"
