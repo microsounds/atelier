@@ -18,7 +18,7 @@
 ### Tools
 ```
 sudo htop git gcc make xorg wmctrl acpi rxvt-unicode-256color screenfetch feh
-ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager sshfs
+ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager sshfs xclip
 ```
 ### Fonts
 ```
