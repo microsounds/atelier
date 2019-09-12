@@ -1,11 +1,11 @@
 # ![miku]quick ![miku] start ![miku]
 * Create a user with the correct name and install `git`.
+	* _Log into `tty2`, you may be kicked off `tty1` halfway through._
 * `git clone --bare [remote] ~/Git/atelier`
 	* _This is your local copy._
 * `git --work-tree=/ --git-dir=Git/atelier checkout .bash_aliases`
 * `source .bashrc`
 * `git-root reset --hard`
-	* _Do not log out, you will be kicked from `tty1`._
 * Initialize `~/.config/dwm`, pull from `https://git.suckless.org/dwm` and then `make install`.
 
 ## On committing and restoring changes
