@@ -25,14 +25,8 @@ set_prompt() {
 	# override $PS1 described in .bashrc
 	PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:${path}\$ "
 	# update titlebar
-	case "$TERM" in xterm*|rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
+	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
 }
-
-# git-root
-# sets / directory as the work tree for version control purposes
-# for git status, use '-u no' or '--untracked-files=no'
-git_repo="$HOME/Git/atelier" # must be a bare repository
-alias git-root="git --git-dir='$git_repo' --work-tree=/"
 
 # display manager functionality
 # logs out after quitting X

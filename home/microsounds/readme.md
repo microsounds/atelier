@@ -3,17 +3,16 @@
 	* _Log into `tty2`, you may be kicked off `tty1` halfway through._
 * `git clone --bare [remote] ~/Git/atelier`
 	* _This is your local copy._
-* `git --work-tree=/ --git-dir=Git/atelier checkout .bash_aliases`
+* `git --work-tree=/ --git-dir=Git/atelier checkout .gitconfig`
+* `git root reset --hard`
 * `source .bashrc`
-* `git-root reset --hard`
 * Initialize `~/.config/dwm`, pull from `https://git.suckless.org/dwm` and then `make install`.
 
 ## On committing and restoring changes
-* `git-root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
-	* `git-root status` -- Ignore unmonitored files with `-uno`
-* All normal git commands _(diff, checkout, etc.)_ should work.
-	* `git-root add -u` and push changes back to remote on occasion.
-	* _Keep things simple and **DO NOT** stage files that require root file permissions._
+* `git root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
+	* `git root status` -- Ignore unmonitored files with `-uno`
+	* `git root add -u` and push changes back to remote on occasion.
+	* Don't track files that require root permissions unless you want to be root for every checkout and pull.
 
 ### Tools
 ```
