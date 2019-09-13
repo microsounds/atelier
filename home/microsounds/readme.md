@@ -10,10 +10,10 @@
 
 # Using the entire filesystem as a git work-tree
 * `git root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
-* All typical commands should work, with special considerations.
-	* `git root status` -- Ignore unmonitored files with `-uno`
-	* `git root add -u` and push changes back to remote on occasion.
-	* Do _*NOT*_ track files that require root permissions unless you want to be root for every checkout and pull.
+	* All commands work, does not affect normal invocations of `git`
+	* Do _**NOT**_ track files that require root permissions unless you want to be root for every checkout and pull.
+	* Bare repo can be located anywhere, even `$HOME`, but it cannot be called `.git` or it will interfere with all subdirectories containing git repos.
+		* _This default git functionality is by design._
 
 ## Comforts
 ```

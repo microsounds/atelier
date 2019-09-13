@@ -4,7 +4,8 @@
 
 [alias]
 	# sets / directory as the work tree for version control purposes
-	# for git status, use '-u no' or '--untracked-files=no'
 	root = !git --git-dir=$HOME/Git/atelier --work-tree=/
-
 	summary = log --oneline --decorate --graph -n 16
+
+[status]
+	showUntrackedFiles = no
