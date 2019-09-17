@@ -6,7 +6,8 @@ _='・' # separator
 fan_data='/proc/acpi/ibm/fan' # thinkpad acpi
 
 while true; do
-	TEMP="$(acpi -tf | egrep -o '([0-9]+\.?){2}')˚F"
+	TEMP="$(acpi -tf | egrep -o '([0-9]+\.?){2}')"
+	[ ! -z $TEMP ] && TEMP="${TEMP}˚F" || TEMP="Virtualized"
 	if [ ! -f $fan_data ]; then FAN="$TEMP"; # get fan speed
 	else
 		FAN="$((($(egrep -o '[0-9]+' $fan_data) * 100) / 5300))"
