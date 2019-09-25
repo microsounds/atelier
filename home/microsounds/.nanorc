@@ -1,32 +1,43 @@
-## ~/.nanorc
+## ~/.nanorc: nano 3.2 user config
 
-## general
-set unix
-set tabsize 4
-set autoindent
-set justifytrim
-set matchbrackets "(<[{)>]}"
-set smooth
-set softwrap
-set multibuffer
-set constantshow
-unset suspend
-unset positionlog
-unset linenumbers
-
-## syntax highlighting
+## syntax
+include "/usr/share/nano/*.nanorc"
+include "/usr/local/share/nano/*.nanorc"
 include "~/.nano/*.nanorc"
 
 ## key bindings
-bind M-` complete main
-bind M-1 findbracket main
-bind M-2 whitespacedisplay main
-bind M-3 comment main
-bind M-4 nosyntax main
+unbind ^S all
 
-## interface color
+## editor
+set smooth
+set softwrap
+set tabsize 4
+set autoindent
+set multibuffer
+set matchbrackets "(<[{)>]}"
+set trimblanks
+set afterends
+set atblanks
+set unix
+set zap
+
+## convenience
+unset positionlog
+unset historylog
+unset locking
+unset suspend
+
+## ui
+set constantshow
+unset linenumbers
+unset morespace
+unset nohelp
+
+## ui color
 set numbercolor white
 set titlecolor black,cyan
 set statuscolor black,white
 set keycolor brightblue
 set functioncolor white
+set errorcolor black,red
+
