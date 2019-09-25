@@ -45,60 +45,72 @@ static const Layout layouts[] = {
 	{ "[M]",      monocle },
 };
 
+/* built-in commands */
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+
 /* key definitions */
 #define CTRL ControlMask
 #define ALT Mod1Mask
 #define META Mod4Mask
 #define SHIFT ShiftMask
-#define MODKEY ALT /* primary modkey */
 
+/* primary modkey */
+#define MODKEY META
+
+/* terminal emulator */
+#define TERM "urxvtc"
+
+/* command macros */
+#define SHCMD(cmd) {.v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define VOLUME(set) SHCMD("amixer -q sset Master" set)
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-
-/* built-in commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "urxvtc", NULL };
-
-/* volume control */
-static const char *vol_up[] = { "amixer", "-q", "sset", "Master", "5%+", NULL };
-static const char *vol_dn[] = { "amixer", "-q", "sset", "Master", "5%-", NULL };
-static const char *vol_mute[] = { "amixer", "-q", "-D", "pulse", "sset", "Master", "toggle", NULL };
+	{ MODKEY|CTRL,                  KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|SHIFT,                 KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|CTRL|SHIFT,            KEY,      toggletag,      {.ui = 1 << TAG} },
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = vol_up } },
-	{ 0,              XF86XK_AudioLowerVolume, spawn,          {.v = vol_dn } },
-	{ 0,              XF86XK_AudioMute,        spawn,          {.v = vol_mute } },
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+/* vol keys */
+	{ 0,              XF86XK_AudioRaiseVolume, spawn,          VOLUME("5%+") },
+	{ 0,              XF86XK_AudioLowerVolume, spawn,          VOLUME("5%-") },
+	{ 0,              XF86XK_AudioMute,        spawn,          VOLUME("toggle") },
+/* basic */
+	{ CTRL|SHIFT,                   XK_q,      quit,           {0} },
+	{ MODKEY|SHIFT,                 XK_q,      quit,           {0} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_Return, spawn,          SHCMD(TERM) },
+/* kill window */
+	{ ALT,                          XK_F4,     killclient,     {0} },
+	{ MODKEY,                       XK_q,      killclient,     {0} },
+	{ MODKEY|SHIFT,                 XK_c,      killclient,     {0} },
+/* switch focus */
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ ALT,                          XK_Tab,    focusstack,     {.i = +1 } },
+	{ ALT|SHIFT,                    XK_Tab,    focusstack,     {.i = -1 } },
+/* master area */
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY|SHIFT,                 XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+/* layout modes */
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	{ MODKEY|SHIFT,                 XK_space,  togglefloating, {0} },
+/* change window tags */
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY|SHIFT,                 XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|SHIFT,                 XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|SHIFT,                 XK_period, tagmon,         {.i = +1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -108,7 +120,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
 /* button definitions */
@@ -118,7 +129,7 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD(TERM) },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
