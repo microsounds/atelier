@@ -2,7 +2,6 @@
 
 ## syntax
 include "/usr/share/nano/*.nanorc"
-include "/usr/local/share/nano/*.nanorc"
 include "~/.nano/*.nanorc"
 
 ## key bindings
