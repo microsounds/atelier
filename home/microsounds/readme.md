@@ -14,8 +14,8 @@
 
 ## Comforts
 ```
-sudo htop git gcc make xorg wmctrl xclip acpi rxvt-unicode-256color screenfetch feh
-ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager sshfs
+sudo htop git gcc make xorg wmctrl xclip xbacklight acpi rxvt-unicode-256color
+screenfetch feh ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager sshfs
 ```
 ## Fonts
 ```
