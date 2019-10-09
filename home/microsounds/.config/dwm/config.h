@@ -63,7 +63,8 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 
 /* command macros */
 #define SHCMD(cmd) {.v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-#define VOLUME(set) SHCMD("amixer -q sset Master" set)
+#define VOLUME(set) SHCMD("amixer -q sset Master " set)
+#define BACKLIGHT(set) SHCMD("xbacklight -time 50 " set)
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|CTRL,                  KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -72,10 +73,12 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-/* vol keys */
-	{ 0,              XF86XK_AudioRaiseVolume, spawn,          VOLUME("5%+") },
-	{ 0,              XF86XK_AudioLowerVolume, spawn,          VOLUME("5%-") },
-	{ 0,              XF86XK_AudioMute,        spawn,          VOLUME("toggle") },
+/* special keys */
+	{ 0,             XF86XK_MonBrightnessUp,   spawn,          BACKLIGHT("-inc 10") },
+	{ 0,             XF86XK_MonBrightnessDown, spawn,          BACKLIGHT("-dec 10") },
+	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          VOLUME("5%+") },
+	{ 0,             XF86XK_AudioLowerVolume,  spawn,          VOLUME("5%-") },
+	{ 0,             XF86XK_AudioMute,         spawn,          VOLUME("toggle") },
 /* basic */
 	{ CTRL|SHIFT,                   XK_q,      quit,           {0} },
 	{ MODKEY|SHIFT,                 XK_q,      quit,           {0} },
