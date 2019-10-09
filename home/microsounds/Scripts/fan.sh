@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # displays fan speed or system temps if fan is off
 
-max=5300
+max=5700
 speed=$(cat /proc/acpi/ibm/fan | sed -En 's/speed:\s+(.*)/\1/p')
 fan=$(printf '%.1f%%' $(echo "($speed / $max) * 100" | bc -l))
 

@@ -10,7 +10,7 @@ while true; do
 	[ ! -z $TEMP ] && TEMP="${TEMP}˚F" || TEMP="Virtualized"
 	if [ ! -f $fan_data ]; then FAN="$TEMP"; # get fan speed
 	else
-		FAN="$((($(egrep -o '[0-9]+' $fan_data) * 100) / 5300))"
+		FAN="$((($(egrep -o '[0-9]+' $fan_data) * 100) / 5700))"
 		[ ! $FAN -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP"
 	fi
 	NET="$(nmcli | grep 'connected' | sed 's/connected to //g' | sed -n 1p)"
