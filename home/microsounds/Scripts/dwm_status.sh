@@ -6,12 +6,13 @@ _='・' # separator
 fan_data='/proc/acpi/ibm/fan' # thinkpad acpi
 
 while true; do
+	# devices with active cooling and/or temperature sensors only
 	TEMP="$(acpi -tf | egrep -o '([0-9]+\.?){2}')"
-	[ ! -z $TEMP ] && TEMP="${TEMP}˚F" || TEMP="Virtualized"
-	if [ ! -f $fan_data ]; then FAN="$TEMP"; # get fan speed
+	[ ! -z $TEMP ] && TEMP="${TEMP}˚F"
+	if [ ! -f $fan_data ]; then FAN="$TEMP";
 	else
 		FAN="$((($(egrep -o '[0-9]+' $fan_data) * 100) / 5700))"
-		[ ! $FAN -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP"
+		[ ! $FAN -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP" # fan off
 	fi
 	NET="$(nmcli | grep 'connected' | sed 's/connected to //g' | sed -n 1p)"
 	[ ! -z "$NET" ] || NET="No Network"
@@ -27,6 +28,6 @@ while true; do
 		*) DAY="${DAY}th"
 	esac
 	DATE="$(date "+%a, %b $DAY")"
-	xsetroot -name " ${FAN} $_ ${NET} $_ ${BAT} $_ ${VOL} $_ ${DATE} $_ ${TIME} "
+	xsetroot -name " ${FAN:+${FAN}$_}${NET}$_${BAT}$_${VOL}$_${DATE}$_${TIME} "
 	sleep 10
 done
