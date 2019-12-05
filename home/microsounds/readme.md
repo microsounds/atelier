@@ -14,13 +14,13 @@
 
 ## Comforts
 ```
-sudo htop git gcc make xorg wmctrl xclip xbacklight acpi rxvt-unicode-256color
+sudo htop git gcc make xorg wmctrl xclip xbacklight sxhkd xvkbd acpi rxvt-unicode-256color
 screenfetch feh ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager sshfs
 ```
 ## Fonts
 ```
 fonts-liberation fonts-dejima-mincho # dwm
-fonts-noto-mono fonts-vlgothic # term
+fonts-noto-mono fonts-vlgothic # terminal
 ```
 ## Libs
 ``` 

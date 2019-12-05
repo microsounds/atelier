@@ -1,3 +1,4 @@
+/* ~/.config/dwm/config.h: dwm/dmenu user configuration */
 #include <X11/XF86keysym.h>
 
 /* appearance */
@@ -52,19 +53,15 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 /* key definitions */
 #define CTRL ControlMask
 #define ALT Mod1Mask
-#define META Mod4Mask
+#define SUPER Mod4Mask
 #define SHIFT ShiftMask
 
 /* primary modkey */
-#define MODKEY META
-
-/* terminal emulator */
-#define TERM "urxvtc"
+#define MODKEY SUPER
 
 /* command macros */
+#define TERM "urxvtc"
 #define SHCMD(cmd) {.v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-#define VOLUME(set) SHCMD("amixer -q sset Master " set)
-#define BACKLIGHT(set) SHCMD("xbacklight -time 50 " set)
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|CTRL,                  KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -73,18 +70,11 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-/* special keys */
-	{ 0,             XF86XK_MonBrightnessUp,   spawn,          BACKLIGHT("-inc 10") },
-	{ 0,             XF86XK_MonBrightnessDown, spawn,          BACKLIGHT("-dec 10") },
-	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          VOLUME("5%+") },
-	{ 0,             XF86XK_AudioLowerVolume,  spawn,          VOLUME("5%-") },
-	{ 0,             XF86XK_AudioMute,         spawn,          VOLUME("toggle") },
 /* basic */
 	{ CTRL|SHIFT,                   XK_q,      quit,           {0} },
 	{ MODKEY|SHIFT,                 XK_q,      quit,           {0} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_Return, spawn,          SHCMD(TERM) },
 /* kill window */
 	{ ALT,                          XK_F4,     killclient,     {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },

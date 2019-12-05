@@ -1,0 +1,27 @@
+# ~/.config/sxhkd/sxhkdrc: sxhkd user configuration
+
+# reload config
+super + Escape
+	pkill -USR1 -x sxhkd
+
+# wm dependent hotkeys
+# ~/.config/dwm/config.h: dwm/dmenu user configuration
+
+# wm independent hotkeys
+super + Return
+	urxvtc
+XF86MonBrightness{Down,Up}
+	xbacklight -time 50 -{dec,inc} 10
+XF86Audio{Mute,LowerVolume,RaiseVolume}
+	amixer -q sset Master {toggle,5%-,5%+}
+
+# chromebook specific workarounds
+# /etc/systemd/logind.conf -> HandlePowerKey=ignore for Delete key 
+#XF86PowerOff
+#	xvkbd -xsendevent -text '\d'
+#super + {F6,F7}
+#	xbacklight -time 50 -{dec,inc} 10
+#super + {F8,F9,F10}
+#	amixer -q sset Master {toggle,5%-,5%+}
+#super + {Up,Down,Left,Right}
+#	xvkbd -xsendevent -text {'\[Prior]','\[Next]','\[Home]','\[End]'}

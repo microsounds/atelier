@@ -5,6 +5,7 @@
 xrdb ~/.Xresources
 
 # daemons
+sxhkd &
 urxvtd -q -o -f
 
 # startup
