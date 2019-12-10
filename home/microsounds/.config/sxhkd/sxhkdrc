@@ -16,12 +16,9 @@ XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
 
 # chromebook specific workarounds
-# /etc/systemd/logind.conf -> HandlePowerKey=ignore for Delete key 
-#XF86PowerOff
-#	xvkbd -xsendevent -text '\d'
+# brightness
 #super + {F6,F7}
 #	xbacklight -time 50 -{dec,inc} 10
+# volume
 #super + {F8,F9,F10}
 #	amixer -q sset Master {toggle,5%-,5%+}
-#super + {Up,Down,Left,Right}
-#	xvkbd -xsendevent -text {'\[Prior]','\[Next]','\[Home]','\[End]'}

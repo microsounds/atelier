@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
+# chromebook layout
+#xkbcomp ~/Scripts/chromebook.xkb $DISPLAY 2>&1 > /dev/null
+
 # config
 xrdb ~/.Xresources
 

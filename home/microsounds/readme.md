@@ -1,12 +1,11 @@
 # ![miku] quick ![miku] start ![miku]
 * Create a user with the correct name and install `git`
-	* _Log into `tty2`, you may be kicked off `tty1` halfway through._
 * `git clone --bare [remote] ~/Git/atelier`
 	* _This is your local copy._
 * `git --work-tree=/ --git-dir=Git/atelier checkout .gitconfig`
-* `git root reset --hard` to restore the environment immediately.
-* `source .bashrc`
+* `git root reset --hard` to restore configuration automatically.
 * Initialize `~/.config/dwm`, pull from `https://git.suckless.org/dwm` and then `make install`
+* Install everything listed and then `source .bashrc` to finish.
 
 # Using the entire filesystem as a git work-tree
 * `git root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
@@ -14,7 +13,7 @@
 
 ## Comforts
 ```
-sudo htop git gcc make xorg wmctrl xclip xbacklight sxhkd xvkbd acpi rxvt-unicode-256color
+sudo htop git gcc make xorg wmctrl xclip xbacklight sxhkd acpi rxvt-unicode-256color
 screenfetch feh ffmpeg mpv suckless-tools pulseaudio alsa-utils network-manager sshfs
 ```
 ## Fonts
