@@ -1,5 +1,4 @@
 /* ~/.config/dwm/config.h: dwm/dmenu user configuration */
-#include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
@@ -27,11 +26,9 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "XLoad",    NULL,       NULL,       0,            1,           -1 },
-	{ "XClock",   NULL,       NULL,       0,            1,           -1 },
+	/* class           instance    title       tags mask     isfloating   monitor */
+	{ "XLoad",         NULL,       NULL,       1,            1,           -1 },
+	{ "XClock",        NULL,       NULL,       1,            1,           -1 },
 };
 
 /* layout(s) */

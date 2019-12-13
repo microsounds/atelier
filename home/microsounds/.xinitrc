@@ -12,7 +12,7 @@ sxhkd &
 urxvtd -q -o -f
 
 # startup
-feh --no-fehbg --bg-tile --randomize ~/Pictures/active/* &
+feh --no-fehbg --bg-fill --randomize ~/Pictures/active/* &
 ~/Scripts/xload.sh vert bottom-right &
 ~/Scripts/dwm_status.sh &
 
