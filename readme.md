@@ -1,14 +1,16 @@
 # ![miku] quick ![miku] start ![miku]
-* Create a user with the correct name and install `git`
-* `git clone --bare [remote] ~/Git/atelier`
-	* _This is your local copy._
-* `git --work-tree=/ --git-dir=Git/atelier checkout .gitconfig`
+* Install `git`, `gcc` and `make` at the bare minimum.
+* Clone this remote as a bare repo.
+	* _`git clone --bare [remote] ~/Git/atelier`_
+* `git --git-dir=Git/atelier --work-tree=$HOME checkout .gitconfig`
 * `git root reset --hard` to restore configuration automatically.
-* Initialize `~/.config/dwm`, pull from `https://git.suckless.org/dwm` and then `make install`
-* Install everything listed and then `source .bashrc` to finish.
+* Run ~/.config/dwm/install.sh` to automatically build and install `dwm`.
+* Install everything else, then `source .bashrc` to finish.
+	* _You will be kicked from `tty1` if X exits with a non-zero exit code._
 
-# Using the entire filesystem as a git work-tree
-* `git root` is an alias for working with bare repo `~/Git/atelier` with the work-tree starting at `/`
+# Version control
+* `git root` is an alias for working with bare repo `~/Git/atelier` with your home directory as the work-tree.
+* Absolute filenames can be tracked if the work-tree is set to filesystem root.
 	* Do _**NOT**_ track files that require root permissions unless you want to be root for every checkout and pull.
 
 ## Comforts

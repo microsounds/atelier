@@ -3,8 +3,8 @@
 	email = microsounds@users.noreply.github.com
 
 [alias]
-	# sets / directory as the work tree for version control purposes
-	root = !git --git-dir=$HOME/Git/atelier --work-tree=/
+	# sets home directory as the work tree for version control purposes
+	root = !git --git-dir=$HOME/Git/atelier --work-tree=$HOME
 	summary = log --oneline --decorate --graph -n 16
 
 [status]
