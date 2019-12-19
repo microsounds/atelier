@@ -1,14 +1,21 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
-# chromebook layout
-#xkbcomp ~/Scripts/chromebook.xkb $DISPLAY 2>&1 > /dev/null
+# sxhkd defaults
+cfg=~/.config/sxhkd # prefix
+layout="$cfg/default"
+
+# chromebook keyboard hack
+if [ "$(cat /sys/devices/virtual/dmi/id/sys_vendor)" = 'GOOGLE' ]; then
+	xkbcomp ~/Scripts/chromebook.xkb $DISPLAY
+	layout="$layout $cfg/chromebook"
+fi
 
 # config
 xrdb ~/.Xresources
 
 # daemons
-sxhkd &
+sxhkd -c $layout &
 urxvtd -q -o -f
 
 # startup

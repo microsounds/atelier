@@ -1,0 +1,8 @@
+# ~/.config/sxhkd/chromebook: chromebook specific hotkeys
+
+# brightness
+super + {F6,F7}
+	xbacklight -time 50 -{dec,inc} 10
+# volume
+super + {F8,F9,F10}
+	amixer -q sset Master {toggle,5%-,5%+}

@@ -1,4 +1,4 @@
-# ~/.config/sxhkd/sxhkdrc: sxhkd user configuration
+# ~/.config/sxhkd/default: sxhkd user configuration
 
 # reload config
 super + Escape
@@ -14,11 +14,3 @@ XF86MonBrightness{Down,Up}
 	xbacklight -time 50 -{dec,inc} 10
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
-
-# chromebook specific workarounds
-# brightness
-#super + {F6,F7}
-#	xbacklight -time 50 -{dec,inc} 10
-# volume
-#super + {F8,F9,F10}
-#	amixer -q sset Master {toggle,5%-,5%+}
