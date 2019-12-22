@@ -10,8 +10,8 @@ SCALE=-1:-1 # 800:-1
 FPS=60 # 25
 
 # system
-CORES=$(cat /proc/cpuinfo | grep -i "processor" | wc -l)
-RES=$(xrandr | grep '*' | awk '{print $1}')
+CORES=$(grep -c 'proc' /proc/cpuinfo)
+RES=$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | sed -n 1p)
 TEMP=$(mktemp -u --suffix=".mp4")
 FINAL="Screenshot - $(date '+%m%d%Y') - $(date '+%r').webm"
 
