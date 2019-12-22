@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-# webm.sh
-# record screen, save in webm format
+## webm.sh v0.2
+## Press Ctrl+C to end recording.
 
 # quality
 SIZE=3M
@@ -15,7 +15,12 @@ RES=$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | sed -n 1p)
 TEMP=$(mktemp -u --suffix=".mp4")
 FINAL="Screenshot - $(date '+%m%d%Y') - $(date '+%r').webm"
 
-ffmpeg -threads $CORES -framerate $FPS -video_size $RES -f x11grab -i :0.0+0,0 -vcodec libx264 -qp 0 -preset ultrafast "$TEMP"
-ffmpeg -i "$TEMP" -c:v libvpx -b:v $BITRATE -fs $SIZE -vf scale=$SCALE -threads $CORES -an "$FINAL"
-rm -v $TEMP && sync
-echo "File created at: $(readlink -f "$FINAL")"
+to_webm() {
+	ffmpeg -i "$TEMP" -c:v libvpx -b:v $BITRATE -fs $SIZE -vf scale=$SCALE -threads $CORES -an "$FINAL"
+	rm -v $TEMP
+	echo "File created at: $(readlink -f "$FINAL")"
+}
+
+cat $0 | grep '^##' | sed 's/## //g'
+trap to_webm 2
+ffmpeg -loglevel panic -threads $CORES -framerate $FPS -video_size $RES -f x11grab -i :0.0+0,0 -vcodec libx264 -qp 0 -preset ultrafast "$TEMP"
