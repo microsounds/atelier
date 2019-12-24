@@ -31,7 +31,7 @@ set_prompt() {
 # display manager functionality
 # logs out after quitting X
 if [ "$(tty)" = "/dev/tty1" ]; then
-	exec startx
+	exec startx > /dev/null 2>&1
 fi
 
 # useful functions
