@@ -19,6 +19,6 @@
 
 # Comforts
 sudo htop git gcc make xorg wmctrl xclip xbacklight sxhkd acpi rxvt-unicode-256color nnn screenfetch feh ffmpeg
-mpv suckless-tools bluez pulseaudio pulseaudio-module-bluetooth alsa-utils network-manager sshfs 
+mpv suckless-tools bluez pulseaudio pulseaudio-module-bluetooth alsa-utils network-manager sshfs pmount
 fonts-liberation fonts-dejima-mincho fonts-noto-mono fonts-vlgothic
 libx11-dev libxft-dev libxinerama-dev libgtk-3-0
