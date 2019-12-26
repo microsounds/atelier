@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
 # ~/.bash_aliases: executed by bash(1) for non-login shells.
 
-# ± git terminal prompt
-# rewrites directory prompt with git information
-
-source ~/Scripts/git_status.sh
+# terminal prompt
 PROMPT_COMMAND=set_prompt
+
 set_prompt() {
-	c='\[\e[1;34m\]' # color
+	c='\[\e[1;34m\]' # path color
 	r='\[\e[0m\]' # reset
 	path="${c}\w${r}"
-	git_info="$(git_status -e)"
+	git_info="$(~/Scripts/git_status.sh)"
 	if [ ! -z "$git_info" ]; then # rewrite path string
-		topdir_abs="$(git_topdir)"
+		topdir_abs="$(git rev-parse --show-toplevel)"
 		topdir="$topdir_abs" # relative path
 		if [ ! -z "$(echo "$topdir" | grep "^$HOME")" ]; then
-			topdir="~${topdir#~}" # remove $HOME from path
+			topdir="~${topdir#~}" # replace $HOME with ~
 		fi
 		prefix="${topdir%/*}/" # expand path into 3 parts
 		suffix="$(echo "$PWD" | cut -c $((${#topdir_abs} + 2))-)"
@@ -30,12 +28,11 @@ set_prompt() {
 
 # display manager functionality
 # logs out after quitting X
-if [ "$(tty)" = "/dev/tty1" ]; then
+if [ "$(tty)" = '/dev/tty1' ]; then
 	exec startx > /dev/null 2>&1
 fi
 
 # useful functions
-
 shell() {
 	if [ ! -z "$1" ]; then
 		man="$(help -m "$1" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
