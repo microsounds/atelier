@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 
-# git_status.sh v0.2
+# git_status.sh v0.3
 # returns repo name, ⎇ branch name, and status indicators in the form '±repo:branch*'
-# if current directory is not a valid git work-tree, returns non-zero
+# pass '-e' to double-escape ANSI color codes
+# bash ignores escape codes when calculating $PS1 length
 
 # colors
 clean='\e[1;32m'
@@ -11,32 +12,31 @@ dirty='\e[1;31m'
 alt='\e[1;36m'
 reset='\e[0m'
 
-if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-	return 1
-else
+data="$(git status -b --porcelain=v2 2>&1)"
+if [ $? -eq 0 ]; then
 	repo="$(git rev-parse --show-toplevel)"
-	data="$(git status -b --porcelain=v2)"
-	# branch info
-	branch="$(echo "$data" | grep 'branch.head' | cut -d ' ' -f3)"
+	info="$(echo "$data" | grep '^#' | cut -d ' ' -f3-)"
+	state="$(echo "$data" | grep -v '^[#?]' | cut -d ' ' -f2)"
+	untracked="$(echo "$data" | grep '^?')"
+	unmerged="$(echo "$data" | grep '^u')"
+
+	# branch name
+	branch="$(echo "$info" | sed -n 2p)"
 	if [ "$branch" = '(detached)' ]; then # use commit hash instead
-		branch="$(echo "$data" | grep 'branch.oid' | cut -d ' ' -f3 | cut -c 1-7)"
+		branch="$(echo "$info" | sed -n 1p | cut -c -7)"
 	fi
 	# upstream info
-	ups="$(echo "$data" | grep 'branch.ab' | cut -d ' ' -f3-4)" # delete +0 -0 stats
-	ups="$(echo "$ups" | sed -E -e 's/[+-0]{2}//g' -e 's/^ *//g' -e 's/ *$//g')"
+	ups= upstream="$(echo "$info" | sed -n 4p)"
+	for f in $upstream; do # filter out +0 -0
+		case $f in +0);; -0);; *) ups="$ups $f";; esac
+	done
 	# determine state
-	color="$clean" stat= # defaults
-	state="$(echo "$data" | egrep -o '^[?12] [MARDRCU.]{2}?')"
-	if [ ! -z "$(echo "$state" | cut -d ' ' -f2 | cut -c 1 | egrep -v '[?.]')" ]; then
-		color="$staged" && stat="$stat+" # staged files exist
-	fi
-	if [ ! -z "$(echo "$state" | cut -d ' ' -f2 | cut -c 2 | egrep -v '[?.]')" ]; then
-		color="$dirty" && stat="$stat*" # unstaged files exist
-	fi
-	if [ ! -z "$(echo "$state" | grep '^?')" ]; then
-		color="$dirty" && stat="$stat%" # untracked files exist
-	fi
-	[ -f "$repo/.git/refs/stash" ] && stat="^$stat" # stash exists
-	printf "%b" "$color±$(basename "$repo"):$branch$stat$alt${ups:+ $ups}$reset"
-	return 0
+	color="$clean" bits= # defaults
+	[ ! -z "$(echo "$state" | cut -c 1 | grep -v '\.')" ] && color="$staged" && bits="$bits+"
+	[ ! -z "$(echo "$state" | cut -c 2 | grep -v '\.')" ] && color="$dirty" && bits="$bits*"
+	[ ! -z "$untracked" ] && color="$dirty" && bits="$bits%"
+	[ ! -z "$unmerged" ] && branch="<!>$branch"
+	[ -f "$repo/.git/refs/stash" ] && bits="^$bits"
+	if [ "$1" = '-e' ]; then color="\[$color\]"; alt="\[$alt\]"; reset="\[$reset\]"; fi
+	printf '%b' "$color±${repo##*/}:$branch$bits$alt$ups$reset"
 fi

@@ -3,15 +3,15 @@
 
 # terminal prompt
 PROMPT_COMMAND=set_prompt
-
 set_prompt() {
 	c='\[\e[1;34m\]' # path color
 	r='\[\e[0m\]' # reset
 	path="${c}\w${r}"
-	git_info="$(~/Scripts/git_status.sh)"
+	# is this a git worktree?
+	git_info="$(~/Scripts/git_status.sh -e)"
 	if [ ! -z "$git_info" ]; then # rewrite path string
 		topdir_abs="$(git rev-parse --show-toplevel)"
-		topdir="$topdir_abs" # relative path
+		topdir="$topdir_abs" # create relative path
 		if [ ! -z "$(echo "$topdir" | grep "^$HOME")" ]; then
 			topdir="~${topdir#~}" # replace $HOME with ~
 		fi
@@ -25,6 +25,7 @@ set_prompt() {
 	# update titlebar
 	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
 }
+
 
 # display manager functionality
 # logs out after quitting X
