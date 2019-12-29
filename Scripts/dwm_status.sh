@@ -17,7 +17,7 @@ NET="$(nmcli | grep 'connected' | sed 's/connected to //g' | sed -n 1p)"
 [ ! -z "$NET" ] || NET="No Network"
 BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
 VOL="Vol $(amixer get 'Master' | egrep -o '[0-9]+%' | sed 1q)"
-amixer get 'Master' | grep 'off' && VOL="${VOL}, muted"
+[ ! -z "$(amixer get 'Master' | grep 'off')" ] && VOL="${VOL}, muted"
 TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
 DAY="$(date '+%e' | sed 's/^ //g')"
 case $DAY in
