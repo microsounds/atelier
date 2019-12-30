@@ -14,28 +14,27 @@ reset='\e[0m'
 
 data="$(git status -b --porcelain=v2 2>&1)"
 if [ $? -eq 0 ]; then
+	# repo name
 	repo="$(git rev-parse --show-toplevel)"
+	# branch info
 	info="$(echo "$data" | grep '^#' | cut -d ' ' -f3-)"
-	state="$(echo "$data" | grep -v '^[#?]' | cut -d ' ' -f2)"
-	untracked="$(echo "$data" | grep '^?')"
-	unmerged="$(echo "$data" | grep '^u')"
-
-	# branch name
-	branch="$(echo "$info" | sed -n 2p)"
-	if [ "$branch" = '(detached)' ]; then # use commit hash instead
-		branch="$(echo "$info" | sed -n 1p | cut -c -7)"
-	fi
+	for f in $(echo "$info" | sed -n 2p); do
+		case $f in # use commit hash for detached head
+			\(detached\)) branch="$(echo "$info" | sed -n 1p | cut -c -7)";;
+			*) branch="$f";;
+		esac
+	done
 	# upstream info
-	ups= upstream="$(echo "$info" | sed -n 4p)"
-	for f in $upstream; do # filter out +0 -0
+	for f in $(echo "$info" | sed -n 4p); do # filter out +0 -0
 		case $f in +0);; -0);; *) ups="$ups $f";; esac
 	done
 	# determine state
-	color="$clean" bits= # defaults
-	[ ! -z "$(echo "$state" | cut -c 1 | grep -v '\.')" ] && color="$staged" && bits="$bits+"
-	[ ! -z "$(echo "$state" | cut -c 2 | grep -v '\.')" ] && color="$dirty" && bits="$bits*"
-	[ ! -z "$untracked" ] && color="$dirty" && bits="$bits%"
-	[ ! -z "$unmerged" ] && branch="<!>$branch"
+	color="$clean" # default
+	state="$(echo "$data" | grep -v '^#' | cut -d ' ' -f2)"
+	[ ! -z "$(echo "$state" | cut -c 1 | tr -d '.')" ] && color="$staged" && bits="$bits+"
+	[ ! -z "$(echo "$state" | cut -c 2 | tr -d '.')" ] && color="$dirty" && bits="$bits*"
+	[ ! -z "$(echo "$state" | grep '^?')" ] && color="$dirty" && bits="$bits%" # untracked
+	[ ! -z "$(echo "$state" | grep '^u')" ] && branch="<!>$branch" # merge conflict
 	[ -f "$repo/.git/refs/stash" ] && bits="^$bits"
 	if [ "$1" = '-e' ]; then color="\[$color\]"; alt="\[$alt\]"; reset="\[$reset\]"; fi
 	printf '%b' "$color±${repo##*/}:$branch$bits$alt$ups$reset"
