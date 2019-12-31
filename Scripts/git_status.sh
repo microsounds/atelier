@@ -12,7 +12,7 @@ dirty='\e[1;31m'
 alt='\e[1;36m'
 reset='\e[0m'
 
-data="$(git status -b --porcelain 2>&1)"
+data="$(git status -b --porcelain 2> /dev/null)"
 if [ $? -eq 0 ]; then
 	# repo name
 	repo="$(git rev-parse --show-toplevel)"
@@ -21,8 +21,10 @@ if [ $? -eq 0 ]; then
 	        sed -e 's/ahead /+/' -e 's/behind /-/' | tr '#.,[] ' '\n' | grep .)"
 	for f in $(echo "$info" | head -1); do
 		case $f in
-			HEAD)
-				branch="$(cut -c -7 "$repo/.git/HEAD")";; # detached head mode
+			# detached head mode
+			HEAD) branch="$(cut -c -7 "$repo/.git/HEAD")";;
+			# no commits yet
+			No) [ ! -z "$(ls "$repo/.git/refs/heads")" ] && branch="$f" || branch="<init>";;
 			*)
 				branch="$f" # normal mode, get upstream if exists
 				if [ $(echo "$info" | wc -l) -ge 3 ]; then
@@ -41,6 +43,6 @@ if [ $? -eq 0 ]; then
 	echo "$state" | grep -q '?' && color="$dirty" && bits="$bits%" # untracked files
 	echo "$state" | grep -q 'U' && branch="<!>$branch" # merge conflict
 	[ -f "$repo/.git/refs/stash" ] && bits="^$bits" # stash exists
-	if [ "$1" = '-e' ]; then color="\[$color\]"; alt="\[$alt\]"; reset="\[$reset\]"; fi
-	printf '%b' "$color±${repo##*/}:$branch$bits$alt$ups$reset"
+	[ "$1" = '-e' ] && color="\[$color\]" && alt="\[$alt\]" && reset="\[$reset\]"
+	echo "$color±${repo##*/}:$branch$bits$alt$ups$reset"
 fi
