@@ -26,9 +26,14 @@ set_prompt() {
 	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
 }
 
+# ~/.local/bin
+# keeps garbage out of root partition
+if [ -d "$HOME/.local/bin" ]; then
+	export PATH="$HOME/.local/bin:$PATH"
+fi
 
 # display manager functionality
-# logs out after quitting X
+# start X on login, logout after X exits
 if [ "$(tty)" = '/dev/tty1' ]; then
 	exec startx > /dev/null 2>&1
 fi

@@ -6,7 +6,6 @@
 	# sets home directory as the work tree for version control purposes
 	root = !git --git-dir=$HOME/Git/atelier --work-tree=$HOME
 	summary = log --oneline --decorate --graph -n 16
-	rewrite = rebase -i HEAD~3
 
 [status]
 	showUntrackedFiles = no
