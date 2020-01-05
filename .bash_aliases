@@ -39,6 +39,10 @@ if [ "$(tty)" = '/dev/tty1' ]; then
 fi
 
 # useful functions
+# spawns QR code (typically containing a URL)
+qr() { qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | feh - -Z --force-aliasing; }
+
+# man-like behavior for shell built-in documentation
 shell() {
 	if [ ! -z "$1" ]; then
 		man="$(help -m "$1" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
@@ -49,9 +53,3 @@ shell() {
 		echo "Which command?"
 	fi
 }
-qr() { fn="qr-$(date +%s).png"; qrencode -s 10 -o "$fn" "$@"; feh "$fn"; rm -v "$fn"; }
-tmp() { cd "$(mktemp -d -p "$(pwd)")"; }
-glcheck() { glewinfo | sort | grep -vi "gl[x_]" | sed 's/^ *//g' | grep -i "$1"; }
-youtube-lq() { youtube-dl -o - -f 17 $1 | mpv - --force-seekable=yes; }
-weather() { (head -7 | sed -n '1,2!p'; grep "^Location" -) <<< $(curl -s "http://wttr.in/$1"); }
-moon() { curl -s "http://wttr.in/moon" | head -23; }
