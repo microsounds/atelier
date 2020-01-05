@@ -3,8 +3,10 @@
 	email = microsounds@users.noreply.github.com
 
 [alias]
-	# sets home directory as the work tree for version control purposes
+	# home directory version control
 	root = !git --git-dir=$HOME/Git/atelier --work-tree=$HOME
+	# implicitly squash fixup commits
+	fixup = !GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash
 	summary = log --oneline --decorate --graph -n 16
 
 [status]

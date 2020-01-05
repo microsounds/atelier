@@ -28,9 +28,12 @@ set_prompt() {
 
 # ~/.local/bin
 # keeps garbage out of root partition
-if [ -d "$HOME/.local/bin" ]; then
-	export PATH="$HOME/.local/bin:$PATH"
-fi
+for f in "$HOME/.local/bin"; do
+	case ":$PATH:" in
+		*":$f:"*) :;;
+		*) export PATH="$f:$PATH";;
+	esac
+done
 
 # display manager functionality
 # start X on login, logout after X exits
@@ -44,11 +47,9 @@ qr() { qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | feh - -Z --force-aliasing;
 
 # man-like behavior for shell built-in documentation
 shell() {
-	if [ ! -z "$1" ]; then
+	if [ ! -z "$1" ]; then # apply bold decoration
 		man="$(help -m "$1" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
-		if [ ! -z "$man" ]; then
-			printf "%b\n" "$man" | less -R
-		fi
+		[ ! -z "$man" ] && printf "%b\n" "$man" | less -R
 	else
 		echo "Which command?"
 	fi
