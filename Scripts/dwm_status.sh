@@ -15,12 +15,33 @@ if [ ! -z "$TEMP" ]; then
 		[ ! $FAN -eq 0 ] && FAN="Fan ${FAN}%" || FAN="$TEMP" # fan off
 	fi
 fi
+# networking
 NET="$(nmcli | fgrep 'connected' | sed 's/connected to //g' | head -1)"
 [ ! -z "$NET" ] || NET="Airplane Mode"
-BAT="Bat $(acpi -b | egrep -o '[0-9]+\%.*')"
-SND="$(amixer get 'Master')"
-VOL="Vol $(echo "$SND" | egrep -o '[0-9]+%' | head -1)"
-[ ! -z "$(echo "$SND" | fgrep 'off')" ] && VOL="$VOL, muted"
+# power management
+acpi="$(acpi -b | egrep -o '[0-9]+\%.*')"
+pct="$(echo "$acpi" | egrep -o '[0-9]+%' | head -1)"
+if [ $pct != '100%' ]; then
+	for btime in "$(echo "$acpi" | egrep -o '([0-9]+:?)+' | tail -1)"; do
+		i=0; for f in h m; do # rewrite time remaining into pretty output
+			i=$((i + 1))
+			val="$(echo "$btime" | tr ':' ' ' | cut -d ' ' -f$i | sed 's/^0*//')"
+			[ ! -z "$val" ] || continue # fields empty?
+			[ $val -ne 0 ] && btime_v="$btime_v$val$f"
+		done
+		for f in $acpi; do case $f in
+				charged) BAT="$btime_v till charged";;
+				remaining) BAT="$btime_v left";;
+			esac
+		done
+	done
+fi
+BAT="Bat $pct${BAT:+, $BAT}"
+# audio
+sound="$(amixer get 'Master')"
+VOL="Vol $(echo "$sound" | egrep -o '[0-9]+%' | head -1)"
+[ ! -z "$(echo "$sound" | fgrep 'off')" ] && VOL="$VOL, muted"
+# time
 TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
 for DAY in $(date '+%e' | sed 's/^ //g'); do
 	case $DAY in
