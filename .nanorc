@@ -33,7 +33,7 @@ unset morespace
 unset nohelp
 
 ## ui color
-set numbercolor white
+set numbercolor brightblack
 set titlecolor black,cyan
 set statuscolor black,white
 set keycolor brightblue
