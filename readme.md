@@ -1,6 +1,6 @@
 [scrot]: https://i.imgur.com/VkmRvWr.png
 [miku]: https://i.imgur.com/Nr7HV9a.png
-# ![miku] _a t e l i e r quick start_ ![miku]
+# ![miku] _a t e l i e r quick start~♪_ ![miku]
 ![scrot]
 > _Setup: Debian stable, vanilla Xorg, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 * Install `git`, `gcc` and `make` at the bare minimum.
