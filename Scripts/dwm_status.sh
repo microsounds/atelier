@@ -42,14 +42,14 @@ sound="$(amixer get 'Master')"
 VOL="Vol $(echo "$sound" | egrep -o '[0-9]+%' | head -1)"
 [ ! -z "$(echo "$sound" | fgrep 'off')" ] && VOL="$VOL, muted"
 # time
-TIME="$(date '+%l:%M%P' | sed 's/^ //g')"
-for DAY in $(date '+%e' | sed 's/^ //g'); do
-	case $DAY in
-		1 | 21 | 31) DAY="${DAY}st";;
-		2 | 22) DAY="${DAY}nd";;
-		3 | 23) DAY="${DAY}rd";;
-		*) DAY="${DAY}th"
+TIME="$(date '+%-l:%M%P')"
+for day in $(date '+%-e'); do
+	case $day in
+		1 | 21 | 31) day="${day}st";;
+		2 | 22) day="${day}nd";;
+		3 | 23) day="${day}rd";;
+		*) day="${day}th"
 	esac
 done
-DATE="$(date "+%a, %b $DAY")"
+DATE="$(date '+%a, %b') $day"
 echo "${FAN:+${FAN}$_}${NET}$_${BAT}$_${VOL}$_${DATE}$_${TIME}"
