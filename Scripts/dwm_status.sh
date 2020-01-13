@@ -23,11 +23,10 @@ acpi="$(acpi -b | egrep -o '[0-9]+\%.*')"
 pct="$(echo "$acpi" | egrep -o '[0-9]+%' | head -1)"
 if [ $pct != '100%' ]; then
 	for btime in "$(echo "$acpi" | egrep -o '([0-9]+:?)+' | tail -1)"; do
-		i=0; for f in h m; do # rewrite time remaining into pretty output
+		i=0; for f in h m; do # rewrite time remaining as approximation
 			i=$((i + 1))
-			val="$(echo "$btime" | tr ':' ' ' | cut -d ' ' -f$i | sed 's/^0*//')"
-			[ ! -z "$val" ] || continue # fields empty?
-			[ $val -ne 0 ] && btime_v="$btime_v$val$f"
+			val="$(echo "$btime" | cut -d ':' -f$i | sed 's/^0//')"
+			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
 				charged) BAT="$btime_v till charged";;
