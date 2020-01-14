@@ -1,4 +1,4 @@
-## ~/.nanorc: nano 3.2 user config
+## ~/.nanorc: nano 3.x user config
 
 ## syntax
 include "/usr/share/nano/*.nanorc"
@@ -13,10 +13,12 @@ set softwrap
 set tabsize 4
 set autoindent
 set multibuffer
+set wordchars "$-_"
 set matchbrackets "(<[{)>]}"
 set trimblanks
 set afterends
 set atblanks
+set fill 80
 set unix
 set zap
 
@@ -32,7 +34,7 @@ unset linenumbers
 unset morespace
 unset nohelp
 
-## ui color
+## color scheme
 set numbercolor brightblack
 set titlecolor black,cyan
 set statuscolor black,white
