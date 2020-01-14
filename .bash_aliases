@@ -10,15 +10,13 @@ set_prompt() {
 	# is this a git worktree?
 	git_info="$(~/Scripts/git_status.sh -e)"
 	if [ ! -z "$git_info" ]; then # rewrite path string
-		topdir_abs="$(git rev-parse --show-toplevel)"
-		topdir="$topdir_abs" # create relative path
-		if [ ! -z "$(echo "$topdir" | grep "^$HOME")" ]; then
-			topdir="~${topdir#~}" # replace $HOME with ~
+		topdir="$(git rev-parse --show-toplevel)"
+		suffix="${PWD##"$topdir"}"
+		prefix="${topdir%/*}/"
+		if echo "$prefix" | grep -q "^$HOME"; then
+			prefix="~${prefix##"$HOME"}" # relative path ~/
 		fi
-		prefix="${topdir%/*}/" # expand path into 3 parts
-		suffix="$(echo "$PWD" | cut -c $((${#topdir_abs} + 2))-)"
-		if [ ! -z "$suffix" ]; then suffix="/$suffix"; fi
-		path="${c}${prefix}${r}${git_info}${c}${suffix}${r}" # final path
+		path="${c}${prefix}${r}${git_info}${c}${suffix}${r}"
 	fi
 	# override $PS1 described in .bashrc
 	PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:${path}\$ "
