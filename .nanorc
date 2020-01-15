@@ -18,7 +18,6 @@ set matchbrackets "(<[{)>]}"
 set trimblanks
 set afterends
 set atblanks
-set fill 80
 set unix
 set zap
 

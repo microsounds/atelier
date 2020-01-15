@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ~/.bash_aliases: executed by bash(1) for non-login shells.
 
-# terminal prompt
+# set terminal prompt
 PROMPT_COMMAND=set_prompt
 set_prompt() {
 	c='\[\e[1;34m\]' # path color
@@ -9,13 +9,14 @@ set_prompt() {
 	path="${c}\w${r}"
 	# is this a git worktree?
 	git_info="$(~/Scripts/git_status.sh -e)"
-	if [ ! -z "$git_info" ]; then # rewrite path string
+	if [ ! -z "$git_info" ]; then # expand path
 		topdir="$(git rev-parse --show-toplevel)"
 		suffix="${PWD##"$topdir"}"
 		prefix="${topdir%/*}/"
 		if echo "$prefix" | grep -q "^$HOME"; then
 			prefix="~${prefix##"$HOME"}" # relative path ~/
 		fi
+		# <prefix>/±repo:branch*/<suffix>
 		path="${c}${prefix}${r}${git_info}${c}${suffix}${r}"
 	fi
 	# override $PS1 described in .bashrc

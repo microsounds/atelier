@@ -16,7 +16,7 @@ if [ ! -z "$TEMP" ]; then
 	fi
 fi
 # networking
-NET="$(nmcli | fgrep 'connected' | sed 's/connected to //g' | head -1)"
+NET="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -1)"
 [ ! -z "$NET" ] || NET="Airplane Mode"
 # power management
 acpi="$(acpi -b | egrep -o '[0-9]+\%.*')"
@@ -29,10 +29,9 @@ if [ $pct != '100%' ]; then
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
-				charged) BAT="$btime_v till charged";;
-				remaining) BAT="$btime_v left";;
-			esac
-		done
+			charged) BAT="$btime_v till charged";;
+			remaining) BAT="$btime_v left";;
+		esac; done
 	done
 fi
 BAT="Bat $pct${BAT:+, $BAT}"

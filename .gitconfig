@@ -5,9 +5,12 @@
 [alias]
 	# home directory version control
 	root = !git --git-dir=$HOME/Git/atelier --work-tree=$HOME
-	# implicitly squash fixup commits
-	fixup = !GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash
 	summary = log --oneline --decorate --graph -n 16
+	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
 
 [status]
 	showUntrackedFiles = no
+
+[rebase]
+	autoStash = true
+	autoSquash = true
