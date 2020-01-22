@@ -22,7 +22,7 @@ set unix
 set zap
 
 ## convenience
-unset positionlog
+set positionlog
 unset historylog
 unset locking
 unset suspend

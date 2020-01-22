@@ -41,8 +41,15 @@ if [ "$(tty)" = '/dev/tty1' ]; then
 fi
 
 # useful functions
-# spawns QR code (typically containing a URL)
-qr() { qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | feh - -Z --force-aliasing; }
+# purge nano filepos history if older than 5 minutes
+nano() {
+	for hist in "$HOME/.nano/filepos_history"; do
+		[ -f "$hist" ] &&
+		[ $(($(date '+%s') - $(stat -c '%Y' "$hist"))) -gt 300 ] &&
+		rm "$hist"
+	done
+	command nano $@
+}
 
 # man-like behavior for shell built-in documentation
 shell() {
@@ -52,4 +59,15 @@ shell() {
 	else
 		echo "Which command?"
 	fi
+}
+
+# force make to use multithreading by default
+alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
+
+# spawns QR code (typically containing a URL)
+qr() { qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | feh - -Z --force-aliasing; }
+
+# check for updates
+update() {
+	for f in update dist-upgrade autopurge autoclean clean; do sudo apt-get $f; done
 }
