@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # ~/.bash_aliases: executed by bash(1) for non-login shells.
 
 # set terminal prompt
@@ -24,21 +23,6 @@ set_prompt() {
 	# update titlebar
 	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
 }
-
-# ~/.local/bin
-# keeps garbage out of root partition
-for f in "$HOME/.local/bin"; do
-	case ":$PATH:" in
-		*":$f:"*) :;;
-		*) export PATH="$f:$PATH";;
-	esac
-done
-
-# display manager functionality
-# start X on login, logout after X exits
-if [ "$(tty)" = '/dev/tty1' ]; then
-	exec startx > /dev/null 2>&1
-fi
 
 # useful functions
 # purge nano filepos history if older than 5 minutes
