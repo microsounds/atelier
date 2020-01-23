@@ -1,4 +1,4 @@
-# ~/.profile: executed by the command interpreter for login shells.
+## ~/.profile: executed by the command interpreter for login shells.
 
 # sources ~/.bashrc and ~/.bash_aliases
 if [ ! -z "$BASH_VERSION" ]; then

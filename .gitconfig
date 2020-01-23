@@ -1,3 +1,5 @@
+## ~/.gitconfig: git user configuration
+
 [user]
 	name = microsounds
 	email = microsounds@users.noreply.github.com
