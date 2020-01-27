@@ -20,6 +20,6 @@
 # Comforts
 sudo htop git gcc make m4 xorg wmctrl xclip xbacklight xdiskusage sxhkd acpi rxvt-unicode-256color
 nnn screenfetch mpv suckless-tools bluez pulseaudio pulseaudio-module-bluetooth alsa-utils
-network-manager sshfs pmount feh ffmpeg curl progress qrencode
+network-manager sshfs pmount feh ffmpeg curl progress qrencode ssh-askpass
 fonts-liberation fonts-dejima-mincho fonts-noto-mono fonts-vlgothic
 libx11-dev libxft-dev libxinerama-dev libgtk-3-0

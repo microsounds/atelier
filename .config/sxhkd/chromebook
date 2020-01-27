@@ -6,3 +6,9 @@ super + {F6,F7}
 # volume
 super + {F8,F9,F10}
 	amixer -q sset Master {toggle,5%-,5%+}
+# power
+ctrl + F1
+	ssh-askpass 'Shutdown?' | sudo -S shutdown now
+# reset touchpad driver
+ctrl + F2
+	MOD='atmel_mxt_ts'; ssh-askpass "Reload $MOD?" | sudo -S sh -c "rmmod $MOD && modprobe $MOD"
