@@ -21,9 +21,11 @@ if [ $? -eq 0 ]; then
 	        sed -e 's/ahead /+/' -e 's/behind /-/' | tr '#.,[] ' '\n' | grep .)"
 	for f in $(echo "$info" | head -1); do
 		case $f in
-			# detached head mode
-			HEAD) branch="$(cut -c -7 "$repo/.git/HEAD")";;
-			# no commits yet
+			HEAD) # detached HEAD mode
+				branch="$(cut -c -7 "$repo/.git/HEAD")" # unnamed commit
+				tag="$(fgrep -rl "$branch" "$repo/.git/refs/tags")" # is this a tag?
+				[ ! -z "$tag" ] && branch="${tag##*/}";;
+			# no commits exist
 			No) [ ! -z "$(ls "$repo/.git/refs/heads")" ] && branch="$f" || branch="<init>";;
 			*) # normal mode
 				branch="$f" # obtain upstream info if it exists
@@ -43,6 +45,7 @@ if [ $? -eq 0 ]; then
 	echo "$state" | grep -q '?' && color="$dirty" && bits="$bits%" # untracked files
 	echo "$state" | grep -q 'U' && branch="<!>$branch" # merge conflict
 	[ -f "$repo/.git/refs/stash" ] && bits="^$bits" # stash exists
+	# parse options
 	if [ ! -z "$1" ]; then for f in $(echo "${1#-}" | sed 's/./& /g'); do case $f in
 		e) color="\[$color\]" && alt="\[$alt\]" && reset="\[$reset\]";;
 		n) unset color alt reset;;
