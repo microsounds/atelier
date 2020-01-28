@@ -29,12 +29,9 @@ for f in $(echo "$info" | head -1); do
 		*) # normal mode
 			branch="$f" # obtain upstream info if available
 			for g in $(echo "$info" | tail -n +3); do
-				case $g in
-					ahead) ups="$ups+";;
-					behind) ups="$ups-";;
-					*) ups="$ups$g "
-				esac
-			done; ups="${ups:+ ${ups%% }}" # trailing spaces
+				case $g in ahead) g=' +';; behind) g=' -';; esac
+				ups="$ups$g"
+			done
 	esac
 done
 
