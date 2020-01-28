@@ -8,9 +8,9 @@
 * `git clone --bare [remote] ~/Git/atelier`
 * `git --git-dir=$HOME/Git/atelier --work-tree=$HOME checkout .gitconfig`
 * `git root reset --hard` to restore configuration automatically.
+	* _Changes to `~/.profile` won't take effect until you log back in._
 * Run `~/.config/dwm/install.sh` to automatically build and install `dwm`.
-* Install everything else, then `source .bashrc` to finish.
-	* _You will be kicked from `tty1` if X exits with a non-zero exit code._
+	* _X starts automatically on `tty1`, you will be kicked if `dwm` isn't installed._
 
 # Notes
 * `git root` is an alias for working with bare repo `~/Git/atelier` with the work-tree set to the home directory.
