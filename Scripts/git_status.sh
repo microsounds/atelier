@@ -17,24 +17,22 @@ if [ $? -eq 0 ]; then
 	# repo name
 	repo="$(git rev-parse --show-toplevel)"
 	# branch info
-	info="$(echo "$data" | head -1 | \
-	        sed -e 's/ahead /+/' -e 's/behind /-/' | tr '#.,[] ' '\n' | grep .)"
+	info="$(echo "$data" | head -1 | tr -s '#.,[]() ' '\n' | grep '.')"
 	for f in $(echo "$info" | head -1); do
 		case $f in
 			HEAD) # detached HEAD mode
 				branch="$(cut -c -7 "$repo/.git/HEAD")" # unnamed commit
 				tag="$(fgrep -rl "$branch" "$repo/.git/refs/tags")" # is this a tag?
 				[ ! -z "$tag" ] && branch="${tag##*/}";;
-			# no commits exist
-			No) [ ! -z "$(ls "$repo/.git/refs/heads")" ] && branch="$f" || branch="<init>";;
+			No) # no branches exist or branch named 'No'
+				[ ! -z "$(ls "$repo/.git/refs/heads")" ] && branch="$f" || branch="<new>";;
 			*) # normal mode
-				branch="$f" # obtain upstream info if it exists
-				if [ $(echo "$info" | wc -l) -ge 3 ]; then
-					# ignores stupid branch names (eg. '+1')
-					for g in $(echo "$info" | tail -n +3); do
-						case $g in \+* | -*) ups="$ups $g";; esac
-					done
-				fi
+				branch="$f" # obtain upstream info if available
+				for g in $(echo "$info" | tail -n +3); do case $g in
+					ahead) ups="$ups+";;
+					behind) ups="$ups-";;
+					*) ups="$ups$g "
+				esac; done; ups="${ups:+ ${ups%% }}" # trailing spaces
 		esac
 	done
 	# index/work-tree state
