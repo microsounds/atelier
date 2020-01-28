@@ -7,8 +7,7 @@ set_prompt() {
 	r='\[\e[0m\]' # reset
 	path="${c}\w${r}"
 	# is this a git worktree?
-	git_info="$(~/Scripts/git_status.sh -e)"
-	if [ ! -z "$git_info" ]; then # expand path
+	if git_info="$(~/Scripts/git_status.sh -e)"; then # expand path
 		topdir="$(git rev-parse --show-toplevel)"
 		suffix="${PWD##"$topdir"}"
 		prefix="${topdir%/*}/"

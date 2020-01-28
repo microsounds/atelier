@@ -12,8 +12,7 @@ dirty='\e[1;31m'
 alt='\e[1;36m'
 reset='\e[0m'
 
-data="$(git status -b --porcelain 2> /dev/null)"
-if [ $? -eq 0 ]; then
+if data="$(git status -b --porcelain 2> /dev/null)"; then
 	# repo name
 	repo="$(git rev-parse --show-toplevel)"
 	# branch info
@@ -49,4 +48,5 @@ if [ $? -eq 0 ]; then
 		n) unset color alt reset;;
 	esac; done; fi
 	echo "$color±${repo##*/}:$branch$bits$alt$ups$reset"
+	else exit
 fi
