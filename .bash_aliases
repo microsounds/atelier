@@ -24,9 +24,18 @@ set_prompt() {
 }
 
 # useful functions
-# purge nano filepos history if older than 5 minutes
+# GNU nano housekeeping routines
 nano() {
-	for hist in "$HOME/.nano/filepos_history"; do
+	share='/usr/share/nano'
+	rc="$HOME/.nano"
+	# override syntax for specific languages
+	for f in c javascript; do
+		if [ "$rc/stdc.patch" -nt "$rc/$f.nanorc" ]; then
+			sed "/syntax/r $rc/stdc.patch" "$share/$f.nanorc" > "$rc/$f.nanorc"
+		fi
+	done
+	# purge filepos history if older than 5 minutes
+	for hist in "$rc/filepos_history"; do
 		[ -f "$hist" ] &&
 		[ $(($(date '+%s') - $(stat -c '%Y' "$hist"))) -gt 300 ] &&
 		rm "$hist"
