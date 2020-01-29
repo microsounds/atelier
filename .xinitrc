@@ -1,21 +1,22 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
-# sxhkd defaults
-cfg=~/.config/sxhkd # prefix
-layout="$cfg/default"
+# hotkeys
+sxhkd="default"
 
-# chromebook keyboard hack
+## chromebook keyboard layout
 if [ "$(cat /sys/devices/virtual/dmi/id/sys_vendor)" = 'GOOGLE' ]; then
 	xkbcomp ~/Scripts/chromebook.xkb $DISPLAY > /dev/null 2>&1
-	layout="$layout $cfg/chromebook"
+	sxhkd="$sxhkd chromebook"
 fi
 
-# config
-xrdb ~/.Xresources
+rm ~/.config/sxhkd/sxhkdrc
+for f in $sxhkd; do
+	cat ~/.config/sxhkd/$f >> ~/.config/sxhkd/sxhkdrc
+done
 
 # daemons
-sxhkd -c $layout &
+sxhkd &
 urxvtd -q -o -f
 while true; do # status bar
 	xsetroot -name " $(~/Scripts/dwm_status.sh) "
@@ -23,6 +24,7 @@ while true; do # status bar
 done &
 
 # run once
+xrdb ~/.Xresources &
 feh --no-fehbg --bg-fill --randomize ~/Pictures/active/* &
 ~/Scripts/xload.sh vert bottom-right &
 

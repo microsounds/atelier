@@ -30,8 +30,8 @@ nano() {
 	rc="$HOME/.nano"
 	# override syntax for specific languages
 	for f in c javascript; do
-		if [ "$rc/stdc.patch" -nt "$rc/$f.nanorc" ]; then
-			sed "/syntax/r $rc/stdc.patch" "$share/$f.nanorc" > "$rc/$f.nanorc"
+		if [ "$rc/c.syntax" -nt "$rc/$f.nanorc" ]; then
+			sed "/syntax/r $rc/c.syntax" "$share/$f.nanorc" > "$rc/$f.nanorc"
 		fi
 	done
 	# purge filepos history if older than 5 minutes
