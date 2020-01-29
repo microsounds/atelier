@@ -26,4 +26,3 @@ window.youtube_screenshot = function() {
 	dl.click();
 	document.body.removeChild(dl);
 };
-

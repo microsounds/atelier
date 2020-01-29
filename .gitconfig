@@ -10,6 +10,9 @@
 	summary = log --oneline --decorate --graph -n 16
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
 
+[advice]
+	detachedHead = false
+
 [status]
 	showUntrackedFiles = no
 
