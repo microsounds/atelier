@@ -24,7 +24,7 @@ while true; do # status bar
 done &
 
 # run once
-xrdb ~/.Xresources &
+xrdb ~/.Xresources
 feh --no-fehbg --bg-fill --randomize ~/Pictures/active/* &
 ~/Scripts/xload.sh vert bottom-right &
 
