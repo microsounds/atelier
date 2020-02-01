@@ -23,9 +23,13 @@ for f in $(echo "$info" | head -1); do
 		HEAD) # detached HEAD mode
 			branch="$(cut -c -7 "$repo/.git/HEAD")" # unnamed commit
 			tag="$(fgrep -rl "$branch" "$repo/.git/refs/tags")" # is this a tag?
+			if [ -f "$repo/.git/packed-refs" ]; then # aggressively packed
+				tag="$tag$(grep "$branch.*refs/tags" "$repo/.git/packed-refs")"
+			fi
 			[ ! -z "$tag" ] && branch="${tag##*/}";;
 		No) # no branches exist or branch named 'No'
-			[ ! -z "$(ls "$repo/.git/refs/heads")" ] && branch="$f" || branch="<new>";;
+			[ -z "$(ls "$repo/.git/refs/heads")" ] &&
+			[ ! -f "$repo/.git/packed-refs" ] && branch="(init)" || branch="$f";;
 		*) # normal mode
 			branch="$f" # obtain upstream info if available
 			for g in $(echo "$info" | tail -n +3); do
