@@ -13,7 +13,7 @@
 if [ ! -z "$1" ] && [ "$(echo "$1" | cut -c 1)" = '-' ]; then
 	for f in $(echo "$1" | sed 's/./& /g'); do
 		case $f in
-			e) CTAGS=1;;
+			e) ctags=1;;
 			h) grep '^##' "$0" | sed 's/^## //' 1>&2;;
 		esac
 	done
@@ -31,7 +31,7 @@ jump_to() {
 	exit
 }
 
-if [ ! -z "$CTAGS" ]; then
+if [ ! -z "$ctags" ]; then
 	# find root directory containing ctags file
 	# all filenames are relative to this directory
 	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
