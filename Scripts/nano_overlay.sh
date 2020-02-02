@@ -10,11 +10,11 @@
 ##  -h              displays this help message.
 
 # overlay command line options
-if [ ! -z "$1" ] && [ $(echo "$1" | cut -c 1) = '-' ]; then
+if [ ! -z "$1" ] && [ "$(echo "$1" | cut -c 1)" = '-' ]; then
 	for f in $(echo "$1" | sed 's/./& /g'); do
 		case $f in
 			e) CTAGS=1;;
-			h) grep '^##' "$0" | sed 's/^## //' 1>&2
+			h) grep '^##' "$0" | sed 's/^## //' 1>&2;;
 		esac
 	done
 fi
@@ -27,7 +27,7 @@ jump_to() {
 	fi
 	file="$(echo "$1" | cut -f2)"
 	line="$(echo "$1" | cut -f3 | egrep -o '[0-9]+')"
-	command nano +$line "$PWD/$file"
+	command nano "+$line" "$PWD/$file"
 	exit
 }
 
@@ -41,13 +41,13 @@ if [ ! -z "$CTAGS" ]; then
 	fi
 	[ -z "$2" ] && echo "Enter a tag query." && exit 1
 	for matches in "$(grep -i "^$2" "$PWD/tags")"; do
-		[ -z "$matches" ] && echo "No matches found." && exit 1
+		[ -z "$matches" ] && echo "No matches found for '$2'." && exit 1
 		for num in $(echo "$matches" | wc -l); do
 			if [ "$num" -gt 1 ]; then # multiple matches
 				if [ ! -z "$3" ]; then
 					[ "$3" -eq "$3" ] 2> /dev/null && # validate
 					[ "$3" -le "$num" ] &&
-					jump_to "$(echo "$matches" | tail -n +$3 | head -1)"
+					jump_to "$(echo "$matches" | tail -n "+$3" | head -1)"
 				fi
 				echo "Select a match or be more specific."
 				echo "$matches" | nl | fold -w 80
