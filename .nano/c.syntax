@@ -1,7 +1,7 @@
 ## ~/.nano/c.syntax: syntax overrides for C-like languages
 
 ## function names
-color cyan "[A-Za-z_][0-9A-Za-z]*[[:space:]]*\("
+color cyan "[A-Za-z_][0-9A-Za-z_]+[[:space:]]*\("
 
 ## operators
 color white "[-+/*=<>?.,:;~%!&|^(){}]" "\[" "\]"
