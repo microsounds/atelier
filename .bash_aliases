@@ -40,7 +40,7 @@ nano() {
 		[ $(($(date '+%s') - $(stat -c '%Y' "$hist"))) -gt 300 ] &&
 		rm "$hist"
 	done
-	command nano $@
+	~/Scripts/nano_overlay.sh "$@"
 }
 
 # man-like behavior for shell built-in documentation
