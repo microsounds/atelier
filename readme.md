@@ -19,8 +19,8 @@
 	* Do _**NOT**_ track files that require root permissions unless you want to be root for every checkout and pull.
 
 # Comforts
-sudo git gcc make ctags m4 xorg wmctrl xclip xbacklight xdiskusage sxhkd acpi rxvt-unicode-256color
-htop nnn screenfetch mpv suckless-tools bluez pulseaudio pulseaudio-module-bluetooth alsa-utils
+sudo git gcc make ctags m4 xorg wmctrl xclip xbacklight xdiskusage sxhkd acpi chromium suckless-tools
+rxvt-unicode-256color htop nnn screenfetch mpv bluez pulseaudio pulseaudio-module-bluetooth alsa-utils
 ssh-askpass network-manager sshfs pmount feh ffmpeg curl progress qrencode optipng jpegoptim vrms
 fonts-liberation fonts-dejima-mincho fonts-noto-mono fonts-vlgothic
-libx11-dev libxft-dev libxinerama-dev libgtk-3-0
+libx11-dev libxft-dev libxinerama-dev
