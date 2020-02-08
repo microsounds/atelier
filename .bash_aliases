@@ -1,7 +1,14 @@
 # ~/.bash_aliases: executed by bash(1) for non-login shells.
 
+# display manager
+# start X on login, logout after X exits
+if [ "$(tty)" = '/dev/tty1' ]; then
+	exec startx > /dev/null 2>&1
+fi
+
 # ctags
 export CTAGS='-n -R'
+
 # set terminal prompt
 PROMPT_COMMAND=set_prompt
 set_prompt() {
