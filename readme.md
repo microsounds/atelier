@@ -1,26 +1,25 @@
 [scrot]: https://i.imgur.com/VkmRvWr.png
 [miku]: https://i.imgur.com/Nr7HV9a.png
-# ![miku] _a t e l i e r quick start~♪_ ![miku]
+# ![miku] _a t e l i e r_ ![miku]
 ![scrot]
 > _Setup: Debian stable, vanilla Xorg, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
-* Install `git`, `gcc` and `make` at the bare minimum.
-	* _Hint: `apt-get install $(tail -5 readme.md)`_
+# Quick start
+* Bootstrap the system by installing `git`.
 * `git clone --bare [remote] ~/Git/atelier`
 * `git --git-dir=$HOME/Git/atelier --work-tree=$HOME checkout .gitconfig`
 * `git root reset --hard` to restore configuration automatically.
-	* _Changes to `~/.profile` won't take effect until you log back in._
+* `cat ~/.packages | xargs apt-get install` to install everything else.
 * Run `~/.config/dwm/install.sh` to automatically build and install `dwm`.
 	* _X starts automatically on `tty1`, you will be kicked if `dwm` isn't installed._
+* `source .bashrc` to finish.
+
+# Using `git` for managing dotfiles
+The git alias _`root`_ treats the home directory as a detached work-tree belonging to bare repo `~/Git/atelier`, effectively turning the home directory into a git repository.
+* Tracked files can be edited, versioned, reverted and synchronized in-place.
+	* _This negates the need for symlinking, synchronizing copies stored in a seperate repo, etc._
+* Untracked files are ignored by default.
+	* _This is not helpful behavior when tracking only specific files in the home directory._
 
 # Notes
-* `git root` is an alias for working with bare repo `~/Git/atelier` with the work-tree set to the home directory.
-	* Absolute filenames can be tracked if the work-tree is set to filesystem root.
-	* Do _**NOT**_ track files that require root permissions unless you want to be root for every checkout and pull.
-
-# Comforts
-sudo git gcc make ctags m4 xorg wmctrl xclip xbacklight xdiskusage sxhkd acpi chromium suckless-tools
-rxvt-unicode-256color htop nnn screenfetch mpv bluez pulseaudio pulseaudio-module-bluetooth alsa-utils
-ssh-askpass network-manager sshfs pmount feh ffmpeg curl progress qrencode optipng jpegoptim vrms
-fonts-liberation fonts-dejima-mincho fonts-noto-mono fonts-vlgothic
-libx11-dev libxft-dev libxinerama-dev
+* See __[~/.packages](.packages)__ for the full list of required packages.
