@@ -7,10 +7,10 @@
 # Quick start
 * Bootstrap the system by installing `git`.
 * `git clone --bare [remote] ~/Git/atelier`
-* `git --git-dir=$HOME/Git/atelier --work-tree=$HOME checkout .gitconfig`
-* `git root reset --hard` to restore configuration automatically.
-* `cat ~/.packages | xargs apt-get install` to install everything else.
-* Run `~/.config/dwm/install.sh` to automatically build and install `dwm`.
+* `git --git-dir=$HOME/Git/atelier --work-tree=$HOME reset --hard`
+	* _Restores configuration automatically._
+* `cat ~/.packages | xargs apt-get install -y` to install everything else.
+* Run `~/.config/dwm/install.sh` to build and install `dwm`.
 	* _X starts automatically on `tty1`, you will be kicked if `dwm` isn't installed._
 * `source .bashrc` to finish.
 
