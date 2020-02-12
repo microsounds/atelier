@@ -1,15 +1,6 @@
-# ~/.bash_aliases: executed by bash(1) for non-login shells.
+## ~/.bashrc: executed by bash(1) for non-login shells.
 
-# display manager
-# start X on login, logout after X exits
-if [ "$(tty)" = '/dev/tty1' ]; then
-	exec startx > /dev/null 2>&1
-fi
-
-# ctags
-export CTAGS='-n -R'
-
-# set terminal prompt
+## set terminal prompt
 PROMPT_COMMAND=set_prompt
 set_prompt() {
 	c='\[\e[1;34m\]' # path color
@@ -26,13 +17,17 @@ set_prompt() {
 		# <prefix>/±repo:branch*/<suffix>
 		path="${c}${prefix}${r}${git_info}${c}${suffix}${r}"
 	fi
-	# override $PS1 described in .bashrc
+	# set prompt
 	PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:${path}\$ "
 	# update titlebar
 	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
 }
 
-# useful functions
+## useful aliases
+alias ls='ls --color=auto'
+alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
+
+## useful functions
 # GNU nano housekeeping routines
 nano() {
 	share='/usr/share/nano'
@@ -61,9 +56,6 @@ shell() {
 		echo "Which command?"
 	fi
 }
-
-# force make to use multithreading by default
-alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
 
 # spawns QR code (typically containing a URL)
 qr() { qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | feh - -Z --force-aliasing; }

@@ -12,7 +12,7 @@
 * `cat ~/.packages | xargs apt-get install -y` to install everything else.
 * Run `~/.config/dwm/install.sh` to build and install `dwm`.
 	* _X starts automatically on `tty1`, you will be kicked if `dwm` isn't installed._
-* `source .bashrc` to finish.
+* Log back in to finish.
 
 # Using `git` for managing dotfiles
 The git alias _`root`_ treats the home directory as a detached work-tree belonging to bare repo `~/Git/atelier`, effectively turning the home directory into a git repository.
