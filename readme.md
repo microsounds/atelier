@@ -9,7 +9,7 @@
 * `git clone --bare [remote] ~/Git/atelier`
 * `git --git-dir=$HOME/Git/atelier --work-tree=$HOME reset --hard`
 	* _Restores configuration automatically, run `exec bash` to reload the environment._
-* `cat ~/.packages | xargs apt-get install -y` to install everything else.
+* `cat ~/.pkgs | xargs apt-get install -y` to install everything else.
 * Run `~/.config/dwm/install.sh` to build and install `dwm`.
 	* _`xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed._
 
@@ -21,4 +21,4 @@ The git alias _`root`_ treats the home directory as a detached work-tree belongi
 	* _This is unwanted behavior when tracking only specific files in the home directory._
 
 # Notes
-* See __[~/.packages](.packages)__ for the full list of required packages.
+* See __[~/.pkgs](.pkgs)__ for the full list of required packages.
