@@ -1,5 +1,7 @@
 acpi
 alsa-utils
+bash
+bash-completion
 bluez
 chromium
 ctags
@@ -20,6 +22,7 @@ libxinerama-dev
 m4
 make
 mpv
+nano
 network-manager
 nnn
 optipng
@@ -29,13 +32,16 @@ pulseaudio
 pulseaudio-module-bluetooth
 qrencode
 rxvt-unicode
+screen
 screenfetch
 ssh-askpass
 sshfs
 suckless-tools
 sudo
 sxhkd
+task-laptop
 vrms
+wget
 wmctrl
 xbacklight
 xclip
