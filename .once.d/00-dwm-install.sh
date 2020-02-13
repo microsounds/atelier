@@ -4,9 +4,11 @@
 
 VER='6.2'
 
+echo "$0"
 cd ~/.config/dwm
 git init
 git remote add origin 'https://git.suckless.org/dwm'
-git fetch --tags origin master
-git checkout "$VER"
-sudo make install -j $(grep -c 'proc' /proc/cpuinfo)
+if git fetch --tags origin master; then
+	git checkout "$VER"
+	sudo make install -j $(grep -c 'proc' /proc/cpuinfo)
+fi

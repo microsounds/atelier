@@ -5,13 +5,14 @@
 > _Setup: Debian stable, vanilla Xorg, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
-* On a fresh install, install `git`.
+* Install `sudo`, add yourself to `/etc/sudoers`, and install `git`.
 * `git clone --bare [remote] ~/Git/atelier`
 * `git --git-dir=$HOME/Git/atelier --work-tree=$HOME reset --hard`
 	* _Restores configuration automatically, run `exec bash` to reload the environment._
-* `cat ~/.pkgs | xargs apt-get install -y` to install everything else.
-* Run `~/.config/dwm/install.sh` to build and install `dwm`.
-	* _`xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed._
+* `cat ~/.pkgs | xargs apt-get install -y` to install essential packages.
+* Run scripts in `~/.once.d` to build and install `dwm`, among other things.
+	* _`for f in ~/.once.d/*; do $f; done`_
+* `xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed.
 
 # Using `git` for managing dotfiles
 The git alias _`root`_ treats the home directory as a detached work-tree belonging to bare repo `~/Git/atelier`, effectively turning the home directory into a git repository.
