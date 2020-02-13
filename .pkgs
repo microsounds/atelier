@@ -5,6 +5,7 @@ bluez
 chromium
 ctags
 curl
+dconf-cli
 feh
 ffmpeg
 fonts-dejima-mincho
