@@ -38,9 +38,9 @@ static const int resizehints = 0;    /* 1 means respect size hints in tiled resi
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "堅い",      tile },    /* tiling */
-	{ "浮く",      NULL },    /* floating */
-	{ "[M]",      monocle },
+	{ "堅い",      tile },
+	{ "中心",      monocle },
+	{ "浮く",      NULL },
 };
 
 /* built-in commands */
@@ -90,8 +90,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 /* layout modes */
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|SHIFT,                 XK_space,  togglefloating, {0} },
 /* change window tags */
