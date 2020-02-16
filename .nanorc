@@ -5,7 +5,7 @@ include "/usr/share/nano/*.nanorc"
 include "~/.nano/*.nanorc"
 
 ## comments
-extendsyntax c comment "/*|*/"
+extendsyntax c comment "/* | */"
 extendsyntax autoconf comment "dnl ## "
 
 ## key bindings

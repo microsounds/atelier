@@ -19,7 +19,10 @@ static const char *colors[][3]= {
 };
 
 /* tagging */
-static const char *tags[] = { "あ", "か", "さ", "た", "な" }; /* はまやらわ */
+static const char *tags[] = {
+	"あ", "か", "さ", "た", "な",
+/* 	"は", "ま", "や", "ら", "わ" */
+};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -34,7 +37,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const int resizehints = 0;    /* 1 means respect size hints in tiled resize */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -59,6 +62,7 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 /* command macros */
 #define TERM "urxvtc"
 #define SHCMD(cmd) {.v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+/*	 modifier                       key       function        argument */
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|CTRL,                  KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -66,7 +70,6 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 	{ MODKEY|CTRL|SHIFT,            KEY,      toggletag,      {.ui = 1 << TAG} },
 
 static Key keys[] = {
-	/* modifier                     key        function        argument */
 /* basic */
 	{ CTRL|SHIFT,                   XK_q,      quit,           {0} },
 	{ MODKEY|SHIFT,                 XK_q,      quit,           {0} },
