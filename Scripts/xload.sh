@@ -25,12 +25,12 @@ done
 
 # launch from list
 for prog in $LIST; do
-	if ! ps -xc | grep "$prog" > /dev/null; then
-		$prog &
-		while ! wmctrl -l | grep "$prog" > /dev/null; do
-			: # keep spinning
-		done
-	fi
+	ps -e | fgrep -q "$prog" || $prog &
+done
+
+# positioning
+for prog in $LIST; do
+	while ! wmctrl -l | fgrep -q "$prog"; do :; done # waste time
 	win_id=$(wmctrl -l | grep "$prog" | egrep -o '0x[0-9a-f]+')
 	wmctrl -i -r "$win_id" -b add,skip_taskbar,skip_pager
 	wmctrl -i -r "$win_id" -b add,sticky,bottom
