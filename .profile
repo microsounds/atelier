@@ -1,8 +1,5 @@
 ## ~/.profile: executed by the command interpreter for login shells.
 
-## environment variables
-export CTAGS='-n -R'
-
 # ~/.local/bin
 for f in "$HOME/.local/bin"; do
 	[ -d "$f" ] && PATH="$f:$PATH"

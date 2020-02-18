@@ -27,6 +27,9 @@ __set_prompt() {
 	unset c r path git_info topdir suffix prefix
 }
 
+## environment variables
+export CTAGS='-n -R'
+
 ## useful aliases
 alias ls='ls --color=auto'
 alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
