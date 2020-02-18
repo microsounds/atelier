@@ -14,6 +14,7 @@ fi
 
 ## display manager
 # start X on login, logout after X exits
+startx() { command startx -- -config "$HOME/.config/xorg/xorg.conf"; }
 if [ "$(tty)" = '/dev/tty1' ]; then
 	exec startx > /dev/null 2>&1
 fi
