@@ -16,6 +16,7 @@ gcc
 git
 htop
 jpegoptim
+libnss-mdns
 libx11-dev
 libxft-dev
 libxinerama-dev
