@@ -17,11 +17,10 @@ done
 
 # daemons
 sxhkd &
-urxvtd -q -o -f
-while true; do # status bar
-	xsetroot -name " $(~/Scripts/dwm_status.sh) "
+ps -e | fgrep -q "urxvtd" || urxvtd -o -f -q
+while xsetroot -name " $(~/Scripts/dwm_status.sh) "; do
 	sleep 10
-done &
+done & # status bar
 
 # run once
 xrdb ~/.Xresources
