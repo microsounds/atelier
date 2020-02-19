@@ -4,9 +4,12 @@
 ## keyboard
 sxhkd="default"
 
+# caps lock
+setxkbmap -option 'caps:super'
+
 # chromebook keyboard layout
 if [ "$(cat /sys/devices/virtual/dmi/id/sys_vendor)" = 'GOOGLE' ]; then
-	xkbcomp ~/Scripts/chromebook.xkb $DISPLAY > /dev/null 2>&1
+	xkbcomp -merge ~/Scripts/chromebook.xkb $DISPLAY > /dev/null 2>&1
 	sxhkd="$sxhkd chromebook"
 fi
 
@@ -15,9 +18,6 @@ rm ~/.config/sxhkd/sxhkdrc
 for f in $sxhkd; do
 	cat ~/.config/sxhkd/$f >> ~/.config/sxhkd/sxhkdrc
 done
-
-# caps lock
-setxkbmap -option 'caps:super'
 
 ## daemons
 sxhkd &
