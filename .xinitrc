@@ -28,7 +28,7 @@ done & # status bar
 
 ## run once
 xrdb ~/.Xresources
-cat ~/.config/dconf/user.conf | dconf load '/' &
+dconf load '/' < ~/.config/dconf/user.conf &
 feh --no-fehbg --bg-fill --randomize ~/Pictures/active/* &
 ~/Scripts/xload.sh vert bottom-right &
 

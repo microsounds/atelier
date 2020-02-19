@@ -5,7 +5,7 @@ HISTCONTROL=ignoredups
 
 # bash-completion
 for f in '/usr/share/bash-completion/bash_completion'; do
-	[ ! -z "$PS1" ] && [ -f "$f" ] && source "$f"
+	[ ! -f "$f" ] || source "$f"
 done; unset f
 
 # set terminal prompt
