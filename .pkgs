@@ -1,6 +1,7 @@
 acpi
 alsa-utils
 bash
+bash-completion
 bluez
 chromium
 ctags

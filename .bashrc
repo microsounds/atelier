@@ -3,6 +3,11 @@
 ## bash specific
 HISTCONTROL=ignoredups
 
+# bash-completion
+for f in '/usr/share/bash-completion/bash_completion'; do
+	[ ! -z "$PS1" ] && [ -f "$f" ] && source "$f"
+done; unset f
+
 # set terminal prompt
 PROMPT_COMMAND=__set_prompt
 __set_prompt() {
