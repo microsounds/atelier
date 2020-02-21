@@ -13,8 +13,8 @@ if [ ! -z "$BASH_VERSION" ]; then
 fi
 
 ## display manager
+# provide user-specific X configuration
 # start X on login, logout after X exits
-startx() { command startx -- -config "$HOME/.config/xorg/xorg.conf"; }
 if [ "$(tty)" = '/dev/tty1' ]; then
-	exec startx > /dev/null 2>&1
+	exec startx -- -config "$HOME/.config/xorg/xorg.conf" > /dev/null 2>&1
 fi
