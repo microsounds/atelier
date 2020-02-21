@@ -12,9 +12,13 @@ if [ ! -z "$BASH_VERSION" ]; then
 	done
 fi
 
-## display manager
-# provide user-specific X configuration
+## Xorg server / display manager
+
+# intel graphics override
+lspci | fgrep 'VGA' | fgrep -q 'Intel' && rc='intel'
+
 # start X on login, logout after X exits
 if [ "$(tty)" = '/dev/tty1' ]; then
-	exec startx -- -config "$HOME/.config/xorg/xorg.conf" > /dev/null 2>&1
+	[ ! -z "$rc" ] && rc="-- -config $HOME/.config/xorg/$rc.conf"
+	exec startx $rc > /dev/null 2>&1
 fi
