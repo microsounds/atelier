@@ -1,22 +1,17 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
-## keyboard
-sxhkd="default"
+## hardware detection
+[ "$(cat /sys/devices/virtual/dmi/id/sys_vendor)" = 'GOOGLE' ] && layout='chromebook'
 
-# caps lock
+## set keybindings and keyboard layout
 setxkbmap -option 'caps:super'
-
-# chromebook keyboard layout
-if [ "$(cat /sys/devices/virtual/dmi/id/sys_vendor)" = 'GOOGLE' ]; then
-	xkbcomp -merge ~/Scripts/chromebook.xkb $DISPLAY > /dev/null 2>&1
-	sxhkd="$sxhkd chromebook"
-fi
-
-# keybindings
 rm ~/.config/sxhkd/sxhkdrc
-for f in $sxhkd; do
+for f in default $layout; do
 	cat ~/.config/sxhkd/$f >> ~/.config/sxhkd/sxhkdrc
+	if [ -f ~/.config/xkb/$f.xkb ]; then
+		xkbcomp -merge ~/.config/xkb/$f.xkb $DISPLAY > /dev/null 2>&1
+	fi
 done
 
 ## daemons
