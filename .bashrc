@@ -36,7 +36,7 @@ __set_prompt() {
 export CTAGS='-n -R'
 
 ## useful aliases
-alias ls='ls --color=auto'
+alias ls='ls -N --color=auto'
 alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
 
 ## useful functions
