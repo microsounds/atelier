@@ -11,9 +11,9 @@ done; unset f
 # set terminal prompt
 PROMPT_COMMAND=__set_prompt
 __set_prompt() {
-	c='\[\e[1;34m\]' # path color
+	u='\[\e[1;32m\]' # user/hostname color
+	p='\[\e[1;34m\]' # path color
 	r='\[\e[0m\]' # reset
-	path="${c}\w${r}"
 	# is this a git worktree?
 	if git_info="$(~/Scripts/git_status.sh -e)"; then # expand path
 		topdir="$(git rev-parse --show-toplevel)"
@@ -23,13 +23,13 @@ __set_prompt() {
 			prefix="~${prefix##"$HOME"}" # relative path ~/
 		fi
 		# <prefix>/±repo:branch*/<suffix>
-		path="${c}${prefix}${r}${git_info}${c}${suffix}${r}"
+		path="${p}${prefix}${r}${git_info}${p}${suffix}${r}"
 	fi
 	# set prompt and update titlebar
-	PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:${path}\$ "
+	PS1="${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
 	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
 	# affects global state, cannot subshell
-	unset c r path git_info topdir suffix prefix
+	unset u p r path git_info topdir suffix prefix
 }
 
 ## environment variables
