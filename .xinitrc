@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
-## hardware detection
-[ "$(cat /sys/devices/virtual/dmi/id/sys_vendor)" = 'GOOGLE' ] && layout='chromebook'
+## hardware overrides
+read vendor < /sys/devices/virtual/dmi/id/sys_vendor
+[ "$vendor" = 'GOOGLE' ] && layout='chromebook'
 
 ## set keybindings and keyboard layout
 setxkbmap -option 'caps:super'

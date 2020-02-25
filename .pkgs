@@ -7,6 +7,7 @@ chromium
 ctags
 curl
 dconf-cli
+dtach
 feh
 ffmpeg
 fonts-dejima-mincho
@@ -34,7 +35,6 @@ pulseaudio
 pulseaudio-module-bluetooth
 qrencode
 rxvt-unicode
-screen
 screenfetch
 ssh-askpass
 sshfs

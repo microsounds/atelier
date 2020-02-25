@@ -14,7 +14,7 @@ fi
 
 ## Xorg server / display manager
 
-# intel graphics override
+# hardware overrides
 lspci | fgrep 'VGA' | fgrep -q 'Intel' && rc='intel'
 
 # start X on login, logout after X exits
