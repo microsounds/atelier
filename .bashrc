@@ -59,14 +59,15 @@ nano() (
 	~/Scripts/nano_overlay.sh "$@"
 )
 
-# man-like behavior for shell built-in documentation
-shell() (
-	if [ ! -z "$1" ]; then # apply bold decoration
-		man="$(help -m "$1" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
-		[ ! -z "$man" ] && printf "%b\n" "$man" | less -R
-	else
-		echo "Which command?"
-	fi
+# shell documentation man pages
+help() (
+	[ -z "$1" ] && command help
+	for f in $@; do # decorate bold text
+		if page="$(command help -m "$f")"; then
+			printf "$(echo "$page" | \
+			sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')" | less -R
+		fi
+	done
 )
 
 # spawns QR code (typically containing a URL)
