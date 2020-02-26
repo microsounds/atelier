@@ -47,13 +47,15 @@ nano() (
 	# override syntax for specific languages
 	for f in c javascript; do
 		if [ "$rc/c.syntax" -nt "$rc/$f.nanorc" ]; then
-			sed "/syntax/r $rc/c.syntax" "$share/$f.nanorc" > "$rc/$f.nanorc"
+			sed "/syntax/r $rc/c.syntax" \
+			    "$share/$f.nanorc" > "$rc/$f.nanorc"
 		fi
 	done
 	# purge filepos history if older than 5 minutes
 	for hist in "$rc/filepos_history"; do
 		[ -f "$hist" ] &&
-		[ $(($(date '+%s') - $(stat -c '%Y' "$hist"))) -gt 300 ] &&
+		[ $(($(date '+%s') - \
+		     $(stat -c '%Y' "$hist"))) -gt 300 ] &&
 		rm "$hist"
 	done
 	~/Scripts/nano_overlay.sh "$@"
@@ -72,7 +74,8 @@ help() (
 
 # spawns QR code (typically containing a URL)
 qr() (
-	qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | feh - -Z --force-aliasing;
+	qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | \
+	feh - -Z --force-aliasing;
 )
 
 # check for updates
