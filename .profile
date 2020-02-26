@@ -2,7 +2,8 @@
 
 # ~/.local/bin
 for f in "$HOME/.local/bin"; do
-	[ -d "$f" ] && PATH="$f:$PATH"
+	PATH="$f:$PATH"
+	[ ! -d "$f" ] && mkdir "$f"
 done
 
 # is this a bash session?
@@ -13,7 +14,6 @@ if [ ! -z "$BASH_VERSION" ]; then
 fi
 
 ## Xorg server / display manager
-
 # hardware overrides
 lspci | fgrep 'VGA' | fgrep -q 'Intel' && rc='intel'
 
