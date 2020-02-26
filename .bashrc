@@ -61,6 +61,18 @@ nano() (
 	~/Scripts/nano_overlay.sh "$@"
 )
 
+# move up to nearest non-empty directory
+cd() {
+	if [ "$1" = '...' ]; then
+		while true; do
+			command cd .. && echo "$PWD"
+			[ "$PWD" != '/' ] &&
+			[ $(ls -l | grep -v '^d' | wc -l) -lt 2 ] || break
+		done; return
+	fi
+	command cd "$@"
+}
+
 # shell documentation man pages
 help() (
 	[ -z "$1" ] && command help
