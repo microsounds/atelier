@@ -1,4 +1,4 @@
-[scrot]: https://i.imgur.com/VkmRvWr.png
+[scrot]: https://i.imgur.com/0peU7Ia.png
 [miku]: https://i.imgur.com/Nr7HV9a.png
 # ![miku] _a t e l i e r_ ![miku]
 ![scrot]
