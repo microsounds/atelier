@@ -5,6 +5,11 @@
 _='・' # separator
 fan_data='/proc/acpi/ibm/fan' # thinkpad acpi
 
+# -p for extra padding
+for f in $(echo "$@" | sed 's/./& /g'); do
+	case $f in p) PAD=' ';; esac
+done
+
 # devices with active cooling and/or temperature sensors only
 TEMP="$(acpi -tf | egrep -o '([0-9]+\.?){2}')"
 if [ ! -z "$TEMP" ]; then
@@ -50,4 +55,4 @@ for day in $(date '+%-e'); do
 	esac
 done
 DATE="$(date '+%a, %b') $day"
-echo "${FAN:+${FAN}$_}${NET}$_${BAT}$_${VOL}$_${DATE}$_${TIME}"
+echo "${PAD}${FAN:+${FAN}$_}${NET}$_${BAT}$_${VOL}$_${DATE}$_${TIME}${PAD}"
