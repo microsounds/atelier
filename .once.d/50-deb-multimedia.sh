@@ -2,7 +2,7 @@
 
 # adds deb-multimedia repos
 
-TMP="/tmp/$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 7)"
+TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
 SOURCE='http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
 DEB='deb-multimedia-keyring_2016.8.1_all.deb'
 APT='/etc/apt/sources.list'
@@ -26,6 +26,7 @@ EOF
 mkdir -v "$TMP"
 if wget "$SOURCE/$DEB" -O "$TMP/$DEB"; then
 	sudo dpkg -i "$TMP/$DEB"
+	sudo apt-get update
 fi
 finish
 

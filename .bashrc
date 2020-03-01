@@ -32,12 +32,10 @@ __set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
-## environment variables
-export CTAGS='-n -R'
-
 ## useful aliases
 alias ls='ls --color --literal --group-directories-first'
 alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
+alias ctags='ctags -n -R'
 
 ## useful functions
 # GNU nano housekeeping routines

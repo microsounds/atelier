@@ -18,7 +18,7 @@ FPS=60 # 25
 CORES=$(grep -c '^proc' /proc/cpuinfo)
 RES=$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | sed -n 1p)
 FINAL="$(date '+Screenshot - %m%d%Y - %r').webm"
-TEMP="/tmp/$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 10).mp4"
+TEMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 10).mp4"
 
 info() { echo "\e[1;${1}m${2}\e[0m"; }
 
