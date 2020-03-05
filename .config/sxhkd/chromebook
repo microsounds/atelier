@@ -1,5 +1,8 @@
 # ~/.config/sxhkd/chromebook: chromebook specific hotkeys
 
+# switch displays
+super + F5
+	~/Scripts/xrandr_cycle.sh
 # brightness
 super + {F6,F7}
 	xbacklight -time 50 -{dec,inc} 10

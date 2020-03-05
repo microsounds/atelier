@@ -10,6 +10,8 @@ super + Escape
 # wm independent hotkeys
 super + Return
 	urxvtc
+XF86Display
+	~/Scripts/xrandr_cycle.sh
 XF86MonBrightness{Down,Up}
 	xbacklight -time 50 -{dec,inc} 10
 XF86Audio{Mute,LowerVolume,RaiseVolume}

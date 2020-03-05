@@ -22,10 +22,12 @@ while xsetroot -name "$(~/Scripts/dwm_status.sh -p)"; do
 	sleep 10
 done & # status bar
 
-## run once
+## configuration
 xrdb ~/.Xresources
 dconf load '/' < ~/.config/dconf/user.conf &
-feh --no-fehbg --bg-fill --randomize ~/Pictures/active/* &
-~/Scripts/xload.sh vert bottom-right &
+for f in ~/Scripts/desktop_rice.sh; do # callback script
+	xeventbind 'resolution' $f &
+	$f &
+done
 
 exec dwm
