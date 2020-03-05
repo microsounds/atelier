@@ -3,6 +3,8 @@
 # desktop rice script
 # also functions as a callback script on resolution change
 
-xsetroot -gray
-feh --no-fehbg --bg-fill --randomize ~/Pictures/active/* &
+bg="$(find ~/Pictures/active | shuf | head -1)"
+
+xsetroot -gray # reset wallpaper
+feh --no-fehbg --bg-fill "$bg" &
 ~/Scripts/xload.sh vert bottom-right &

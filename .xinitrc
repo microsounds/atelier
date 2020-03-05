@@ -17,7 +17,7 @@ done
 
 ## daemons
 sxhkd &
-ps -e | fgrep -q "urxvtd" || urxvtd -o -f -q
+ps -e | fgrep -q 'urxvtd' || urxvtd -o -f -q
 while xsetroot -name "$(~/Scripts/dwm_status.sh -p)"; do
 	sleep 10
 done & # status bar

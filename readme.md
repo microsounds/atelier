@@ -12,7 +12,8 @@
 * `cat ~/.pkgs | xargs apt-get install -y` to install essential packages.
 * Run scripts in `~/.once.d` to build and install `dwm`, among other things.
 	* _`for f in ~/.once.d/*; do $f; done`_
-* `xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed.
+* Reboot before continuing.
+	* _`xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed._
 
 # Using `git` for managing dotfiles
 The git alias _`root`_ treats the home directory as a detached work-tree belonging to bare repo `~/Git/atelier`, effectively turning `$HOME` into a git repository.
