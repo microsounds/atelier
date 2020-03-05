@@ -36,6 +36,7 @@ __set_prompt() {
 alias ls='ls --color --literal --group-directories-first'
 alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
 alias ctags='ctags -n -R'
+alias feh='feh -.'
 
 ## useful functions
 # GNU nano housekeeping routines
@@ -90,7 +91,7 @@ qr() (
 
 # check for updates
 update() (
-	for f in update dist-upgrade autopurge autoclean clean; do
+	for f in update dist-upgrade autopurge clean; do
 		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f
 	done
 )
