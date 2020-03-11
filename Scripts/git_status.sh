@@ -43,11 +43,14 @@ for f in $(echo "$info" | head -1); do
 	esac
 done
 
-# index/work-tree state
+# index/worktree state
 color="$clean" # default
 state="$(echo "$data" | tail -n +2 | cut -c -2)"
-[ ! -z "$(echo "$state" | cut -c 1 | tr -d '? ')" ] && color="$staged" && bits="$bits+"
-[ ! -z "$(echo "$state" | cut -c 2 | tr -d '? ')" ] && color="$dirty" && bits="$bits*"
+i=0; for f in index tree; do i=$((i + 1));
+	eval "$f=$(echo "$state" | cut -c $i | tr -d '? ')"
+done
+[ ! -z "$index" ] && color="$staged" && bits="$bits+"
+[ ! -z "$tree" ] && color="$dirty" && bits="$bits*"
 echo "$state" | grep -q '?' && color="$dirty" && bits="$bits%" # untracked files
 echo "$state" | grep -q 'U' && branch="<!>$branch" # merge conflict
 [ -f "$git_dir/refs/stash" ] && bits="^$bits" # stash exists
