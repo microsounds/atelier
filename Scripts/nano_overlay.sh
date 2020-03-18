@@ -92,7 +92,7 @@ mode_encrypt() {
 		tmp="/tmp/$f.$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
 		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
 		[ -f "$f" ] && file -b "$f" | grep -q "^$magic" && state='encrypted'
-		# no state - file is cleartext, ask to overwrite when finished
+		# no state - file is plaintext, ask to overwrite when finished
 
 		mesg_st "Password for '$f'${state:+ ($state)}: " && get_pass
 		if [ "$state" != 'encrypted' ]; then # verify password
@@ -110,15 +110,16 @@ mode_encrypt() {
 				rm -rf "$tmp"
 				exit 1
 			fi
+			init="$(sha256sum < "$tmp")" # monitor changes
 		fi
-		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file for editing
+		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
 		command nano "$tmp"
 		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # ask to overwrite original
 				mesg_st "Overwrite original file '$f'? (y/Y/yes): "
 				prompt_user && state='ok'
 			fi
-			if [ ! -z "$state" ]; then
+			if [ ! -z "$state" ] && [ "$init" != "$(sha256sum < "$tmp")" ]; then
 				xz -z < "$tmp" | openssl enc $cipher -pass "pass:$pass" -e > "$f"
 			fi
 			shred -z -u "$tmp"
