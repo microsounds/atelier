@@ -90,8 +90,9 @@ mode_encrypt() {
 	cipher='-aes-256-cbc -pbkdf2'
 	for f in "$@"; do
 		tmp="/tmp/$f.$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
-		[ ! -f "$f" ] && state='new file' # determine file state
+		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
 		[ -f "$f" ] && file -b "$f" | grep -q "^$magic" && state='encrypted'
+		# no state - file is cleartext, ask to overwrite when finished
 
 		mesg_st "Password for '$f'${state:+ ($state)}: " && get_pass
 		if [ "$state" != 'encrypted' ]; then # verify password
@@ -110,7 +111,7 @@ mode_encrypt() {
 				exit 1
 			fi
 		fi
-		[ -z "$state" ] && cp "$f" "$tmp" # existing, but unencrypted
+		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file for editing
 		command nano "$tmp"
 		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # ask to overwrite original
