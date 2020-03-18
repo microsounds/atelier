@@ -18,6 +18,7 @@ gcc
 git
 htop
 jpegoptim
+ledger
 libnss-mdns
 libx11-dev
 libxft-dev
@@ -28,6 +29,7 @@ mpv
 nano
 network-manager
 nnn
+openssl
 optipng
 pmount
 progress
@@ -49,3 +51,4 @@ xbacklight
 xclip
 xdiskusage
 xorg
+xz-utils

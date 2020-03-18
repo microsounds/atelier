@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.3
-## Overlay script that provides additional functionality for GNU nano.
+## nano_overlay.sh v0.4
+## Overlay script that provides interactive functionality for GNU nano.
 ##  -h              Displays this message.
 
-mesg() { echo "${mode:+[$mode] }$@"; }
+mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$@"; } # for prompts
+mesg() { mesg_st "$@"; printf '\n'; }
 
 mode_help() {
 	command nano "$@"
@@ -39,21 +40,21 @@ mode_ctags() {
 		mesg 'No index found in current or any parent directories up to /.'
 		exit 1
 	fi
-	[ -z "$2" ] && mesg 'Enter a tag query.' && exit 1
+	[ -z "$1" ] && mesg 'Enter a tag query.' && exit 1
 
 	# find matches based on first column
-	for f in $(cut -f1 < "$PWD/tags" | grep -i -n "$2" | cut -d ':' -f1); do
+	for f in $(cut -f1 < "$PWD/tags" | grep -i -n "$1" | cut -d ':' -f1); do
 		list="$list${f}p;"
 	done
 	matches="$(sed -n "$list" < "$PWD/tags")"
-	[ -z "$matches" ] && mesg "No matches found for $2." && exit 1
+	[ -z "$matches" ] && mesg "No matches found for $1." && exit 1
 
 	num="$(echo "$matches" | wc -l)"
 	if [ "$num" -gt 1 ]; then # multiple matches
-		if [ ! -z "$3" ]; then
-			[ "$3" -eq "$3" ] 2> /dev/null && # validate
-			[ "$3" -le "$num" ] &&
-			jump_to "$(echo "$matches" | tail -n "+$3" | head -1)"
+		if [ ! -z "$2" ]; then
+			[ "$2" -eq "$2" ] 2> /dev/null && # validate
+			[ "$2" -le "$num" ] &&
+			jump_to "$(echo "$matches" | tail -n "+$2" | head -1)"
 		fi
 		mesg 'Select a match or be more specific.'
 		echo "$matches" | nl | fold -w 80 && exit 1
@@ -62,16 +63,81 @@ mode_ctags() {
 }
 
 ## Open an encrypted file for editing using openssl(1).
-##  -f <filename>   Fill in documentation here.
+##  -f <filename>   Prompts the user for a encryption password.
+##                  Decrypts a file for editing, and encrypts it upon saving.
+##                  Creates file if it doesn't already exist.
+##                  If the file exists but isn't encrypted, user will be
+##                  prompted to overwrite the original file.
+
+get_pass() {
+	stty -echo # impure function
+	read -r pass && printf '\n'
+	stty echo
+}
+
+prompt_user() {
+	read -r res # expect a 'yes' response
+	case $res in
+		y | Y | yes) return 0;;
+		*) return 1
+	esac
+}
+
+mode_encrypt() {
+	mode='encrypt'
+	# global settings
+	magic='openssl'
+	cipher='-aes-256-cbc -pbkdf2'
+	for f in "$@"; do
+		tmp="/tmp/$f.$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+		[ ! -f "$f" ] && state='new file' # determine file state
+		[ -f "$f" ] && file -b "$f" | grep -q "^$magic" && state='encrypted'
+
+		mesg_st "Password for '$f'${state:+ ($state)}: " && get_pass
+		if [ "$state" != 'encrypted' ]; then # verify password
+			orig="$pass"
+			mesg_st "Verify password: " && get_pass
+			if [ "$orig" != "$pass" ]; then
+				mesg "Passwords do not match, exiting."
+				exit 1
+			fi
+			unset orig
+		fi
+		if [ "$state" = 'encrypted' ]; then
+			if ! openssl enc $cipher -pass "pass:$pass" -d < "$f" | xz -d > "$tmp"; then
+				mesg 'Invalid password, exiting.'
+				rm -rf "$tmp"
+				exit 1
+			fi
+		fi
+		[ -z "$state" ] && cp "$f" "$tmp" # existing, but unencrypted
+		command nano "$tmp"
+		if [ -f "$tmp" ]; then
+			if [ -z "$state" ]; then # ask to overwrite original
+				mesg_st "Overwrite original file '$f'? (y/Y/yes): "
+				prompt_user && state='ok'
+			fi
+			if [ ! -z "$state" ]; then
+				xz -z < "$tmp" | openssl enc $cipher -pass "pass:$pass" -e > "$f"
+			fi
+			shred -z -u "$tmp"
+		fi
+		unset pass state
+	done
+	exit
+}
 
 # overlay command line options
-if [ ! -z "$1" ] && [ "$(echo "$1" | cut -c 1)" = '-' ]; then
-	for f in $(echo "$1" | sed 's/./& /g'); do
-		case $f in
-			h) mode_help "$@";;
-			e) mode_ctags "$@";;
-		esac
-	done
+if [ ! -z "$1" ]; then # steal options not supported by GNU nano
+	if echo "$1" | grep -q '^-' && ! echo "$1" | grep -q '^--'; then
+		for f in $(echo "$1" | sed 's/./& /g'); do
+			case $f in
+				h) mode_help "$@";;
+				e) shift && mode_ctags "$@";;
+				f) shift && mode_encrypt "$@";;
+			esac
+		done
+	fi
 fi
 
 command nano "$@"

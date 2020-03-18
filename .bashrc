@@ -86,7 +86,7 @@ help() (
 # spawns QR code (typically containing a URL)
 qr() (
 	qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | \
-	feh - -Z --force-aliasing;
+	feh - -Z --force-aliasing
 )
 
 # check for updates
@@ -94,4 +94,15 @@ update() (
 	for f in update dist-upgrade autopurge clean; do
 		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f
 	done
+)
+
+# decrypts ledger file for viewing
+ledger() (
+	file="$HOME/.ledger.d/ledger.xz.enc"
+	tmp="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+	[ ! -f "$file" ] && echo "'$file' not found." && return
+	if openssl enc -aes-256-cbc -pbkdf2 -d < "$file" | xz -d > "$tmp"; then
+		[ ! -f "$tmp" ] || command ledger -f "$tmp" "$@"
+	fi
+	shred -z -u "$tmp"
 )
