@@ -96,13 +96,17 @@ update() (
 	done
 )
 
-# decrypts ledger file for viewing
+# optionally decrypts ledger file for viewing
 ledger() (
-	file="$HOME/.ledger.d/ledger.xz.enc"
-	tmp="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+	file="$HOME/.private.d/ledger.dat"
 	[ ! -f "$file" ] && echo "'$file' not found." && return
-	if openssl enc -aes-256-cbc -pbkdf2 -d < "$file" | xz -d > "$tmp"; then
-		[ ! -f "$tmp" ] || command ledger -f "$tmp" "$@"
+	if ! file -b "$file" | grep -q '^openssl'; then
+		command ledger -f "$file" "$@"
+	else
+		tmp="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+		if openssl enc -aes-256-cbc -pbkdf2 -d < "$file" | xz -d > "$tmp"; then
+			[ ! -f "$tmp" ] || command ledger -f "$tmp" "$@"
+		fi
+		shred -z -u "$tmp"
 	fi
-	shred -z -u "$tmp"
 )
