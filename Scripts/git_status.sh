@@ -31,12 +31,14 @@ for f in $(echo "$info" | head -1); do
 				tag="$tag$(grep "$branch.*refs/tags" "$git_dir/packed-refs")"
 			fi
 			[ ! -z "$tag" ] && branch="${tag##*/}";;
-		No) # no branches exist or branch named 'No'
+		No | Initial) # either no branches exist or unfortunate branch name
 			[ -z "$(ls "$git_dir/refs/heads")" ] &&
 			[ ! -f "$git_dir/packed-refs" ] && branch="(init)" || branch="$f";;
 		*) # normal mode
 			branch="$f" # obtain upstream info if available
-			for g in $(echo "$info" | tail -n +3); do
+			remote="$(echo "$info" | tail -n +3)"
+			[ "$remote" != 'gone' ] || break # upstream gone
+			for g in $remote; do
 				case $g in ahead) g=' +';; behind) g=' -';; esac
 				ups="$ups$g"
 			done
