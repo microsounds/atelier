@@ -6,6 +6,7 @@
 
 # Quick start
 * Install `sudo`, add yourself to the `sudo` group and install `git`.
+	* _Group membership changes apply upon next login._
 * `git clone --bare [remote] ~/Git/atelier`
 * `git --git-dir=$HOME/Git/atelier --work-tree=$HOME reset --hard`
 	* _Restores configuration automatically, run `exec bash` to reload the environment._
@@ -15,15 +16,16 @@
 * Reboot before continuing.
 	* _`xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed._
 
-# Using `git` for managing dotfiles
+# Notes
+## Managing dotfiles with `git root`
 The git alias _`root`_ treats the home directory as a detached work-tree belonging to bare repo `~/Git/atelier`, effectively turning `$HOME` into a git repository.
 * Tracked files can be edited, versioned, reverted and synchronized in-place.
 	* _This negates the need for symlinking, synchronizing copies stored in a seperate repo, etc._
 * Untracked files are ignored by default.
 	* _This is unwanted behavior when tracking only specific files in the home directory._
 
-# Notes
-* **Every effort is made to maintain a nominally reproducible GNU/Linux setup.**
+## System Configuration
+* **Every effort is made to maintain a reasonably reproducible GNU/Linux setup.**
 *  Use of local, user-specific dotfiles that don't touch system defaults are preferred.
 	* _Dotfiles in `$HOME` supersede any defaults stored in `/etc`, `/usr/share`, etc._
 * System-wide changes that bypass the package manager are avoided when possible.
