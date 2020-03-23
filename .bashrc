@@ -96,17 +96,11 @@ update() (
 	done
 )
 
-# optionally decrypts ledger file for viewing
+# decrypt ledger file for viewing
 ledger() (
+	export EDITOR='ledger -f'
+	export EXTERN_ARGS="$@"
 	file="$HOME/.private.d/ledger.dat"
 	[ ! -f "$file" ] && echo "'$file' not found." && return
-	if ! file -b "$file" | grep -q '^openssl'; then
-		command ledger -f "$file" "$@"
-	else
-		tmp="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
-		if openssl enc -aes-256-cbc -pbkdf2 -d < "$file" | xz -d > "$tmp"; then
-			[ ! -f "$tmp" ] || command ledger -f "$tmp" "$@"
-		fi
-		shred -z -u "$tmp"
-	fi
+	~/Scripts/nano_overlay.sh -f "$file"
 )

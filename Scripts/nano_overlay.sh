@@ -18,7 +18,7 @@ mode_help() {
 ##                  directory, search through it for '<tag>' and open the file
 ##                  containing it's definition.
 ##                  If multiple matches are found, specify line number <#>.
-##                  * Requires ctags '-n' flag for numeric line numbers.
+##                  ** Requires ctags '-n' flag for numeric line numbers.
 
 jump_to() {
 	if [ "$(echo "$1" | cut -f3 | cut -c 1-2)" = '/^' ]; then
@@ -62,12 +62,15 @@ mode_ctags() {
 	jump_to "$matches"
 }
 
-## Open an encrypted file for editing using openssl(1).
+## Open an xz(1) compressed and openssl(1) encrypted file for editing.
 ##  -f <filename>   Prompts the user for a encryption password.
 ##                  Decrypts a file for editing, and encrypts it upon saving.
 ##                  Creates file if it doesn't already exist.
 ##                  If the file exists but isn't encrypted, user will be
 ##                  prompted to overwrite the original file.
+##                  * External scripts can control what is done with the
+##                    decrypted file using $EDITOR and $EXTERN_ARGS
+##                  ** Requires OpenSSL 1.1.1 or later.
 
 get_pass() {
 	stty -echo # impure function
@@ -89,7 +92,7 @@ mode_encrypt() {
 	magic='openssl'
 	cipher='-aes-256-cbc -pbkdf2'
 	for f in "$@"; do
-		tmp="/tmp/$f.$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+		tmp="/tmp/${f##*/}.$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
 		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
 		[ -f "$f" ] && file -b "$f" | grep -q "^$magic" && state='encrypted'
 		# no state - file is plaintext, ask to overwrite when finished
@@ -113,7 +116,10 @@ mode_encrypt() {
 			init="$(sha256sum < "$tmp")" # monitor changes
 		fi
 		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
-		command nano "$tmp"
+
+		# open plaintext file for editing
+		command ${EDITOR:-nano} "$tmp" $EXTERN_ARGS
+
 		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # ask to overwrite original
 				mesg_st "Overwrite original file '$f'? (y/Y/yes): "
