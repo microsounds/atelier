@@ -49,7 +49,7 @@ done
 color="$clean" # default
 state="$(echo "$data" | tail -n +2 | cut -c -2)"
 i=0; for f in index tree; do i=$((i + 1));
-	eval "$f=$(echo "$state" | cut -c $i | tr -d '? ')"
+	eval "$f='$(echo "$state" | cut -c $i | tr -d '? ')'"
 done
 [ ! -z "$index" ] && color="$staged" && bits="$bits+"
 [ ! -z "$tree" ] && color="$dirty" && bits="$bits*"
