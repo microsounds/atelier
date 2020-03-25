@@ -9,6 +9,7 @@
 	root = !git --git-dir=$HOME/Git/atelier --work-tree=$HOME
 	summary = log --oneline --decorate --graph -n 16
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
+	ecommit = !git commit -a -m "$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
 
 [advice]
 	detachedHead = false
