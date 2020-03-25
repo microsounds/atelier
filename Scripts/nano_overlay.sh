@@ -64,12 +64,12 @@ mode_ctags() {
 
 ## Open an xz(1) compressed and openssl(1) encrypted file for editing.
 ##  -f <filename>   Prompts the user for a encryption password.
-##                  Decrypts a file for editing, and encrypts it upon saving.
+##                  Decrypts file for editing, re-encrypts if file is modified.
 ##                  Creates file if it doesn't already exist.
 ##                  If the file exists but isn't encrypted, user will be
 ##                  prompted to overwrite the original file.
-##                  * External scripts can control what is done with the
-##                    decrypted file using $EDITOR and $EXTERN_ARGS
+##                  * Scripts can provide env vars $EDITOR and $EXTERN_ARGS
+##                    to edit the decrypted file using a different program.
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
 get_pass() {
