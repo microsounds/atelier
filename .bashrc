@@ -92,7 +92,7 @@ qr() (
 # check for updates
 update() (
 	for f in update dist-upgrade autopurge clean; do
-		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f
+		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f || exit
 	done
 )
 
@@ -101,6 +101,6 @@ ledger() (
 	export EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
 	file="$HOME/.private.d/ledger.dat"
-	[ ! -f "$file" ] && echo "'$file' not found." && return
+	[ ! -f "$file" ] && echo "'$file' not found." && exit
 	~/Scripts/nano_overlay.sh -f "$file"
 )
