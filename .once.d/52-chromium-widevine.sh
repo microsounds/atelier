@@ -19,7 +19,7 @@ finish() {
 	exit
 }
 
-trap finish 2
+trap finish 1 2 3 6
 
 echo "$0"
 mkdir -v "$TMP"

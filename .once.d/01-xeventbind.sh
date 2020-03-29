@@ -13,7 +13,7 @@ finish() {
 
 echo "$0"
 mkdir -v "$TMP"
-trap finish 2
+trap finish 1 2 3 6
 if git clone "$REPO" "$TMP"; then
 	make -C "$TMP"
 	mv -v "$TMP/$BINARY" "$INSTALL"

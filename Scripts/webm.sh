@@ -23,21 +23,22 @@ TEMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 10).mp4"
 info() { echo "\e[1;${1}m${2}\e[0m"; }
 
 to_webm() {
-	trap really_quit 2
-	info $INFO "Encoding..."
-	ffmpeg -hide_banner -i "$TEMP" \
-	       -c:v libvpx -b:v $BITRATE -fs $SIZE -vf scale=$SCALE -threads $CORES -an "$FINAL"
-	rm -v "$TEMP"
-	info $OK "File saved at: $PWD/$FINAL"
-}
-
-really_quit() {
-	info $ERR "Terminated abruptly..."
-	rm -v "$TEMP" "$FINAL"
-	exit 1
+	iter=$((iter + 1))
+	if [ $iter -lt 2 ]; then
+		info $INFO "Encoding..."
+		ffmpeg -hide_banner -i "$TEMP" \
+	           -c:v libvpx -b:v $BITRATE -fs $SIZE -vf scale=$SCALE \
+	           -threads $CORES -an "$FINAL"
+		rm -v "$TEMP"
+		info $OK "File saved at: $PWD/$FINAL"
+	else
+		info $ERR "Terminated abruptly..."
+		rm -v "$TEMP" "$FINAL"
+		exit 1
+	fi
 }
 
 info $INFO "$(cat $0 | grep '^##' | sed 's/## //g')"
-trap to_webm 2
+iter=0; trap to_webm 2
 ffmpeg -loglevel panic -threads $CORES -framerate $FPS -video_size $RES \
        -f x11grab -i :0.0+0,0 -vcodec libx264 -qp 0 -preset ultrafast "$TEMP"

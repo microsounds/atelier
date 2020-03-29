@@ -107,6 +107,8 @@ mode_encrypt() {
 			fi
 			unset orig
 		fi
+
+		trap 'shred -z -u "$tmp"' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then
 			if ! openssl enc $cipher -pass "pass:$pass" -d < "$f" | xz -d > "$tmp"; then
 				mesg 'Invalid password, exiting.'
@@ -128,7 +130,6 @@ mode_encrypt() {
 			if [ ! -z "$state" ] && [ "$init" != "$(sha256sum < "$tmp")" ]; then
 				xz -z < "$tmp" | openssl enc $cipher -pass "pass:$pass" -e > "$f"
 			fi
-			shred -z -u "$tmp"
 		fi
 		unset pass state
 	done
