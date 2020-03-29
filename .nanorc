@@ -17,7 +17,7 @@ set softwrap
 set tabsize 4
 set autoindent
 set multibuffer
-set wordchars "$-_"
+set wordchars "$-:_"
 set matchbrackets "(<[{)>]}"
 set trimblanks
 set afterends
