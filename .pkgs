@@ -49,7 +49,7 @@ vrms
 wget
 wmctrl
 xbacklight
-xclip
 xdiskusage
 xorg
+xsel
 xz-utils

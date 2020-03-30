@@ -43,6 +43,7 @@ alias feh='feh -.'
 nano() (
 	share='/usr/share/nano'
 	rc="$HOME/.nano"
+	hist="$rc/filepos_history"
 	# override syntax for specific languages
 	for f in c javascript; do
 		if [ "$rc/c.syntax" -nt "$rc/$f.nanorc" ]; then
@@ -51,12 +52,10 @@ nano() (
 		fi
 	done
 	# purge filepos history if older than 5 minutes
-	for hist in "$rc/filepos_history"; do
-		[ -f "$hist" ] &&
-		[ $(($(date '+%s') - \
-		     $(stat -c '%Y' "$hist"))) -gt 300 ] &&
-		rm "$hist"
-	done
+	if [ -f "$hist" ]; then
+		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
+		[ $delta -gt 300 ] && rm "$hist"
+	fi
 	~/Scripts/nano_overlay.sh "$@"
 )
 
