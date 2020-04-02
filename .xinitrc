@@ -23,7 +23,7 @@ while xsetroot -name "$(~/Scripts/dwm_status.sh -p)"; do
 done & # status bar
 
 ## configuration
-xrdb ~/.Xresources
+xrdb -I"$HOME/.local/include" ~/.Xresources
 dconf load '/' < ~/.config/dconf/user.conf &
 for f in ~/Scripts/desktop_startup.sh; do # callback script
 	xeventbind 'resolution' $f &

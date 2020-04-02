@@ -1,4 +1,7 @@
 /* ~/.config/dwm/config.h: dwm/dmenu user configuration */
+#include <colors/nightdrive.h>
+#define str(s) _xstr(s)
+#define _xstr(s) #s
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
@@ -7,11 +10,11 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[] = { "Liberation Serif:size=12", "Dejima:size=12" };
 static const char dmenufont[] = "Liberation Serif:size=12";
-static const char col_gray1[] = "#272727";
-static const char col_gray2[] = "#646464";
-static const char col_gray3[] = "#FFFFFF";
-static const char col_gray4[] = "#FFFFFF"; /* fg text */
-static const char col_cyan[]  = "#B24A7A"; /* CDE salmon pink */
+static const char col_gray1[] = str(BGCOLOR);
+static const char col_gray2[] = str(BGLIGHT);
+static const char col_gray3[] = str(FGCOLOR);
+static const char col_gray4[] = str(FGCOLOR); /* fg text */
+static const char col_cyan[]  = str(BGPINK);
 static const char *colors[][3]= {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
