@@ -6,9 +6,9 @@
 
 /* special */
 #define FGCOLOR	#FFFFFF
+#define FGLIGHT	#B24A7A /* CDE salmon pink */
 #define BGCOLOR	#272727
 #define BGLIGHT	#646464
-#define BGPINK	#B24A7A /* CDE salmon pink */
 
 /* black */
 #define COLOR0	#222827

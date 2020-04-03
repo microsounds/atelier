@@ -2,11 +2,11 @@
 #include <colors/nightdrive.h>
 
 ! xft
-Xft.dpi:        96
-Xft.antialias:  true
-Xft.rgba:       rgb
-Xft.hinting:    true
-Xft.hintstyle:  hintslight
+Xft.dpi: 96
+Xft.antialias: true
+Xft.rgba: rgb
+Xft.hinting: true
+Xft.hintstyle: hintslight
 
 ! rxvt-unicode
 ! near-zero kerning causes font breakage without fallbacks
