@@ -15,7 +15,5 @@ if git checkout -f "$VER"; then
 	for f in patches/*; do # apply patches
 		patch < $f;
 	done
-	make CC="cc -I$HOME/.local/include" \
-	     PREFIX="$HOME/.local" \
-	     install -j $(grep -c '^proc' /proc/cpuinfo)
+	make install PREFIX="$HOME/.local" -j $(grep -c '^proc' /proc/cpuinfo)
 fi

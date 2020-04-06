@@ -1,10 +1,8 @@
 ## ~/.profile: executed by the command interpreter for login shells.
 
-# ~/.local/bin
-for f in "$HOME/.local/bin"; do
-	PATH="$f:$PATH"
-	[ ! -d "$f" ] && mkdir "$f"
-done
+# ~/.local hierarchy
+export PATH="$HOME/.local/bin:$PATH"
+export C_INCLUDE_PATH="$HOME/.local/include"
 
 # is this a bash session?
 if [ ! -z "$BASH_VERSION" ]; then
