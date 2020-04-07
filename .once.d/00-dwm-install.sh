@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 # install dwm
-# force inclusion of user-specific headers
 
 VER='6.2'
+SOURCE="$HOME/.config/dwm"
 
 echo "$0"
-cd ~/.config/dwm
-if ! git status; then
+[ -d "$SOURCE" ] && cd "$SOURCE" || exit 1
+if ! git status 2> /dev/null; then
 	git init
 	git remote add origin 'https://git.suckless.org/dwm'
 	git fetch --tags origin master
