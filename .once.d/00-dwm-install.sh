@@ -1,17 +1,22 @@
 #!/usr/bin/env sh
-# install dwm
 
-VER='6.2'
-SOURCE="$HOME/.config/dwm"
+# dwm install script
+# configuration should already exist in ~/.config/dwm
+# git refuses to clone into non-empty directories and git-submodule is a mess
+
+CONFIG="$HOME/.config/dwm"
+ORIGIN='git://git.suckless.org/dwm'
+VERSION='6.2'
 
 echo "$0"
-[ -d "$SOURCE" ] && cd "$SOURCE" || exit 1
-if ! git status 2> /dev/null; then
+[ ! -d "$CONFIG" ] && echo "'$CONFIG' doesn't exist." && exit 1
+
+if cd "$CONFIG" && ! git status 2> /dev/null; then
 	git init
-	git remote add origin 'https://git.suckless.org/dwm'
+	git remote add origin "$ORIGIN"
 	git fetch --tags origin master
 fi
-if git checkout -f "$VER"; then
+if git checkout -f "$VERSION"; then
 	for f in patches/*; do # apply patches
 		patch < $f;
 	done
