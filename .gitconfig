@@ -8,7 +8,7 @@
 	sync = push origin master
 	summary = log --oneline --decorate --graph -n 16
 	# home directory version control
-	root = !git --git-dir=$HOME/Git/atelier --work-tree=$HOME
+	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
 	# dumb file storage
@@ -16,9 +16,6 @@
 
 [advice]
 	detachedHead = false
-
-[status]
-	showUntrackedFiles = no
 
 [rebase]
 	autoStash = true

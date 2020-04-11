@@ -5,29 +5,30 @@
 > _Setup: Debian stable, vanilla Xorg, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
-* Install `sudo`, add yourself to the `sudo` group and install `git`.
+1. Perform a base installation of Debian stable.
+2. Install `sudo`, add yourself to the `sudo` group and install `git`.
 	* _Group membership changes apply upon next login._
-* `git clone --bare [remote] ~/Git/atelier`
-* `git --git-dir=$HOME/Git/atelier --work-tree=$HOME reset --hard`
-	* _Restores configuration automatically, run `exec bash` to reload the environment._
-* `cat ~/.pkgs | xargs apt-get install -y` to install essential packages.
-* Run scripts in `~/.once.d` to build and install `dwm`, among other things.
+3. Bootstrap the system automatically using Git. _This is needed only once._
+	```shell
+	git clone --bare [remote] ~/.config/meta
+	git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
+	git meta config status.showUntrackedFiles no # set to ignore untracked files
+	```
+4. `cat ~/.pkgs | xargs apt-get install -y` to install essential packages.
+5. Run scripts in `~/.once.d` to build and install `dwm`, among other things.
 	* _`for f in ~/.once.d/*; do $f; done`_
-* Reboot before continuing.
+6. Reboot to finish.
 	* _`xinit` starts automatically upon login to `tty1`, you will be kicked if `dwm` isn't installed._
 
 # Notes
-## Managing dotfiles with `git root`
-The git alias _`root`_ treats the home directory as a detached work-tree belonging to bare repo `~/Git/atelier`, effectively turning `$HOME` into a git repository.
-* Tracked files can be edited, versioned, reverted and synchronized in-place.
-	* _This negates the need for symlinking, synchronizing copies stored in a seperate repo, etc._
-* Untracked files are ignored by default.
-	* _This is unwanted behavior when tracking only specific files in the home directory._
+## Using `git meta`
+`git meta` points to a detached _**bare**_ repo in `~/.config/meta` which manages the `$HOME` directory, allowing for in-place backup and version control of dotfiles.
 
-## System Configuration
-* **Every effort is made to maintain a reasonably reproducible GNU/Linux setup.**
-*  Use of local, user-specific dotfiles that don't touch system defaults are preferred.
-	* _Dotfiles in `$HOME` supersede any defaults stored in `/etc`, `/usr/share`, etc._
+* Every effort is made to maintain a reproducible GNU/Linux system that can be synchronized between various machines.
+* Use of local, user-specific dotfiles that don't touch system defaults are preferred.
+	* _eg. dotfiles in `$HOME` supersede any defaults located in `/etc`, `/usr/share`, etc._
+
+## System-wide Configuration
 * System-wide changes that bypass the package manager are avoided when possible.
 	* _Necessary system-wide changes are reproduced with `~/.once.d` scripts._
 * See __[~/.pkgs](.pkgs)__ for the full list of essential packages.
