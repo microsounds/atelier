@@ -14,7 +14,7 @@
 	git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
 	git meta config status.showUntrackedFiles no # set to ignore untracked files
 	```
-4. `cat ~/.pkgs | xargs apt-get install -y` to install essential packages.
+4. `cat ~/.comforts | xargs apt-get install -y` to install essential packages.
 5. Run scripts in `~/.once.d` to build and install `dwm`, among other things.
 	* _`for f in ~/.once.d/*; do $f; done`_
 6. Reboot to finish.
@@ -31,4 +31,4 @@
 ## System-wide Configuration
 * System-wide changes that bypass the package manager are avoided when possible.
 	* _Necessary system-wide changes are reproduced with `~/.once.d` scripts._
-* See __[~/.pkgs](.pkgs)__ for the full list of essential packages.
+* See __[~/.comforts](.comforts)__ for the full list of essential packages.
