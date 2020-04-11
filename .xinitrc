@@ -25,7 +25,7 @@ done & # status bar
 ## configuration
 xrdb ~/.Xresources
 dconf load '/' < ~/.config/dconf/user.conf &
-for f in ~/Scripts/desktop_startup.sh; do # callback script
+for f in ~/Scripts/xwin_decor.sh; do # callback script
 	xeventbind 'resolution' $f &
 	$f &
 done
