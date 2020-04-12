@@ -26,9 +26,9 @@ set unix
 set zap
 
 ## convenience
+set locking
 set positionlog
 unset historylog
-unset locking
 unset suspend
 
 ## ui

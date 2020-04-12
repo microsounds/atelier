@@ -137,6 +137,7 @@ mode_encrypt() {
 }
 
 # overlay command line options
+mode='overlay'
 if [ ! -z "$1" ]; then # steal options not supported by GNU nano
 	if echo "$1" | grep -q '^-' && ! echo "$1" | grep -q '^--'; then
 		for f in $(echo "$1" | sed 's/./& /g'); do
@@ -147,6 +148,14 @@ if [ ! -z "$1" ]; then # steal options not supported by GNU nano
 			esac
 		done
 	fi
+	for f in "$@"; do # force quit on lockfiles and other mistakes
+		echo "$f" | fgrep -q '/' && bname="${f%/*}" # absolute paths
+		if [ -f "${bname:-.}/.${f##*/}.swp" ]; then
+			mesg "'$f' already in use, exiting." && exit 1
+		elif [ -d "$f" ]; then
+			mesg "'$f' is a directory, exiting." && exit 1
+		fi
+	done
 fi
 
 command nano "$@"
