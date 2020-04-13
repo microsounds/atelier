@@ -22,7 +22,7 @@ if [ ! -z "$TEMP" ]; then
 fi
 # networking
 NET="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -1)"
-[ ! -z "$NET" ] || NET="Airplane Mode"
+[ ! -z "$NET" ] || NET="Network Off"
 # power management
 acpi="$(acpi -b | egrep -o '[0-9]+\%.*')"
 pct="$(echo "$acpi" | egrep -o '[0-9]+%' | head -1)"
