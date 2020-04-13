@@ -2,7 +2,7 @@
 [miku]: https://i.imgur.com/Nr7HV9a.png
 # ![miku] _a  t  e  l  i  e  r_ ![miku]
 ![scrot]
-> _Pictured: Debian stable, vanilla Xorg, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
+> _Pictured: Debian stable, vanilla Xorg, Miku, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
 1. Perform a base installation of Debian stable.
@@ -23,7 +23,7 @@
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile), you will be kicked if `dwm` isn't installed._
 
 # Usage notes
-## `nano` > [`nano_overlay`](/Scripts/nano_overlay.sh)
+## `nano` > [`nano_overlay`](Scripts/nano_overlay.sh)
 * Invoking `nano` calls a shell function that does the following:
 	* Generates customized syntax files for C-like languages.
 	* Purges old file cursor positions.
