@@ -17,10 +17,11 @@ __set_prompt() {
 	# is this a git worktree?
 	if git_info="$(~/Scripts/git_status.sh -e)"; then # expand path
 		topdir="$(git rev-parse --show-toplevel)"
-		suffix="${PWD##"$topdir"}"
+		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"
+		# if $HOME is a git repo, relative path aliasing will fail
 		if echo "$prefix" | grep -q "^$HOME"; then
-			prefix="~${prefix##"$HOME"}" # relative path ~/
+			prefix="~${prefix##$HOME}"
 		fi
 		# <prefix>/±repo:branch*/<suffix>
 		path="${p}${prefix}${r}${git_info}${p}${suffix}${r}"

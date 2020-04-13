@@ -149,7 +149,8 @@ if [ ! -z "$1" ]; then # steal options not supported by GNU nano
 		done
 	fi
 	for f in "$@"; do # force quit on lockfiles and other mistakes
-		echo "$f" | fgrep -q '/' && bname="${f%/*}" # absolute paths
+		# path has ../relative/sub/dirs or is absolute
+		echo "$f" | fgrep -q '/' && bname="${f%/*}"
 		if [ -f "${bname:-.}/.${f##*/}.swp" ]; then
 			mesg "'$f' already in use, exiting." && exit 1
 		elif [ -d "$f" ]; then
