@@ -108,7 +108,7 @@ mode_encrypt() {
 			unset orig
 		fi
 
-		trap 'shred -z -u "$tmp"' 0 1 2 3 6
+		trap '[ ! -f "$tmp" ] || shred -z -u "$tmp"' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then
 			if ! openssl enc $cipher -pass "pass:$pass" -d < "$f" | xz -d > "$tmp"; then
 				mesg 'Invalid password, exiting.'
