@@ -72,6 +72,8 @@ mode_ctags() {
 ##                    to edit the decrypted file using a different program.
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
+random_bits() { tr -cd 'a-z0-9' < /dev/urandom | head -c $1; }
+
 get_pass() {
 	stty -echo # impure function
 	read -r pass && printf '\n'
@@ -92,7 +94,11 @@ mode_encrypt() {
 	magic='openssl'
 	cipher='-aes-256-cbc -pbkdf2'
 	for f in "$@"; do
-		tmp="/tmp/${f##*/}.$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+		while :; do tmp="/tmp/${f##*/}.$(random_bits 7)"
+			[ -f "$tmp" ] || break
+		done
+
+		# is this an encrypted file?
 		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
 		[ -f "$f" ] && file -b "$f" | grep -q "^$magic" && state='encrypted'
 		# no state - file is plaintext, ask to overwrite when finished
