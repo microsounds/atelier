@@ -13,7 +13,7 @@ fi
 
 ## Xorg server / display manager
 # hardware overrides
-lspci | fgrep 'VGA' | fgrep -q 'Intel' && rc='intel'
+lspci | egrep -q 'VGA.*Intel' && rc='intel'
 
 # start X on login, logout after X exits
 if [ "$(tty)" = '/dev/tty1' ]; then

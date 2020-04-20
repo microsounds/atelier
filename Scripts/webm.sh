@@ -10,6 +10,7 @@ ERR=31
 
 # quality
 SIZE=3M
+CONSTQ=31
 BITRATE=3M # 4M
 SCALE=-1:-1 # 800:-1
 FPS=60 # 25
@@ -27,14 +28,13 @@ to_webm() {
 	if [ $iter -lt 2 ]; then
 		info $INFO "Encoding..."
 		ffmpeg -hide_banner -i "$TEMP" \
-	           -c:v libvpx -b:v $BITRATE -fs $SIZE -vf scale=$SCALE \
-	           -threads $CORES -an "$FINAL"
+	           -c:v libvpx -b:v $BITRATE -crf $CONSTQ -fs $SIZE \
+	           -vf scale=$SCALE -fs $SIZE -threads $CORES -an "$FINAL"
 		rm -v "$TEMP"
 		info $OK "File saved at: $PWD/$FINAL"
 	else
 		info $ERR "Terminated abruptly..."
-		rm -v "$TEMP" "$FINAL"
-		exit 1
+		rm -v "$TEMP" "$FINAL" && exit 1
 	fi
 }
 
