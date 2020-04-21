@@ -60,6 +60,16 @@ nano() (
 	~/Scripts/nano_overlay.sh "$@"
 )
 
+# runs ledger, decrypts ledger file for viewing
+# suspend to make changes to plaintext ledger directly
+ledger() (
+	file="$HOME/.private.d/ledger.dat"
+	[ ! -f "$file" ] && echo "'$file' not found." && exit
+	export EDITOR='ledger -f'
+	export EXTERN_ARGS="$@"
+	~/Scripts/nano_overlay.sh -f "$file"
+)
+
 # move up to nearest non-empty directory
 cd() {
 	if [ "$1" = '...' ]; then
@@ -94,13 +104,4 @@ update() (
 	for f in update dist-upgrade autopurge clean; do
 		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f || exit
 	done
-)
-
-# decrypt ledger file for viewing
-ledger() (
-	export EDITOR='ledger -f'
-	export EXTERN_ARGS="$@"
-	file="$HOME/.private.d/ledger.dat"
-	[ ! -f "$file" ] && echo "'$file' not found." && exit
-	~/Scripts/nano_overlay.sh -f "$file"
 )

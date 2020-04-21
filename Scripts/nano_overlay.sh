@@ -8,7 +8,7 @@ mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$@"; } # for prompts
 mesg() { mesg_st "$@"; printf '\n'; }
 
 mode_help() {
-	command nano "$@"
+	nano "$@"
 	grep '^##' "$0" | sed 's/^## //' 1>&2
 	exit
 }
@@ -27,7 +27,7 @@ jump_to() {
 	fi
 	file="$(echo "$1" | cut -f2)"
 	line="$(echo "$1" | cut -f3 | egrep -o '[0-9]+')"
-	command nano "+$line" "$PWD/$file"
+	nano "+$line" "$PWD/$file"
 	exit
 }
 
@@ -126,7 +126,7 @@ mode_encrypt() {
 		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
 
 		# open plaintext file for editing
-		command ${EDITOR:-nano} "$tmp" $EXTERN_ARGS
+		${EDITOR:-nano} "$tmp" $EXTERN_ARGS
 
 		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # ask to overwrite original
@@ -165,4 +165,4 @@ if [ ! -z "$1" ]; then # steal options not supported by GNU nano
 	done
 fi
 
-command nano "$@"
+nano "$@"
