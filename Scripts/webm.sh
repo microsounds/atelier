@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-## webm.sh v0.3
+## webm.sh v0.4
+#  screen recorder, outputs soundless webm for certain anime imageboards
 ## Press Ctrl+C to end recording, press Ctrl+C again to cancel.
 
 # colors
@@ -16,9 +17,10 @@ SCALE=-1:-1 # 800:-1
 FPS=60 # 25
 
 # system
-CORES=$(grep -c '^proc' /proc/cpuinfo)
-RES=$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | sed -n 1p)
-FINAL="$(date '+Screenshot - %m%d%Y - %r').webm"
+NAME="${0##*/}" # derive script name
+CORES="$(grep -c '^proc' /proc/cpuinfo)"
+RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -1)"
+FINAL="$(date '+%Y-%m-%d-%H%M%S')_${RES}_${NAME%.*}.webm"
 TEMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 10).mp4"
 
 info() { echo "\e[1;${1}m${2}\e[0m"; }
