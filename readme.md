@@ -1,8 +1,7 @@
-[scrot]: https://i.imgur.com/0peU7Ia.png
-[miku]: https://i.imgur.com/Nr7HV9a.png
 # ![miku] _a  t  e  l  i  e  r_ ![miku]
+Dotfiles, shell scripts, and desktop rice. Home directory backup.
 ![scrot]
-> _Pictured: Debian stable, vanilla Xorg, Miku, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
+> _Pictured: Debian stable, vanilla Xorg, miku, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
 1. Perform a base installation of Debian stable.
@@ -53,3 +52,6 @@
 * System-wide changes that bypass the package manager are avoided when possible.
 	* _Necessary system-wide changes are reproduced with `~/.once.d` scripts._
 * See [`~/.comforts`](.comforts) for the full list of essential packages.
+
+[scrot]: https://i.imgur.com/0peU7Ia.png
+[miku]: https://i.imgur.com/Nr7HV9a.png
