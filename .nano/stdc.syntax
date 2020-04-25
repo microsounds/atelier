@@ -1,4 +1,4 @@
-## ~/.nano/c.syntax: syntax overrides for C-like languages
+## ~/.nano/stdc.syntax: syntax overrides for C-like languages
 
 ## function names
 color cyan "[A-Za-z_][0-9A-Za-z_]+[[:space:]]*\("

@@ -45,10 +45,9 @@ nano() (
 	share='/usr/share/nano'
 	rc="$HOME/.nano"
 	hist="$rc/filepos_history"
-	# override syntax for specific languages
-	for f in c javascript; do
-		if [ "$rc/c.syntax" -nt "$rc/$f.nanorc" ]; then
-			sed "/syntax/r $rc/c.syntax" \
+	for f in c javascript; do # prepend c syntax rules
+		if [ "$rc/stdc.syntax" -nt "$rc/$f.nanorc" ]; then
+			sed "/syntax/r $rc/stdc.syntax" \
 			    "$share/$f.nanorc" > "$rc/$f.nanorc"
 		fi
 	done
