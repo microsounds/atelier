@@ -13,16 +13,11 @@ Xft.hintstyle: hintslight
 URxvt.font: xft:Noto Mono:size=10,xft:VL Gothic:size=10
 URxvt.letterSpace: -2
 URxvt.lineSpace: -1
-URxvt.geometry: 94x24
+URxvt.geometry: 96x24
 URxvt.internalBorder: 3
-URxvt.cursorBlink: false
-URxvt.cursorUnderline: false
 URxvt.saveLines: 2048
 URxvt.scrollBar: false
-URxvt.scrollBar_right: false
 URxvt.urgentOnBell: true
-URxvt.depth: 24
-URxvt.iso14755: false
 
 ! color scheme
 URxvt.cursorColor: FGCOLOR
