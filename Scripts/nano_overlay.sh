@@ -27,8 +27,7 @@ jump_to() {
 	fi
 	file="$(echo "$1" | cut -f2)"
 	line="$(echo "$1" | cut -f3 | egrep -o '[0-9]+')"
-	nano "+$line" "$PWD/$file"
-	exit
+	exec nano "+$line" "$PWD/$file"
 }
 
 mode_ctags() {
@@ -165,4 +164,4 @@ if [ ! -z "$1" ]; then # steal options not supported by GNU nano
 	done
 fi
 
-nano "$@"
+exec nano "$@"
