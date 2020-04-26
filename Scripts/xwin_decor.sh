@@ -1,14 +1,19 @@
 #!/usr/bin/env sh
 
-# runs startup items that aren't daemons
-# set as callback script that executes upon display resolution change
+# decorate root window
+# use bitmap background as fallback
 
 images="$HOME/Pictures/active"
-cpp << EOF | egrep -o '#[A-Z0-9]+' | while read color; do
+bitmaps='/usr/include/X11/bitmaps'
+
+cpp << EOF | egrep -v '^(#|$)' | while read color; do
 	#include <colors/nightdrive.h>
-	BGCOLOR
+	#define str(s) xstr(s)
+	#define xstr(s) #s
+	-bg str(COLOR0) -fg str(COLOR9)
 EOF
-	xsetroot -solid "$color"
+	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/gray3"
 done
-feh --no-fehbg --bg-fill "$(find "$images" -type f | shuf | head -1)" &
+
+find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg --bg-fill &
 ~/Scripts/xload.sh vert bottom-right &
