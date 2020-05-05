@@ -39,7 +39,6 @@ URxvt.color12: COLOR12
 URxvt.color13: COLOR13
 URxvt.color14: COLOR14
 URxvt.color15: COLOR15
-URxvt.color16: COLOR16
 
 ! xclock
 XClock.Clock.hourColor: COLOR9

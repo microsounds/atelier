@@ -104,3 +104,13 @@ update() (
 		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f || exit
 	done
 )
+
+# switch terminal color palette
+tcolor() {
+		find ~/.local/include/colors -type f | while read plt; do
+			if echo "${plt##*/}" | fgrep -q "$@"; then
+				sed "/#include/a #include \"$plt\"" ~/.Xresources | xrdb -
+			fi
+		done
+		exec urxvtc
+}

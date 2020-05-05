@@ -39,9 +39,9 @@ unset quickblank
 set constantshow
 
 ## color scheme
+set keycolor brightblue
+set functioncolor white
 set numbercolor cyan
 set titlecolor black,cyan
 set statuscolor black,white
-set keycolor brightblue
-set functioncolor white
 set errorcolor black,red

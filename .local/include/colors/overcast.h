@@ -1,20 +1,19 @@
-#ifndef NIGHTDRIVE_H
-#define NIGHTDRIVE_H
+#ifndef OVERCAST_H
+#define OVERCAST_H
 
-/* night drive v.1 ~microsounds */
-/* 気付かなかったーー */
+/* overcast rainy v.1 ~microsounds */
 
 #define str(s) _xstr(s)
 #define _xstr(s) #s
 
 /* special */
-#define FGCOLOR	#FFFFFF
-#define FGLIGHT	#B24A7A /* CDE salmon pink */
-#define BGCOLOR	#272727
-#define BGLIGHT	#646464
+#define FGCOLOR	#4D4D4C
+#define FGLIGHT	#D8A2BB
+#define BGCOLOR	#EEEEEE
+#define BGLIGHT	#808080
 
 /* black */
-#define COLOR0	#222827
+#define COLOR0	#EFEFEF
 #define COLOR8	#5D6F74
 
 /* red */
@@ -27,7 +26,7 @@
 
 /* yellow */
 #define COLOR3	#9898AE
-#define COLOR11	#C0C0DD
+#define COLOR11	#5C5C8C
 
 /* blue */
 #define COLOR4	#654A96
@@ -38,11 +37,11 @@
 #define COLOR13	#7E62B7
 
 /* cyan */
-#define COLOR6	#A9D1DF
-#define COLOR14	#849DA2
+#define COLOR6	#3DA7A7
+#define COLOR14	#4B595C
 
 /* white */
-#define COLOR7	#B0B0B0
+#define COLOR7	#868686
 #define COLOR15	#D9D6CF
 
-#endif /* NIGHTDRIVE_H */
+#endif /* OVERCAST_H */

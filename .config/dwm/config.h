@@ -1,7 +1,5 @@
 /* ~/.config/dwm/config.h: dwm/dmenu user configuration */
 #include <colors/nightdrive.h>
-#define str(s) _xstr(s)
-#define _xstr(s) #s
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
