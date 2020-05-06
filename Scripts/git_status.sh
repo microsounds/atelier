@@ -58,13 +58,9 @@ echo "$state" | grep -q 'U' && branch="<!>$branch" # merge conflict
 [ -f "$git_dir/refs/stash" ] && bits="^$bits" # stash exists
 
 # parse color options
-if [ ! -z "$1" ]; then
-	for f in $(echo "${1#-}" | sed 's/./& /g'); do
-		case $f in
-			e) color="\[$color\]" && alt="\[$alt\]" && reset="\[$reset\]";;
-			n) unset color alt reset;;
-		esac
-	done
-fi
+for f in $(echo "${@#-}" | sed 's/./& /g'); do case $f in
+	e) color="\[$color\]"; alt="\[$alt\]"; reset="\[$reset\]";;
+	n) unset color alt reset;;
+esac; done
 
 echo "$color±${repo##*/}:$branch$bits$alt$ups$reset"

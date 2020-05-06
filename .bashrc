@@ -11,11 +11,15 @@ done; unset f
 # set terminal prompt
 PROMPT_COMMAND=__set_prompt
 __set_prompt() {
-	u='\[\e[1;32m\]' # user/hostname color
-	p='\[\e[1;34m\]' # path color
-	r='\[\e[0m\]' # reset
+	case $TERM in *color)
+		win='\[\e]0;\u@\h: \w\a\]' # set window title
+		u='\[\e[1;32m\]' # user/hostname color
+		p='\[\e[1;34m\]' # path color
+		r='\[\e[0m\]';;  # reset
+		*) color='n'     # strip color
+	esac
 	# is this a git worktree?
-	if git_info="$(~/Scripts/git_status.sh -e)"; then # expand path
+	if git_info="$(~/Scripts/git_status.sh -${color:-e})"; then
 		topdir="$(git rev-parse --show-toplevel)"
 		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"
@@ -26,15 +30,13 @@ __set_prompt() {
 		# <prefix>/±repo:branch*/<suffix>
 		path="${p}${prefix}${r}${git_info}${p}${suffix}${r}"
 	fi
-	# set prompt and update titlebar
-	PS1="${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
-	case "$TERM" in xterm* | rxvt*) PS1="\[\e]0;\u@\h: \w\a\]$PS1"; esac
+	# set prompt
+	PS1="${win}${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
 	# affects global state, cannot subshell
-	unset u p r path git_info topdir suffix prefix
+	unset win u p r color path git_info topdir suffix prefix
 }
 
 ## useful aliases
-alias ls='ls --color --literal --group-directories-first'
 alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
 alias ctags='ctags -n -R'
 alias feh='feh -.'
@@ -57,6 +59,12 @@ nano() (
 		[ $delta -gt 300 ] && rm "$hist"
 	fi
 	~/Scripts/nano_overlay.sh "$@"
+)
+
+ls() (
+	arg='--classify' # color support fallback
+	case $TERM in *color) arg='--color';; esac
+	command ls --literal --group-directories-first $arg "$@"
 )
 
 # runs ledger, decrypts ledger file for viewing
