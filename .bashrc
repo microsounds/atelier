@@ -24,7 +24,7 @@ __set_prompt() {
 		r='\[\e[0m\]'  # reset
 	fi
 	# is this a git worktree?
-	if git_info="$(~/Scripts/git_status.sh -${COLOR+e}n)"; then
+	if git_info="$(~/Scripts/git_status.sh -${__COLOR+e}n)"; then
 		topdir="$(git rev-parse --show-toplevel)"
 		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"

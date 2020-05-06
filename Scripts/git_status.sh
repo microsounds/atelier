@@ -59,8 +59,8 @@ echo "$state" | grep -q 'U' && branch="<!>$branch" # merge conflict
 
 # parse color options
 for f in $(echo "${@#-}" | sed 's/./& /g'); do case $f in
-	e) color="\[$color\]"; alt="\[$alt\]"; reset="\[$reset\]";;
-	n) unset color alt reset;;
+	e) color="\[$color\]"; alt="\[$alt\]"; reset="\[$reset\]"; break;;
+	n) unset color alt reset; break;;
 esac; done
 
 echo "$color±${repo##*/}:$branch$bits$alt$ups$reset"
