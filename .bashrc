@@ -8,18 +8,23 @@ for f in '/usr/share/bash-completion/bash_completion'; do
 	[ ! -f "$f" ] || source "$f"
 done; unset f
 
+# color support
+COLOR=1; case $TERM in
+	*color | linux) ;; # known color terminals
+	*) [ $(tput colors) -le 2 ] && unset COLOR
+esac
+
 # set terminal prompt
 PROMPT_COMMAND=__set_prompt
 __set_prompt() {
-	case $TERM in *color)
+	if [ ! -z $COLOR ]; then
 		win='\[\e]0;\u@\h: \w\a\]' # set window title
 		u='\[\e[1;32m\]' # user/hostname color
 		p='\[\e[1;34m\]' # path color
-		r='\[\e[0m\]';;  # reset
-		*) color='n'     # strip color
-	esac
+		r='\[\e[0m\]'  # reset
+	fi
 	# is this a git worktree?
-	if git_info="$(~/Scripts/git_status.sh -${color:-e})"; then
+	if git_info="$(~/Scripts/git_status.sh -${COLOR+e}n)"; then
 		topdir="$(git rev-parse --show-toplevel)"
 		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"
@@ -33,7 +38,7 @@ __set_prompt() {
 	# set prompt
 	PS1="${win}${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
 	# affects global state, cannot subshell
-	unset win u p r color path git_info topdir suffix prefix
+	unset win u p r path git_info topdir suffix prefix
 }
 
 ## useful aliases
@@ -63,7 +68,7 @@ nano() (
 
 ls() (
 	arg='--classify' # color support fallback
-	case $TERM in *color) arg='--color';; esac
+	[ ! -z $COLOR ] && arg='--color'
 	command ls --literal --group-directories-first $arg "$@"
 )
 
