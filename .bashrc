@@ -9,16 +9,15 @@ for f in '/usr/share/bash-completion/bash_completion'; do
 done; unset f
 
 # color support
-COLOR=1; case $TERM in
+__COLOR=1; case $TERM in
 	*color | linux) ;; # known color terminals
-	*) [ $(tput colors) -le 2 ] && unset COLOR
+	*) [ $(tput colors) -lt 8 ] && unset __COLOR
 esac
 
 # set terminal prompt
 PROMPT_COMMAND=__set_prompt
 __set_prompt() {
-	if [ ! -z $COLOR ]; then
-		win='\[\e]0;\u@\h: \w\a\]' # set window title
+	if [ ! -z $__COLOR ]; then
 		u='\[\e[1;32m\]' # user/hostname color
 		p='\[\e[1;34m\]' # path color
 		r='\[\e[0m\]'  # reset
@@ -35,10 +34,10 @@ __set_prompt() {
 		# <prefix>/±repo:branch*/<suffix>
 		path="${p}${prefix}${r}${git_info}${p}${suffix}${r}"
 	fi
-	# set prompt
-	PS1="${win}${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
+	# set window title and prompt
+	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
 	# affects global state, cannot subshell
-	unset win u p r path git_info topdir suffix prefix
+	unset u p r path git_info topdir suffix prefix
 }
 
 ## useful aliases
@@ -68,7 +67,7 @@ nano() (
 
 ls() (
 	arg='--classify' # color support fallback
-	[ ! -z $COLOR ] && arg='--color'
+	[ ! -z $__COLOR ] && arg='--color'
 	command ls --literal --group-directories-first $arg "$@"
 )
 
