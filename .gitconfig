@@ -1,4 +1,4 @@
-## ~/.gitconfig: git user configuration
+## ~/.gitconfig: global git configuration
 
 [user]
 	name = microsounds

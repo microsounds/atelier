@@ -1,8 +1,4 @@
 #!/usr/bin/env sh
 
-# move chromium cache to ramdisk likely owned by pam_systemd
-# this would be a function, but dmenu doesn't support those
-
-for f in ${0##*/}; do
-	/usr/bin/$f --disk-cache-dir="${XDG_RUNTIME_DIR:-$HOME/.cache}/$f" "$@"
-done
+# enforce use of environment-specific cache location
+for f in ${0##*/}; do /usr/bin/$f --disk-cache-dir="$XDG_CACHE_HOME/$f" "$@"; done

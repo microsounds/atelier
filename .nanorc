@@ -1,8 +1,7 @@
 ## ~/.nanorc: nano 3.x user config
 
-## syntax
-include "/usr/share/nano/*.nanorc"
-include "~/.nano/*.nanorc"
+## custom syntax
+include ~/.local/share/nano/*.nanorc
 
 ## comments
 extendsyntax c comment "/* | */"

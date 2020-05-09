@@ -48,13 +48,12 @@ alias feh='feh -.'
 ## useful functions
 # GNU nano housekeeping routines
 nano() (
-	share='/usr/share/nano'
-	rc="$HOME/.nano"
-	hist="$rc/filepos_history"
+	my="$HOME/.local/share/nano"; builtin='/usr/share/nano'
+	hist="$my/filepos_history"
 	for f in c javascript; do # prepend c syntax rules
-		if [ "$rc/stdc.syntax" -nt "$rc/$f.nanorc" ]; then
-			sed "/syntax/r $rc/stdc.syntax" \
-			    "$share/$f.nanorc" > "$rc/$f.nanorc"
+		if [ "$my/stdc.syntax" -nt "$my/$f.nanorc" ]; then
+			sed "/syntax/r $my/stdc.syntax" \
+			    "$builtin/$f.nanorc" > "$my/$f.nanorc"
 		fi
 	done
 	# purge filepos history if older than 5 minutes
