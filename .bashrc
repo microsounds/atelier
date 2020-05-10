@@ -50,16 +50,19 @@ alias feh='feh -.'
 nano() (
 	my="$HOME/.local/share/nano"; builtin='/usr/share/nano'
 	hist="$my/filepos_history"
-	for f in c javascript; do # prepend c syntax rules
+	for f in c javascript; do # prepend builtin syntax rules
 		if [ "$my/stdc.syntax" -nt "$my/$f.nanorc" ]; then
 			sed "/syntax/r $my/stdc.syntax" \
 			    "$builtin/$f.nanorc" > "$my/$f.nanorc"
 		fi
 	done
-	# purge filepos history if older than 5 minutes
+	# incrementally drop oldest filepos lines after 5 minutes
 	if [ -f "$hist" ]; then
 		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
-		[ $delta -gt 300 ] && rm "$hist"
+		if [ $delta -gt 300 ]; then
+			line=$(((delta - 300) / 60))
+			{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
+		fi
 	fi
 	~/Scripts/nano_overlay.sh "$@"
 )
@@ -118,10 +121,10 @@ update() (
 
 # switch terminal color palette
 tcolor() {
-		find ~/.local/include/colors -type f | while read plt; do
-			if echo "${plt##*/}" | fgrep -q "$@"; then
-				sed "/#include/a #include \"$plt\"" ~/.Xresources | xrdb -
-			fi
-		done
-		exec urxvtc
+	find ~/.local/include/colors -type f | while read plt; do
+		if echo "${plt##*/}" | fgrep -q "$@"; then
+			sed "/#include/a #include \"$plt\"" ~/.Xresources | xrdb -
+		fi
+	done
+	exec urxvtc
 }
