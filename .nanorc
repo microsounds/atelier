@@ -35,6 +35,7 @@ set nohelp
 unset morespace
 unset linenumbers
 unset quickblank
+unset nopauses
 set constantshow
 
 ## color scheme

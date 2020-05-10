@@ -3,19 +3,15 @@
 ## ~/.local file hierarchy
 export PATH="$HOME/.local/bin:$PATH"
 export C_INCLUDE_PATH="$HOME/.local/include"
-export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
 
-# nothing important gets written here, force ramdisk usage
+# redirect wasteful SSD writes to pam_systemd tmpfs or not at all
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/dev/null}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
 
-# is this a bash session?
-if [ ! -z "$BASH_VERSION" ]; then
-	for f in "$HOME/.bashrc"; do
-		[ -f "$f" ] && source "$f"
-	done
-fi
+## is this a bash session?
+[ ! -z "$BASH_VERSION" ] && source "$HOME/.bashrc"
 
 ## Xorg server / display manager
 # hardware overrides
