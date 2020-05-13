@@ -9,21 +9,21 @@ for f in '/usr/share/bash-completion/bash_completion'; do
 done; unset f
 
 # color support
-__COLOR=1; case $TERM in
+export _COLOR=1; case $TERM in
 	*color | linux) ;; # known color terminals
-	*) [ $(tput colors) -lt 8 ] && unset __COLOR
+	*) [ $(tput colors) -lt 8 ] && unset _COLOR
 esac
 
 # set terminal prompt
-PROMPT_COMMAND=__set_prompt
-__set_prompt() {
-	if [ ! -z $__COLOR ]; then
+PROMPT_COMMAND=_set_prompt
+_set_prompt() {
+	if [ ! -z $_COLOR ]; then
 		u='\[\e[1;32m\]' # user/hostname color
 		p='\[\e[1;34m\]' # path color
 		r='\[\e[0m\]'  # reset
 	fi
 	# is this a git worktree?
-	if git_info="$(~/Scripts/git_status.sh -${__COLOR+e}n)"; then
+	if git_info="$(~/Scripts/git_status.sh -${_COLOR+e}n)"; then
 		topdir="$(git rev-parse --show-toplevel)"
 		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"
@@ -69,7 +69,7 @@ nano() (
 
 ls() (
 	arg='--classify' # color support fallback
-	[ ! -z $__COLOR ] && arg='--color'
+	[ ! -z $_COLOR ] && arg='--color'
 	command ls --literal --group-directories-first $arg "$@"
 )
 

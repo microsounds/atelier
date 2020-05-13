@@ -1,9 +1,11 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
-## hardware overrides
+## XKB hardware overrides
 read vendor < /sys/devices/virtual/dmi/id/sys_vendor
-[ "$vendor" = 'GOOGLE' ] && layout='chromebook'
+case $vendor in
+	GOOGLE) layout='chromebook';;
+esac
 
 ## set keybindings and keyboard layout
 setxkbmap -option 'caps:super'

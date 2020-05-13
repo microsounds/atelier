@@ -6,19 +6,19 @@ export C_INCLUDE_PATH="$HOME/.local/include"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 
-# redirect wasteful SSD writes to pam_systemd tmpfs or not at all
+# redirect cache writes to pam_systemd's tmpfs or not at all
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/dev/null}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
 
-## is this a bash session?
-[ ! -z "$BASH_VERSION" ] && source "$HOME/.bashrc"
+## login shell
+# X server hardware overrides
+case $(lspci | tr 'A-Z' 'a-z') in
+	*vga*intel*) xopt='intel';; # intel integrated graphics
+esac
+[ ! -z "$xopt" ] && xopt="-- -config $HOME/.config/xorg/$xopt.conf"
 
-## Xorg server / display manager
-# hardware overrides
-lspci | egrep -q 'VGA.*Intel' && rc='intel'
-
-# start X on login, logout after X exits
-if [ "$(tty)" = '/dev/tty1' ]; then
-	[ ! -z "$rc" ] && rc="-- -config $HOME/.config/xorg/$rc.conf"
-	exec startx $rc > /dev/null 2>&1
-fi
+# start X server if tty1
+case $(tty) in
+	*tty1) exec startx $xopt > /dev/null 2>&1;;
+	*) case $0 in *bash) source "$HOME/.bashrc";; esac
+esac
