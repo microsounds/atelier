@@ -112,10 +112,17 @@ qr() (
 	feh - -Z --force-aliasing
 )
 
-# check for updates
+# check for updates, remove old kernels
 update() (
+	announce() { printf "\e[1m%s\e[0m\n" "$@";}
 	for f in update dist-upgrade autopurge clean; do
-		printf "\e[1m[$f]\e[0m\n" && sudo apt-get $f || exit
+		announce "$f"
+		sudo apt-get "$f" || exit
+	done
+	for f in $(dpkg --get-selections | egrep '^linux-image-[0-9]+' \
+	         | sed 's/image/*/' | cut -f1 | sort -r | tail -n +2); do
+		announce "removing $f..."
+		sudo apt-get autopurge "$f" || exit
 	done
 )
 
