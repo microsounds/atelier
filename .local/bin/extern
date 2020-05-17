@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+# Usage: extern [command]
+# Runs external executable located outside of the directory this shell script
+# is located in for this invocation only.
+# eg. Script is located in ~/.local/bin, this directory is purged from $PATH.
+#
+# This exists solely to avoid hardcoding paths to system built-in executables.
+# Similar to POSIX command(1) but goes one step further.
+
+PATH="${PATH#${0%/*}}"
+"$@"
