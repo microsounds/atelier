@@ -43,7 +43,6 @@ _set_prompt() {
 ## useful aliases
 alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
 alias ctags='ctags -n -R'
-alias feh='feh -.'
 
 ## useful functions
 # GNU nano housekeeping routines
