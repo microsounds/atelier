@@ -19,6 +19,6 @@ for f in dwm-6.2; do
 	if git checkout -f "$VERSION"; then
 		# apply patches
 		[ ! -d patches ] || for g in patches/*; do patch < $g; done
-		make install PREFIX="$HOME/.local" -j $(grep -c '^proc' /proc/cpuinfo)
+		make install PREFIX="$HOME/.local"
 	fi
 done

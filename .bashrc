@@ -40,10 +40,6 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
-## useful aliases
-alias make="make -j$(grep -c '^proc' /proc/cpuinfo)"
-alias ctags='ctags -n -R'
-
 ## useful functions
 # GNU nano housekeeping routines
 nano() (

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# enforce use of numeric line numbers
+extern ctags -n -R "$@"
