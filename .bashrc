@@ -4,9 +4,7 @@
 HISTCONTROL=ignoredups
 
 # bash-completion
-for f in '/usr/share/bash-completion/bash_completion'; do
-	[ ! -f "$f" ] || source "$f"
-done; unset f
+. '/usr/share/bash-completion/bash_completion'
 
 # color support
 export _COLOR=1; case $TERM in
