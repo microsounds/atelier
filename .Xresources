@@ -1,16 +1,18 @@
-!! ~/.Xresources: X resources user configuration
-#include <colors/nightdrive.h>
+/* ~/.Xresources: X resources user configuration */
 
-! xft
+/* xft */
 Xft.dpi: 96
 Xft.antialias: true
 Xft.rgba: rgb
 Xft.hinting: true
 Xft.hintstyle: hintslight
 
-! rxvt-unicode
-! near-zero kerning causes font breakage without fallbacks
-URxvt.font: xft:Noto Mono:size=10,xft:VL Gothic:size=10
+/* rxvt-unicode */
+/* terminal fonts	normal                              fallback japanese */
+#define FONT_SERIF	xft:Verily Serif Mono:pixelsize=13, xft:Dejima:pixelsize=14
+#define FONT_SANS	xft:Noto Mono:pixelsize=13,         xft:VL Gothic:pixelsize=13
+
+URxvt.font: FONT_SERIF
 URxvt.letterSpace: -2
 URxvt.lineSpace: -1
 URxvt.geometry: 96x24
@@ -19,7 +21,9 @@ URxvt.saveLines: 2048
 URxvt.scrollBar: false
 URxvt.urgentOnBell: true
 
-! color scheme
+/* terminal color theme */
+#include <colors/nightdrive.h>
+
 URxvt.cursorColor: FGCOLOR
 URxvt.foreground: FGCOLOR
 URxvt.background: BGCOLOR
@@ -40,7 +44,7 @@ URxvt.color13: COLOR13
 URxvt.color14: COLOR14
 URxvt.color15: COLOR15
 
-! xclock
+/* xclock */
 XClock.Clock.hourColor: COLOR9
 XClock.Clock.minuteColor: COLOR6
 XClock.Clock.secondColor: FGCOLOR
@@ -48,7 +52,7 @@ XClock.Clock.majorColor: FGCOLOR
 XClock.Clock.minorColor: FGCOLOR
 XClock.Clock.background: BGCOLOR
 
-! xload
+/* xload */
 XLoad.*.foreground: FGCOLOR
 XLoad.*.background: BGCOLOR
 XLoad.*.highlight: COLOR14

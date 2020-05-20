@@ -1,23 +1,28 @@
 /* ~/.config/dwm/config.h: dwm/dmenu user configuration */
-#include <colors/nightdrive.h>
 
-/* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 16;       /* snap pixel */
-static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[] = { "Liberation Serif:size=12", "Dejima:size=12" };
-static const char dmenufont[] = "Liberation Serif:size=12";
+/* ux color theme */
+#include <colors/nightdrive.h>
 static const char col_gray1[] = str(BGCOLOR);
 static const char col_gray2[] = str(BGLIGHT);
 static const char col_gray3[] = str(FGCOLOR);
-static const char col_gray4[] = str(FGCOLOR); /* fg text */
+static const char col_gray4[] = str(FGCOLOR); /* foreground text */
 static const char col_cyan[]  = str(FGLIGHT);
 static const char *colors[][3]= {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan },
 };
+
+/* ux appearance */
+static const unsigned int borderpx = 1; /* window border width in px */
+static const unsigned int snap = 16;    /* snap pixel */
+static const int showbar = 1;
+static const int topbar = 1;
+static const char *fonts[] = {
+	"Liberation Serif:pixelsize=16",    /* normal */
+	"Dejima:pixelsize=16"               /* fallback japanese */
+};
+static const char dmenufont[] = "Liberation Serif:pixelsize=16";
 
 /* tagging */
 static const char *tags[] = {
@@ -36,8 +41,8 @@ static const Rule rules[] = {
 };
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 1;    /* number of clients in master area */
+static const float mfact = 0.55; /* factor of master area size [0.05..0.95] */
+static const int nmaster = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resize */
 
 static const Layout layouts[] = {
