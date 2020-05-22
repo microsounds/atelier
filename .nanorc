@@ -16,7 +16,7 @@ set softwrap
 set tabsize 4
 set autoindent
 set multibuffer
-set wordchars "$-:_"
+set wordchars "$-:._"
 set matchbrackets "(<[{)>]}"
 set trimblanks
 set afterends
@@ -31,17 +31,17 @@ unset historylog
 unset suspend
 
 ## ui
+set nopauses
+set constantshow
+unset quickblank
 set nohelp
 unset morespace
 unset linenumbers
-unset quickblank
-unset nopauses
-set constantshow
 
 ## color scheme
 set keycolor brightblue
 set functioncolor white
-set numbercolor cyan
+set numbercolor white
 set titlecolor black,cyan
 set statuscolor black,white
 set errorcolor black,red
