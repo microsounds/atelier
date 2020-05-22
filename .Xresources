@@ -8,9 +8,11 @@ Xft.hinting: true
 Xft.hintstyle: hintslight
 
 /* rxvt-unicode */
-/* terminal fonts	normal                              fallback japanese */
-#define FONT_SERIF	xft:Verily Serif Mono:pixelsize=13, xft:Dejima:pixelsize=14
-#define FONT_SANS	xft:Noto Mono:pixelsize=13,         xft:VL Gothic:pixelsize=13
+#define font(name, px)	xft:name:pixelsize=px
+
+/* terminal fonts	normal               fallback japanese */
+#define FONT_SERIF	font(Go Mono, 13),   font(Dejima, 13)
+#define FONT_SANS	font(Noto Mono, 13), font(VL Gothic, 13)
 
 URxvt.font: FONT_SERIF
 URxvt.letterSpace: -2
