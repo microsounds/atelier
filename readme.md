@@ -1,7 +1,7 @@
-# ![miku] _a  t  e  l  i  e  r_ ![miku]
-Dotfiles, shell scripts, and desktop rice. Home directory backup.
+# dotfiles![miku] — _a  t  e  l  i  e  r_
+_Dotfiles, shell scripts, and desktop rice. Home directory backup._
 ![scrot]
-> _Pictured: Debian stable, vanilla Xorg, miku, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
+> _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
 1. Perform a base installation of Debian stable.
@@ -15,13 +15,40 @@ Dotfiles, shell scripts, and desktop rice. Home directory backup.
 	# Disregard worktree state of $HOME, set to ignore untracked files
 	git meta config status.showUntrackedFiles no
 	```
-4. `cat ~/.comforts | xargs apt-get install -y` to install essential packages.
-5. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
-	* _These build and install the window manager, among other things._
-6. Reboot to finish.
+4. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
+	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._ 
+5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile), you will be kicked if `dwm` isn't installed._
 
 # Usage notes
+## Using `git meta`
+`git meta` points to a detached **bare** repo in `~/.config/meta` which manages the `$HOME` directory, allowing for in-place backup and version control of dotfiles.
+
+This is ideal for changes within the home directory, but not for system-wide changes.
+
+## Using `~/.once.d` post-install scripts
+All system-wide changes are performed through automated scripts located in `~/.once.d`
+
+_Some scripts apply only to specific hardware, they will **NOT** touch the system even if they are run._
+
+* System-wide changes that bypass the package manager, eg. edits to `/etc` are avoided when possible.
+* Sideloaded software is installed to `~/.local/bin` instead of `/usr/local/bin`
+
+| series | function |
+| -- | -- |
+| `0*` | Makes system-wide changes performed **through** the package manager, eg. installing essential packages. |
+| `1*` | Makes changes to `~/.local` file hierarchy, eg. sideloading 3rd party software. |
+| `2*` | Makes system-wide changes that **bypass** the package manager, eg. changes to `/etc`. These are hacks. |
+
+See [`~/.comforts`](.comforts) for the full list of essential packages.
+
+# Environment notes
+## Overloaded commands
+Some commands are overloaded to enable non-default behavior in several ways.
+1. Shell functions defined in [`~/.bashrc`](.bashrc)
+2. Executables scripts in `~/.local/bin` that invoke the intended command with [`extern`](.local/bin/extern)
+	* This is a dumb hack to emulate shell function behavior in `dmenu` and POSIX shell scripts.
+
 ## `nano` > [`nano_overlay`](Scripts/nano_overlay.sh)
 * Invoking `nano` calls a shell function that does the following:
 	* Generates customized syntax files for C-like languages.
@@ -41,17 +68,5 @@ Dotfiles, shell scripts, and desktop rice. Home directory backup.
 	* __`~/path/to/repo/sub/dir`__
 	* __`~/path/to/±repo:branch*/sub/dir`__
 
-## Using `git meta`
-`git meta` points to a detached _**bare**_ repo in `~/.config/meta` which manages the `$HOME` directory, allowing for in-place backup and version control of dotfiles.
-
-* Every effort is made to maintain a reproducible GNU/Linux system that can be synchronized between various machines.
-* Use of local, user-specific dotfiles that don't touch system defaults are preferred.
-	* _eg. dotfiles in `$HOME` supersede any defaults located in `/etc`, `/usr/share`, etc._
-
-## System-wide Configuration
-* System-wide changes that bypass the package manager are avoided when possible.
-	* _Necessary system-wide changes are reproduced with `~/.once.d` scripts._
-* See [`~/.comforts`](.comforts) for the full list of essential packages.
-
-[scrot]: https://i.imgur.com/0peU7Ia.png
-[miku]: https://i.imgur.com/Nr7HV9a.png
+[scrot]: https://i.imgur.com/yaVgrN7.png
+[miku]: https://i.imgur.com/fxBi6Qg.png

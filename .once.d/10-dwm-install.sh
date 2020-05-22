@@ -4,7 +4,6 @@
 # configuration should already exist in ~/.config
 
 echo "$0"
-
 for f in dwm-6.2; do
 	VERSION="${f#*-}"
 	CONFIG="$HOME/.config/${f%-*}"

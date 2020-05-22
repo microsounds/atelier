@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+# defines standard apt repositories
 # adds deb-multimedia repos
 
 TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
@@ -13,7 +14,7 @@ finish() {
 	exit
 }
 
-trap finish 1 2 3 6
+trap finish 0 1 2 3 6
 
 echo "$0"
 echo "Writing to '$APT'"
@@ -28,5 +29,3 @@ if wget "$SOURCE/$DEB" -O "$TMP/$DEB"; then
 	sudo dpkg -i "$TMP/$DEB"
 	sudo apt-get update
 fi
-finish
-
