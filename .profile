@@ -20,5 +20,5 @@ esac
 # start X server if tty1
 case $(tty) in
 	*tty1) exec startx $xopt > /dev/null 2>&1;;
-	*) case $0 in *bash) source "$HOME/.bashrc";; esac
+	*) case $0 in *bash) . "$HOME/.bashrc";; esac
 esac
