@@ -11,8 +11,8 @@
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
-	# dumb file storage
-	ecommit = !git commit -a -m "$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+	# commit changes without a message
+	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
 
 [advice]
 	detachedHead = false
