@@ -3,6 +3,7 @@
 # decorate root window
 # use bitmap background as fallback
 
+position='--bg-fill -g +0+0' # top of wallpaper
 images="$HOME/Pictures/active"
 bitmaps='/usr/include/X11/bitmaps'
 
@@ -13,5 +14,5 @@ EOF
 	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/gray3"
 done
 
-find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg -g +0+0 --bg-fill &
+find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg $position &
 ~/Scripts/xload.sh vert bottom-right &
