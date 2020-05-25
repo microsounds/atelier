@@ -13,5 +13,5 @@ OPTION='ignore'
 echo "$0"
 # append required key if it doesn't exist
 grep -q "$KEY" "$CONF" || echo "$KEY" | sudo tee -a "$CONF"
-sudo sed -i "/.*$KEY/c $KEY=$OPTION" "$CONF"
+sed "/.*$KEY/c $KEY=$OPTION" < "$CONF" | sudo tee "$CONF"
 echo "You must restart logind for changes to take effect."
