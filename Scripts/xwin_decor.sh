@@ -13,5 +13,5 @@ EOF
 	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/gray3"
 done
 
-find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg --bg-fill &
+find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg -g +0+0 --bg-fill &
 ~/Scripts/xload.sh vert bottom-right &
