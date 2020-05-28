@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: xinit user configuration
 
+# disable hardware beep
+xset -b off
+
 ## XKB hardware overrides
 read vendor < /sys/devices/virtual/dmi/id/sys_vendor
 case $vendor in
