@@ -5,14 +5,18 @@
 
 position='--bg-fill -g +0+0' # top of wallpaper
 images="$HOME/Pictures/active"
-bitmaps='/usr/include/X11/bitmaps'
+bitmaps="$HOME/.local/share/X11/bitmaps"
 
+# xload
+~/Scripts/xload.sh vert bottom-right &
+
+# fallback wallpaper
 cpp << EOF | egrep -v '^(#|$)' | while read color; do
-	#include <colors/overcast.h>
-	-bg str(COLOR0) -fg str(COLOR9)
+	#include <colors/nightdrive.h>
+	-bg str(COLOR3) -fg str(FGLIGHT)
 EOF
-	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/gray3"
+	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/diag.xbm"
 done
 
-find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg $position &
-~/Scripts/xload.sh vert bottom-right &
+# wallpaper
+find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg $position || exit
