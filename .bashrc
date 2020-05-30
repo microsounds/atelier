@@ -38,6 +38,12 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
+## useful aliases
+# prompt before overwrite
+for f in cp mv; do
+	alias $f="$f -i"
+done
+
 ## useful functions
 # GNU nano housekeeping routines
 nano() (
