@@ -4,17 +4,17 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 > _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
-1. Perform a base installation of Debian stable, and login to `tty2`
-2. Install `sudo`, add yourself to the `sudo` group and install `git`
+1. Perform a base installation of Debian stable.
+	* _Do not login to [`tty1`](.profile), you will be kicked during bootstrap._
+2. Install `sudo`, add yourself to the `sudo` group and install `git`.
 	* _Group membership changes apply upon next login._
-3. Bootstrap the system automatically using git.
-	* _This is needed only once._
+3. Bootstrap the system automatically using git. This is done only once.
 	```shell
 	git clone --bare [remote] ~/.config/meta
 	git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
 	# Set to ignore state of untracked files in $HOME
 	git meta config status.showUntrackedFiles no
-	# Re-invoke the login shell to set up environment for the next steps
+	# Re-invoke the login shell to reload the environment for the next step
 	exec $SHELL -l
 	```
 4. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
