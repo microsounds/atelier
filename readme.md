@@ -7,19 +7,19 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 1. Perform a base installation of Debian stable.
 	* _Do not login to [`tty1`](.profile), you will be kicked during bootstrap._
 2. Install `sudo`, add yourself to the `sudo` group and install `git`.
-	* _Group membership changes apply upon next login._
-3. Bootstrap the system automatically using git. This is done only once.
+3. _**Apply changes to group membership by invoking the login shell.**_
+	* _`exec $SHELL -l` is the easiest way to do this, or log back in manually._
+4. Bootstrap the system automatically with git. This is done only once.
 	```shell
 	git clone --bare [remote] ~/.config/meta
 	git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
 	# Set to ignore state of untracked files in $HOME
 	git meta config status.showUntrackedFiles no
-	# Re-invoke the login shell to reload the environment for the next step
-	exec $SHELL -l
 	```
-4. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
+5. _**Invoke the login shell again to reload changes to the environment.**_
+6. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
 	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._ 
-5. Reboot to finish.
+7. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile), you will be kicked if `dwm` isn't installed._
 
 # Usage notes
@@ -29,17 +29,17 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 This is ideal for changes within the home directory, but not for system-wide changes.
 
 ## Using `~/.once.d` post-install scripts
-All system-wide changes are performed through automated scripts located in `~/.once.d`
+All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d)
 
 _Some scripts apply only to specific hardware, they will **NOT** touch the system even if they are run._
 
 * System-wide changes that bypass the package manager, eg. edits to `/etc` are avoided when possible.
-* Sideloaded software is installed to `~/.local/bin` instead of `/usr/local/bin`
+* Sideloaded software is installed to [`~/.local/bin`](.local/bin) instead of `/usr/local/bin`
 
 | series | function |
 | -- | -- |
 | `0*` | Makes system-wide changes performed **through** the package manager, eg. installing essential packages. |
-| `1*` | Makes changes to `~/.local` file hierarchy, eg. sideloading 3rd party software. |
+| `1*` | Makes changes to [`~/.local`](.local) file hierarchy, eg. sideloading 3rd party software. |
 | `2*` | Makes system-wide changes that **bypass** the package manager, eg. changes to `/etc`. These are hacks. |
 
 See [`~/.comforts`](.comforts) for the full list of essential packages.
