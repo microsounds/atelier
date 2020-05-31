@@ -6,13 +6,13 @@ HISTCONTROL=ignoredups
 # bash-completion
 . '/usr/share/bash-completion/bash_completion'
 
-# color support
+## color support
 export _COLOR=1; case $TERM in
 	*color | linux) ;; # known color terminals
 	*) [ $(tput colors) -lt 8 ] && unset _COLOR
 esac
 
-# set terminal prompt
+## set terminal prompt
 PROMPT_COMMAND=_set_prompt
 _set_prompt() {
 	if [ ! -z $_COLOR ]; then
@@ -38,11 +38,43 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
-## useful aliases
+## overloading built-in commands
+# create parent directories
+alias mkdir='mkdir -p'
+
 # prompt before overwrite
-for f in cp mv; do
-	alias $f="$f -i"
-done
+alias cp='cp -i'
+alias mv='mv -i'
+
+# identify file types regardless of color support
+ls() (
+	arg='--classify' # fallback
+	[ ! -z $_COLOR ] && arg='--color'
+	command ls --literal --group-directories-first $arg "$@"
+)
+
+# moves out out deep nested directories containing only directories
+cd() {
+	if [ "$1" = '...' ]; then
+		while true; do
+			command cd .. && echo "$PWD"
+			[ "$PWD" != '/' ] &&
+			[ $(ls -la | grep -v '^d' | wc -l) -lt 2 ] || break
+		done; return
+	fi
+	command cd "$@"
+}
+
+# runs shell documentation through a pager
+help() (
+	[ -z "$1" ] && command help
+	for f in $@; do # decorate bold text
+		if page="$(command help -m "$f")"; then
+			printf "$(echo "$page" | \
+			sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')" | less -R
+		fi
+	done
+)
 
 ## useful functions
 # GNU nano housekeeping routines
@@ -59,17 +91,11 @@ nano() (
 	if [ -f "$hist" ]; then
 		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
 		if [ $delta -gt 300 ]; then
-			line=$(((delta - 300) / 60))
+			line=$(((delta - 300) / 60)) # one per minute
 			{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
 		fi
 	fi
 	~/Scripts/nano_overlay.sh "$@"
-)
-
-ls() (
-	arg='--classify' # color support fallback
-	[ ! -z $_COLOR ] && arg='--color'
-	command ls --literal --group-directories-first $arg "$@"
 )
 
 # runs ledger, decrypts ledger file for viewing
@@ -80,29 +106,6 @@ ledger() (
 	export EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
 	~/Scripts/nano_overlay.sh -f "$file"
-)
-
-# move up to nearest non-empty directory
-cd() {
-	if [ "$1" = '...' ]; then
-		while true; do
-			command cd .. && echo "$PWD"
-			[ "$PWD" != '/' ] &&
-			[ $(ls -l | grep -v '^d' | wc -l) -lt 2 ] || break
-		done; return
-	fi
-	command cd "$@"
-}
-
-# shell documentation man pages
-help() (
-	[ -z "$1" ] && command help
-	for f in $@; do # decorate bold text
-		if page="$(command help -m "$f")"; then
-			printf "$(echo "$page" | \
-			sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')" | less -R
-		fi
-	done
 )
 
 # spawns QR code (typically containing a URL)
