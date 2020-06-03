@@ -77,6 +77,7 @@ mode_ctags() {
 ##                  prompted to overwrite the original file.
 ##                  * Scripts can provide env vars $EDITOR and $EXTERN_ARGS
 ##                    to edit the decrypted file using a different program.
+##                    eg. ${EDITOR:-nano} "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
 random_bits() { tr -cd 'a-z0-9' < /dev/urandom | head -c $1; }
