@@ -23,6 +23,11 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile), you will be kicked if `dwm` isn't installed._
 
 # Usage notes
+## X session startup tied to Xinit
+This setup attempts to limit the use of system-wide changes to the machine.
+
+Daemons and services required for the window manager are tied to `xinit`, avoiding the use of `systemd` unit files, cronjobs, or other stateful changes. They are terminated when the X server exits.
+
 ## Using `git meta`
 `git meta` points to a detached **bare** repo in `~/.config/meta` which manages the `$HOME` directory, allowing for in-place backup and version control of dotfiles.
 
