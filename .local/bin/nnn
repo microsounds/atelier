@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# window manager shim
+# open terminal if not open already
+[ -z "$WINDOWID" ] && shim='urxvtc -e'
+
+exec extern $shim nnn "$@"
+
