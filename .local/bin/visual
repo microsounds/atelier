@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Usage: visual [command]
+# X window wrapper for terminal programs
+
+# opens a terminal if not open already
+case "$(tty)" in
+	'not a tty') shim='urxvtc -e';;
+esac
+
+$shim "$@"

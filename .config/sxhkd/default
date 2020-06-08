@@ -3,16 +3,21 @@
 # reload config
 super + Escape
 	pkill -USR1 -x sxhkd
-
-# wm dependent hotkeys
-# ~/.config/dwm/config.h: dwm/dmenu user configuration
-
-# wm independent hotkeys
+# terminal
 super + Return
 	urxvtc
+# file manager
+super + e
+	visual nnn
+# task manager
+ctrl + alt + Delete
+	visual htop
+# switch displays
 XF86Display
 	~/Scripts/xrandr_cycle.sh
+# brightness
 XF86MonBrightness{Down,Up}
 	xbacklight -time 50 -{dec,inc} 10
+# audio
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}

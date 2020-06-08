@@ -1,5 +1,9 @@
 ## ~/.profile: executed by the command interpreter for login shells.
 
+# editor
+export EDITOR='nano'
+export VISUAL='visual nano'
+
 ## ~/.local file hierarchy
 export PATH="$HOME/.local/bin:$PATH"
 export C_INCLUDE_PATH="$HOME/.local/include"

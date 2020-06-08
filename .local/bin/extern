@@ -1,12 +1,13 @@
 #!/usr/bin/env sh
 
 # Usage: extern [command]
-# Runs external executable located outside of the directory this shell script
-# is located in for this invocation only.
+# Purges directory containing this script from $PATH for this invocation only.
 # eg. Script is located in ~/.local/bin, this directory is purged from $PATH.
 #
-# This exists solely to avoid hardcoding paths to system built-in executables.
-# Similar to POSIX command(1) but goes one step further.
+# Typical usage is to emulate the behavior of shell functions in environments
+# that don't support them, such as window managers.
+# This is just a dumb implementation of command(1), and exists solely to
+# avoid hardcoding paths to executables.
 
 PATH="${PATH#${0%/*}}"
 "$@"
