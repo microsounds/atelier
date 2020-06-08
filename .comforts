@@ -26,6 +26,7 @@ libxft-dev
 libxinerama-dev
 m4
 make
+mediainfo
 mpv
 nano
 network-manager

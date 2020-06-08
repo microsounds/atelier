@@ -1,8 +1,12 @@
 #!/usr/bin/env sh
 
-# window manager shim
-# open terminal if not open already
-[ -z "$WINDOWID" ] && shim='urxvtc -e'
+# ~/.local/bin/nnn: nnn 2.x configuration
 
-exec extern $shim nnn "$@"
+# nnn chokes on multiple levels of invocation
+unset VISUAL
 
+export NNN_USE_EDITOR=1
+export NNN_SHOW_HIDDEN=1
+export DISABLE_FILE_OPEN_ON_NAV=1
+
+extern nnn "$@"
