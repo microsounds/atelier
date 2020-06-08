@@ -13,7 +13,7 @@ bitmaps="$HOME/.local/share/X11/bitmaps"
 # fallback wallpaper
 cpp << EOF | egrep -v '^(#|$)' | while read color; do
 	#include <colors/nightdrive.h>
-	-bg str(COLOR3) -fg str(FGLIGHT)
+	-bg str(COLOR15) -fg str(COLOR1)
 EOF
 	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/diag.xbm"
 done
