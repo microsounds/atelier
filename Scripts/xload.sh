@@ -30,11 +30,12 @@ done
 
 # positioning
 for prog in $LIST; do
-	while ! wmctrl -l | fgrep -q "$prog"; do :; done # waste time
-	win_id=$(wmctrl -l | grep "$prog" | egrep -o '0x[0-9a-f]+')
-	wmctrl -i -r "$win_id" -b add,skip_taskbar,skip_pager
-	wmctrl -i -r "$win_id" -b add,sticky,bottom
-	wmctrl -i -r "$win_id" -e 0,$XPOS,$YPOS,$SIZE,$SIZE
+	# waste time while prog launches
+	while ! window=$(xwininfo -name "$prog" 2> /dev/null); do :; done
+	win_id=$(echo "$window" | egrep -o '0x[0-9a-f]+' | head -1)
+	wmctrl -i -r "$win_id" -b add,skip_taskbar,skip_pager &
+	wmctrl -i -r "$win_id" -b add,sticky,bottom &
+	wmctrl -i -r "$win_id" -e 0,$XPOS,$YPOS,$SIZE,$SIZE &
 	jump=$((SIZE + GAP)) # determine placement
 	if [ ! -z $VERT ]; then
 		[ $((YPOS - jump)) -lt 0 ] && jump=$((jump * -1))
