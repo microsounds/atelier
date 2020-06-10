@@ -27,8 +27,7 @@ mkfifo "$FIFO"
 
 # thread loop
 launch() {
-	[ ! -e "$FIFO" ] && exit
-	while :; do
+	while [ -e "$FIFO" ]; do
 		"$1"
 		sleep "$2"
 	done > "$FIFO" &
