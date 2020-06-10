@@ -35,10 +35,10 @@ launch() {
 }
 
 fan_speed() (
-	# express fan speed in percent if supported
+	# express fan speed in percent power if supported
 	sensors -u | egrep 'fan[0-9]+_input' | head -1 | while read -r _ rpm; do
 		rpm=$(((${rpm%.*} * 100) / 5700))
-		echo "FAN ${rpm}%"
+		echo "FAN ${rpm}%💦"
 	done
 )
 
@@ -52,7 +52,7 @@ temps() (
 		sum=$((sum + ${f%.*}))
 	done
 	temp="$(echo "scale=1; (($sum / $n) * (9 / 5)) + 32" | bc)"
-	echo "TEMP $temp˚F"
+	echo "TEMP ∿$temp˚F"
 )
 
 public_ip() (
@@ -64,13 +64,13 @@ public_ip() (
 )
 
 network() (
-	# networking
+	# network manager status
 	net="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -1)"
-	echo "NET ${net:-Network Off}"
+	echo "NET 📶${net:-Network Off}"
 )
 
 power() (
-	# power management
+	# AC adapter / battery life
 	acpi="$(acpi -b | egrep -o '[0-9]+\%.*')"
 	pct="$(echo "$acpi" | egrep -o '[0-9]+%' | head -1)"
 
@@ -87,15 +87,15 @@ power() (
 			remaining) btime_v="$btime_v left";;
 		esac; done
 	fi
-	echo "BAT $pct${btime_v:+, $btime_v}"
+	echo "BAT ↯$pct${btime_v:+, $btime_v}"
 )
 
 sound() (
 	# sound mixer
 	alsa="$(amixer get 'Master')"
 	lvl="$(echo "$alsa" | egrep -o '[0-9]+%' | head -1)"
-	[ ! -z "$(echo "$alsa" | fgrep 'off')" ] && lvl="$lvl, muted"
-	echo "VOL Vol $lvl"
+	[ ! -z "$(echo "$alsa" | fgrep 'off')" ] && mute="🔇"
+	echo "VOL ${mute:-🔉}$lvl"
 )
 
 current_date() (
@@ -119,7 +119,7 @@ current_time() (
 # update every n seconds
 launch fan_speed 30
 launch temps 30
-launch public_ip 15
+#launch public_ip 15
 launch network 15
 launch power 30
 launch sound 5
@@ -139,6 +139,6 @@ while read -r line; do
 	# compose status bar
 	bar="${FAN-$TEMP}${IP}${NET}${BAT}${VOL}${DATE}${TIME}"
 
-	# strip delimiter from the very end
+	# strip delimiter from last module
 	echo "'$pad$(echo "$bar" | sed 's/・$//')$pad'" | xargs xsetroot -name
 done < "$FIFO"
