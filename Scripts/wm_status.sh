@@ -45,11 +45,13 @@ fan_speed() (
 temps() (
 	# express average CPU temperature in ˚F
 	cores=$(grep -c '^proc' /proc/cpuinfo)
-	sum=0; for f in $(sensors -u | egrep 'temp[0-9]+_input' | sort | tail -$cores \
-	                             | sed 's/^ *//' | tr ' ' '\t' | cut -f2); do
+	sum=0; n=0; # don't assume # of cores is equal to # of sensors
+	for f in $(sensors -u | egrep 'temp[0-9]+_input' | sort | tail -$cores \
+	                      | sed 's/^ *//' | tr ' ' '\t' | cut -f2); do
+		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
 	done
-	temp="$(echo "scale=1; (($sum / $cores) * (9 / 5)) + 32" | bc)"
+	temp="$(echo "scale=1; (($sum / $n) * (9 / 5)) + 32" | bc)"
 	echo "TEMP $temp˚F"
 )
 
