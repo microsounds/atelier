@@ -24,6 +24,7 @@ libnss-mdns
 libx11-dev
 libxft-dev
 libxinerama-dev
+lm-sensors
 m4
 make
 mediainfo

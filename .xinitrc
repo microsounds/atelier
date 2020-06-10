@@ -23,9 +23,7 @@ done
 ## daemons
 sxhkd &
 urxvtd -o &
-while xsetroot -name "$(~/Scripts/dwm_status.sh -p)"; do
-	sleep 10
-done & # status bar
+~/Scripts/wm_status.sh -p & # status bar
 
 ## configuration
 xrdb ~/.Xresources
