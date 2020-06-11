@@ -70,15 +70,17 @@ network() (
 
 power() (
 	# AC adapter / battery life
-	acpi="$(acpi -b | egrep -o '[0-9]+\%.*')"
-	pct="$(echo "$acpi" | egrep -o '[0-9]+%' | head -1)"
+	acpi="$(acpi -b | tr -d ',' | head -1)"
+	for f in $acpi; do case $f in
+		*%) pct="$f";;
+		*:*:*) btime="$f";;
+	esac; done
 
-	# ignore blank, 'Unknown' or 'Charging at zero rate' values
-	if [ "$acpi" != "$pct" ] && ! echo "$acpi" | egrep -q '(Unknown|zero)'; then
-		btime="$(echo "$acpi" | egrep -o '([0-9]+:?)+' | tail -1)"
-		i=0; for f in h m; do # rewrite time remaining as approximation
+	if [ ! -z "$btime" ]; then
+		i=0; for f in h m; do # approximate time remaining
 			i=$((i + 1))
-			val="$(echo "$btime" | cut -d ':' -f$i | sed 's/^0//')"
+			val="$(echo "$btime" | tr ':' '\n' | tail -n +$i | head -1)"
+			val="$(echo "$val" | sed 's/^0//')" # strip leading zero
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
