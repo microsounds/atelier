@@ -56,16 +56,14 @@ temps() (
 
 public_ip() (
 	# get public IP (very slow)
-	if ! ip="$(wget -q -O - 'https://ifconfig.me/ip')"; then
-		ip="none"
-	fi
-	echo "IP $ip"
+	ip="$(wget -q -O - 'https://ifconfig.me/ip')"
+	echo "IP ${ip:-none}"
 )
 
 network() (
 	# network manager status
 	net="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -1)"
-	echo "NET 📶${net:-Network Off}"
+	echo "NET 📶 ${net:-Disabled}"
 )
 
 power() (
@@ -79,8 +77,7 @@ power() (
 	if [ ! -z "$btime" ]; then
 		i=0; for f in h m; do # approximate time remaining
 			i=$((i + 1))
-			val="$(echo "$btime" | tr ':' '\n' | tail -n +$i | head -1)"
-			val="$(echo "$val" | sed 's/^0//')" # strip leading zero
+			val="$(echo "$btime" | cut -d ':' -f$i | sed 's/^0//')"
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
@@ -94,21 +91,20 @@ power() (
 sound() (
 	# sound mixer
 	alsa="$(amixer get 'Master')"
-	lvl="$(echo "$alsa" | egrep -o '[0-9]+%' | head -1)"
-	[ ! -z "$(echo "$alsa" | fgrep 'off')" ] && mute="🔇"
+	lvl="$(echo "$alsa" | egrep -o '[0-9]+\%' | head -1)"
+	echo "$alsa" | fgrep -q 'off' && mute="🔇"
 	echo "VOL ${mute:-🔉}$lvl"
 )
 
 current_date() (
 	# current date
-	for day in $(date '+%-e'); do
-		case $day in
-			1 | 21 | 31) day="${day}st";;
-			2 | 22) day="${day}nd";;
-			3 | 23) day="${day}rd";;
-			*) day="${day}th"
-		esac
-	done
+	day="$(date '+%-e')"
+	case $day in
+		1 | 21 | 31) day="${day}st";;
+		2 | 22) day="${day}nd";;
+		3 | 23) day="${day}rd";;
+		*) day="${day}th"
+	esac
 	echo "DATE $(date '+%a, %b') $day"
 )
 
