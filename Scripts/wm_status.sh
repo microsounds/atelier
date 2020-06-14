@@ -50,7 +50,7 @@ temps() (
 		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
 	done
-	temp="$(echo "1k 32 9 5 / $sum $n / * + n" | dc)"
+	temp="$(echo "scale=1; 32 + (1.8 * ($sum / $n))" | bc)"
 	echo "TEMP ∿$temp˚F"
 )
 
