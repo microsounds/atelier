@@ -89,11 +89,17 @@ power() (
 )
 
 sound() (
-	# sound mixer
+	# sound mixer status
 	alsa="$(amixer get 'Master')"
 	lvl="$(echo "$alsa" | egrep -o '[0-9]+\%' | head -1)"
-	echo "$alsa" | fgrep -q 'off' && mute="🔇"
-	echo "VOL ${mute:-🔉}$lvl"
+	echo "$alsa" | fgrep -q 'off' && mute='🔇'
+
+	# headphone status
+	for f in $(pactl list sinks | fgrep "Active Port"); do
+		case $f in *headphones) aux=' ☊';; esac
+	done
+
+	echo "VOL ${mute:-🔉}$lvl$aux"
 )
 
 current_date() (
