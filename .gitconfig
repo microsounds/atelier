@@ -5,13 +5,13 @@
 	email = microsounds@users.noreply.github.com
 
 [alias]
-	sync = push origin master
+	# recent changes
 	summary = log --oneline --decorate --graph -n 16
 	# home directory version control
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
-	# commit changes without a message
+	# quickly commit changes without a message
 	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
 
 [advice]
