@@ -12,6 +12,10 @@ export _COLOR=1; case $TERM in
 	*) [ $(tput colors) -lt 8 ] && unset _COLOR
 esac
 
+## preserve $OLDPWD between sessions
+export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/lastdir.$UID"
+[ ! -f "$_LASTDIR" ] || read OLDPWD < "$_LASTDIR"
+
 ## set terminal prompt
 PROMPT_COMMAND=_set_prompt
 _set_prompt() {
@@ -38,7 +42,7 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
-## overloading built-in commands
+## default options for coreutils
 # create parent directories
 alias mkdir='mkdir -p'
 
@@ -46,25 +50,34 @@ alias mkdir='mkdir -p'
 alias cp='cp -i'
 alias mv='mv -i'
 
-# identify file types regardless of color support
 ls() (
+	# identify file types regardless of color support
 	arg='--classify' # fallback
 	[ ! -z $_COLOR ] && arg='--color'
 	command ls --literal --group-directories-first $arg "$@"
 )
 
-# moves out out deep nested directories containing only directories
+# impure function
 cd() {
-	if [ "$1" = '...' ]; then
-		while true; do
-			command cd .. && echo "$PWD"
-			[ "$PWD" != '/' ] &&
-			[ $(ls -la | grep -v '^d' | wc -l) -lt 2 ] || break
-		done; return
-	fi
+	case "$1" in
+		...) # quickly move out of deep nested dirs containing only more dirs
+			while :; do
+				command cd .. && echo "$PWD"
+				[ "$PWD" != '/' ] &&
+				[ $(ls -la | grep -v '^d' | wc -l) -lt 2 ] || break
+			done && return;;
+		-e) # fuzzy find and jump into sub-directory
+			shift
+			[ -z "$1" ] && echo 'Please enter a query.' && return
+			set -- "$(find . -type d | grep -i "$1" | head -1)"
+			[ -z "$@" ] && echo 'Not found.' && return;;
+	esac
 	command cd "$@"
+	# preserve $OLDPWD between sessions
+	echo "$PWD" > "$_LASTDIR"
 }
 
+## useful functions
 # runs shell documentation through a pager
 help() (
 	[ -z "$1" ] && command help
@@ -76,7 +89,6 @@ help() (
 	done
 )
 
-## useful functions
 # GNU nano housekeeping routines
 nano() (
 	my="$HOME/.local/share/nano"; builtin='/usr/share/nano'
@@ -128,6 +140,7 @@ update() (
 	done
 )
 
+# impure function
 # switch terminal color palette
 tcolor() {
 	find ~/.local/include/colors -type f | while read plt; do

@@ -50,14 +50,26 @@ _Some scripts apply only to specific hardware, they will **NOT** touch the syste
 See [`~/.comforts`](.comforts) for the full list of essential packages.
 
 # Environment notes
-## Overloaded commands
-Some commands are overloaded to enable non-default behavior in several ways.
-1. Shell functions defined in [`~/.bashrc`](.bashrc)
-2. Executables scripts in `~/.local/bin` that invoke the intended command with [`extern`](.local/bin/extern)
+## Non-standard commands
+Several commands are extended with the following precedence:
+1. Scripts in `~/.local/bin` that invoke the intended command with [`extern`](.local/bin/extern)
 	* This is a dumb hack to emulate shell function behavior in `dmenu` and POSIX shell scripts.
+2. Bash shell functions defined in [`~/.bashrc`](.bashrc)
+3. Executables located in `/usr/bin`
+
+It goes without saying that most of these are impure functions.
+
+## `ls`
+* The contents of `$OLDPWD` is preserved between sessions.
+* `ls` offers the following extensions:
+	| opt | function |
+	| -- | -- |
+	| `...` | Quickly moves out of deep nested directories containing only more directories. |
+	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
+
 
 ## `nano` > [`nano_overlay`](Scripts/nano_overlay.sh)
-* Invoking `nano` calls a shell function that does the following:
+* Invoking `nano` does the following:
 	* Generates customized syntax files for C-like languages.
 	* Purges old file cursor positions.
 * Arguments are passed verbatim to `nano_overlay` which offers the following extensions:
