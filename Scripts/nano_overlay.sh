@@ -161,7 +161,8 @@ mode_encrypt() {
 
 # overlay command line options
 mode='overlay'
-if [ ! -z "$1" ]; then # steal options not supported by GNU nano
+if [ ! -z "$1" ]; then
+	# steal options not supported by GNU nano
 	if echo "$1" | grep -q '^-' && ! echo "$1" | grep -q '^--'; then
 		for f in $(echo "$1" | sed 's/./& /g'); do
 			case $f in
@@ -171,13 +172,21 @@ if [ ! -z "$1" ]; then # steal options not supported by GNU nano
 			esac
 		done
 	fi
-	for f in "$@"; do # force quit on lockfiles and other mistakes
-		if [ -f "$(derive_parent "$f")/.${f##*/}.swp" ]; then
-			quit "'$f' already in use"
-		elif [ -d "$f" ]; then
-			quit "'$f' is a directory"
-		fi
-	done
+	# normal mode
+	# make wild assumptions about arguments
+	for f in "$@"; do case "$f" in
+		-*) # don't act on flags
+			;;
+		*)
+			# lockfile exists
+			[ -f "$(derive_parent "$f")/.${f##*/}.swp" ] && \
+				quit "'$f' already in use"
+			# unwritable
+			[ -d "$f" ] && quit "'$f' is a directory"
+			# force line numbers on large files
+			[ -f "$f" ] && [ $(wc -l < "$f") -gt 250 ] && \
+				opts='-l'
+	esac; done
 fi
 
-exec nano "$@"
+exec nano $opts "$@"
