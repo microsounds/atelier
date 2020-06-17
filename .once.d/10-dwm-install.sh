@@ -1,14 +1,17 @@
 #!/usr/bin/env sh
 
-# automated dwm install script
-# configuration should already exist in ~/.config
+# automated suckless configuration and install script
 
 echo "$0"
 for f in dwm-6.2; do
 	VERSION="${f#*-}"
 	CONFIG="$HOME/.config/${f%-*}"
 	ORIGIN="git://git.suckless.org/${f%-*}"
-	[ ! -d "$CONFIG" ] && echo "'$CONFIG' doesn't exist." && exit 1
+
+	# checkout config directory if it doesn't already exist
+	if ! git meta checkout "$CONFIG" || [ ! -d "$CONFIG" ]; then
+		echo "'$CONFIG' doesn't exist." && exit 1
+	fi
 
 	if cd "$CONFIG" && ! git status 2> /dev/null; then
 		git init
