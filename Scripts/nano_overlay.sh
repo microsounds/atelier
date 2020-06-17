@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.4
+## nano_overlay.sh v0.5
 ## Overlay script that provides interactive functionality for GNU nano.
 ##  -h              Displays this message.
 
@@ -14,7 +14,7 @@ derive_parent() (
 	# return '.' if path is in the current dir
 	if echo "$@" | fgrep -q '/'; then
 		path="${@%/*}"
-		path="${path:-/}" # nothing left, assume '/'
+		path="${path:-/}" # if nothing left, assume '/'
 	fi
 	echo "${path:-.}"
 )
@@ -43,19 +43,21 @@ mode_ctags() {
 	# find root directory containing ctags index
 	# all filenames are relative to this directory
 	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
-	[ -z "$PWD" ] && quit 'No index found in this or any parent directories up to /'
+	[ ! -z "$PWD" ] ||
+		quit 'No index found in this or any parent directories up to /'
 
 	# validate index and get version
 	ver="$(fgrep '!_TAG_FILE_FORMAT' "$PWD/tags" | cut -f2)"
 	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
-	fgrep -q '/^' "$PWD/tags" && quit 'Index file must be in numeric '-n' mode'
+	fgrep -q '/^' "$PWD/tags" &&
+		quit 'Index file must be in numeric '-n' mode'
 
 	# find matches based on first column
 	[ ! -z "$1" ] || quit 'No tag query given'
 	for f in $(cut -f1 < "$PWD/tags" | grep -i -n "$1" | cut -d ':' -f1); do
 		list="$list${f}p;"
 	done
-	# create tab-delimited list from index file
+	# cherry-pick matches from index file
 	matches="$(sed -n "$list" < "$PWD/tags")"
 	[ ! -z "$matches" ] || quit "No matches found for $1"
 
@@ -143,9 +145,8 @@ mode_encrypt() {
 
 		trap '[ ! -f "$tmp" ] || shred -z -u "$tmp"' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then # decrypt file
-			if ! openssl enc $cipher -pass "pass:$pass" -d < "$f" | xz -d > "$tmp"; then
+			openssl enc $cipher -pass "pass:$pass" -d < "$f" | xz -d > "$tmp" ||
 				quit 'Invalid password'
-			fi
 			init="$(sha256sum < "$tmp")" # monitor changes
 		fi
 		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
@@ -187,13 +188,12 @@ if [ ! -z "$1" ]; then
 			;;
 		*)
 			# lockfile exists
-			[ -f "$(derive_parent "$f")/.${f##*/}.swp" ] && \
+			[ -f "$(derive_parent "$f")/.${f##*/}.swp" ] &&
 				quit "'$f' already in use"
 			# unwritable
 			[ -d "$f" ] && quit "'$f' is a directory"
 			# force line numbers on large files
-			[ -f "$f" ] && [ $(wc -l < "$f") -gt 250 ] && \
-				opts='-l'
+			[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opts='-l'
 	esac; done
 fi
 
