@@ -1,22 +1,23 @@
 ## ~/.bashrc: executed by bash(1) for non-login shells.
 
-## bash specific
+# bash specific
 HISTCONTROL=ignoredups
 
 # bash-completion
 . '/usr/share/bash-completion/bash_completion'
 
-## color support
+# color support
 export _COLOR=1; case $TERM in
 	*color | linux) ;; # known color terminals
 	*) [ $(tput colors) -lt 8 ] && unset _COLOR
 esac
 
-## preserve $OLDPWD between sessions
+# preserve $OLDPWD between sessions
 export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/lastdir.$UID"
 [ ! -f "$_LASTDIR" ] || read OLDPWD < "$_LASTDIR"
 
-## set terminal prompt
+# set terminal prompt
+# embed git status information if available
 PROMPT_COMMAND=_set_prompt
 _set_prompt() {
 	if [ ! -z $_COLOR ]; then
@@ -38,11 +39,9 @@ _set_prompt() {
 	fi
 	# set window title and prompt
 	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
-	# affects global state, cannot subshell
 	unset u p r path git_info topdir suffix prefix
 }
 
-## default options for coreutils
 # create parent directories
 alias mkdir='mkdir -p'
 
@@ -57,7 +56,6 @@ ls() (
 	command ls --literal --group-directories-first $arg "$@"
 )
 
-# impure function
 cd() {
 	case "$1" in
 		...) # quickly move out of deep nested dirs containing only more dirs
@@ -77,7 +75,6 @@ cd() {
 	echo "$PWD" > "$_LASTDIR"
 }
 
-## useful functions
 # runs shell documentation through a pager
 help() (
 	[ -z "$1" ] && command help
@@ -89,7 +86,7 @@ help() (
 	done
 )
 
-# GNU nano housekeeping routines
+# nano housekeeping routines
 nano() (
 	my="$HOME/.local/share/nano"; builtin='/usr/share/nano'
 	hist="$my/filepos_history"
@@ -112,6 +109,7 @@ nano() (
 
 # runs ledger, decrypts ledger file for viewing
 # suspend to make changes to plaintext ledger directly
+# changes are saved if plaintext ledger is modified
 ledger() (
 	file="$HOME/.private.d/ledger.dat"
 	[ ! -f "$file" ] && echo "'$file' not found." && exit
@@ -120,10 +118,10 @@ ledger() (
 	~/Scripts/nano_overlay.sh -f "$file"
 )
 
-# spawns QR code (typically containing a URL)
+# create QR code from stdin or from a string argument
 qr() (
-	qrencode -s 1 -o - "${@:-$(cat /dev/stdin)}" | \
-	feh - -Z --force-aliasing
+	[ ! -f /dev/stdin ] || set -- -r /dev/stdin
+	qrencode -s 1 -o - "$@" | feh - -Z --force-aliasing
 )
 
 # check for updates, remove old kernels
@@ -140,12 +138,11 @@ update() (
 	done
 )
 
-# impure function
-# switch terminal color palette
-tcolor() {
-	find ~/.local/include/colors -type f | while read plt; do
-		if echo "${plt##*/}" | fgrep -q "$@"; then
-			sed "/#include/a #include \"$plt\"" ~/.Xresources | xrdb -
+# reload terminal configuration, pass optional colorscheme name
+reload() {
+	find ~/.local/include/colors -type f | while read f; do
+		if echo "${f##*/}" | fgrep -q "${@:-nightdrive}"; then
+			sed "/#include/a #include \"$f\"" ~/.Xresources | xrdb -
 		fi
 	done
 	exec urxvtc
