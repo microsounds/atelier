@@ -32,14 +32,11 @@ mode_help() {
 ##                  If multiple matches are found, specify line number <#>.
 ##                  ** Requires ctags '-n' flag for numeric line numbers.
 
-jump_to() {
-	if [ "$(echo "$1" | cut -f3 | cut -c 1-2)" = '/^' ]; then
-		quit 'ctags must be run in '-n' mode for numeric line numbers'
-	fi
-	file="$(echo "$1" | cut -f2)"
-	line="$(echo "$1" | cut -f3 | egrep -o '[0-9]+')"
-	exec nano "+$line" "$PWD/$file"
-}
+jump_into() (
+	file="$(echo "$@" | cut -f2)"
+	pos="$(echo "$@" | cut -f3 | egrep -o '[0-9]+')"
+	exec nano "+$pos" "$PWD/$file"
+)
 
 mode_ctags() {
 	mode='ctags'
@@ -47,26 +44,37 @@ mode_ctags() {
 	# all filenames are relative to this directory
 	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
 	[ -z "$PWD" ] && quit 'No index found in this or any parent directories up to /'
-	[ -z "$1" ] && quit 'No tag query given'
+
+	# validate index and get version
+	ver="$(fgrep '!_TAG_FILE_FORMAT' "$PWD/tags" | cut -f2)"
+	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
+	fgrep -q '/^' "$PWD/tags" && quit 'Index file must be in numeric '-n' mode'
 
 	# find matches based on first column
+	[ ! -z "$1" ] || quit 'No tag query given'
 	for f in $(cut -f1 < "$PWD/tags" | grep -i -n "$1" | cut -d ':' -f1); do
 		list="$list${f}p;"
 	done
+	# create tab-delimited list from index file
 	matches="$(sed -n "$list" < "$PWD/tags")"
-	[ -z "$matches" ] && quit "No matches found for $1"
+	[ ! -z "$matches" ] || quit "No matches found for $1"
 
 	num="$(echo "$matches" | wc -l)"
 	if [ "$num" -gt 1 ]; then # multiple matches
 		if [ ! -z "$2" ]; then
-			[ "$2" -eq "$2" ] 2> /dev/null && # validate
-			[ "$2" -le "$num" ] &&
-			jump_to "$(echo "$matches" | tail -n "+$2" | head -1)"
+			# valid number
+			[ "$2" -eq "$2" ] 2> /dev/null &&
+			# that's in range
+			[ "$2" -ge 1 ] && [ "$2" -le $num ] &&
+			jump_into "$(echo "$matches" | tail -n +$2 | head -1)"
 		fi
 		mesg 'Select a match or be more specific.'
-		echo "$matches" | nl | fold -w 80 && exit 1
+		i=1; echo "$matches" | while read -r line; do
+			printf ' %d\t%s\n' "$i" "$line"
+			i=$((i + 1))
+		done && exit 1
 	fi
-	jump_to "$matches"
+	jump_into "$matches"
 }
 
 ## Open an xz(1) compressed and openssl(1) encrypted file for editing.
