@@ -50,8 +50,20 @@ temps() (
 		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
 	done
-	temp="$(echo "scale=1; 32 + (1.8 * ($sum / $n))" | bc)"
+	temp="$(echo "1k 32 1.8 $sum $n / * + n" | dc)"
 	echo "TEMP ∿$temp˚F"
+)
+
+cpu_speed() (
+	# express average CPU clock speed
+	sum=0; n=0; for f in $(grep 'MHz' /proc/cpuinfo | cut -d ':' -f2); do
+		n=$((n + 1))
+		sum=$((sum + ${f%.*}))
+	done
+	clk=$((sum / n))
+	[ $clk -gt 1000 ] && clk="$(echo "2k $clk 1000 / n" | dc)GHz" ||
+		clk="${clk}MHz"
+	echo "CPU $clk"
 )
 
 public_ip() (
@@ -120,8 +132,9 @@ current_time() (
 )
 
 # update every n seconds
-launch fan_speed 30
+launch fan_speed 10
 launch temps 30
+#launch cpu_speed 5
 #launch public_ip 15
 launch network 15
 launch power 30
@@ -140,7 +153,7 @@ while read -r line; do
 	case "$NET" in *disconnected) unset IP;; esac
 
 	# compose status bar
-	bar="${FAN-$TEMP}${IP}${NET}${BAT}${VOL}${DATE}${TIME}"
+	bar="${FAN-$TEMP}${CPU}${IP}${NET}${BAT}${VOL}${DATE}${TIME}"
 
 	# strip delimiter from last module
 	echo "'$pad$(echo "$bar" | sed 's/・$//')$pad'" | xargs xsetroot -name
