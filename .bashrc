@@ -145,9 +145,9 @@ colors() (
 			code=$((f + g))
 			unset s; # generate padding
 			for h in $(seq $((8 - ${#code}))); do s="$s "; done
-			printf '\e[%dm%s\e[0m' "$code" "$s$code"
+			printf '\e[%dm%s' "$code" "$s$code"
 		done
-		printf '\n'
+		printf '\e[0m\n'
 	done
 )
 
