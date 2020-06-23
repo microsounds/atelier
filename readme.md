@@ -1,4 +1,4 @@
-# dotfiles![miku] — _a  t  e  l  i  e  r_
+# _dotfiles—atelier_![miku]
 _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 ![scrot]
 > _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
