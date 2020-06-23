@@ -107,7 +107,7 @@ sound() (
 	echo "$alsa" | fgrep -q 'off' && mute='🔇'
 
 	# headphone status
-	for f in $(pactl list sinks | fgrep "Active Port"); do
+	for f in $(pactl list sinks | tr 'A-Z' 'a-z' | fgrep 'active port') ; do
 		case $f in *headphones) aux=' ☊';; esac
 	done
 
