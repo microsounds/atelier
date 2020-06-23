@@ -138,6 +138,19 @@ update() (
 	done
 )
 
+# display ANSI terminal colors
+colors() (
+	for f in 40 100; do
+		for g in $(seq 0 7); do
+			code=$((f + g))
+			unset s; # generate padding
+			for h in $(seq $((8 - ${#code}))); do s="$s "; done
+			printf '\e[%dm%s\e[0m' "$code" "$s$code"
+		done
+		printf '\n'
+	done
+)
+
 # reload terminal configuration, pass optional colorscheme name
 reload() {
 	find ~/.local/include/colors -type f | while read f; do
