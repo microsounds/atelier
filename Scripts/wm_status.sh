@@ -117,18 +117,18 @@ current_date() (
 	# current moon phase
 	# calculate days since a specific new moon
 	# divide by length of lunar cycle
-	# obtain percentage into the current cycle
+	# express lit portion of the moon in percent
 	now=$(date '+%s')
 	known=633381600 # Jan 26th, 1990 was a new moon
-	pct=$(echo "2k $now $known - 86400 / 29.53 / n" | dc | cut -d '.' -f2)
+	lit=$(echo "2k $now $known - 86400 / 29.53 / 100 % n" | dc)
 
-	# floor and map percentage to available icons
+	# express floor(abs(lit portion)) with an available glyph
 	steps=7; phase='🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔'
-	map=$(printf '%.0f' $(echo "2k $pct 100 / $steps * n" | dc))
+	map=$(printf '%.0f' $(echo "${lit#-} $steps * n" | dc))
 	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$((map + 1)) | head -1)
 
 	# current date
-	day="$(date '+%-e')"
+	day=$(date '+%-e')
 	case $day in
 		1 | 21 | 31) day="${day}st";;
 		2 | 22) day="${day}nd";;
