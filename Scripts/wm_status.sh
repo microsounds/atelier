@@ -110,11 +110,23 @@ sound() (
 	for f in $(pactl list sinks | tr 'A-Z' 'a-z' | fgrep 'active port') ; do
 		case $f in *headphones) aux=' ☊';; esac
 	done
-
 	echo "VOL ${mute:-🔉}$lvl$aux"
 )
 
 current_date() (
+	# current moon phase
+	# calculate days since a specific new moon
+	# divide by length of lunar cycle
+	# obtain percentage into the current cycle
+	now=$(date '+%s')
+	known=633381600 # Jan 26th, 1990 was a new moon
+	pct=$(echo "2k $now $known - 86400 / 29.53 / n" | dc | cut -d '.' -f2)
+
+	# floor and map percentage to available icons
+	steps=7; phase='🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔'
+	map=$(printf '%.0f' $(echo "2k $pct 100 / $steps * n" | dc))
+	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$((map + 1)) | head -1)
+
 	# current date
 	day="$(date '+%-e')"
 	case $day in
@@ -123,7 +135,7 @@ current_date() (
 		3 | 23) day="${day}rd";;
 		*) day="${day}th"
 	esac
-	echo "DATE $(date '+%a, %b') $day"
+	echo "DATE $(date '+%a, %b') $day $moon"
 )
 
 current_time() (
