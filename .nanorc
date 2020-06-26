@@ -7,8 +7,11 @@ include ~/.local/share/nano/*.nanorc
 extendsyntax c comment "/* | */"
 extendsyntax autoconf comment "dnl ## "
 
-## key bindings
-unbind ^S all
+## disable ^S to save
+unbind ^S main
+## disable justify functions
+unbind ^J main
+unbind M-J main
 
 ## editor
 set smooth
@@ -22,7 +25,6 @@ set trimblanks
 set afterends
 set atblanks
 set unix
-set zap
 
 ## convenience
 set locking
