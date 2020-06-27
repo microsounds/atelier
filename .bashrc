@@ -43,12 +43,6 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
-# returns mtime of a file as unix timestamp
-# if file doesn't exist return mtime of 0
-mtime() (
-	stat -c '%Y' "$@" 2> /dev/null || echo '0'
-)
-
 # compare file mtime in a peculiar way
 # if either file doesn't exist, assume first file is always newer
 is_newer() (
@@ -114,7 +108,7 @@ nano() (
 	done
 	# incrementally drop oldest filepos lines after 5 minutes
 	if [ -f "$hist" ]; then
-		delta=$(($(date '+%s') - $(mtime "$hist")))
+		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
 		if [ $delta -gt 300 ]; then
 			line=$(((delta - 300) / 60)) # one per minute
 			{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
