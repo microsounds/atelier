@@ -19,7 +19,7 @@ FPS=60 # 25
 # system
 NAME="${0##*/}" # derive script name
 CORES="$(grep -c '^proc' /proc/cpuinfo)"
-RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -1)"
+RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -n 1)"
 FINAL="$(date '+%Y-%m-%d-%H%M%S')_${RES}_${NAME%.*}.webm"
 TEMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 10).mp4"
 

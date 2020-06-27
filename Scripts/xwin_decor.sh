@@ -19,4 +19,4 @@ EOF
 done
 
 # wallpaper
-find "$images" -type f | shuf | head -1 | xargs feh --no-fehbg $position || exit
+find "$images" -type f | shuf | head -n 1 | xargs feh --no-fehbg $position || exit

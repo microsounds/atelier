@@ -68,7 +68,7 @@ mode_ctags() {
 			[ "$2" -eq "$2" ] 2> /dev/null &&
 			# that's in range
 			[ "$2" -ge 1 ] && [ "$2" -le $num ] &&
-			jump_into "$(echo "$matches" | tail -n +$2 | head -1)"
+			jump_into "$(echo "$matches" | tail -n +$2 | head -n 1)"
 		fi
 		mesg 'Select a match or be more specific.'
 		i=1; echo "$matches" | while read -r line; do

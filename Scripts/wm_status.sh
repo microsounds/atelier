@@ -35,7 +35,7 @@ launch() {
 
 fan_speed() (
 	# express fan speed in percent power if supported
-	sensors -u | egrep 'fan[0-9]+_input' | head -1 | while read -r _ rpm; do
+	sensors -u | egrep 'fan[0-9]+_input' | head -n 1 | while read -r _ rpm; do
 		rpm=$(((${rpm%.*} * 100) / 5700))
 		echo "FAN ${rpm}%💦"
 	done
@@ -74,13 +74,13 @@ public_ip() (
 
 network() (
 	# network manager status
-	net="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -1)"
+	net="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -n 1)"
 	echo "NET 📶 ${net:-Disabled}"
 )
 
 power() (
 	# AC adapter / battery life
-	acpi="$(acpi -b | tr -d ',' | head -1)"
+	acpi="$(acpi -b | tr -d ',' | head -n 1)"
 	for f in $acpi; do case $f in
 		*%) pct="$f";;
 		*:*:*) btime="$f";;
@@ -103,7 +103,7 @@ power() (
 sound() (
 	# sound mixer status
 	alsa="$(amixer get 'Master')"
-	lvl="$(echo "$alsa" | egrep -o '[0-9]+\%' | head -1)"
+	lvl="$(echo "$alsa" | egrep -o '[0-9]+\%' | head -n 1)"
 	echo "$alsa" | fgrep -q 'off' && mute='🔇'
 
 	# headphone status
@@ -125,7 +125,7 @@ current_date() (
 	# express floor(abs(lit portion)) with an available glyph
 	steps=7; phase='🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔'
 	map=$(printf '%.0f' $(echo "${lit#-} $steps * n" | dc))
-	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$((map + 1)) | head -1)
+	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$((map + 1)) | head -n 1)
 
 	# current date
 	day=$(date '+%-e')

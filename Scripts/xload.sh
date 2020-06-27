@@ -32,7 +32,7 @@ done
 for prog in $LIST; do
 	# waste time while prog launches
 	while ! window="$(xwininfo -name "$prog" 2> /dev/null)"; do :; done
-	win_id=$(echo "$window" | egrep -o '0x[0-9a-f]+' | head -1)
+	win_id=$(echo "$window" | egrep -o '0x[0-9a-f]+' | head -n 1)
 	wmctrl -i -r "$win_id" -b add,skip_taskbar,skip_pager &
 	wmctrl -i -r "$win_id" -b add,sticky,bottom &
 	wmctrl -i -r "$win_id" -e 0,$XPOS,$YPOS,$SIZE,$SIZE &

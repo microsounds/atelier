@@ -21,8 +21,8 @@ git_dir="$repo/.git" # is this a submodule?
 [ ! -f "$git_dir" ] || read _ git_dir < "$git_dir"
 
 # branch info
-info="$(echo "$data" | head -1 | tr -s '#.,[]() ' '\n' | grep '.')"
-for f in $(echo "$info" | head -1); do
+info="$(echo "$data" | head -n 1 | tr -s '#.,[]() ' '\n' | grep '.')"
+for f in $(echo "$info" | head -n 1); do
 	case $f in
 		HEAD) # detached HEAD mode
 			branch="$(cut -c -7 "$git_dir/HEAD")" # unnamed commit

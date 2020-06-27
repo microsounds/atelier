@@ -1,6 +1,6 @@
 ## ~/.bashrc: executed by bash(1) for non-login shells.
 
-# bash specific
+## bash specific
 HISTCONTROL=ignoredups
 
 # bash-completion
@@ -14,8 +14,9 @@ esac
 
 # preserve $OLDPWD between sessions
 export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/lastdir.$UID"
-[ ! -f "$_LASTDIR" ] || read OLDPWD < "$_LASTDIR"
+[ ! -f "$_LASTDIR" ] || read -r OLDPWD < "$_LASTDIR"
 
+## internal constructs
 # set terminal prompt
 # embed git status information if available
 PROMPT_COMMAND=_set_prompt
@@ -42,6 +43,20 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
+# returns mtime of a file as unix timestamp
+# if file doesn't exist return mtime of 0
+mtime() (
+	stat -c '%Y' "$@" 2> /dev/null || echo '0'
+)
+
+# compare file mtime in a peculiar way
+# if either file doesn't exist, assume first file is always newer
+is_newer() (
+	res="$(find "$1" -newer "$2" 2> /dev/null)" || return 0
+	[ ! -z "$res" ]
+)
+
+## external constructs
 # create parent directories
 alias mkdir='mkdir -p'
 
@@ -62,12 +77,12 @@ cd() {
 			while :; do
 				command cd .. && echo "$PWD"
 				[ "$PWD" != '/' ] &&
-				[ $(ls -la | grep -v '^d' | wc -l) -lt 2 ] || break
+				[ $(ls -la | grep -vc '^d') -lt 2 ] || break
 			done && return;;
 		-e) # fuzzy find and jump into sub-directory
 			shift
 			[ -z "$1" ] && echo 'Please enter a query.' && return
-			set -- "$(find . -type d | grep -i "$1" | head -1)"
+			set -- "$(find . -type d | grep -i "$1" | head -n 1)"
 			[ -z "$@" ] && echo 'Not found.' && return;;
 	esac
 	command cd "$@"
@@ -80,8 +95,8 @@ help() (
 	[ -z "$1" ] && command help
 	for f in $@; do # decorate bold text
 		if page="$(command help -m "$f")"; then
-			printf "$(echo "$page" | \
-			sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')" | less -R
+			page="$(echo "$page" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
+			printf "%b" "$page" | less -R
 		fi
 	done
 )
@@ -90,15 +105,16 @@ help() (
 nano() (
 	my="$HOME/.local/share/nano"; builtin='/usr/share/nano'
 	hist="$my/filepos_history"
-	for f in c javascript; do # prepend builtin syntax rules
-		if [ "$my/stdc.syntax" -nt "$my/$f.nanorc" ]; then
+	# prepend syntax rules if built-ins are older
+	for f in c javascript; do
+		if is_newer "$my/stdc.syntax" "$my/$f.nanorc"; then
 			sed "/syntax/r $my/stdc.syntax" \
 			    "$builtin/$f.nanorc" > "$my/$f.nanorc"
 		fi
 	done
 	# incrementally drop oldest filepos lines after 5 minutes
 	if [ -f "$hist" ]; then
-		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
+		delta=$(($(date '+%s') - $(mtime "$hist")))
 		if [ $delta -gt 300 ]; then
 			line=$(((delta - 300) / 60)) # one per minute
 			{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
@@ -153,7 +169,7 @@ colors() (
 
 # reload terminal configuration, pass optional colorscheme name
 reload() {
-	find ~/.local/include/colors -type f | while read f; do
+	find ~/.local/include/colors -type f | while read -r f; do
 		if echo "${f##*/}" | fgrep -q "${@:-nightdrive}"; then
 			sed "/#include/a #include \"$f\"" ~/.Xresources | xrdb -
 		fi

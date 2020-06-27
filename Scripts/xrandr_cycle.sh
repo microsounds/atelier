@@ -10,7 +10,7 @@ PRIMARY="$(echo "$DISPLAYS" | fgrep 'primary' | get_field 1)"
 DISPLAYS="$(echo "$DISPLAYS" | get_field 1)"
 
 if [ -z "$PRIMARY" ]; then
-	PRIMARY="$(echo "$DISPLAYS" | head -1)"
+	PRIMARY="$(echo "$DISPLAYS" | head -n 1)"
 	echo "No displays are primary, promoting $PRIMARY."
 fi
 
@@ -23,7 +23,7 @@ i=0; for f in $DISPLAYS; do
 	i=$((i + 1))
 done
 
-SELECT="$(echo "$DISPLAYS" | tail -n +$((SELECT + 1)) | head -1)"
+SELECT="$(echo "$DISPLAYS" | tail -n +$((SELECT + 1)) | head -n 1)"
 echo "Switching to $SELECT."
 xrandr --output "$SELECT" --primary --auto
 [ "$SELECT" != "$PRIMARY" ] && xrandr --output "$PRIMARY" --off
