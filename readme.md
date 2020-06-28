@@ -18,7 +18,7 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 	```
 5. _**Invoke the login shell again to reload changes to the environment.**_
 6. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
-	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._ 
+	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._
 7. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile), you will be kicked if `dwm` isn't installed._
 

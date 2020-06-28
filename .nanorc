@@ -3,15 +3,11 @@
 ## custom syntax
 include ~/.local/share/nano/*.nanorc
 
-## comments
-extendsyntax c comment "/* | */"
-extendsyntax autoconf comment "dnl ## "
-
 ## disable ^S to save
 unbind ^S main
-## disable justify functions
-unbind ^J main
-unbind M-J main
+
+## uncomment to justify plaintext
+#set fill 80
 
 ## editor
 set smooth

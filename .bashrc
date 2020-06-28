@@ -97,15 +97,14 @@ help() (
 
 # nano housekeeping routines
 nano() (
-	my="$HOME/.local/share/nano"; builtin='/usr/share/nano'
-	hist="$my/filepos_history"
-	# prepend syntax rules if built-ins are older
+	my="$HOME/.local/share/nano"; def='/usr/share/nano'
+	# insert custom syntax rules for C-likes if builtins are older
 	for f in c javascript; do
-		if is_newer "$my/stdc.syntax" "$my/$f.nanorc"; then
-			sed "/syntax/r $my/stdc.syntax" \
-			    "$builtin/$f.nanorc" > "$my/$f.nanorc"
+		if is_newer "$my/stdc.syn" "$my/$f.nanorc"; then
+			sed "/^comment/r $my/stdc.syn" < "$def/$f.nanorc" > "$my/$f.nanorc"
 		fi
 	done
+	hist="$my/filepos_history"
 	# incrementally drop oldest filepos lines after 5 minutes
 	if [ -f "$hist" ]; then
 		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))

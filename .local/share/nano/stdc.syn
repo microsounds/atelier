@@ -1,0 +1,12 @@
+## ~/.local/share/nano/stdc.syn: C-like language syntax overrides
+
+# C89 comments
+comment "/* | */"
+# function names
+color cyan "[A-Za-z_][0-9A-Za-z_]+[[:space:]]*\("
+# operators
+color white "[-+/*=<>?.,:;~%!&|^(){}]" "\[" "\]"
+# mixed tabs and spaces
+color ,red " +	+"
+
+## end overrides
