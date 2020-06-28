@@ -1,0 +1,32 @@
+## ~/.local/share/nano/markdown.nanorc: markdown syntax
+
+syntax markdown "\.m(ar)?k?d(ow)?n?$"
+comment "<!--|-->"
+
+## inline HTML
+# tags
+color cyan "<[[:alpha:]/!?][^>]*>"
+# tag attributes
+color red "[a-z\-]+="
+
+## markdown-specific
+# headings
+color cyan "^[[:space:]]*#.*"
+# block quotes
+color brightgreen "^[[:space:]]*>.*"
+# inline links and images
+color cyan "\!?\[[^\[]+\](\([^\(]+\))?"
+# macros
+color brightred "\{[A-Za-z0-9_]+\}"
+# code blocks
+color red "`[^`]*`"
+color red start="```" end="```"
+# comments
+color yellow start="<!--" end="-->"
+
+## generic
+# spaces in front of tabs
+color ,red " +	+"
+# trailing whitespace
+color ,green "[[:space:]]+$"
+
