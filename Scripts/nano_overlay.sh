@@ -6,7 +6,7 @@
 
 mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$@"; } # for prompts
 mesg() { mesg_st "$@"; printf '\n'; }
-quit() { mesg "$@, exiting."; exit 1; }
+quit() { mesg "$@, exiting." 1>&2; exit 1; }
 
 derive_parent() (
 	# return parent dir if path has
