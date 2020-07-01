@@ -130,9 +130,9 @@ current_date() (
 	# current date
 	day=$(date '+%-e')
 	case $day in
-		1 | 21 | 31) day="${day}st";;
-		2 | 22) day="${day}nd";;
-		3 | 23) day="${day}rd";;
+		1 | [^1]1) day="${day}st";;
+		2 | [^1]2) day="${day}nd";;
+		3 | [^1]3) day="${day}rd";;
 		*) day="${day}th"
 	esac
 	echo "DATE $(date '+%a, %b') $day $moon"
