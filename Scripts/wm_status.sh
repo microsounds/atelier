@@ -114,28 +114,28 @@ sound() (
 )
 
 current_date() (
-	# current moon phase
 	# calculate days since a specific new moon
 	# divide by length of lunar cycle
-	# express lit portion of the moon in percent
+	# express currently elapsed cycle progress in percent
 	now=$(date '+%s')
 	known=633381600 # Jan 26th, 1990 was a new moon
-	lit=$(echo "2k $now $known - 86400 / 29.53 / 100 % n" | dc)
-
-	# express floor(abs(lit portion)) with an available glyph
-	steps=7; phase='🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔'
-	map=$(printf '%.0f' $(echo "${lit#-} $steps * n" | dc))
-	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$((map + 1)) | head -n 1)
+	cycle=$(echo "scale=2; (($now - $known) / 86400) / 29.53" | bc)
+	cycle=${cycle#*.} # absolute value
+	# map progress to an available glyph
+	phase='🌕 🌖 🌗 🌘 🌑 🌑 🌒 🌓 🌔 🌕'
+	map=$(((${cycle#0} / 10) + 1))
+	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$map | head -n 1)
 
 	# current date
-	day=$(date '+%-e')
+	timest="$(date '+%-e %a, %b x')"
+	day="${timest%% *}"
 	case $day in
 		1 | [!1]1) day="${day}st";;
 		2 | [!1]2) day="${day}nd";;
 		3 | [!1]3) day="${day}rd";;
 		*) day="${day}th"
 	esac
-	echo "DATE $(date '+%a, %b') $day $moon"
+	echo "DATE $moon ${timest#* }" | sed "s/x/$day/"
 )
 
 current_time() (
