@@ -48,6 +48,7 @@ qrencode
 rxvt-unicode
 screenfetch
 scrot
+shellcheck
 ssh-askpass
 sshfs
 suckless-tools
