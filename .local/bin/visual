@@ -3,6 +3,8 @@
 # Usage: visual [command]
 # X window wrapper for terminal programs
 
+[ ! -z "$DISPLAY" ] || exit 1
+
 # opens a terminal if not open already
 case "$(tty)" in
 	'not a tty') shim='urxvtc -e';;

@@ -3,9 +3,11 @@
 /* xft */
 Xft.dpi: 96
 Xft.antialias: true
-Xft.rgba: rgb
 Xft.hinting: true
+Xft.autohint: true
 Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+Xft.rgba: rgb
 
 /* rxvt-unicode */
 #define font(name, px)	xft:name:pixelsize=px
