@@ -4,7 +4,7 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 > _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
-1. Perform a base installation of Debian stable.
+1. Perform a base install of Debian stable, don't select a desktop environment.
 	* _Do not login to [`tty1`](.profile), you will be kicked during bootstrap._
 2. Install `sudo`, add yourself to the `sudo` group and install `git`.
 3. _**Apply changes to group membership by invoking the login shell.**_
@@ -13,7 +13,7 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 	```shell
 	git clone --bare [remote] ~/.config/meta
 	git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
-	# Set to ignore state of untracked files in $HOME
+	# set to ignore state of untracked files in $HOME
 	git meta config status.showUntrackedFiles no
 	```
 5. _**Invoke the login shell again to reload changes to the environment.**_
@@ -26,7 +26,8 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 ## X session startup tied to Xinit
 This setup attempts to limit the use of system-wide changes to the machine.
 
-Daemons and services required for the window manager are tied to `xinit`, avoiding the use of `systemd` unit files, cronjobs, or other stateful changes. They are terminated when the X server exits.
+Daemons and services required for the window manager are tied to `xinit`, avoiding the use of `systemd` unit files, cronjobs, or other stateful changes.
+They are terminated when the X server exits.
 
 ## Using `git meta`
 `git meta` points to a detached **bare** repo in `~/.config/meta` which manages the `$HOME` directory, allowing for in-place backup and version control of dotfiles.
