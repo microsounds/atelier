@@ -1,4 +1,4 @@
-# _dotfiles—atelier_![miku]
+# _dotfiles—atelier_![shimeji]
 _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 ![scrot]
 > _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
@@ -89,5 +89,5 @@ Several commands have been extended into nonpure functions* with the following p
 	* __`~/path/to/repo/sub/dir`__
 	* __`~/path/to/±repo:branch*/sub/dir`__
 
-[scrot]: https://i.imgur.com/yaVgrN7.png
-[miku]: https://i.imgur.com/fxBi6Qg.png
+[scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
+[shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png
