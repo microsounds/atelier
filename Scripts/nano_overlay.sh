@@ -4,6 +4,10 @@
 ## Overlay script that provides interactive functionality for GNU nano.
 ##  -h              Displays this message.
 
+# use nano overlay instead of standard nano for interactive features
+ACTUAL_EDITOR='/usr/bin/nano'
+EDITOR="$0"
+
 mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$@"; } # for prompts
 mesg() { mesg_st "$@"; printf '\n'; }
 quit() { mesg "$@, exiting." 1>&2; exit 1; }
@@ -20,9 +24,8 @@ derive_parent() (
 )
 
 mode_help() {
-	nano "$@"
-	grep '^##' "$0" | sed 's/^## //' 1>&2
-	exit
+	$ACTUAL_EDITOR -h
+	grep '^##' "$0" | sed 's/^## //'
 }
 
 ## Search and jump to source code definitions using ctags(1).
@@ -35,7 +38,7 @@ mode_help() {
 jump_into() (
 	file="$(echo "$@" | cut -f2)"
 	pos="$(echo "$@" | cut -f3 | egrep -o '[0-9]+')"
-	exec nano "+$pos" "$PWD/$file"
+	$EDITOR "+$pos" "$PWD/$file"
 )
 
 mode_ctags() {
@@ -85,9 +88,9 @@ mode_ctags() {
 ##                  Creates file if it doesn't already exist.
 ##                  If the file exists but isn't encrypted, user will be
 ##                  prompted to overwrite the original file.
-##                  * Scripts can provide env vars $EDITOR and $EXTERN_ARGS
-##                    to edit the decrypted file using a different program.
-##                    eg. ${EDITOR:-nano} "$decrypted_file" $EXTERN_ARGS
+##                  * Scripts can provide the following environment variables
+##                    to edit the decrypted file using another command.
+##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
 random_bits() { tr -cd 'a-z0-9' < /dev/urandom | head -c $1; }
@@ -152,7 +155,7 @@ mode_encrypt() {
 		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
 
 		# open plaintext file for editing
-		${EDITOR:-nano} "$tmp" $EXTERN_ARGS
+		${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
 
 		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # ask to overwrite original
@@ -175,9 +178,9 @@ if [ ! -z "$1" ]; then
 	if echo "$1" | grep -q '^-' && ! echo "$1" | grep -q '^--'; then
 		for f in $(echo "$1" | sed 's/./& /g'); do
 			case $f in
-				h) mode_help "$@";;
-				e) shift && mode_ctags "$@";;
-				f) shift && mode_encrypt "$@";;
+				h) mode_help 1>&2 && exit 1;;
+				e) shift && mode_ctags "$@" && exit;;
+				f) shift && mode_encrypt "$@" && exit;;
 			esac
 		done
 	fi
@@ -197,4 +200,4 @@ if [ ! -z "$1" ]; then
 	esac; done
 fi
 
-exec nano $opts "$@"
+exec $ACTUAL_EDITOR $opts "$@"

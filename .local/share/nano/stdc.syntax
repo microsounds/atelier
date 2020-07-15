@@ -1,4 +1,4 @@
-## ~/.local/share/nano/stdc.syn: C-like language syntax overrides
+## ~/.local/share/nano/stdc.syntax: C-like language syntax overrides
 
 # C89 comments
 comment "/* | */"

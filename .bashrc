@@ -95,13 +95,14 @@ help() (
 	done
 )
 
-# nano housekeeping routines
+# nano configuration/housekeeping
 nano() (
 	my="$HOME/.local/share/nano"; def='/usr/share/nano'
 	# insert custom syntax rules for C-likes if builtins are older
 	for f in c javascript; do
-		if is_newer "$my/stdc.syn" "$my/$f.nanorc"; then
-			sed "/^comment/r $my/stdc.syn" < "$def/$f.nanorc" > "$my/$f.nanorc"
+		if is_newer "$my/stdc.syntax" "$my/$f.nanorc"; then
+			sed "/^comment/r $my/stdc.syntax" > "$my/$f.nanorc" \
+				< "$def/$f.nanorc"
 		fi
 	done
 	hist="$my/filepos_history"
@@ -113,7 +114,7 @@ nano() (
 			{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
 		fi
 	fi
-	~/Scripts/nano_overlay.sh "$@"
+	command nano "$@"
 )
 
 # runs ledger, decrypts ledger file for viewing
@@ -122,7 +123,7 @@ nano() (
 ledger() (
 	file="$HOME/.private.d/ledger.dat"
 	[ ! -f "$file" ] && echo "'$file' not found." && exit
-	export EDITOR='ledger -f'
+	export EXTERN_EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
 	~/Scripts/nano_overlay.sh -f "$file"
 )
