@@ -13,8 +13,8 @@ export _COLOR=1; case $TERM in
 esac
 
 # preserve $OLDPWD between sessions
-export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/lastdir.$UID"
-[ ! -f "$_LASTDIR" ] || read -r OLDPWD < "$_LASTDIR"
+export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/lastdir"
+[ -f "$_LASTDIR" ] && read -r OLDPWD < "$_LASTDIR"
 
 ## internal constructs
 # set terminal prompt
