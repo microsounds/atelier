@@ -54,7 +54,8 @@ See [`~/.comforts`](.comforts) for the full list of essential packages.
 ## Non-standard commands
 Several commands have been extended into nonpure functions* with the following precedence:
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
-2. Scripts _(including symlinks to scripts)_ in `~/.local/bin` managed by this git repo or sideloaded via post-install scripts.
+2. Scripts and symlinks in `~/.local/bin`
+	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
 3. System executables located in `/usr/bin`
 
 *_Functions that affects external state, such as changing `$PWD`, exporting environment variables in the current shell, purposefully mangling files, calling other utilities that affect state—anything that cannot be accomplished a stateless read loop in a subshell or abusing pipes._

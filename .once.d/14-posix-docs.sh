@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# downlond POSIX/SUSv4-2018 standards docs
+# download POSIX/SUSv4-2018 standards docs
 
 SOURCE='https://pubs.opengroup.org/onlinepubs/9699919799/download'
 BINARY='susv4-2018.tar.bz2'
