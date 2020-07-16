@@ -28,7 +28,7 @@ _set_prompt() {
 	fi
 	# is this a git worktree?
 	if git_info="$(~/Scripts/git_status.sh -${_COLOR+e}n)"; then
-		topdir="$(git rev-parse --show-toplevel)"
+		topdir="$(command git rev-parse --show-toplevel)"
 		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"
 		# if $HOME is a git repo, relative path aliasing will fail
@@ -93,6 +93,15 @@ help() (
 			printf "%b" "$page" | less -R
 		fi
 	done
+)
+
+# implicitly set git dir to ~/.config/meta if outside a git dir
+git() (
+	case "$1" in
+		init | clone | meta) ;;
+		*) command git status > /dev/null 2>&1 || alias='meta'
+	esac
+	command git $alias "$@"
 )
 
 # nano configuration/housekeeping
