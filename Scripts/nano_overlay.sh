@@ -2,7 +2,7 @@
 
 ## nano_overlay.sh v0.5
 ## Overlay script that provides interactive functionality for GNU nano.
-##  -h              Displays this message.
+##  -h, --help      Displays this message.
 
 # use nano overlay instead of standard nano for interactive features
 ACTUAL_EDITOR='/usr/bin/nano'
@@ -28,9 +28,9 @@ mode_help() {
 	grep '^##' "$0" | sed 's/^## //'
 }
 
-## Search and jump to source code definitions using ctags(1).
+## Search and jump to source code definitions provided by ctags(1).
 ##  -e <tag> <#>    If a ctags index file exists in the current or a parent
-##                  directory, search through it for '<tag>' and open the file
+##  or --ctags      directory, search through it for '<tag>' and open the file
 ##                  containing it's definition.
 ##                  If multiple matches are found, specify line number <#>.
 ##                  ** Requires ctags '-n' flag for numeric line numbers.
@@ -84,7 +84,7 @@ mode_ctags() {
 
 ## Open an xz(1) compressed and openssl(1) encrypted file for editing.
 ##  -f <filename>   Prompts the user for a encryption password.
-##                  Decrypts file for editing, re-encrypts if file is modified.
+##  or --encrypt    Decrypts file for editing, re-encrypts if file is modified.
 ##                  Creates file if it doesn't already exist.
 ##                  If the file exists but isn't encrypted, user will be
 ##                  prompted to overwrite the original file.
@@ -175,25 +175,22 @@ mode_encrypt() {
 mode='overlay'
 if [ ! -z "$1" ]; then
 	# steal options not supported by GNU nano
-	if echo "$1" | grep -q '^-' && ! echo "$1" | grep -q '^--'; then
-		for f in $(echo "$1" | sed 's/./& /g'); do
-			case $f in
-				h) mode_help 1>&2 && exit 1;;
-				e) shift && mode_ctags "$@" && exit;;
-				f) shift && mode_encrypt "$@" && exit;;
-			esac
-		done
-	fi
+	for f in $(echo "$1" | grep '^-' | sed 's/^\-*//'); do
+		case $f in
+			h | help) mode_help 1>&2 && exit 1;;
+			e | ctags) shift && mode_ctags "$@" && exit;;
+			f | encrypt) shift && mode_encrypt "$@" && exit;;
+		esac
+	done
+
 	# normal mode
 	# make wild assumptions about arguments
 	for f in "$@"; do case "$f" in
-		-*) # don't act on flags
-			;;
-		*)
-			# lockfile exists
+		-*) ;; # don't act on flags
+		 *) # lockfile exists?
 			[ -f "$(derive_parent "$f")/.${f##*/}.swp" ] &&
 				quit "'$f' already in use"
-			# unwritable
+			# file unwritable
 			[ -d "$f" ] && quit "'$f' is a directory"
 			# force line numbers on large files
 			[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opts='-l'
