@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 # enable multithreading
-extern make -j "$(grep -c '^proc' /proc/cpuinfo)" "$@"
+/usr/bin/make -j "$(grep -c '^proc' /proc/cpuinfo)" "$@"

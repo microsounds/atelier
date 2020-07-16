@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 # scale down images to fit window by default
-extern feh -. "$@"
+/usr/bin/feh -. "$@"

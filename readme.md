@@ -53,13 +53,11 @@ See [`~/.comforts`](.comforts) for the full list of essential packages.
 # Environment notes
 ## Non-standard commands
 Several commands have been extended into nonpure functions* with the following precedence:
-1. Scripts in `~/.local/bin` that invoke the intended command with [`extern`](.local/bin/extern)
-	* This is a dumb hack to emulate shell function behavior in `dmenu` and POSIX shell scripts.
-2. Bash shell functions defined in [`~/.bashrc`](.bashrc)
-3. Executables located in `/usr/bin`
+1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
+2. Scripts _(including symlinks to scripts)_ in `~/.local/bin` managed by this git repo or sideloaded via post-install scripts.
+3. System executables located in `/usr/bin`
 
-
-*_Refers to any function that affects external state, such as changing `$PWD`, exporting environment variables in the current shell, purposefully mangling files, calling other utilities that affect state—basically anything that cannot be accomplished a read loop in a subshell or abusing pipes._
+*_Functions that affects external state, such as changing `$PWD`, exporting environment variables in the current shell, purposefully mangling files, calling other utilities that affect state—anything that cannot be accomplished a stateless read loop in a subshell or abusing pipes._
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.

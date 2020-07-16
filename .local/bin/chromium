@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 # enforce use of environment-specific cache location
-for f in ${0##*/}; do extern $f --disk-cache-dir="$XDG_CACHE_HOME/$f" "$@"; done
+for f in ${0##*/}; do /usr/bin/$f --disk-cache-dir="$XDG_CACHE_HOME/$f" "$@"; done

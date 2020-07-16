@@ -9,4 +9,4 @@ export NNN_USE_EDITOR=1
 export NNN_SHOW_HIDDEN=1
 export DISABLE_FILE_OPEN_ON_NAV=1
 
-extern nnn "$@"
+/usr/bin/nnn "$@"
