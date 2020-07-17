@@ -184,16 +184,22 @@ if [ ! -z "$1" ]; then
 	done
 
 	# normal mode
-	# make wild assumptions about arguments
+	# blindly make assumptions about arguments
 	for f in "$@"; do case "$f" in
 		-*) ;; # don't act on flags
-		 *) # lockfile exists?
-			[ -f "$(derive_parent "$f")/.${f##*/}.swp" ] &&
-				quit "'$f' already in use"
+		*)
 			# file unwritable
 			[ -d "$f" ] && quit "'$f' is a directory"
 			# force line numbers on large files
 			[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opts='-l'
+			# check if file lock exists
+			lock="$(derive_parent "$f")/.${f##*/}.swp"
+			if [ -f "$lock" ]; then
+				# remove stale lock if pid at bytes 24-27 doesn't exist
+				pid=$(od -j 24 -N 3 -t d -A n < "$lock" | tr -d ' ')
+				! ps -p "$pid" > /dev/null || quit "'$f' already in use"
+				rm -f "$lock"
+			fi
 	esac; done
 fi
 
