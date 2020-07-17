@@ -50,15 +50,16 @@ _Some scripts apply only to specific hardware, they will **NOT** touch the syste
 
 See [`~/.comforts`](.comforts) for the full list of essential packages.
 
-# Environment notes
+# Selected environment notes
 ## Non-standard commands
-Several commands have been extended into nonpure functions* with the following precedence:
+Several commands are extended to include impure functionality, such as
+purposefully mangling config files, and generally affecting state.
+
+They have the following precedence:
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
 2. Scripts and symlinks in `~/.local/bin`
 	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
 3. System executables located in `/usr/bin`
-
-*_Functions that affects external state, such as changing `$PWD`, exporting environment variables in the current shell, purposefully mangling files, calling other utilities that affect state—anything that cannot be accomplished a stateless read loop in a subshell or abusing pipes._
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.
@@ -68,6 +69,9 @@ Several commands have been extended into nonpure functions* with the following p
 	| `...` | Quickly moves out of deep nested directories containing only more directories. |
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
 
+## `git`
+* Invoking `git` outside of a valid git directory will append the `meta` alias automatically.
+	* `init` and `clone` commands are unaffected.
 
 ## `nano` > [`nano_overlay`](Scripts/nano_overlay.sh)
 * Invoking `nano` does the following:
