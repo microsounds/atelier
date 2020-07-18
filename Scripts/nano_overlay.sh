@@ -203,4 +203,17 @@ if [ ! -z "$1" ]; then
 	esac; done
 fi
 
+# incrementally purge stale entries from filepos_history
+for f in "$HOME/.nano" "$XDG_DATA_HOME/nano"; do
+	hist="$f/filepos_history"
+	[ -f "$hist" ] || continue
+	# after 5 minutes of inactivity, drop one line per minute elapsed
+	delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
+	if [ $delta -gt 300 ]; then
+		line=$(((delta - 300) / 60))
+		{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
+	fi
+	break
+done
+
 exec $ACTUAL_EDITOR $opts "$@"

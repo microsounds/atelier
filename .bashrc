@@ -104,25 +104,15 @@ git() (
 	command git $alias "$@"
 )
 
-# nano configuration/housekeeping
+# inject custom syntax highlighting rules for C-like languages
 nano() (
-	my="$HOME/.local/share/nano"; def='/usr/share/nano'
-	# insert custom syntax rules for C-likes if builtins are older
+	my="$XDG_DATA_HOME/nano"; def='/usr/share/nano'
 	for f in c javascript; do
 		if is_newer "$my/stdc.syntax" "$my/$f.nanorc"; then
 			sed "/^comment/r $my/stdc.syntax" > "$my/$f.nanorc" \
 				< "$def/$f.nanorc"
 		fi
 	done
-	hist="$my/filepos_history"
-	# incrementally drop oldest filepos lines after 5 minutes
-	if [ -f "$hist" ]; then
-		delta=$(($(date '+%s') - $(stat -c '%Y' "$hist")))
-		if [ $delta -gt 300 ]; then
-			line=$(((delta - 300) / 60)) # one per minute
-			{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
-		fi
-	fi
 	command nano "$@"
 )
 
