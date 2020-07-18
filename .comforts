@@ -57,9 +57,9 @@ sxhkd
 task-laptop
 vrms
 wget
-wmctrl
 xbacklight
 xdiskusage
+xdotool
 xorg
 xsel
 xz-utils
