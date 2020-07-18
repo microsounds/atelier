@@ -12,7 +12,7 @@ mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$@"; } # for prompts
 mesg() { mesg_st "$@"; printf '\n'; }
 quit() { mesg "$@, exiting." 1>&2; exit 1; }
 
-derive_parent() (
+derive_parent() {
 	# return parent dir if path has
 	# ../relative/sub/dirs or is absolute path
 	# return '.' if path is in the current dir
@@ -21,7 +21,7 @@ derive_parent() (
 		path="${path:-/}" # if nothing left, assume '/'
 	fi
 	echo "${path:-.}"
-)
+}
 
 mode_help() {
 	$ACTUAL_EDITOR -h
@@ -35,11 +35,11 @@ mode_help() {
 ##                  If multiple matches are found, specify line number <#>.
 ##                  ** Requires ctags '-n' flag for numeric line numbers.
 
-jump_into() (
+jump_into() {
 	file="$(echo "$@" | cut -f2)"
 	pos="$(echo "$@" | cut -f3 | egrep -o '[0-9]+')"
 	$EDITOR "+$pos" "$PWD/$file"
-)
+}
 
 mode_ctags() {
 	mode='ctags'
@@ -171,8 +171,8 @@ mode_encrypt() {
 	exit
 }
 
-# overlay command line options
 mode='overlay'
+# overlay command line options
 if [ ! -z "$1" ]; then
 	# steal options not supported by GNU nano
 	for f in $(echo "$1" | grep '^-' | sed 's/^\-*//'); do
@@ -182,27 +182,9 @@ if [ ! -z "$1" ]; then
 			f | encrypt) shift && mode_encrypt "$@" && exit;;
 		esac
 	done
-
-	# normal mode
-	# blindly make assumptions about arguments
-	for f in "$@"; do case "$f" in
-		-*) ;; # don't act on flags
-		*)
-			# file unwritable
-			[ -d "$f" ] && quit "'$f' is a directory"
-			# force line numbers on large files
-			[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opts='-l'
-			# check if file lock exists
-			lock="$(derive_parent "$f")/.${f##*/}.swp"
-			if [ -f "$lock" ]; then
-				# remove stale lock if pid at bytes 24-27 doesn't exist
-				pid=$(od -j 24 -N 3 -t d -A n < "$lock" | tr -d ' ')
-				! ps -p "$pid" > /dev/null || quit "'$f' already in use"
-				rm -f "$lock"
-			fi
-	esac; done
 fi
 
+# housekeeping
 # incrementally purge stale entries from filepos_history
 for f in "$HOME/.nano" "$XDG_DATA_HOME/nano"; do
 	hist="$f/filepos_history"
@@ -214,6 +196,26 @@ for f in "$HOME/.nano" "$XDG_DATA_HOME/nano"; do
 		{ rm "$hist"; tail -n "+$line" > "$hist"; } < "$hist"
 	fi
 	break
-done
+done &
 
+# housekeeping
+# append options/refuse to open certain files
+for f in "$@"; do case "$f" in
+	-*) ;; # don't act on flags
+	*)
+		# file unwritable
+		[ -d "$f" ] && quit "'$f' is a directory"
+		# force line numbers on large files
+		[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opts='-l'
+		# check if file lock exists
+		lock="$(derive_parent "$f")/.${f##*/}.swp"
+		if [ -f "$lock" ]; then
+			# remove stale lock if pid at bytes 24-27 doesn't exist
+			pid=$(od -j 24 -N 3 -t d -A n < "$lock" | tr -d ' ')
+			! ps -p "$pid" > /dev/null || quit "'$f' already in use"
+			rm -f "$lock"
+		fi
+esac; done
+
+wait
 exec $ACTUAL_EDITOR $opts "$@"
