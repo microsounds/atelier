@@ -66,7 +66,7 @@ They have the following precedence:
 * `cd` offers the following extensions:
 	| opt | function |
 	| -- | -- |
-	| `...` | Quickly moves out of deep nested directories containing only more directories. |
+	| `...`, `....`, etc. | Shorthand for `../../`, `../../../` and so on. |
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
 
 ## `git`

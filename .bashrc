@@ -43,8 +43,8 @@ _set_prompt() {
 	unset u p r path git_info topdir suffix prefix
 }
 
-# compare file mtime in a peculiar way
-# if either file doesn't exist, assume first file is always newer
+# compare file mtimes
+# files being compared might not exist yet, assume 1st file is always newer
 is_newer() (
 	res="$(find "$1" -newer "$2" 2> /dev/null)" || return 0
 	[ ! -z "$res" ]
@@ -67,16 +67,16 @@ ls() (
 
 cd() {
 	case "$1" in
-		...) # quickly move out of deep nested dirs containing only more dirs
-			while :; do
-				command cd .. && echo "$PWD"
-				[ "$PWD" != '/' ] &&
-				[ $(ls -la | grep -vc '^d') -lt 2 ] || break
-			done && return;;
+		...*) # shorthand aliases for referencing parent dirs
+			_e='../' # converts ... into ../../ and so on
+			for f in $(echo "${1#??}" | sed 's/./& /g'); do
+				[ "$f" = '.' ] && _e="${_e}../" || break
+			done && set -- "$_e";;
 		-e) # fuzzy find and jump into sub-directory
 			shift
 			[ -z "$1" ] && echo 'Please enter a query.' && return
-			set -- "$(find . -type d | grep -i "$1" | head -n 1)"
+			_e="$(find . -type d 2> /dev/null)"
+			set -- "$(echo "$_e" | grep -i "$1" | head -n 1)"
 			[ -z "$@" ] && echo 'Not found.' && return;;
 	esac
 	command cd "$@"
