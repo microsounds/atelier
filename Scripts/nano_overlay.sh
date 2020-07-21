@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.6
-## Overlay script that provides interactive functionality for GNU nano.
+## nano_overlay.sh v0.6 — interactive external overlay for GNU nano
+## (c) 2020 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
 
 # use nano overlay instead of standard nano for interactive features
