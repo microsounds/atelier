@@ -11,6 +11,7 @@ EDITOR="$0"
 mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$1"; } # for prompts
 mesg() { mesg_st "$1"; printf '\n'; }
 quit() { mesg "$1, exiting." 1>&2; exit 1; }
+announce() { echo "$@" 1>&2; "$@"; }
 
 derive_parent() {
 	# return parent dir if path has
@@ -178,7 +179,8 @@ mode_encrypt() {
 		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
 
 		# open plaintext file for editing
-		${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
+		[ ! -z "$EXTERN_EDITOR" ] && ext='announce'
+		$ext ${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
 
 		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # ask to overwrite original
