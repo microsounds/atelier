@@ -8,18 +8,19 @@
 ACTUAL_EDITOR='/usr/bin/nano'
 EDITOR="$0"
 
-mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$@"; } # for prompts
-mesg() { mesg_st "$@"; printf '\n'; }
-quit() { mesg "$@, exiting." 1>&2; exit 1; }
+mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$1"; } # for prompts
+mesg() { mesg_st "$1"; printf '\n'; }
+quit() { mesg "$1, exiting." 1>&2; exit 1; }
 
 derive_parent() {
 	# return parent dir if path has
 	# ../relative/sub/dirs or is absolute path
 	# return '.' if path is in the current dir
-	if echo "$@" | fgrep -q '/'; then
-		path="${@%/*}"
-		path="${path:-/}" # if nothing left, assume '/'
-	fi
+	case "$1" in
+		*/*)
+			path="${1%/*}"
+			path="${path:-/}";; # if nothing left, assume '/'
+	esac
 	echo "${path:-.}"
 }
 
@@ -47,12 +48,12 @@ ex_convert() {
 	# ex command can be delimited with any of '/?^$'
 	ex='s,[/?^$]+,\n,g'
 	IFS='	'; 	while read -r tag file addr; do
+		printf '%s\t%s\t' "$tag" "$file"
 		find="$(echo "$addr" | sed -E "$ex" | grep . | head -n 1)"
 		case "$find" in
-			[0-9]*) ;;
-			*) addr="$(fgrep -n "$find" < "$PWD/$file" | cut -d ':' -f1)";;
+			[0-9]*) echo "$addr";;
+			*) fgrep -n "$find" < "$PWD/$file" | cut -d ':' -f1 | head -n 1
 		esac
-		echo "$tag\t$file\t$addr"
 	done < /dev/stdin
 }
 
