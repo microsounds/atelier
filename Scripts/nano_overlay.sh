@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.5
+## nano_overlay.sh v0.6
 ## Overlay script that provides interactive functionality for GNU nano.
 ##  -h, --help      Displays this message.
 
@@ -28,17 +28,32 @@ mode_help() {
 	grep '^##' "$0" | sed 's/^## //'
 }
 
-## Search and jump to source code definitions provided by ctags(1).
+## Search and jump to source code definitions provided by POSIX ctags(1).
 ##  -e <tag> <#>    If a ctags index file exists in the current or a parent
 ##  or --ctags      directory, search through it for '<tag>' and open the file
 ##                  containing it's definition.
 ##                  If multiple matches are found, specify line number <#>.
-##                  ** Requires ctags '-n' flag for numeric line numbers.
 
-jump_into() {
-	file="$(echo "$@" | cut -f2)"
-	pos="$(echo "$@" | cut -f3 | egrep -o '[0-9]+')"
-	$EDITOR "+$pos" "$PWD/$file"
+cherry_pick() {
+	# generate sed script from matches based on first column
+	cut -f1 | grep -i -n "$1" | cut -d ':' -f1 | while read -r f; do
+		echo "${f}p;"
+	done < /dev/stdin
+}
+
+ex_convert() {
+	# format: {tag}\t{filename}\t{ex command or line no}{;" extended }
+	# follow ex editor commands and rewrite as line numbers
+	# ex command can be delimited with any of '/?^$'
+	ex='s,[/?^$]+,\n,g'
+	IFS='	'; 	while read -r tag file addr; do
+		find="$(echo "$addr" | sed -E "$ex" | grep . | head -n 1)"
+		case "$find" in
+			[0-9]*) ;;
+			*) addr="$(fgrep -n "$find" < "$PWD/$file" | cut -d ':' -f1)";;
+		esac
+		echo "$tag\t$file\t$addr"
+	done < /dev/stdin
 }
 
 mode_ctags() {
@@ -50,36 +65,43 @@ mode_ctags() {
 		quit 'No index found in this or any parent directories up to /'
 
 	# validate index and get version
-	ver="$(fgrep '!_TAG_FILE_FORMAT' "$PWD/tags" | cut -f2)"
+	ver="$(fgrep '!_TAG_FILE_FORMAT' < "$PWD/tags" | cut -f2)"
 	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
-	fgrep -q '/^' "$PWD/tags" &&
-		quit 'Index file must be in numeric '-n' mode'
 
-	# find matches based on first column
 	[ ! -z "$1" ] || quit 'No tag query given'
-	for f in $(cut -f1 < "$PWD/tags" | grep -i -n "$1" | cut -d ':' -f1); do
-		list="$list${f}p;"
-	done
+
 	# cherry-pick matches from index file
-	matches="$(sed -n "$list" < "$PWD/tags")"
+	index="$(grep -v '^!_TAG_' < "$PWD/tags")"
+	list="$(echo "$index" | cherry_pick "$1")"
+	matches="$(echo "$index" | sed -n "$list")"
+
 	[ ! -z "$matches" ] || quit "No matches found for $1"
 
+	# multiple matches
 	num="$(echo "$matches" | wc -l)"
-	if [ "$num" -gt 1 ]; then # multiple matches
+	if [ "$num" -gt 1 ]; then # narrow down
 		if [ ! -z "$2" ]; then
 			# valid number
 			[ "$2" -eq "$2" ] 2> /dev/null &&
 			# that's in range
 			[ "$2" -ge 1 ] && [ "$2" -le $num ] &&
-			jump_into "$(echo "$matches" | tail -n +$2 | head -n 1)"
+			matches="$(echo "$matches" | tail -n +$2 | head -n 1)"
 		fi
-		mesg 'Select a match or be more specific.'
+	fi
+	# show listing of matches and exit
+	if [ "$(echo "$matches" | wc -l)" -ne 1 ]; then
+		mesg 'Select a match or be more specific.' 1>&2
 		i=1; echo "$matches" | while read -r line; do
-			printf ' %d\t%s\n' "$i" "$line"
+			printf ' %d\t%s\n' "$i" "$line" 1>&2
 			i=$((i + 1))
 		done && exit 1
 	fi
-	jump_into "$matches"
+
+	# assemble final argument list
+	matches="$(echo "$matches" | ex_convert)"
+	pos="$(echo "$matches" | cut -f3 | egrep -o '[0-9]+' | head -n 1)"
+	file="$(echo "$matches" | cut -f2)"
+	$EDITOR "+$pos" "$PWD/$file"
 }
 
 ## Open an xz(1) compressed and openssl(1) encrypted file for editing.
@@ -168,7 +190,6 @@ mode_encrypt() {
 		fi
 		unset pass state
 	done
-	exit
 }
 
 mode='overlay'
