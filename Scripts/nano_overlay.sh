@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.6 — interactive external overlay for GNU nano
+## nano_overlay.sh v0.7 — interactive external overlay for GNU nano
 ## (c) 2020 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
 
@@ -35,6 +35,13 @@ mode_help() {
 ##  or --ctags      directory, search through it for '<tag>' and open the file
 ##                  containing it's definition.
 ##                  If multiple matches are found, specify line number <#>.
+
+offset_header() {
+	# return offset of first line that isn't metadata
+	nl | while read -r offset line; do
+		[ "${line%${line#?}}" != '!' ] && echo "$offset" && return
+	done < /dev/stdin
+}
 
 cherry_pick() {
 	# generate sed script from matches based on first column
@@ -84,11 +91,32 @@ mode_ctags() {
 	ver="$(fgrep '!_TAG_FILE_FORMAT' < "$PWD/tags" | cut -f2)"
 	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
 
-	# cherry-pick matches from index file
 	[ ! -z "$1" ] || quit 'No tag query given'
-	index="$(grep -v '^!_TAG_' < "$PWD/tags")"
-	list="$(echo "$index" | cherry_pick "$1")"
-	matches="$(echo "$index" | sed -n "$list")"
+
+	# session persistence
+	unset matches
+	backup="${XDG_RUNTIME_DIR:-/tmp}/.${0##*/}-$mode"
+	if [ -f "${backup}-cached" ]; then
+		read -r prev_query < "${backup}-query"
+		read -r prev_hash < "${backup}-hash"
+		[ "$prev_query" = "$1" ] &&
+		[ "$prev_hash" = "$(md5sum < "$PWD/tags")" ] &&
+		matches="$(cat "${backup}-cached")"
+	fi
+
+	# discarding previous session
+	if [ -z "$matches" ]; then
+		# pass cherry-picked matching lines into sed via named pipe
+		fifo="${backup}-pipe" && mkfifo "$fifo" 2> /dev/null
+		offset="$(offset_header < "$PWD/tags")"
+		tail -n "+$offset" < "$PWD/tags" | cherry_pick "$1" > "$fifo" &
+		matches="$(tail -n "+$offset"  < "$PWD/tags" | sed -n -f "$fifo")"
+
+		# cache results for repeat invocations
+		echo "$matches" > "${backup}-cached" &
+		echo "$1" > "${backup}-query" &
+		md5sum < "$PWD/tags" > "${backup}-hash" &
+	fi
 	[ ! -z "$matches" ] || quit "No matches found for $1"
 
 	# narrow down multiple matches
