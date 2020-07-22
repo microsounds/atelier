@@ -43,13 +43,6 @@ offset_header() {
 	done < /dev/stdin
 }
 
-cherry_pick() {
-	# generate sed script from matches based on first column
-	cut -f1 | grep -i -n "$1" | cut -d ':' -f1 | while read -r f; do
-		echo "${f}p;"
-	done < /dev/stdin
-}
-
 ex_parser() {
 	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
 	# follow ex editor commands and rewrite as line numbers
@@ -106,10 +99,12 @@ mode_ctags() {
 
 	# discarding previous session
 	if [ -z "$matches" ]; then
-		# pass cherry-picked matching lines into sed via named pipe
-		fifo="${backup}-pipe" && mkfifo "$fifo" 2> /dev/null
+		# cherry-pick matching lines based on first column
+		# pass matching lines into sed again via named pipe
+		fifo="${backup}-pipe"; mkfifo "$fifo" 2> /dev/null
 		offset="$(offset_header < "$PWD/tags")"
-		tail -n "+$offset" < "$PWD/tags" | cherry_pick "$1" > "$fifo" &
+		tail -n "+$offset" < "$PWD/tags" | cut -f1 |
+			grep -i -n "$1" | cut -d ':' -f1 | sed 's/$/&p;/' > "$fifo" &
 		matches="$(tail -n "+$offset"  < "$PWD/tags" | sed -n -f "$fifo")"
 
 		# cache results for repeat invocations
