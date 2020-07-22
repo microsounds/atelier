@@ -46,29 +46,36 @@ cherry_pick() {
 ex_parser() {
 	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
 	# follow ex editor commands and rewrite as line numbers
-	# ex command can be delimited with any of '/?^$'
-	ex='s,[/?^$]+,\n,g'
 	IFS='	'; while read -r tag file addr; do
 		# return 1 if line is malformed
 		for f in tag file addr; do
 			eval "[ ! -z \"\${$f}\" ]" || return 1
 		done
+		# absolute filename?
+		[ "${file%${file#?}}" = '/' ] || file="$PWD/$file"
 		printf '%s\t%s\t' "$tag" "$file"
-		find="$(echo "$addr" | sed -E "$ex" | grep . | head -n 1)"
-		case "$find" in
-			# numeric
-			[0-9]*) echo "$addr" | egrep -o '[0-9]+' | head -n 1;;
-			# ex command, return 2 if it's outdated
-			*) find="$(fgrep -n "$find" < "$PWD/$file")" || return 2
-			   echo "$find" | cut -d ':' -f1 | head -n 1
+
+		# numeric
+		case "$addr" in [0-9]*)
+			echo "$addr" | egrep -o '[0-9]+' | head -n 1 && continue;;
 		esac
+		# ex command
+		# strip delimiters, anchors and slash escapes
+		de="${addr%"${addr#?}"}"
+		addr="${addr#*"$de"}"; addr="${addr%"$de"*}"
+		[ "${addr%"${addr#?}"}" = '^' ] && addr="${addr#^}"
+		[ "${addr#"${addr%?}"}" = '$' ] && addr="${addr%$}"
+		addr="$(echo "$addr" | sed 's,\\/,/,g;s,\\\\,\\,g')"
+		# return 2 if command is outdated
+		addr="$(fgrep -n "$addr" < "$file")" || return 2
+		echo "$addr" | cut -d ':' -f1 | head -n 1
 	done < /dev/stdin
 }
 
 mode_ctags() {
 	mode='ctags'
 	# find root directory containing ctags index
-	# all filenames are relative to this directory
+	# prefixes all relative filenames found
 	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
 	[ ! -z "$PWD" ] ||
 		quit 'No index found in this or any parent directories up to /'
@@ -113,7 +120,7 @@ mode_ctags() {
 	esac
 	file="$(echo "$matches" | cut -f2)"
 	pos="$(echo "$matches" | cut -f3)"
-	$EDITOR "+$pos" "$PWD/$file"
+	$EDITOR "+$pos" "$file"
 }
 
 ## Open an xz(1) compressed and openssl(1) encrypted file for editing.
