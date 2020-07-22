@@ -43,17 +43,24 @@ cherry_pick() {
 	done < /dev/stdin
 }
 
-ex_convert() {
-	# format: {tag}\t{filename}\t{ex command or line no}{;" extended }
+ex_parser() {
+	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
 	# follow ex editor commands and rewrite as line numbers
 	# ex command can be delimited with any of '/?^$'
 	ex='s,[/?^$]+,\n,g'
-	IFS='	'; 	while read -r tag file addr; do
+	IFS='	'; while read -r tag file addr; do
+		# return 1 if line is malformed
+		for f in tag file addr; do
+			eval "[ ! -z \"\${$f}\" ]" || return 1
+		done
 		printf '%s\t%s\t' "$tag" "$file"
 		find="$(echo "$addr" | sed -E "$ex" | grep . | head -n 1)"
 		case "$find" in
-			[0-9]*) echo "$addr";;
-			*) fgrep -n "$find" < "$PWD/$file" | cut -d ':' -f1 | head -n 1
+			# numeric
+			[0-9]*) echo "$addr" | egrep -o '[0-9]+' | head -n 1;;
+			# ex command, return 2 if it's outdated
+			*) find="$(fgrep -n "$find" < "$PWD/$file")" || return 2
+			   echo "$find" | cut -d ':' -f1 | head -n 1
 		esac
 	done < /dev/stdin
 }
@@ -70,26 +77,25 @@ mode_ctags() {
 	ver="$(fgrep '!_TAG_FILE_FORMAT' < "$PWD/tags" | cut -f2)"
 	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
 
-	[ ! -z "$1" ] || quit 'No tag query given'
-
 	# cherry-pick matches from index file
+	[ ! -z "$1" ] || quit 'No tag query given'
 	index="$(grep -v '^!_TAG_' < "$PWD/tags")"
 	list="$(echo "$index" | cherry_pick "$1")"
 	matches="$(echo "$index" | sed -n "$list")"
-
 	[ ! -z "$matches" ] || quit "No matches found for $1"
 
-	# multiple matches
+	# narrow down multiple matches
 	num="$(echo "$matches" | wc -l)"
-	if [ "$num" -gt 1 ]; then # narrow down
+	if [ "$num" -gt 1 ]; then
 		if [ ! -z "$2" ]; then
 			# valid number
 			[ "$2" -eq "$2" ] 2> /dev/null &&
 			# that's in range
-			[ "$2" -ge 1 ] && [ "$2" -le $num ] &&
-			matches="$(echo "$matches" | tail -n +$2 | head -n 1)"
+			[ "$2" -ge 1 ] && [ "$2" -le "$num" ] &&
+			matches="$(echo "$matches" | tail -n "+$2" | head -n 1)"
 		fi
 	fi
+
 	# show listing of matches and exit
 	if [ "$(echo "$matches" | wc -l)" -ne 1 ]; then
 		mesg 'Select a match or be more specific.' 1>&2
@@ -100,9 +106,13 @@ mode_ctags() {
 	fi
 
 	# assemble final argument list
-	matches="$(echo "$matches" | ex_convert)"
-	pos="$(echo "$matches" | cut -f3 | egrep -o '[0-9]+' | head -n 1)"
+	matches="$(echo "$matches" | ex_parser)"
+	case $? in
+		1) quit "Index file is malformed";;
+		2) quit "Index file is outdated";;
+	esac
 	file="$(echo "$matches" | cut -f2)"
+	pos="$(echo "$matches" | cut -f3)"
 	$EDITOR "+$pos" "$PWD/$file"
 }
 
