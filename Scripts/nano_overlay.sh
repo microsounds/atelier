@@ -92,9 +92,10 @@ mode_ctags() {
 
 	# discarding previous session
 	if [ -z "$matches" ]; then
-		# fuzzy cherry-pick matching lines based on first column
+		# cherry-pick matching lines based on first column
+		# case insensitive substring search up to first literal tab
 		matches="$(grep -v '^!_TAG_' < "$PWD/tags" | \
-			egrep -i "^\w*${1}\w*$(printf '\t').*$")"
+			egrep -i "^\w*${1}\w*	.*$")"
 
 		# cache results for repeat invocations
 		echo "$matches" > "${backup}-cached" &
