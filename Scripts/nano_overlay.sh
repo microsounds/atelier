@@ -36,13 +36,6 @@ mode_help() {
 ##                  containing it's definition.
 ##                  If multiple matches are found, specify line number <#>.
 
-offset_header() {
-	# return offset of first line that isn't metadata
-	nl | while read -r offset line; do
-		[ "${line%${line#?}}" != '!' ] && echo "$offset" && return
-	done < /dev/stdin
-}
-
 ex_parser() {
 	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
 	# follow ex editor commands and rewrite as line numbers
@@ -99,13 +92,9 @@ mode_ctags() {
 
 	# discarding previous session
 	if [ -z "$matches" ]; then
-		# cherry-pick matching lines based on first column
-		# pass matching lines into sed again via named pipe
-		fifo="${backup}-pipe"; mkfifo "$fifo" 2> /dev/null
-		offset="$(offset_header < "$PWD/tags")"
-		tail -n "+$offset" < "$PWD/tags" | cut -f1 |
-			grep -i -n "$1" | cut -d ':' -f1 | sed 's/$/&p;/' > "$fifo" &
-		matches="$(tail -n "+$offset"  < "$PWD/tags" | sed -n -f "$fifo")"
+		# fuzzy cherry-pick matching lines based on first column
+		matches="$(grep -v '^!_TAG_' < "$PWD/tags" | \
+			egrep -i "^\w*${1}\w*$(printf '\t').*$")"
 
 		# cache results for repeat invocations
 		echo "$matches" > "${backup}-cached" &
