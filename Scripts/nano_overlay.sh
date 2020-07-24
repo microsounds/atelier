@@ -169,7 +169,7 @@ prompt_user() {
 mode_encrypt() {
 	mode='encrypt'
 	# global settings
-	magic='openssl'
+	magic='Salted__'
 	cipher='-aes-256-cbc -pbkdf2'
 	# temp file directory
 	prefix="${XDG_RUNTIME_DIR:-/tmp}"
@@ -185,9 +185,12 @@ mode_encrypt() {
 			[ -f "$tmp" ] || break
 		done
 
-		# is this an encrypted file?
+		# determine file state
 		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
-		[ -f "$f" ] && file -b "$f" | grep -q "^$magic" && state='encrypted'
+		if [ -f "$f" ]; then # is this an encrypted file?
+			sig="$(dd bs=8 count=1 < "$f" 2> /dev/null)"
+			[ "$sig" = "$magic" ] && state='encrypted'
+		fi
 		# no state - file is plaintext, ask to overwrite when finished
 
 		mesg_st "Password for '$f'${state:+ ($state)}: "
