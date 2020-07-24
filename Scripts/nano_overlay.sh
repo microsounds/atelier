@@ -188,8 +188,9 @@ mode_encrypt() {
 		# determine file state
 		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
 		if [ -f "$f" ]; then # is this an encrypted file?
-			sig="$(dd bs=8 count=1 < "$f" 2> /dev/null)"
-			[ "$sig" = "$magic" ] && state='encrypted'
+			case "$(dd bs=8 count=1 < "$f" 2> /dev/null)" in
+				$magic) state='encrypted';;
+			esac
 		fi
 		# no state - file is plaintext, ask to overwrite when finished
 
@@ -268,7 +269,8 @@ for f in "$@"; do case "$f" in
 		lock="$(derive_parent "$f")/.${f##*/}.swp"
 		if [ -f "$lock" ]; then
 			# remove stale lock if pid at bytes 24-27 doesn't exist
-			pid=$(od -j 24 -N 3 -t d -A n < "$lock" | tr -d ' ')
+			pid=$(dd bs=3 skip=8 count=1 < "$lock" 2> /dev/null | \
+				od -t d -A n | tr -d ' ')
 			! ps -p "$pid" > /dev/null || quit "'$f' already in use"
 			rm -f "$lock"
 		fi
