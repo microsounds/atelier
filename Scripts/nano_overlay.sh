@@ -147,7 +147,9 @@ mode_ctags() {
 ##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
-random_bits() { tr -cd 'a-z0-9' < /dev/urandom | head -c $1; }
+random_bits() {
+	tr -cd 'a-z0-9' < /dev/urandom | dd count=1 bs="$1" 2> /dev/null
+}
 
 get_response() {
 	stty -echo

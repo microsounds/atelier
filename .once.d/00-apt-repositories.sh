@@ -3,7 +3,7 @@
 # defines standard apt repositories
 # adds deb-multimedia repos
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
 DEB='deb-multimedia-keyring_2016.8.1_all.deb'
 CONF='/etc/apt/sources.list'

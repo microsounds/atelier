@@ -3,7 +3,7 @@
 # install xeventbind utility
 # useful for resizing root window decorations on resolution change
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 REPO='https://github.com/ritave/xeventbind'
 BINARY='xeventbind'
 INSTALL="$HOME/.local/bin"

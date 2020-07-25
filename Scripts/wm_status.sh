@@ -13,8 +13,8 @@ done
 
 # FIFO location
 prog="${0##*/}"
-key="$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
-FIFO="${XDG_RUNTIME_DIR:-/tmp}/${prog%.*}.$key"
+key="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
+FIFO="${XDG_RUNTIME_DIR:-/tmp}/.${prog%.*}.$key"
 
 abort() {
 	rm -rf "$FIFO"

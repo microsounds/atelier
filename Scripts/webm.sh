@@ -21,7 +21,8 @@ NAME="${0##*/}" # derive script name
 CORES="$(grep -c '^proc' /proc/cpuinfo)"
 RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -n 1)"
 FINAL="$(date '+%Y-%m-%d-%H%M%S')_${RES}_${NAME%.*}.webm"
-TEMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 10).mp4"
+KEY="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=10 count=1 2> /dev/null)"
+TEMP="/tmp/${KEY}.mp4"
 
 info() { echo "\e[1;${1}m${2}\e[0m"; }
 

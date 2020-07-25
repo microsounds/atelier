@@ -2,7 +2,7 @@
 
 # automated sunvox install script
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | head -c 7)"
+TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://www.warmplace.ru/soft/sunvox'
 PROGRAM='sunvox'
 ARCH='linux_x86_64'
