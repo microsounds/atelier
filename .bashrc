@@ -1,6 +1,7 @@
 ## ~/.bashrc: executed by bash(1) for non-login shells.
 
-## bash specific
+## internal constructs
+# bash specific
 HISTCONTROL=ignoredups
 
 # bash-completion
@@ -12,11 +13,10 @@ export _COLOR=1; case $TERM in
 	*) [ $(tput colors) -lt 8 ] && unset _COLOR
 esac
 
-# preserve $OLDPWD between sessions
-export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/lastdir"
+# $OLDPWD persistence between sessions
+export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
 [ -f "$_LASTDIR" ] && read -r OLDPWD < "$_LASTDIR"
 
-## internal constructs
 # set terminal prompt
 # embed git status information if available
 PROMPT_COMMAND=_set_prompt
@@ -79,8 +79,9 @@ cd() {
 			set -- "$(echo "$_e" | grep -i "$1" | head -n 1)"
 			[ -z "$@" ] && echo 'Not found.' && return;;
 	esac
-	command cd "$@"
+
 	# preserve $OLDPWD between sessions
+	command cd "$@"
 	echo "$PWD" > "$_LASTDIR"
 }
 
