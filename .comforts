@@ -13,6 +13,7 @@ dc
 dconf-cli
 feh
 ffmpeg
+file
 fonts-dejima-mincho
 fonts-go
 fonts-liberation
@@ -28,8 +29,10 @@ libx11-dev
 libxft-dev
 libxinerama-dev
 lm-sensors
+lsof
 m4
 make
+man
 mediainfo
 mosh
 mpv
@@ -37,6 +40,7 @@ nano
 network-manager
 nnn
 ntfs-3g
+openssh-client
 openssl
 optipng
 parallel

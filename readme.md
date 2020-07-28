@@ -4,9 +4,10 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 > _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
-1. Perform a base install of Debian stable, don't select a desktop environment.
-	* _Do not login to [`tty1`](.profile), you will be kicked during bootstrap._
-2. Install `sudo`, add yourself to the `sudo` group and install `git`.
+1. Perform a base install of Debian stable.
+	* _Do not select a desktop environment or "standard system utilities"._
+	* _Do not perform these steps on `tty1`, you will be kicked several times through bootstrap._
+2. Install `git`, `wget`, `sudo`, and add yourself to the `sudo` group.
 3. _**Apply changes to group membership by invoking the login shell.**_
 	* _`exec $SHELL -l` is the easiest way to do this, or log back in manually._
 4. Bootstrap the system automatically with git. This is done only once.
@@ -20,7 +21,7 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 6. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
 	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._
 7. Reboot to finish.
-	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile), you will be kicked if `dwm` isn't installed._
+	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
 # Usage notes
 ## X session startup tied to Xinit

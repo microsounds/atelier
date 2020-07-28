@@ -27,5 +27,7 @@ EOF
 mkdir -v "$TMP"
 if wget "$SOURCE/$DEB" -O "$TMP/$DEB"; then
 	sudo dpkg -i "$TMP/$DEB"
-	sudo apt-get update
+	for f in update dist-upgrade autopurge clean; do
+		sudo apt-get -y $f
+	done
 fi
