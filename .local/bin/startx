@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+# X server hardware overrides
+unset xopt
+case $(lspci | tr 'A-Z' 'a-z') in
+	*vga*intel*) xopt='intel';; # intel integrated graphics
+esac
+
+exec /usr/bin/startx "$@" -- ${xopt:+-config "$HOME/.config/xorg/${xopt}.conf"}

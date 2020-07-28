@@ -2,7 +2,6 @@
 
 # editor
 export EDITOR='nano'
-export VISUAL='visual nano'
 
 ## ~/.local file hierarchy
 export PATH="$HOME/.local/bin:$PATH"
@@ -15,14 +14,8 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/dev/null}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
 
 ## login shell
-# X server hardware overrides
-case $(lspci | tr 'A-Z' 'a-z') in
-	*vga*intel*) xopt='intel';; # intel integrated graphics
-esac
-[ ! -z "$xopt" ] && xopt="-- -config $HOME/.config/xorg/$xopt.conf"
-
 # start X server if tty1
 case $(tty) in
-	*tty1) exec startx $xopt > /dev/null 2>&1;;
+	*tty1) exec startx > /dev/null 2>&1;;
 	*) case $0 in *bash) . "$HOME/.bashrc";; esac
 esac
