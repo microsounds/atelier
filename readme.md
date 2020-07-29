@@ -4,23 +4,21 @@ _Dotfiles, shell scripts, and desktop rice. Home directory backup._
 > _Pictured: Debian stable, vanilla Xorg, akari, dwm + dmenu + sxhkd, urxvt + POSIX shell scripts._
 
 # Quick start
-1. Perform a base install of Debian stable.
-	* _Do not select a desktop environment or "standard system utilities"._
+1. Perform a base install of the current Debian stable, do not select a DE or standard system utilities when prompted.
 	* _Do not perform these steps on `tty1`, you will be kicked several times through bootstrap._
-2. Install `git`, `wget`, `sudo`, and add yourself to the `sudo` group.
-3. _**Apply changes to group membership by invoking the login shell.**_
-	* _`exec $SHELL -l` is the easiest way to do this, or log back in manually._
-4. Bootstrap the system automatically with git. This is done only once.
+2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
+3. Bootstrap the system automatically with git. This only needs to be done once.
 	```shell
-	git clone --bare [remote] ~/.config/meta
-	git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
-	# set to ignore state of untracked files in $HOME
-	git meta config status.showUntrackedFiles no
+	$ git clone --bare [remote] ~/.config/meta
+	$ git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
+	# Set to ignore state of untracked files in $HOME
+	$ git meta config status.showUntrackedFiles no`
+	# Invoke the login shell to reflect all changes to the environment
+	$ exec $SHELL -l
 	```
-5. _**Invoke the login shell again to reload changes to the environment.**_
-6. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
+4. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
 	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._
-7. Reboot to finish.
+5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
 # Usage notes
