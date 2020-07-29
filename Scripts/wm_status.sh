@@ -45,7 +45,8 @@ temps() (
 	# express average CPU temperature in ˚F
 	cores=$(grep -c '^proc' /proc/cpuinfo)
 	sum=0; n=0; # don't assume # of cores is equal to # of sensors
-	for f in $(sensors -u | egrep 'temp[0-9]+_input' | sort | tail -$cores \
+	data="$(sensors -u)" || return # don't assume sensors exist
+	for f in $(echo "$data" | egrep 'temp[0-9]+_input' | sort | tail -$cores \
 	                      | sed 's/^ *//' | tr ' ' '\t' | cut -f2); do
 		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
