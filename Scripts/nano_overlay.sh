@@ -34,7 +34,8 @@ mode_help() {
 ##  -e <tag> <#>    If a ctags index file exists in the current or a parent
 ##  or --ctags      directory, search through it for '<tag>' and open the file
 ##                  containing it's definition.
-##                  If multiple matches are found, specify line number <#>.
+##                  If multiple matches are found, specify line number <#>
+##                  or 'all' to open all matches at once.
 
 ex_parser() {
 	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
