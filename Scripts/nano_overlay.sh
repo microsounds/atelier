@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.7 — interactive external overlay for GNU nano
+## nano_overlay.sh v0.8 — interactive external overlay for GNU nano
 ## (c) 2020 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
 
@@ -104,25 +104,29 @@ mode_ctags() {
 	fi
 	[ ! -z "$matches" ] || quit "No matches found for $1"
 
-	# narrow down multiple matches
+	# multiple line match disambiguation
 	num="$(echo "$matches" | wc -l)"
 	if [ "$num" -gt 1 ]; then
+		unset arg_ok
 		if [ ! -z "$2" ]; then
-			# valid number
+			# special case 'all' opens all matching files
+			case "$2" in
+				all) arg_ok=1;;
+			esac
+			# if numeric argument is valid integer that's in range,
+			# then cherry-pick desired line
 			[ "$2" -eq "$2" ] 2> /dev/null &&
-			# that's in range
-			[ "$2" -ge 1 ] && [ "$2" -le "$num" ] &&
-			matches="$(echo "$matches" | tail -n "+$2" | head -n 1)"
+				[ "$2" -ge 1 ] && [ "$2" -le "$num" ] && arg_ok=1 &&
+				matches="$(echo "$matches" | tail -n "+$2" | head -n 1)"
 		fi
-	fi
-
-	# show listing of matches and exit
-	if [ "$(echo "$matches" | wc -l)" -ne 1 ]; then
-		mesg 'Select a match or be more specific.' 1>&2
-		i=1; echo "$matches" | while read -r line; do
-			printf ' %d\t%s\n' "$i" "$line" 1>&2
-			i=$((i + 1))
-		done && exit 1
+		# if no argument is passed, show listing and exit
+		if [ -z "$arg_ok" ]; then
+			mesg "Specify a match or use 'all' to select all matches." 1>&2
+			i=1; echo "$matches" | while read -r line; do
+				printf ' %d\t%s\n' "$i" "$line" 1>&2
+				i=$((i + 1))
+			done && exit 1
+		fi
 	fi
 
 	# assemble final argument list
@@ -131,9 +135,14 @@ mode_ctags() {
 		1) quit "Index file is malformed";;
 		2) quit "Index file is outdated";;
 	esac
-	file="$(echo "$matches" | cut -f2)"
-	pos="$(echo "$matches" | cut -f3)"
-	$EDITOR "+$pos" "$file"
+	set --
+	for f in $(seq $(echo "$matches" | wc -l)); do
+		line="$(echo "$matches" | tail -n "+$f" | head -n 1)"
+		file="$(echo "$line" | cut -f2)"
+		pos="$(echo "$line" | cut -f3)"
+		set -- "$@" "+$pos" "$file"
+	done
+	$EDITOR "$@"
 }
 
 ## Open an xz(1) compressed and openssl(1) encrypted file for editing.
@@ -273,7 +282,9 @@ for f in "$@"; do case "$f" in
 			# remove stale lock if pid at bytes 24-27 doesn't exist
 			pid=$(dd bs=3 skip=8 count=1 < "$lock" 2> /dev/null | \
 				od -t d -A n | tr -d ' ')
-			! ps -p "$pid" > /dev/null || quit "'$f' already in use"
+			if [ "$pid" -eq "$pid" ] 2> /dev/null; then # valid pid
+				! ps -p "$pid" > /dev/null || quit "'$f' already in use"
+			fi
 			rm -f "$lock"
 		fi
 esac; done
