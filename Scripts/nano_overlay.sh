@@ -48,20 +48,19 @@ ex_parser() {
 		[ "${file%${file#?}}" = '/' ] || file="$PWD/$file"
 		printf '%s\t%s\t' "$tag" "$file"
 
-		# numeric
-		case "$addr" in [0-9]*)
-			echo "$addr" | egrep -o '[0-9]+' | head -n 1 && continue;;
+		# if addr is not numeric, parse as ex command
+		case "$addr" in [!0-9]*)
+			# extract delimited text
+			# strip delimiters, regex anchors and slash escapes
+			de="${addr%"${addr#?}"}"
+			addr="${addr#*"$de"}"; addr="${addr%"$de"*}"
+			[ "${addr%"${addr#?}"}" = '^' ] && addr="${addr#^}"
+			[ "${addr#"${addr%?}"}" = '$' ] && addr="${addr%$}"
+			addr="$(echo "$addr" | sed 's,\\/,/,g;s,\\\\,\\,g')"
+			# return 2 if command is outdated
+			addr="$(fgrep -n "$addr" < "$file")" || return 2;;
 		esac
-		# ex command
-		# strip delimiters, anchors and slash escapes
-		de="${addr%"${addr#?}"}"
-		addr="${addr#*"$de"}"; addr="${addr%"$de"*}"
-		[ "${addr%"${addr#?}"}" = '^' ] && addr="${addr#^}"
-		[ "${addr#"${addr%?}"}" = '$' ] && addr="${addr%$}"
-		addr="$(echo "$addr" | sed 's,\\/,/,g;s,\\\\,\\,g')"
-		# return 2 if command is outdated
-		addr="$(fgrep -n "$addr" < "$file")" || return 2
-		echo "$addr" | cut -d ':' -f1 | head -n 1
+		echo "${addr%%[!0-9]*}"
 	done < /dev/stdin
 }
 
@@ -95,7 +94,7 @@ mode_ctags() {
 		# cherry-pick matching lines based on first column
 		# case insensitive substring search up to first literal tab
 		matches="$(grep -v '^!_TAG_' < "$PWD/tags" | \
-			egrep -i "^\w*${1}\w*	.*$")"
+			egrep -i "^\\w*${1}\\w*	.*$")"
 
 		# cache results for repeat invocations
 		echo "$matches" > "${backup}-cached" &
