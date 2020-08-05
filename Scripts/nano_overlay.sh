@@ -269,17 +269,24 @@ done &
 
 # housekeeping
 # append options/refuse to open certain files
+unset seeks ro ln
 for f in "$@"; do case "$f" in
-	-*) ;; # don't act on flags
+	-*);; # don't act on flags
+	+[0-9]*)
+		# mode_ctags: avoid creating lockfiles when seeking multiple files
+		# the same file might be opened multiple times at different positions
+		# open in view-only mode to avoid lockfile warnings on the same file
+		# nano versions before 4.8 will ignore this and create lockfiles anyway
+		[ -z "$ro" ] && seeks=$((seeks + 1)) && [ "$seeks" -gt 1 ] && ro='-v';;
 	*)
-		# file unwritable
+		# opening a directory by mistake
 		[ -d "$f" ] && quit "'$f' is a directory"
 		# force line numbers on large files
-		[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opts='-l'
-		# check if file lock exists
+		[ -z "$ln" ] && [ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && ln='-l'
+		# refuse to open if a valid lockfile exists
 		lock="$(derive_parent "$f")/.${f##*/}.swp"
 		if [ -f "$lock" ]; then
-			# remove stale lock if pid at bytes 24-27 doesn't exist
+			# remove stale lockfile if pid at bytes 24-27 doesn't exist
 			pid=$(dd bs=3 skip=8 count=1 < "$lock" 2> /dev/null | \
 				od -t d -A n | tr -d ' ')
 			if [ "$pid" -eq "$pid" ] 2> /dev/null; then # valid pid
@@ -290,4 +297,4 @@ for f in "$@"; do case "$f" in
 esac; done
 
 wait
-exec $ACTUAL_EDITOR $opts "$@"
+exec $ACTUAL_EDITOR $ro $ln "$@"
