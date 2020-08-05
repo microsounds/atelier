@@ -51,12 +51,14 @@ ex_parser() {
 
 		# if addr is not numeric, parse as ex command
 		case "$addr" in [!0-9]*)
-			# extract delimited text
-			# strip delimiters, regex anchors and slash escapes
+			# start/end delimiter can be one of '/' or '?'
+			# delete text not contained within delimited zone
 			de="${addr%"${addr#?}"}"
 			addr="${addr#*"$de"}"; addr="${addr%"$de"*}"
+			# strip optional regex anchors
 			[ "${addr%"${addr#?}"}" = '^' ] && addr="${addr#^}"
 			[ "${addr#"${addr%?}"}" = '$' ] && addr="${addr%$}"
+			# strip escapes for slash \/ => /, backslash \\ => \
 			addr="$(echo "$addr" | sed 's,\\/,/,g;s,\\\\,\\,g')"
 			# return 2 if command is outdated
 			addr="$(fgrep -n "$addr" < "$file")" || return 2;;
