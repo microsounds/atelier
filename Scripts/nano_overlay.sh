@@ -139,9 +139,8 @@ mode_ctags() {
 	esac
 	set --
 	for f in $(seq $(echo "$matches" | wc -l)); do
-		line="$(echo "$matches" | tail -n "+$f" | head -n 1)"
-		file="$(echo "$line" | cut -f2)"
-		pos="$(echo "$line" | cut -f3)"
+		line="$(echo "$matches" | tail -n "+$f" | head -n 1 | cut -f2-)"
+		file="${line%	*}"; pos="${line#*	}"
 		set -- "$@" "+$pos" "$file"
 	done
 	$EDITOR "$@"
