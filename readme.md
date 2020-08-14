@@ -23,7 +23,12 @@ _Dotfiles, shell scripts, complete graphical/shell configuration for Debian GNU/
 
 # Usage notes
 ## Using `git meta`
-`git meta` points to a detached **bare** repo in `~/.config/meta` which manages the `$HOME` directory, allowing for in-place backup and version control of dotfiles.
+For the purposes of version control, `$HOME` is treated as the detached working tree for the git **bare repo** located in `~/.config/meta`
+
+* `meta` prefixes git commands with `--git-dir=$HOME/.config/meta --work-tree=$HOME`
+* `meta status` will ignore files not tracked by this git repo.
+* Invoking `git` outside of a valid git directory will append the `meta` alias automatically.
+	* `init` and `clone` commands are unaffected.
 
 This is ideal for changes within the home directory, but not for system-wide changes.
 
@@ -56,10 +61,6 @@ Several commands are extended to include impure functions, such as purposefully 
 2. Scripts and symlinks in `~/.local/bin`
 	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
 3. System executables located in `/usr/bin`
-
-## `git`
-* Invoking `git` outside of a valid git directory will append the `meta` alias automatically.
-	* `init` and `clone` commands are unaffected.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.
