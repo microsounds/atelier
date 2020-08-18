@@ -9,7 +9,9 @@ for f in dwm-6.2; do
 	ORIGIN="git://git.suckless.org/${f%-*}"
 
 	# checkout config directory if it doesn't already exist
-	git meta checkout "$CONFIG" || mkdir -v "$CONFIG"
+	if [ ! -d "$CONFIG" ]; then
+		git meta checkout "$CONFIG" || mkdir -v "$CONFIG"
+	fi
 
 	if cd "$CONFIG" && ! git status 2> /dev/null; then
 		git init
