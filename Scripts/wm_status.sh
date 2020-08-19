@@ -36,8 +36,11 @@ launch() {
 fan_speed() (
 	# express fan speed in percent power if supported
 	sensors -u | egrep 'fan[0-9]+_input' | head -n 1 | while read -r _ rpm; do
-		rpm=$(((${rpm%.*} * 100) / 5700))
-		echo "FAN ${rpm}%💦"
+		rpm="${rpm%.*}"
+		if [ $rpm -gt 999 ]; then
+			rpm="$(echo "scale=1; $rpm / 1000" | bc)k"
+		fi
+		echo "FAN ${rpm}↻"
 	done
 )
 
