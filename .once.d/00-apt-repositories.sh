@@ -18,11 +18,11 @@ trap finish 0 1 2 3 6
 
 echo "$0"
 echo "Writing to '$CONF'"
-sudo tee "$CONF" << EOF
-deb http://deb.debian.org/debian/ stable main contrib non-free
-deb http://deb.debian.org/debian/ stable-updates main contrib non-free
-deb http://security.debian.org/debian-security stable/updates main contrib non-free
-deb http://www.deb-multimedia.org/ stable main non-free
+sudo tee "$CONF" <<- EOF
+	deb http://deb.debian.org/debian/ stable main contrib non-free
+	deb http://deb.debian.org/debian/ stable-updates main contrib non-free
+	deb http://security.debian.org/debian-security stable/updates main contrib non-free
+	deb http://www.deb-multimedia.org/ stable main non-free
 EOF
 mkdir -v "$TMP"
 if wget "$SOURCE/$DEB" -O "$TMP/$DEB"; then

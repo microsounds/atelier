@@ -11,7 +11,7 @@ bitmaps="$HOME/.local/share/X11/bitmaps"
 ~/Scripts/xload.sh vert bottom-right &
 
 # fallback wallpaper
-cpp << EOF | egrep -v '^(#|$)' | while read -r color; do
+cpp <<- EOF | egrep -v '^(#|$)' | while read -r color; do
 	#include <colors/nightdrive.h>
 	-bg str(COLOR15) -fg str(COLOR1)
 EOF
