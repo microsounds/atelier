@@ -11,8 +11,6 @@ _Dotfiles, shell scripts, complete graphical/shell configuration for Debian GNU/
 	```shell
 	$ git clone --bare [remote] ~/.config/meta
 	$ git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
-	# Set to ignore state of untracked files in $HOME
-	$ git meta config status.showUntrackedFiles no`
 	# Invoke the login shell to reflect all changes to the environment
 	$ exec $SHELL -l
 	```
