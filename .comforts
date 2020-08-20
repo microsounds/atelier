@@ -33,6 +33,7 @@ m4
 make
 man
 mediainfo
+mesa-utils
 mosh
 mpv
 nano
