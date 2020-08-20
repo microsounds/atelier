@@ -3,9 +3,7 @@ alsa-utils
 bash
 bash-completion
 bluez
-chromium='80.*'
-chromium-common='80.*'
-chromium-sandbox='80.*'
+chromium
 cmark-gfm
 ctags
 curl
