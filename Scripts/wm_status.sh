@@ -77,9 +77,14 @@ public_ip() (
 )
 
 network() (
-	# network manager status
-	net="$(nmcli | fgrep 'connected' | sed 's/connected to //' | head -n 1)"
-	echo "NET 📶 ${net:-Disabled}"
+	# show networking status for first active connection
+	net="$(nmcli -t device | grep '[^dis]connected' | head -n 1 | \
+		cut -d ':' -f2,4 | sed 's/:/& /')"
+	if [ -z "$net" ]; then # disconnected or networking disabled
+		net="$(nmcli -t networking)"
+		net="$(echo "${net%${net#?}}" | tr 'a-z' 'A-Z')${net#?}"
+	fi
+	echo "NET 📶 ${net}"
 )
 
 power() (
