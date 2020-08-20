@@ -1,9 +1,14 @@
 #!/usr/bin/env sh
 
-unset xopt
-# intel integrated graphics
-lspci | tr 'A-Z' 'a-z' | grep -q '*vga*intel*' && xopt='intel'
-
+# Let Xorg run with default settings unless the only display driver available
+# is Intel integrated gfx, such as most laptops, in which case, force use of
+# xorg-intel driver since Xorg will default to xorg-modesetting by default.
+adapters="$(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|3d controller)')"
+xopt='intel'
+for f in $(seq $(echo "$adapters" | wc -l)); do
+	echo "$adapters" | tail -n "+$f" | head -n 1 | fgrep -q 'intel' \
+		|| unset xopt
+done
 [ ! -z "$xopt" ] && xopt="-config $HOME/.config/xorg/$xopt.conf"
 
 exec /usr/bin/startx "$@" -- $xopt
