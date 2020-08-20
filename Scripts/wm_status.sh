@@ -34,7 +34,7 @@ launch() {
 }
 
 fan_speed() (
-	# express fan speed in percent power if supported
+	# express fan speed in RPM if supported
 	sensors -u | egrep 'fan[0-9]+_input' | head -n 1 | while read -r _ rpm; do
 		rpm="${rpm%.*}"
 		if [ $rpm -gt 999 ]; then
@@ -45,27 +45,28 @@ fan_speed() (
 )
 
 temps() (
-	# express average CPU temperature in ˚F
-	cores=$(grep -c '^proc' /proc/cpuinfo)
-	sum=0; n=0; # don't assume # of cores is equal to # of sensors
-	data="$(sensors -u)" || return # don't assume sensors exist
-	for f in $(echo "$data" | egrep 'temp[0-9]+_input' | sort | tail -$cores \
-	                      | sed 's/^ *//' | tr ' ' '\t' | cut -f2); do
+	# express average CPU temperature in ˚F if supported
+	data="$(sensors -u coretemp-isa-0000)" || return # not supported
+	unset sum n
+	for f in $(echo "$data" | egrep 'temp[0-9]+_input' |
+		tr -d ' ' | tr -s ':' '\t' | cut -f2); do
 		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
 	done
-	temp="$(echo "1k 32 1.8 $sum $n / * + n" | dc)"
+	temp="$(echo "scale=1; (($sum / $n) * 1.8) + 32" | bc)"
 	echo "TEMP ∿$temp˚F"
 )
 
 cpu_speed() (
 	# express average CPU clock speed
-	sum=0; n=0; for f in $(grep 'MHz' /proc/cpuinfo | cut -d ':' -f2); do
+	unset sum n
+	for f in $(fgrep 'MHz' < '/proc/cpuinfo' |
+		tr -d ' ' | tr -s ':' '\t' | cut -f2); do
 		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
 	done
 	clk=$((sum / n))
-	[ $clk -gt 1000 ] && clk="$(echo "2k $clk 1000 / n" | dc)GHz" ||
+	[ $clk -gt 999 ] && clk="$(echo "scale=2; $clk / 1000" | bc)GHz" ||
 		clk="${clk}MHz"
 	echo "CPU $clk"
 )
@@ -88,8 +89,9 @@ network() (
 )
 
 power() (
-	# AC adapter / battery life
+	# AC adapter / battery life if supported
 	acpi="$(acpi -b | tr -d ',' | head -n 1)"
+	[ ! -z "$acpi" ] || return # not supported
 	for f in $acpi; do case $f in
 		*%) pct="$f";;
 		*:*:*) btime="$f";;
@@ -154,7 +156,7 @@ current_time() (
 
 # update every n seconds
 launch fan_speed 10
-launch temps 30
+launch temps 15
 #launch cpu_speed 5
 #launch public_ip 15
 launch network 15
