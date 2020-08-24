@@ -89,10 +89,11 @@ network() (
 )
 
 power() (
-	# AC adapter / battery life if supported
+	# battery life / AC adapter status if supported
 	acpi="$(acpi -b | tr -d ',' | head -n 1)"
 	[ ! -z "$acpi" ] || return # not supported
 	for f in $acpi; do case $f in
+		unavailable) return;; # not supported
 		*%) pct="$f";;
 		*:*:*) btime="$f";;
 	esac; done
