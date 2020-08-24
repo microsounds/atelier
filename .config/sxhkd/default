@@ -3,6 +3,7 @@
 # reload config
 super + Escape
 	pkill -USR1 -x sxhkd
+
 # terminal
 super + Return
 	urxvtc
@@ -12,12 +13,26 @@ super + e
 # task manager
 ctrl + alt + Delete
 	visual htop
+
+# shutdown
+{ super + F2, XF86PowerOff }
+	systemctl poweroff
+# display off
+{ super + F3, XF86ScreenSaver }
+	sleep 1; xset dpms force off
+# suspend
+{ super + F4, XF86Sleep }
+	systemctl suspend
 # switch displays
-XF86Display
+{super + F5, XF86Display }
 	~/Scripts/xrandr_cycle.sh
 # brightness
+super + {F6,F7}
+	xbacklight -time 50 -{dec,inc} 10
 XF86MonBrightness{Down,Up}
 	xbacklight -time 50 -{dec,inc} 10
 # audio
+super + {F8,F9,F10}
+	amixer -q sset Master {toggle,5%-,5%+}
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
