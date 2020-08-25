@@ -27,9 +27,10 @@ mkfifo "$FIFO"
 
 # thread loop
 launch() {
-	while [ -e "$FIFO" ]; do
+	while :; do
+		sleep "$2" &
 		"$1"
-		sleep "$2"
+		wait
 	done > "$FIFO" &
 }
 
@@ -90,7 +91,7 @@ network() (
 
 power() (
 	# battery life / AC adapter status if supported
-	acpi="$(acpi -b | tr -d ',' | head -n 1)"
+	acpi="$(acpi -b | tr -d ',' | head -n 1)" 2> /dev/null
 	[ ! -z "$acpi" ] || return # not supported
 	for f in $acpi; do case $f in
 		unavailable) return;; # not supported
