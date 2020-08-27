@@ -1,10 +1,5 @@
 #!/usr/bin/env sh
-
 # decorate root window
-# use bitmap background as fallback
-
-# xload
-~/Scripts/xload.sh vert bottom-right &
 
 # fallback tiling background
 bitmaps="$HOME/.local/share/X11/bitmaps"

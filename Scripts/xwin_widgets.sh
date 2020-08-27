@@ -12,8 +12,8 @@ EDGE=20   # distance from screen border
 
 # dumb parser
 # calculates starting positions
-ARGS="${@:-bottom right}" # defaults
-[ $(echo "$ARGS" | grep -c 'vert') -gt 0 ] && VERT=1 # vertical flag
+ARGS="${@:-vert bottom right}" # defaults
+echo "$ARGS" | fgrep -q 'vert' && VERT=1 # vertical flag
 for f in $(echo "$ARGS" | sed 's/-/ /g'); do
 	case $f in # (display res - edge) - ((winsize + gap) * # of windows)
 		left)           XPOS=$EDGE;;
