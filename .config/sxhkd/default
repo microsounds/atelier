@@ -15,16 +15,19 @@ ctrl + alt + Delete
 	visual htop
 
 # shutdown
-{ super + F2, XF86PowerOff }
+{ super + F1, XF86PowerOff }
 	systemctl poweroff
-# display off
-{ super + F3, XF86ScreenSaver }
-	sleep 1; xset dpms force off
 # suspend
-{ super + F4, XF86Sleep }
+{ super + F2, XF86Sleep }
 	systemctl suspend
+# hibernate
+super + F3
+	systemctl hibernate
+# display off
+{ super + F4, XF86ScreenSaver }
+	sleep 1; xset dpms force off
 # switch displays
-{super + F5, XF86Display }
+{ super + F5, XF86Display }
 	~/Scripts/xrandr_cycle.sh
 # brightness
 super + {F6,F7}

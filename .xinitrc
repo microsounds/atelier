@@ -11,13 +11,12 @@ esac
 ## startup daemons tied to this X server invocation
 urxvtd -o &
 ~/Scripts/wm_status.sh -p & # status bar
-xset s 3600 3600 && xss-lock systemctl suspend & # suspend on idle
 for f in decor widgets; do
 	xeventbind resolution ~/Scripts/xwin_${f}.sh &
 done
 
 # sxhkd: generate hotkeys at runtime
-{	echo '!! file overwritten at startup !!' > ~/.config/sxhkd/sxhkdrc
+{	echo "# !! overwritten by $0 at startup !!" > ~/.config/sxhkd/sxhkdrc
 	for f in default $layout; do
 		cat ~/.config/sxhkd/$f >> ~/.config/sxhkd/sxhkdrc
 	done
