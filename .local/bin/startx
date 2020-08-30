@@ -11,8 +11,6 @@ for f in $(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|3d controller)'); do
 		intel|nvidia) xopt="$f"; break;;
 	esac
 done
-[ ! -z "$xopt" ] && xopt=".config/xorg/$xopt.conf"
+[ ! -z "$xopt" ] && xopt="$(id -u)-override/$xopt.conf"
 
-# Xorg dislikes absolute filenames under specific circumstances
-cd "$HOME"
 exec /usr/bin/startx "$@" -- ${xopt:+-config} "$xopt"

@@ -36,14 +36,14 @@ All system-wide changes are performed through automated scripts located in [`~/.
 
 _Some scripts apply only to specific hardware, they will **NOT** touch the system even if they are run._
 
-* System-wide changes that require root access are avoided when possible, as these are considered unsightly hacks.
+* System-wide changes that require root access are avoided as much as possible, as these are usually hacks.
 * Sideloaded software is installed to [`~/.local/bin`](.local/bin) instead of `/usr/local/bin`
 
 | series | function |
 | -- | -- |
-| `0*` | Makes system-wide changes performed **through** the package manager, eg. installing essential packages. |
-| `1*` | Makes changes to [`~/.local`](.local) file hierarchy, eg. sideloading 3rd party software. |
-| `2*` | Makes system-wide changes that **bypass** the package manager, eg. changes to `/etc`. |
+| `0*` | System-wide changes performed **through** the package manager, eg. installing packages from Debian repos. |
+| `1*` | Changes to [`~/.local`](.local) file hierarchy, eg. sideloading 3rd party software. |
+| `2*` | System-wide changes that purposefully defeat the package manager, eg. changes to `/etc`. These are hacks. |
 
 See [`~/.comforts`](.comforts) for the full list of essential packages.
 
@@ -60,6 +60,12 @@ Several commands are extended to include impure functions, such as purposefully 
 2. Scripts and symlinks in `~/.local/bin`
 	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
 3. System executables located in `/usr/bin`
+
+## `startx`
+Invoking `startx` will pass hardware-specific `xorg.conf` files to the X server, mostly for screen tearing fixes.
+
+Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
+Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.
