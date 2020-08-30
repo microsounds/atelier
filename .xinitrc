@@ -12,7 +12,7 @@ esac
 urxvtd -o &
 ~/Scripts/wm_status.sh -p & # status bar
 for f in decor widgets; do
-	xeventbind resolution ~/Scripts/xwin_${f}.sh &
+	xeventbind resolution ~/Scripts/xwin_$f.sh &
 done
 
 # sxhkd: generate hotkeys at runtime
@@ -27,7 +27,7 @@ xset b off &
 dconf load '/' < ~/.config/dconf/user.conf &
 xrdb ~/.Xresources && {
 	for f in decor widgets; do
-		~/Scripts/xwin_${f}.sh &
+		~/Scripts/xwin_$f.sh &
 	done
 } &
 
