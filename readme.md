@@ -59,7 +59,7 @@ Several commands are extended to include impure functions, such as purposefully 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
 2. Scripts and symlinks in `~/.local/bin`
 	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
-3. System executables located in `/usr/bin`
+3. `/usr/bin` system executables
 
 ## `startx`
 Invoking `startx` will pass hardware-specific `xorg.conf` files to the X server, mostly for screen tearing fixes.
