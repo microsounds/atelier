@@ -10,6 +10,7 @@ esac
 
 ## startup daemons tied to this X server invocation
 urxvtd -o &
+pcmanfm -d &
 ~/Scripts/wm_status.sh -p & # status bar
 for f in decor widgets; do
 	xeventbind resolution ~/Scripts/xwin_$f.sh &

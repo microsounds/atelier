@@ -9,7 +9,7 @@ super + Return
 	urxvtc
 # file manager
 super + e
-	visual nnn
+	pcmanfm
 # task manager
 ctrl + alt + Delete
 	visual htop

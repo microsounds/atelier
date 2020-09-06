@@ -43,8 +43,7 @@ ntfs-3g
 openssh-client
 openssl
 optipng
-parallel
-pmount
+pcmanfm
 progress
 pulseaudio
 pulseaudio-module-bluetooth
@@ -60,6 +59,7 @@ suckless-tools
 sudo
 sxhkd
 task-laptop
+udevil
 vrms
 wget
 xbacklight
