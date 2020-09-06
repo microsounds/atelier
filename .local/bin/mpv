@@ -1,11 +1,10 @@
 #!/usr/bin/env sh
 
-# disable hardware acceleration on intel integrated gfx
+# disable hardware acceleration on chromebooks
 unset opt
-for f in $(glxinfo | tr 'A-Z' 'a-z' | egrep '^opengl (vendor|renderer)'); do
-	case $f in
-		intel) opt='laptop'; break;;
-	esac
-done
+read -r vendor < /sys/devices/virtual/dmi/id/sys_vendor
+case $vendor in
+	GOOGLE) opt='chromebook';;
+esac
 
-exec /usr/bin/mpv --profile="${opt:-desktop}" "$@"
+exec /usr/bin/mpv --profile="${opt:-normal}" "$@"
