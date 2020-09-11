@@ -17,6 +17,9 @@ ctrl + alt + Delete
 # shutdown
 { super + F1, XF86PowerOff }
 	systemctl poweroff
+# reboot
+{ shift + super + F1, shift + XF86PowerOff }
+	systemctl reboot
 # suspend
 { super + F2, XF86Sleep }
 	systemctl suspend
