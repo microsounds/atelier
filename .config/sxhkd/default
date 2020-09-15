@@ -14,31 +14,25 @@ super + e
 ctrl + alt + Delete
 	visual htop
 
-# shutdown
-{ super + F1, XF86PowerOff }
-	systemctl poweroff
-# reboot
-{ shift + super + F1, shift + XF86PowerOff }
-	systemctl reboot
-# suspend
-{ super + F2, XF86Sleep }
-	systemctl suspend
-# hibernate
-super + F3
-	systemctl hibernate
+# shutdown/reboot
+super + {_,shift +} F1
+	systemctl {poweroff,reboot}
+# suspend/hibernate
+super + {_,shift +} F2
+	systemctl {suspend,hibernate}
 # display off
-{ super + F4, XF86ScreenSaver }
+{super + F3,XF86ScreenSaver}
 	sleep 1; xset dpms force off
 # switch displays
-{ super + F5, XF86Display }
+{super + F5,XF86Display}
 	~/Scripts/xrandr_cycle.sh
 # brightness
-super + {F6,F7}
+super + F{6,7}
 	xbacklight -time 50 -{dec,inc} 10
 XF86MonBrightness{Down,Up}
 	xbacklight -time 50 -{dec,inc} 10
 # audio
-super + {F8,F9,F10}
+super + F{8,9,10}
 	amixer -q sset Master {toggle,5%-,5%+}
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
