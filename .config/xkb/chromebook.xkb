@@ -1,12 +1,13 @@
 // X Keyboard Extension keymap for Samsung Chromebook 3 XE500C13 (CELES)
-// [nav keys]  Alt_R + { Up,Left,Right,Down } -> { Prior,Home,End,Next }
-// [fn keys]   Function keys F1 thru F10 work normally with the standard layout.
-// [power key] Power mapped to Delete, Alt_R + Power produces F11.
-//             Disable power key in /etc/systemd/logind.conf -> HandlePowerKey=ignore
-// [hotkeys]   Chromebook keyboards lack a hardware-level 'Fn' modifier that sends
-//             different keycodes and must be handled in software with an overlay layer.
-//             Normal XF86* keysyms don't work, arbitrary hotkey bindings can be directly
-//             handled with sxhkd or your window manager.
+// [nav keys]   Alt_R + { Up,Left,Right,Down } -> { Prior,Home,End,Next }
+// [fn keys]    Function keys F1 thru F10 work normally with the standard layout.
+// [delete key] Alt_R + BackSpace mapped to Delete.
+// [power key]  Power mapped to Delete, Alt_R + Power produces F11.
+//              Disable power key in /etc/systemd/logind.conf -> HandlePowerKey=ignore
+// [hotkeys]    Chromebook keyboards lack a hardware-level 'Fn' modifier that sends
+//              different keycodes and must be handled in software with an overlay layer.
+//              Normal XF86* keysyms don't work, arbitrary hotkey bindings can be directly
+//              handled with sxhkd or your window manager.
  
 xkb_keymap {
 	xkb_keycodes { include "evdev+aliases(qwerty)" };
@@ -15,6 +16,7 @@ xkb_keymap {
 	xkb_symbols  {
 		include "pc+us+inet(evdev)+level3(ralt_switch)"
 		key <POWR> { [ Delete, Delete, F11, Delete ] };
+		key <BKSP> { [ BackSpace, BackSpace, Delete, BackSpace ] };
 		key <UP>   { [ Up, Up, Prior, Up ] };
 		key <DOWN> { [ Down, Down, Next, Down ] };
 		key <LEFT> { [ Left, Left, Home, Left ] };
