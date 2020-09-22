@@ -185,7 +185,7 @@ while read -r line; do
 	case "$FAN" in 0*) unset FAN;; esac # fan spindown
 	# no internet
 	case "$IP" in none*) unset IP;; esac
-	case "$NET" in *disconnected) unset IP;; esac
+	case "$NET" in *abled) unset IP;; esac
 
 	# compose status bar
 	bar="${FAN-$TEMP}${CPU}${IP}${NET}${BAT}${VOL}${DATE}${TIME}"
