@@ -107,8 +107,8 @@ power() (
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
-			charged) flow='⭢'; btime_v="$btime_v till charged";;
-			remaining) flow='⭠'; btime_v="$btime_v left";;
+			charged) flow='⭠'; btime_v="$btime_v till charged";;
+			remaining) flow='⭢'; btime_v="$btime_v left";;
 		esac; done
 
 		# calculate power draw in watts if charging/discharging
@@ -120,7 +120,7 @@ power() (
 			[ ! -z "$draw" ] && draw="${draw%*.0}w"
 		fi
 	fi
-	echo "BAT ↯${draw:+$draw$flow}$pct${btime_v:+, $btime_v}"
+	echo "BAT ↯$pct${draw:+$flow$draw}${btime_v:+, $btime_v}"
 )
 
 sound() (
