@@ -55,7 +55,7 @@ temps() (
 		sum=$((sum + ${f%.*}))
 	done
 	temp="$(echo "scale=1; (($sum / $n) * 1.8) + 32" | bc)"
-	echo "TEMP ∿$temp˚F"
+	echo "TEMP ∿${temp%*.0}˚F"
 )
 
 cpu_speed() (
@@ -90,7 +90,7 @@ network() (
 )
 
 power() (
-	# battery life / AC adapter status if supported
+	# extract battery life / AC adapter status if supported
 	acpi="$(acpi -b | tr -d ',' | head -n 1)" 2> /dev/null
 	[ ! -z "$acpi" ] || return # not supported
 	for f in $acpi; do case $f in
@@ -99,18 +99,28 @@ power() (
 		*:*:*) btime="$f";;
 	esac; done
 
+	# rewrite approx. time remaining if available
 	if [ ! -z "$btime" ]; then
-		i=0; for f in h m; do # approximate time remaining
+		i=0; for f in h m; do
 			i=$((i + 1))
 			val="$(echo "$btime" | cut -d ':' -f$i | sed 's/^0//')"
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
-			charged) btime_v="$btime_v till charged";;
-			remaining) btime_v="$btime_v left";;
+			charged) flow='⭢'; btime_v="$btime_v till charged";;
+			remaining) flow='⭠'; btime_v="$btime_v left";;
 		esac; done
+
+		# calculate power draw in watts if charging/discharging
+		batt='/sys/class/power_supply/BAT0'
+		if [ -d "$batt" ]; then
+			read -r uV < "$batt/voltage_now"
+			read -r uA < "$batt/current_now"
+			draw="$(echo "scale=1; (($uV / 1000000) * ($uA / 1000000))" | bc)"
+			[ ! -z "$draw" ] && draw="${draw%*.0}w"
+		fi
 	fi
-	echo "BAT ↯$pct${btime_v:+, $btime_v}"
+	echo "BAT ↯${draw:+$draw$flow}$pct${btime_v:+, $btime_v}"
 )
 
 sound() (
@@ -162,7 +172,7 @@ launch temps 15
 #launch cpu_speed 5
 #launch public_ip 15
 launch network 15
-launch power 30
+launch power 15
 launch sound 5
 launch current_date 60
 launch current_time 10
