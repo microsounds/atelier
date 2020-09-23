@@ -9,6 +9,7 @@ unset xopt
 for f in $(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|3d controller)'); do
 	case $f in
 		intel|nvidia) xopt="$f"; break;;
+		ati|amd|radeon) xopt='amd'; break;;
 	esac
 done
 [ ! -z "$xopt" ] && xopt="$(id -u)-override/$xopt.conf"
