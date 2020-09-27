@@ -21,7 +21,7 @@ git_dir="$repo/.git" # is this a submodule?
 [ ! -f "$git_dir" ] || read _ git_dir < "$git_dir"
 
 # branch info
-info="$(echo "$data" | head -n 1 | tr -s '#.,[]() ' '\n' | grep '.')"
+info="$(echo "$data" | head -n 1 | tr -s ' #,[]()' '\n' | grep '.')"
 for f in $(echo "$info" | head -n 1); do
 	case $f in
 		HEAD) # detached HEAD mode
@@ -35,8 +35,9 @@ for f in $(echo "$info" | head -n 1); do
 			[ -z "$(ls "$git_dir/refs/heads")" ] &&
 			[ ! -f "$git_dir/packed-refs" ] && branch="(init)" || branch="$f";;
 		*) # normal mode
-			branch="$f" # obtain upstream info if available
-			remote="$(echo "$info" | tail -n +3)"
+			branch="${f%...*}" # strip upstream name
+			# obtain upstream tracking info if it exists
+			remote="$(echo "$info" | tail -n +2)"
 			[ "$remote" != 'gone' ] || break # upstream gone
 			for g in $remote; do
 				case $g in ahead) g=' +';; behind) g=' -';; esac
