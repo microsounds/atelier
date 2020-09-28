@@ -1,73 +1,40 @@
-acpi
-alsa-utils
-bash
-bash-completion
-bluez
+bash bash-completion shellcheck
 chromium
-cmark-gfm
-ctags
-curl
+cmark-gfm optipng jpegoptim
+cpp dconf-cli sxhkd
+*cups libnss-mdns
 dc
-dconf-cli
 dkms
 feh
-ffmpeg
 file
-fonts-dejima-mincho
-fonts-go
-fonts-liberation
-fonts-noto-mono
-fonts-vlgothic
-gcc
-git
+*gimp
+git make gcc
+suckless-tools libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 gparted
 htop
-jpegoptim
 ledger
-libnss-mdns
-libx11-dev
-libxft-dev
-libxinerama-dev
-lm-sensors
-lsof
 m4
-make
 man
-mediainfo
 mesa-utils
-mosh
-mpv
-nano
-network-manager
-nnn
-ntfs-3g
+mpv youtube-dl ffmpeg mediainfo
+nano ctags openssl
 openssh-client
-openssl
-optipng
+*openssh-server
 pcmanfm
 progress
-pulseaudio
-pulseaudio-module-bluetooth
 qrencode
-rxvt-unicode
+rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
 screen
 screenfetch
 scrot
-shellcheck
 ssh-askpass
 sshfs
-suckless-tools
 sudo
-sxhkd
-task-laptop
-udevil
+task-laptop acpi lm-sensors network-manager alsa-utils pulseaudio pulseaudio-module-bluetooth bluez
+udevil ntfs-3g
+*valgrind
 vrms
-wget
-xbacklight
+wget curl
 xdiskusage
-xdotool
-xorg
-xsel
-xz-utils
-youtube-dl
-zip
+xorg xdotool xsel xbacklight
+zip xz-utils

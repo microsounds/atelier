@@ -38,14 +38,14 @@ _Some scripts apply only to specific hardware, they will **NOT** touch the syste
 
 * System-wide changes that require root access are avoided as much as possible, as these are usually hacks.
 * Sideloaded software is installed to [`~/.local/bin`](.local/bin) instead of `/usr/local/bin`
+* [`~/.comforts`](.comforts) descrbes the full list of non-optional package groups that will be installed.
+	* Optional package groups are marked with an asterisk, you will be asked to approve these at runtime.
 
 | series | function |
 | -- | -- |
 | `0*` | System-wide changes performed **through** the package manager, eg. installing packages from Debian repos. |
 | `1*` | Changes to [`~/.local`](.local) file hierarchy, eg. sideloading 3rd party software. |
 | `2*` | System-wide changes that purposefully defeat the package manager, eg. changes to `/etc`. These are hacks. |
-
-See [`~/.comforts`](.comforts) for the full list of essential packages.
 
 # Some environment notes
 ## Use of daemons
