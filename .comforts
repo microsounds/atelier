@@ -12,12 +12,11 @@ git make gcc
 suckless-tools libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 gparted
 htop
-ledger
 m4
 man
 mesa-utils
 mpv youtube-dl ffmpeg mediainfo
-nano ctags openssl
+nano ctags openssl ledger
 openssh-client
 *openssh-server
 pcmanfm
@@ -33,6 +32,7 @@ sudo
 task-laptop acpi lm-sensors network-manager alsa-utils pulseaudio pulseaudio-module-bluetooth bluez
 udevil ntfs-3g
 *valgrind
+*virt-manager
 vrms
 wget curl
 xdiskusage
