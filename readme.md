@@ -1,7 +1,12 @@
 # _dotfiles—atelier_![shimeji]
-_Dotfiles, shell scripts, complete graphical/shell configuration for Debian GNU/Linux, home directory backup._
+This is my primary computing setup, a self-contained graphical shell environment for Debian GNU/Linux.
+* Git is used to maintain an identical and reproducible setup across multiple machines.
+* A series of post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
+
+Some installation instructions are provided, along with documentation for some of the more arduous parts.
+
 ![scrot]
-> _Pictured: Debian stable, POSIX shell scripts, urxvt, and Xorg + dwm + sxhkd as a graphical shell_
+> _Pictured: Debian stable, a "graphical shell" environment consisting mostly of Xorg, dwm, sxhkd, and urxvtd._
 
 # Quick start
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
@@ -48,8 +53,9 @@ _Some scripts apply only to specific hardware, they will **NOT** touch the syste
 | `2*` | System-wide changes that purposefully defeat the package manager, eg. changes to `/etc`. These are hacks. |
 
 # Some environment notes
-## Use of daemons
-All daemons and services required to support the graphical shell are initialized during X startup and terminated when the user logs out.
+## X server invocation
+No login manager is used, login to `tty1` to start the graphical shell.
+All daemons and services required to support the graphical shell are initialized along with the X server and are terminated when the user terminates the session.
 
 `systemd` unit services, cronjobs and similar mechanisms are avoided.
 
