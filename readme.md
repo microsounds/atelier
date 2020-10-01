@@ -12,12 +12,12 @@ Some installation instructions are provided, along with documentation for some o
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
 	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be booted._
 2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
-	* Log back in to reflect changes to group membership.
+	* Log back in to apply changes to group membership.
 3. Bootstrap the system automatically with a hard git reset from this repo, this is done only once.
 	```shell
 	$ git clone --bare [remote] ~/.config/meta
 	$ git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
-	# Invoke the login shell to reflect all changes to the environment
+	# Invoke the login shell to apply changes made to the environment
 	$ exec $SHELL -l
 	```
 4. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
