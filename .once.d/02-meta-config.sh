@@ -3,9 +3,14 @@
 # git meta configuration automated setup
 echo "$0"
 
-# upstream
+# use ssh by default, fallback to https if ~/.ssh doesn't exist
+prefix='ssh://git@'
+[ ! -d ~/.ssh ] && prefix='https://'
+upstream='github.com/microsounds/atelier'
+
+# fetch upstream
 git meta remote remove origin
-git meta remote add origin 'ssh://git@github.com/microsounds/atelier'
+git meta remote add origin "$prefix$upstream"
 git meta fetch
 git meta branch -u origin/master
 
