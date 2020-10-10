@@ -1,0 +1,5 @@
+# ~/.gtkrc-2.0: GTK2 user configuration
+
+gtk-font-name="Liberation Sans 9"
+gtk-theme-name="ThinIce"
+gtk-icon-theme-name="breeze"
