@@ -21,7 +21,7 @@ mpv youtube-dl ffmpeg mediainfo
 nano ctags openssl ledger
 openssh-client
 *openssh-server
-pcmanfm
+pcmanfm gtk2-engines breeze-icon-theme
 progress
 qrencode
 rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
