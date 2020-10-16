@@ -13,6 +13,9 @@ super + e
 # task manager
 ctrl + alt + Delete
 	visual htop
+# screenshots (add delay for interactive mode)
+{_,shift +} Print
+	{scrot,sleep 0.2; scrot -s}
 
 # power
 {_,shift +} super + F{1,2}

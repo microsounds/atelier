@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# implicitly drop screenshots in ~/Pictures/screenshots
+dir="$HOME/Pictures/screenshots"
+
+mkdir -p "$dir"
+cd "$dir"
+/usr/bin/scrot "$@"
