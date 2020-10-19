@@ -11,8 +11,9 @@
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
-	# quickly commit and push
-	sync = "!f() { git commit -a -m \"$(date) on $(uname -n)\"; git push; }; f"
+	# quickly commit changes and push
+	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
+	sync = "!f() { git checkin; git push; }; f"
 
 [advice]
 	detachedHead = false
