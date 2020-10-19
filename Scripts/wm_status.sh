@@ -110,17 +110,8 @@ power() (
 			charged) flow='⭠'; btime_v="$btime_v till charged";;
 			remaining) flow='⭢'; btime_v="$btime_v left";;
 		esac; done
-
-		# calculate power draw in watts if charging/discharging
-		batt='/sys/class/power_supply/BAT0'
-		if [ -d "$batt" ]; then
-			read -r uV < "$batt/voltage_now"
-			read -r uA < "$batt/current_now"
-			draw="$(echo "scale=1; (($uV / 1000000) * ($uA / 1000000))" | bc)"
-			[ ! -z "$draw" ] && draw="${draw%*.0}w"
-		fi
 	fi
-	echo "BAT ↯$pct${draw:+$flow$draw}${btime_v:+, $btime_v}"
+	echo "BAT ↯$pct${btime_v:+, $btime_v}"
 )
 
 sound() (
