@@ -20,7 +20,7 @@ Some installation instructions are provided, along with documentation for some o
 	# Invoke the login shell to apply changes made to the environment
 	$ exec $SHELL -l
 	```
-4. `for f in ~/.once.d/*; do $f; done` to run post-install scripts.
+4. Run `post-install` in the shell to run post-install scripts automatically.
 	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
@@ -37,9 +37,9 @@ For the purposes of version control, `$HOME` is treated as the detached working 
 This is ideal for changes within the home directory, but not for system-wide changes.
 
 ## Using `~/.once.d` post-install scripts
-All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d)
+All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d), you can run them all at once with shell function `post-install`.
 
-_Some scripts apply only to specific hardware, they will **NOT** touch the system even if they are run._
+_You can re-run them anytime without ill effects, some scripts apply only to specific hardware, they will **NOT** touch the system even if they are run._
 
 * System-wide changes that require root access are avoided as much as possible, as these are usually hacks.
 * Sideloaded software is installed to [`~/.local/bin`](.local/bin) instead of `/usr/local/bin`

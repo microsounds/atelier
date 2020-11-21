@@ -16,9 +16,8 @@ finish() {
 
 trap finish 0 1 2 3 6
 
-echo "$0"
 mkdir -v "$TMP"
 echo "Fetching '$DEB'..."
-if wget "$SOURCE/$DEB" -O "$TMP/$DEB"; then
+if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
 	sudo dpkg -i "$TMP/$DEB"
 fi

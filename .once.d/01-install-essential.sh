@@ -3,7 +3,6 @@
 # installs essential packages
 # ask to install optional packages
 
-echo "$0"
 prompt_user() {
 	while read -r res; do
 		case "$(echo "$res" | tr 'A-Z' 'a-z')" in
@@ -29,5 +28,5 @@ for f in $(cat ~/.comforts); do
 	pkgs="$pkgs $f"
 done
 
-echo "$pkgs" | xargs sudo apt-get -y install
+echo "$pkgs" | xargs sudo apt-get -y install || exit 1
 sudo apt-get clean

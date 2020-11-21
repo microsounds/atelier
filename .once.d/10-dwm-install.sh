@@ -2,7 +2,6 @@
 
 # automated suckless configuration and install script
 
-echo "$0"
 for f in dwm-6.2; do
 	VERSION="${f#*-}"
 	CONFIG="$HOME/.config/${f%-*}"
@@ -16,7 +15,7 @@ for f in dwm-6.2; do
 	if cd "$CONFIG" && ! git status 2> /dev/null; then
 		git init
 		git remote add origin "$ORIGIN"
-		git fetch --tags origin master
+		git fetch --tags origin master || exit 1
 	fi
 	if git checkout -f "$VERSION"; then
 		# apply patches

@@ -21,9 +21,8 @@ finish() {
 
 trap finish 0 1 2 3 6
 
-echo "$0"
 mkdir -v "$TMP"
-if wget "$SOURCE/$DEB" -O "$TMP/$DEB"; then
+if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
 	ar -p "$TMP/$DEB" "$DATA" | tar -C "$TMP" -xJv "./$EXTRACT"
 	sudo rm -rf "$TARGET"
 	sudo mv -v "$TMP/$EXTRACT" "$TARGET"

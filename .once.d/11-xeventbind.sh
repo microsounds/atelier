@@ -16,9 +16,8 @@ finish() {
 
 trap finish 0 1 2 3 6
 
-echo "$0"
 mkdir -v "$TMP"
-if git clone "$REPO" "$TMP"; then
+if git clone "$REPO" "$TMP" || exit 1; then
 	make -C "$TMP"
 	mv -v "$TMP/$BINARY" "$INSTALL"
 fi

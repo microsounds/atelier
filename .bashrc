@@ -134,11 +134,22 @@ qr() (
 	qrencode -s 1 -o - "$@" | feh - -Z --force-aliasing
 )
 
+# automatically run ~/.once.d post-install scripts
+post-install() (
+	announce() { printf '\e[1m%s\e[0m\n' "$@"; }
+	for f in ~/.once.d/*; do
+		while announce ">>> Running '${f##*/}'" && ! $f; do
+			announce 'Retrying...'
+			sleep 1
+		done
+	done
+)
+
 # check for updates, remove old kernels
 update() (
-	announce() { printf "\e[1m%s\e[0m\n" "$@";}
+	announce() { printf '\e[1m%s\e[0m\n' "$@";}
 	for f in update dist-upgrade autopurge clean; do
-		announce "$f"
+		announce ">>> $f"
 		sudo apt-get "$f" || exit
 	done
 	for f in $(dpkg --get-selections | egrep '^linux-image-[0-9]+' \
@@ -170,3 +181,4 @@ reload() {
 	done
 	exec urxvtc
 }
+

@@ -16,8 +16,6 @@ finish() {
 
 trap finish 0 1 2 3 6
 
-echo "$0"
-
 mkdir -v "$TMP"
 # fetch version information
 wget -q -O - "$SOURCE" | grep 'title_version' \
@@ -33,4 +31,4 @@ wget -q -O - "$SOURCE" | grep 'title_version' \
 	mv "$TMP/$PROGRAM" "$SHARE"
 	TARGET="$(find "$SHARE/$PROGRAM" | grep "$ARCH/${PROGRAM}$")"
 	ln -sfv  "$TARGET" "$INSTALL/bin"
-done
+done || exit 1

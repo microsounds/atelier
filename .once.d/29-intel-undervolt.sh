@@ -20,12 +20,11 @@ finish() {
 	exit
 }
 
-echo "$0"
 grep 'GenuineIntel' < /proc/cpuinfo > /dev/null || exit
 
 trap finish 0 1 2 3 6
 mkdir -v "$TMP"
-if git clone "$REPO" "$TMP" && cd "$TMP"; then
+if git clone "$REPO" "$TMP" || exit 1 && cd "$TMP"; then
 	# keep existing configuration on reinstall
 	[ -f "$CONF" ] && cp -v "$CONF" "$TMP"
 	./configure --enable-systemd
