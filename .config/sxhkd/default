@@ -24,8 +24,8 @@ ctrl + alt + Delete
 {super + F3,XF86ScreenSaver}
 	sleep 1; xset dpms force off
 # switch displays
-{super + F5,XF86Display}
-	~/Scripts/xrandr_cycle.sh
+{_,shift +}{super + F5,XF86Display}
+	{~/Scripts/xrandr_cycle.sh,arandr}
 # brightness
 {_,shift +} super + F{6,7}
 	xbacklight -{dec 10,set 1,inc 10,set 100}

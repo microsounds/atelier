@@ -1,4 +1,4 @@
-/* ~/.Xresources: X resources user configuration */
+/* ~/.xresources: X resources user configuration */
 
 /* xft */
 Xft.dpi: 96

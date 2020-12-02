@@ -27,7 +27,7 @@ done
 ## startup items that run once
 xset b off &
 dconf load '/' < ~/.config/dconf/user.conf &
-xrdb ~/.Xresources && {
+xrdb ~/.xresources && {
 	for f in decor widgets; do
 		~/Scripts/xwin_$f.sh &
 	done

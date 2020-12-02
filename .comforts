@@ -38,5 +38,5 @@ udevil ntfs-3g sshfs
 vrms
 wget curl
 xdiskusage
-xorg xdotool xsel xbacklight sxhkd
+xorg xdotool xsel xbacklight sxhkd arandr
 zip xz-utils
