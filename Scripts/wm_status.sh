@@ -107,8 +107,8 @@ power() (
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
-			charged) flow='⭠'; btime_v="$btime_v till charged";;
-			remaining) flow='⭢'; btime_v="$btime_v left";;
+			charged) btime_v="$btime_v till charged";;
+			remaining) btime_v="$btime_v left";;
 		esac; done
 	fi
 	echo "BAT ↯$pct${btime_v:+, $btime_v}"
