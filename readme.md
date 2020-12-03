@@ -59,6 +59,11 @@ All daemons and services required to support the graphical shell are initialized
 
 `systemd` unit services, cronjobs and similar mechanisms are avoided.
 
+At startup, `startx` will pass hardware-specific `xorg.conf` files to the X server, to enable hardware compositing on supported hardware and eliminate screen tearing.
+
+Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
+Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
+
 ## Non-standard commands
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
@@ -66,12 +71,6 @@ Several commands are extended to include impure functions, such as purposefully 
 2. Scripts and symlinks in `~/.local/bin`
 	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
 3. `/usr/bin` system executables
-
-## `startx`
-Invoking `startx` will pass hardware-specific `xorg.conf` files to the X server, to enable hardware compositing on supported hardware and eliminate screen tearing.
-
-Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
-Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.
