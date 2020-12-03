@@ -9,8 +9,9 @@ export C_INCLUDE_PATH="$HOME/.local/include"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 
-# redirect cache writes to pam_systemd's tmpfs or not at all
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/dev/null}"
+# force cache writes to ramdisk
+# fallback to /tmp if pam_systemd doesn't provide ramdisk
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
 
 ## login shell
