@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# installs essential packages
-# ask to install optional packages
+# installs essential package list
+# ask to install optional package groups
 
 prompt_user() {
 	while read -r res; do
@@ -20,8 +20,13 @@ for f in $(cat ~/.comforts); do
 	# package groups with an asterisk are optional, prompt user
 	if [ "${f%${f#?}}" = '*' ]; then
 		f="${f#?}"
-		# don't ask if package is already installed
-		dpkg -s "${f% *}" > /dev/null 2>&1 && continue
+		# don't ask if package group is fully installed
+		unset IFS not_inst
+		for g in $f; do
+			printf '%s\r' "Checking '$g'..."
+			dpkg -s "$g" > /dev/null 2>&1 || { not_inst=1; break; }
+		done
+		[ -z "$not_inst" ] && continue
 		printf "%s" "Install optional package(s) $f?: "
 		prompt_user || continue
 	fi

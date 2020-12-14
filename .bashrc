@@ -1,6 +1,8 @@
 ## ~/.bashrc: executed by bash(1) for non-login shells.
 
-## internal constructs
+#
+## internal use
+
 # bash specific
 HISTCONTROL=ignoredups
 
@@ -50,7 +52,14 @@ is_newer() (
 	[ ! -z "$res" ]
 )
 
-## external constructs
+# internal echo function
+announce() (
+	printf '\e[1m%s\e[0m\n' "$@";
+)
+
+#
+## external use
+
 # create parent directories
 alias mkdir='mkdir -p'
 
@@ -136,7 +145,6 @@ qr() (
 
 # automatically run ~/.once.d post-install scripts
 post-install() (
-	announce() { printf '\e[1m%s\e[0m\n' "$@"; }
 	for f in ~/.once.d/*; do
 		while announce ">>> Running '${f##*/}'" && ! $f; do
 			announce 'Retrying...'
@@ -147,7 +155,6 @@ post-install() (
 
 # check for updates, remove old kernels
 update() (
-	announce() { printf '\e[1m%s\e[0m\n' "$@";}
 	for f in update dist-upgrade autopurge clean; do
 		announce ">>> $f"
 		sudo apt-get "$f" || exit
@@ -181,4 +188,3 @@ reload() {
 	done
 	exec urxvtc
 }
-
