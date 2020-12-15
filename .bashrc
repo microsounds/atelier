@@ -77,19 +77,10 @@ alias mkdir='mkdir -p'
 alias cp='cp -i'
 alias mv='mv -i'
 
-# ~/.swallow
 # enable terminal swallowing for selected X applications
-if [ -f ~/.swallow ]; then
-	IFS='
-	'
-	for f in $(cat ~/.swallow); do
-		case "${f%${f#?}}" in
-			\#) continue;;
-			*) alias "$f"="swallow $f"
-		esac
-	done
-	unset IFS f
-fi
+for f in feh mpv pcmanfm xdiskusage; do
+	alias "$f"="swallow $f"
+done && unset f
 
 ls() (
 	# identify file types regardless of color support
