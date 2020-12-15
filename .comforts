@@ -1,3 +1,5 @@
+## ~/.comforts: essential and optional package groups
+
 *audacity
 bash bash-completion shellcheck
 chromium

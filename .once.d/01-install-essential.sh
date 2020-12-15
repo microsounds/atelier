@@ -17,19 +17,20 @@ IFS='
 '
 unset pkgs
 for f in $(cat ~/.comforts); do
-	# package groups with an asterisk are optional, prompt user
-	if [ "${f%${f#?}}" = '*' ]; then
-		f="${f#?}"
-		# don't ask if package group is fully installed
-		unset IFS not_inst
-		for g in $f; do
-			printf '%s\r' "Checking '$g'..."
-			dpkg -s "$g" > /dev/null 2>&1 || { not_inst=1; break; }
-		done
-		[ -z "$not_inst" ] && continue
-		printf "%s" "Install optional package(s) $f?: "
-		prompt_user || continue
-	fi
+	case "${f%${f#?}}" in
+		\#) continue;; # comments
+		\*) # package groups with an asterisk are optional, prompt user
+			f="${f#?}"
+			# don't ask if package group is fully installed
+			unset IFS not_inst
+			for g in $f; do
+				printf '%s\r' "Checking '$g'..."
+				dpkg -s "$g" > /dev/null 2>&1 || { not_inst=1; break; }
+			done
+			[ -z "$not_inst" ] && continue
+			printf "%s" "Install optional package(s) $f?: "
+			prompt_user || continue;;
+	esac
 	pkgs="$pkgs $f"
 done
 
