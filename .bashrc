@@ -57,6 +57,16 @@ announce() (
 	printf '\e[1m%s\e[0m\n' "$@";
 )
 
+# unmap current X window and restore it after background process returns
+swallow() (
+	[ ! -z "$1" ] || exit 1
+	WINID="$(xdotool getactivewindow)" || exit 1
+
+	"$@" 2> /dev/null &
+	xdotool windowunmap "$WINID" && wait
+	xdotool windowmap "$WINID"
+)
+
 #
 ## external use
 
@@ -66,6 +76,20 @@ alias mkdir='mkdir -p'
 # prompt before overwrite
 alias cp='cp -i'
 alias mv='mv -i'
+
+# ~/.swallow
+# enable terminal swallowing for selected X applications
+if [ -f ~/.swallow ]; then
+	IFS='
+	'
+	for f in $(cat ~/.swallow); do
+		case "${f%${f#?}}" in
+			\#) continue;;
+			*) alias "$f"="swallow $f"
+		esac
+	done
+	unset IFS f
+fi
 
 ls() (
 	# identify file types regardless of color support
