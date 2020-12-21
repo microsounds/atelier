@@ -1,5 +1,6 @@
 ## ~/.comforts: essential and optional package groups
 
+alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
 chromium
@@ -12,8 +13,8 @@ dkms
 feh
 file
 *gimp
-git make gcc
-gparted
+git make gcc wget curl
+gparted udevil ntfs-3g dosfsutils sshfs
 htop
 *kdenlive
 m4
@@ -33,12 +34,10 @@ scrot
 ssh-askpass
 suckless-tools libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 sudo
-task-laptop acpi lm-sensors network-manager bluez alsa-utils pulseaudio pulseaudio-module-bluetooth
-udevil ntfs-3g sshfs
+task-laptop acpi lm-sensors network-manager bluez
 *valgrind
 *virt-manager
 vrms
-wget curl
 xdiskusage
 xorg xdotool xsel xbacklight sxhkd arandr
 zip xz-utils
