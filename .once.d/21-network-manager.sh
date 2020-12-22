@@ -1,8 +1,11 @@
 #!/usr/bin/env sh
 
-# allow network-manager to manage wired devices
-# that appear in /etc/network/interfaces
+# NetworkManager tweaks
 
+# don't wait on networking during startup
+sudo systemctl disable NetworkManager-wait-online.service
+
+# allow network-manager to manage wired devices from /etc/network/interfaces
 CONF='/etc/NetworkManager/NetworkManager.conf'
 KEY='managed'
 OPTION='true'
