@@ -14,7 +14,7 @@ feh
 file
 *gimp
 git make gcc wget curl
-gparted udevil ntfs-3g dosfsutils sshfs
+gparted udevil ntfs-3g exfat-utils dosfstools sshfs
 htop
 *kdenlive
 m4
