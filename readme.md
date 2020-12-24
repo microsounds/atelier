@@ -64,6 +64,14 @@ At startup, `startx` will pass hardware-specific `xorg.conf` files to the X serv
 Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
 Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
+## X root window decoration
+Using optional config file `~/.xdecor`, you can designate an absolute path to a directory containing videos or images to use as a wallpaper.
+```
+$ pwd > ~/.xdecor
+```
+If configured, [`xwin_decor`](Scripts/xwin_decor.sh) will pick a random file within it and set it as the wallpaper on startup.
+In the case of video files, a random frame will be taken and set as the wallpaper using `ffmpeg`.
+
 ## Non-standard commands
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
