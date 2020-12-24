@@ -52,6 +52,24 @@ _You can re-run them anytime without ill effects, some scripts apply only to spe
 | `1*` | Changes to [`~/.local`](.local) file hierarchy, eg. sideloading 3rd party software. |
 | `2*` | System-wide changes that purposefully defeat the package manager, eg. changes to `/etc`. These are hacks. |
 
+## Main hotkeys
+| shift + | super + | key |
+| --: | --: | :-- |
+| | terminal | return |
+| | file manager | e |
+| reboot | shutdown | F1 |
+| hibernate | sleep | F2 |
+| | display off | F3 |
+| | _reserved_ | F4 |
+| configure displays | switch active display | F5 |
+| minimum brightness | lower brightness 10% | F6 |
+| maximum brightness | raise brightness 10% | F7 |
+| | toggle mute | F8 |
+| | lower volume 5% | F9 |
+| | raise volume 5% | F10 |
+| | randomize wallpaper | F11 |
+| | _reserved_ | F12 |
+
 # Some environment notes
 ## X server invocation
 No login manager is used, login to `tty1` to start the graphical shell.
@@ -65,7 +83,7 @@ Xorg's security model forbids non-root users from passing arbitrary config files
 Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
 ## X root window decoration
-Using optional config file `~/.xdecor`, you can designate an absolute path to a directory containing videos or images to use as a wallpaper.
+Using _optional_ config file `~/.xdecor`, you can designate an absolute path to a directory containing videos or images to use as a wallpaper.
 ```
 $ pwd > ~/.xdecor
 ```

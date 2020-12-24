@@ -36,3 +36,6 @@ super + F{8,9,10}
 	amixer -q sset Master {toggle,5%-,5%+}
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
+# randomize wallpaper
+super + F11
+	~/Scripts/xwin_decor.sh
