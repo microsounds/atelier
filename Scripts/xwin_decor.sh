@@ -17,10 +17,10 @@ setwall='feh --no-fehbg --bg-fill -g +0+0 -'
 [ ! -f "$config" ] && exit || read -r dir < "$config"
 [ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
 
-sel="$(find "$dir" -type f | egrep '.(jpe?g|png|mkv|mp4)$' | shuf -n 1)"
+sel="$(find "$dir" -type f | egrep '\.(jpe?g|png|mkv|mp4)$' | shuf -n 1)"
 [ ! -z "$sel" ] || exit
 case "$sel" in
-	*jpg|*jpeg|*png) $setwall < "$sel"; break;;
+	*jpg|*jpeg|*png) $setwall < "$sel";;
 	*)
 		mediainfo "$sel" --output='Video;%FrameCount% %FrameRate%' \
 			| while read -r f_count fps; do
