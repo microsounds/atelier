@@ -174,8 +174,12 @@ update() (
 		announce ">>> $f"
 		sudo apt-get "$f" || exit
 	done
-	for f in $(dpkg --get-selections | egrep '^linux-image-[0-9]+' \
-	         | sed 's/image/*/' | cut -f1 | sort -rV | tail -n +2); do
+	# 3-digit semantic versioning sort, zero pad version numbers
+	pad="$(tr '\0' '0' < /dev/zero | dd bs=3 count=1 2> /dev/null)"
+	for f in $(dpkg --get-selections | egrep '^linux-image-[0-9]+' | cut -f1 \
+		| sed -E -e "s/([0-9]+)/$pad\1/g" -e "s/0*([0-9]{${#pad}})/\1/g" \
+		| sort -r | sed -E -e 's/0*([1-9][0-9]*|0)/\1/g' -e 's/image/\*/' \
+		| tail -n +2); do
 		announce "removing $f..."
 		sudo apt-get autopurge "$f" || exit
 	done
