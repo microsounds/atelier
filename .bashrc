@@ -174,7 +174,7 @@ update() (
 		announce ">>> $f"
 		sudo apt-get "$f" || exit
 	done
-	# 3-digit semantic versioning sort, zero pad version numbers
+	# semantic versioning sort, zero-pad numbers to 3 digits
 	pad="$(tr '\0' '0' < /dev/zero | dd bs=3 count=1 2> /dev/null)"
 	for f in $(dpkg --get-selections | egrep '^linux-image-[0-9]+' | cut -f1 \
 		| sed -E -e "s/([0-9]+)/$pad\1/g" -e "s/0*([0-9]{${#pad}})/\1/g" \
@@ -202,7 +202,7 @@ colors() (
 reload() {
 	find ~/.local/include/colors -type f | while read -r f; do
 		if echo "${f##*/}" | fgrep -q "${@:-nightdrive}"; then
-			sed "/#include/a #include \"$f\"" ~/.Xresources | xrdb -
+			sed "/#include/a #include \"$f\"" ~/.xresources | xrdb -
 		fi
 	done
 	exec urxvtc
