@@ -54,7 +54,10 @@ is_newer() (
 
 # internal echo function
 announce() (
-	printf '\e[1m%s\e[0m\n' "$@";
+	msg="$@";
+	printf '\e[30;46m%s%s\e[0m\n' "$msg" \
+		"$(tr '\0' ' ' < /dev/zero \
+			| dd count=1 bs=$(($(tput cols) - ${#msg})) 2> /dev/null)"
 )
 
 # unmap current X window and restore it after background process returns
@@ -177,8 +180,8 @@ update() (
 	# semantic versioning sort, zero-pad numbers to 3 digits
 	pad="$(tr '\0' '0' < /dev/zero | dd bs=3 count=1 2> /dev/null)"
 	for f in $(dpkg --get-selections | egrep '^linux-image-[0-9]+' | cut -f1 \
-		| sed -E -e "s/([0-9]+)/$pad\1/g" -e "s/0*([0-9]{${#pad}})/\1/g" \
-		| sort -r | sed -E -e 's/0*([1-9][0-9]*|0)/\1/g' -e 's/image/\*/' \
+		| sed -E -e "s/([0-9]+)/${pad}\1/g" -e "s/0*([0-9]{${#pad}})/\1/g" \
+		| sort -r | sed -E -e "s/0*([0-9]+)/\1/g" -e 's/image/\*/' \
 		| tail -n +2); do
 		announce "removing $f..."
 		sudo apt-get autopurge "$f" || exit
