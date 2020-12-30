@@ -270,7 +270,7 @@ done &
 
 # housekeeping
 # append options/refuse to open certain files
-unset seeks ro ln
+unset seeks opt
 for f in "$@"; do case "$f" in
 	-*);; # don't act on flags
 	+[0-9]*)
@@ -278,12 +278,12 @@ for f in "$@"; do case "$f" in
 		# the same file might be opened multiple times at different positions
 		# open in view-only mode to avoid lockfile warnings on the same file
 		# nano versions before 4.8 will ignore this and create lockfiles anyway
-		[ -z "$ro" ] && seeks=$((seeks + 1)) && [ "$seeks" -gt 1 ] && ro='-v';;
+		seeks=$((seeks + 1)) && [ "$seeks" -gt 1 ] && opt="${opt}v";;
 	*)
 		# opening a directory by mistake
 		[ -d "$f" ] && quit "'$f' is a directory"
 		# force line numbers on large files
-		[ -z "$ln" ] && [ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && ln='-l'
+		[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opt="${opt}l"
 		# refuse to open if a valid lockfile exists
 		lock="$(derive_parent "$f")/.${f##*/}.swp"
 		if [ -f "$lock" ]; then
@@ -298,4 +298,4 @@ for f in "$@"; do case "$f" in
 esac; done
 
 wait
-exec $ACTUAL_EDITOR $ro $ln "$@"
+exec $ACTUAL_EDITOR ${opt:+-$(echo "$opt" | tr -s 'a-z')} "$@"
