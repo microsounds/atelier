@@ -200,7 +200,7 @@ mode_encrypt() {
 		# determine file state
 		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
 		if [ -f "$f" ]; then # is this an encrypted file?
-			case "$(dd bs=8 count=1 < "$f" 2> /dev/null)" in
+			case "$(dd bs=${#magic} count=1 < "$f" 2> /dev/null)" in
 				$magic) state='encrypted';;
 			esac
 		fi
