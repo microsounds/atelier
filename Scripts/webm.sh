@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## webm.sh v0.4
+## webm.sh v0.5
 #  screen recorder, outputs soundless webm for certain anime imageboards
 ## Press Ctrl+C to end recording, press Ctrl+C again to cancel.
 
@@ -29,15 +29,21 @@ info() { echo "\e[1;${1}m${2}\e[0m"; }
 to_webm() {
 	iter=$((iter + 1))
 	if [ $iter -lt 2 ]; then
-		info $INFO "Encoding..."
-		ffmpeg -hide_banner -i "$TEMP" \
-	           -c:v libvpx -b:v $BITRATE -crf $CONSTQ -fs $SIZE \
-	           -vf scale=$SCALE -fs $SIZE -threads $CORES -an "$FINAL"
-		rm -v "$TEMP"
+		for f in $(seq 2); do
+			info $INFO "Pass $f encoding..."
+			case $f in
+				1) OUTPUT='-f null /dev/null';;
+				2) OUTPUT="$PWD/$FINAL";;
+			esac
+			ffmpeg -hide_banner -loglevel info -i "$TEMP" -c:v libvpx \
+				-b:v $BITRATE -crf $CONSTQ -fs $SIZE -vf scale=$SCALE \
+				-fs $SIZE -threads $CORES -an -passlogfile $KEY -pass $f $OUTPUT
+		done
+		rm -v "$TEMP" "$PWD/$KEY"*
 		info $OK "File saved at: $PWD/$FINAL"
 	else
 		info $ERR "Terminated abruptly..."
-		rm -v "$TEMP" "$FINAL" && exit 1
+		rm -v "$TEMP" "$PWD/$KEY"* "$FINAL" && exit 1
 	fi
 }
 
