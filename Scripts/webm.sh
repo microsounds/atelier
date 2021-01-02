@@ -24,27 +24,35 @@ RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -n 1)"
 NAME="${0##*/}" # derive script name
 CORES="$(grep -c '^proc' /proc/cpuinfo)"
 
-# final encode settings (2-pass)
-ENC_OPTS="-hide_banner -loglevel info -c:v libvpx \
-	-b:v $BITRATE -crf $CONSTQ -fs $SIZE -vf scale=$SCALE \
-	-fs $SIZE -threads $CORES -an -passlogfile $KEY"
-
 # filenames
 TEMP="$PWD/${KEY}.mp4"
 FINAL="$PWD/$(date '+%Y-%m-%d-%H%M%S')_${RES}_${NAME%.*}.webm"
 
 info() { echo "\e[1;${1}m${2}\e[0m"; }
 
+# rewrite ffmpeg command to use 2-pass encoding
+twopass() {
+	final_opt="$(eval "echo \$$(($#))")"
+	for f in "$@"; do
+		shift
+		[ "$f" = "$final_opt" ] && continue
+		set -- "$@" "$f"
+	done
+	for f in $(seq 2); do
+		info $INFO "Pass $f encoding..."
+		case $f in
+			1) "$@" -passlogfile $KEY -pass $f -f null /dev/null;;
+			2) "$@" -passlogfile $KEY -pass $f "$final_opt";;
+		esac
+	done
+}
+
 to_webm() {
 	iter=$((iter + 1))
 	if [ $iter -lt 2 ]; then
-		for f in $(seq 2); do
-			info $INFO "Pass $f encoding..."
-			case $f in
-				1) ffmpeg -i "$TEMP" $ENC_OPTS -pass $f -f null /dev/null;;
-				2) ffmpeg -i "$TEMP" $ENC_OPTS -pass $f "$FINAL";;
-			esac
-		done
+			twopass ffmpeg -hide_banner -loglevel info -i "$TEMP" -c:v libvpx \
+				-b:v $BITRATE -crf $CONSTQ -fs $SIZE -vf scale=$SCALE \
+				-fs $SIZE -threads $CORES -an "$FINAL"
 		rm -fv "$PWD/$KEY"*
 		info $OK "File saved at: $FINAL"
 	else
