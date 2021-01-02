@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+# ffmpeg 2-pass wrapper
+# rewrites ffmpeg commands to use 2-pass encoding
+
+key="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=10 count=1 2> /dev/null)"
+
+error() { echo "$@" && exit 1; }
+announce() { echo "$@"; "$@"; }
+
+case "$1" in
+	*ffmpeg*);;
+	*) error 'Not a valid ffmpeg command'
+esac
+
+# isolate final arg
+final_opt="$(eval "echo \$$(($#))")"
+for f in "$@"; do
+	shift
+	[ "$f" = "$final_opt" ] && continue
+	set -- "$@" "$f"
+done
+
+on_exit() { rm -fv $key*.log; }
+trap on_exit 0 1 2 3 6
+
+for f in $(seq 2); do
+	case $f in
+		1) announce "$@" -passlogfile $key -pass $f -f null /dev/null;;
+		2) announce "$@" -passlogfile $key -pass $f "$final_opt";;
+	esac
+done
