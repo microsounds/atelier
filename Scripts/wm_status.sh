@@ -86,7 +86,9 @@ network() (
 		net="$(nmcli -t networking)"
 		net="$(echo "${net%${net#?}}" | tr 'a-z' 'A-Z')${net#?}"
 	fi
-	echo "NET 📶 ${net}"
+	ico='📶' # connected but no internet
+	ping -c 1 '8.8.8.8' > /dev/null 2>&1 || ico='✕'
+	echo "NET $ico $net"
 )
 
 power() (
