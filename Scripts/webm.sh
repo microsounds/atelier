@@ -50,9 +50,9 @@ twopass() {
 to_webm() {
 	iter=$((iter + 1))
 	if [ $iter -lt 2 ]; then
-			twopass ffmpeg -hide_banner -loglevel info -i "$TEMP" -c:v libvpx \
-				-b:v $BITRATE -crf $CONSTQ -fs $SIZE -vf scale=$SCALE \
-				-fs $SIZE -threads $CORES -an "$FINAL"
+		twopass ffmpeg -hide_banner -loglevel info -i "$TEMP" -c:v libvpx \
+			-b:v $BITRATE -crf $CONSTQ -fs $SIZE -vf scale=$SCALE \
+			-fs $SIZE -threads $CORES -an "$FINAL"
 		rm -fv "$PWD/$KEY"*
 		info $OK "File saved at: $FINAL"
 	else
@@ -64,4 +64,4 @@ to_webm() {
 info $INFO "$(cat $0 | grep '^##' | sed 's/## //g')"
 iter=0; trap to_webm 2
 ffmpeg -loglevel panic -threads $CORES -framerate $FPS -video_size $RES \
-       -f x11grab -i :0.0+0,0 -c:v libx264 -qp 0 -preset ultrafast "$TEMP"
+	-f x11grab -i :0.0+0,0 -c:v libx264 -qp 0 -preset ultrafast "$TEMP"
