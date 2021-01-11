@@ -42,7 +42,7 @@ fan_speed() (
 		if [ ${#rpm} -gt 3 ]; then
 			rpm="$(echo "scale=1; $rpm / 1000" | bc)k"
 		fi
-		echo "FAN ${rpm}↻"
+		echo "FAN ↻${rpm}"
 	done
 )
 
@@ -74,8 +74,8 @@ cpu_speed() (
 )
 
 public_ip() (
-	# get public IP (very slow)
-	ip="$(wget -q -O - 'https://ifconfig.me/ip')"
+	# get public IP address (very slow)
+	ip="$(dig @resolver1.opendns.com myip.opendns.com +short 2> /dev/null)"
 	echo "IP ${ip:-none}"
 )
 
@@ -88,7 +88,7 @@ network() (
 		net="$(echo "${net%${net#?}}" | tr 'a-z' 'A-Z')${net#?}"
 	fi
 	ico='📶' # connected but no internet
-	ping -c 1 '8.8.8.8' > /dev/null 2>&1 || ico='✕'
+	ping -c 1 '8.8.8.8' > /dev/null 2>&1 || ico='⛔'
 	echo "NET $ico $net"
 )
 
@@ -185,7 +185,7 @@ while read -r line; do
 	case "$NET" in *abled) unset IP;; esac
 
 	# compose status bar
-	bar="${FAN-$TEMP}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
+	bar="${FAN:-$TEMP}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
 
 	# strip delimiter from last module
 	echo "'$pad$(echo "$bar" | sed 's/・$//')$pad'" | xargs xsetroot -name
