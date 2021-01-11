@@ -8,6 +8,7 @@
 for f in $(echo "${@#-}" | sed 's/./& /g'); do
 	case $f in
 		p) pad=' ';; # -p for extra padding
+		m) invert=1;; # -m for reverse video moon phase
 	esac
 done
 
@@ -138,10 +139,12 @@ current_date() (
 	known=633381600 # Jan 26th, 1990 was a new moon
 	cycle=$(echo "scale=2; (($now - $known) / 86400) / 29.53" | bc)
 	cycle=${cycle#*.} # absolute value
-	# map progress to an available glyph
-	phase='🌕 🌖 🌗 🌘 🌑 🌑 🌒 🌓 🌔 🌕'
+	# map cycle progress to an available glyph
+	# reverse video: switch new/full moon glyphs for use with dark backgrounds
+	phases='🌑 🌒 🌓 🌔 🌕\n🌕 🌖 🌗 🌘 🌑'
 	map=$(((${cycle#0} / 10) + 1))
-	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$map | head -n 1)
+	moon=$(echo "$phases" | sort ${invert:+-r} | tr ' ' '\n' \
+		| tail -n +$map | head -n 1)
 
 	# current date
 	timest="$(date '+%-e %a, %b x')"

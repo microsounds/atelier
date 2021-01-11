@@ -10,7 +10,7 @@ esac
 
 ## daemons tied to this X server instance
 urxvtd -o &
-~/Scripts/wm_status.sh -p & # status bar
+~/Scripts/wm_status.sh -pm & # status bar
 
 # mangle sxhkd config at runtime
 {	echo "# !! overwritten by $0 at startup !!" > ~/.config/sxhkd/sxhkdrc
