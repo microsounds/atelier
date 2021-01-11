@@ -15,6 +15,9 @@
 	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
 	sync = "!f() { git checkin; git push; }; f"
 
+[init]
+	defaultBranch = master
+
 [advice]
 	detachedHead = false
 
