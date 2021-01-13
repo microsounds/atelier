@@ -56,7 +56,7 @@ temps() (
 		sum=$((sum + ${f%.*}))
 	done
 	temp="$(echo "scale=1; (($sum / $n) * 1.8) + 32" | bc)"
-	echo "TEMP ∿${temp%*.0}˚F"
+	echo "TEMP ∿${temp%*.0}°F"
 )
 
 cpu_speed() (
@@ -71,6 +71,13 @@ cpu_speed() (
 	[ ${#clk} -gt 3 ] && clk="$(echo "scale=2; $clk / 1000" | bc)G" \
 		|| clk="${clk}M"
 	echo "CPU ${clk}Hz"
+)
+
+weather() (
+	# get current weather based on current IP (very slow)
+	fmt='%f, %C'
+	wttr="$(wget -q -O - "http://wttr.in/?format=$fmt" | tr -d '+')"
+	echo "WTTR ${wttr:-none}"
 )
 
 public_ip() (
@@ -167,6 +174,7 @@ current_time() (
 launch fan_speed 10
 launch temps 15
 #launch cpu_speed 1
+#launch weather 60
 #launch public_ip 30
 launch network 15
 launch power 15
@@ -174,18 +182,18 @@ launch sound 5
 launch current_date 60
 launch current_time 10
 
-while read -r line; do
+while read -r module data; do
 	# receive module output and append delimiter
-	eval "${line%% *}=\"${line#* }・\""
+	eval "$module=\"$data・\""
 
-	# conditional modules
-	case "$FAN" in 0*) unset FAN;; esac # fan spindown
-	# no internet
-	case "$IP" in none*) unset IP;; esac
-	case "$NET" in *abled) unset IP;; esac
+	# conditionally revoke modules
+	case "$data" in
+		0*|none) eval "unset $module";; # fan spindown/no internet
+		*abled) unset IP;; # no internet
+	esac
 
 	# compose status bar
-	bar="${FAN:-$TEMP}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
+	bar="${FAN:-$TEMP}${WTTR}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
 
 	# strip delimiter from last module
 	echo "'$pad$(echo "$bar" | sed 's/・$//')$pad'" | xargs xsetroot -name
