@@ -77,6 +77,7 @@ weather() (
 	# get current weather based on current IP (very slow)
 	fmt='%f, %C'
 	wttr="$(wget -q -O - "http://wttr.in/?format=$fmt" | tr -d '+')"
+	case "$wttr" in Unknown*) unset wttr;; esac # wttr.in API is down
 	echo "WTTR ${wttr:-none}"
 )
 
