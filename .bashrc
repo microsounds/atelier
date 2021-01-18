@@ -158,7 +158,7 @@ ledger() (
 # create QR code from stdin or from a string argument
 qr() (
 	[ ! -f /dev/stdin ] || set -- -r /dev/stdin
-	qrencode -s 1 -o - "$@" | feh - -Z --force-aliasing
+	qrencode -s 1 -o - "$@" | command feh - -Z --force-aliasing
 )
 
 # automatically run ~/.once.d post-install scripts
