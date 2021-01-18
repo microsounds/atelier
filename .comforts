@@ -16,6 +16,7 @@ file
 git make gcc wget curl
 gparted udevil ntfs-3g exfat-utils dosfstools sshfs
 htop
+jq
 *kdenlive
 m4
 man
@@ -29,6 +30,7 @@ pcmanfm gtk2-engines breeze-icon-theme
 progress
 qrencode
 rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
+sc
 screen
 screenfetch
 scrot
@@ -41,4 +43,4 @@ task-laptop acpi lm-sensors network-manager bluez
 vrms
 xdiskusage
 xorg xdotool xsel xbacklight sxhkd arandr
-zip xz-utils
+zip gzip bzip2 xz-utils pigz pbzip2
