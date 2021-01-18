@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-# enforce use of environment-specific cache location
+# redirect cache writes to ramdisk
 for f in ${0##*/}; do /usr/bin/$f --disk-cache-dir="$XDG_CACHE_HOME/$f" "$@"; done
