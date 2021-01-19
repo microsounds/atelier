@@ -14,5 +14,3 @@ sudo tee '/etc/modprobe.d/i915.conf' <<- EOF
 	# disable panel-self refresh to mitigate system hangs and instability
 	options i915 enable_psr=0
 EOF
-
-
