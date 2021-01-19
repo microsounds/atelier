@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 ## nano_overlay.sh v0.8 — interactive external overlay for GNU nano
-## (c) 2020 microsounds <https://github.com/microsounds>, GPLv3+
+## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
 
 # use nano overlay instead of standard nano for interactive features
@@ -283,7 +283,7 @@ for f in "$@"; do case "$f" in
 		# opening a directory by mistake
 		[ -d "$f" ] && quit "'$f' is a directory"
 		# force line numbers on large files
-		[ -f "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opt="${opt}l"
+		[ -r "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opt="${opt}l"
 		# refuse to open if a valid lockfile exists
 		lock="$(derive_parent "$f")/.${f##*/}.swp"
 		if [ -f "$lock" ]; then
