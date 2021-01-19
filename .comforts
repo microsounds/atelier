@@ -19,10 +19,10 @@ htop
 jq
 *kdenlive
 m4
-man
+man-db
 mesa-utils
 mpv youtube-dl ffmpeg mediainfo
-nano ctags openssl ledger
+nano exuberant-ctags openssl ledger
 openssh-client
 *openssh-server
 parallel

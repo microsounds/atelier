@@ -18,6 +18,9 @@
 [init]
 	defaultBranch = master
 
+[pull]
+	ff = only
+
 [advice]
 	detachedHead = false
 

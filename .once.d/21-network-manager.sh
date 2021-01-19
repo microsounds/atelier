@@ -13,4 +13,4 @@ OPTION='true'
 # append required key if it doesn't exist
 grep -q "$KEY" "$CONF" || echo "$KEY" | sudo tee -a "$CONF"
 sed "/.*$KEY/c $KEY=$OPTION" < "$CONF" | sudo tee "$CONF"
-sudo systemctl restart network-manager
+sudo systemctl restart NetworkManager
