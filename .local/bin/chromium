@@ -1,4 +1,12 @@
 #!/usr/bin/env sh
 
+unset opt
+
+# disable hardware acceleration on chromebooks
+read -r vendor < /sys/devices/virtual/dmi/id/sys_vendor
+case $vendor in
+	GOOGLE) opt="$opt --disable-gpu-compositing";;
+esac
+
 # redirect cache writes to ramdisk
-for f in ${0##*/}; do /usr/bin/$f --disk-cache-dir="$XDG_CACHE_HOME/$f" "$@"; done
+/usr/bin/chromium $opt --disk-cache-dir="$XDG_CACHE_HOME/${0##*/}" "$@"
