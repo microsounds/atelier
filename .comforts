@@ -11,6 +11,7 @@ dc
 dconf-cli
 dkms
 feh
+figlet
 file
 *gimp
 git make gcc wget curl
@@ -26,7 +27,7 @@ nano exuberant-ctags openssl ledger
 openssh-client
 *openssh-server
 parallel
-pcmanfm gtk2-engines breeze-icon-theme
+pcmanfm ffmpegthumbnailer gtk2-engines breeze-icon-theme
 progress
 qrencode
 rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
