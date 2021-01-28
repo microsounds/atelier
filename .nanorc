@@ -26,9 +26,11 @@ set unix
 set locking
 set positionlog
 unset historylog
-unset suspend
+unset suspend # suspendable
 
 ## ui
+#set indicator
+#unset stateflags
 set nopauses
 set constantshow
 unset quickblank
@@ -43,3 +45,4 @@ set numbercolor white
 set titlecolor black,cyan
 set statuscolor black,white
 set errorcolor black,red
+#set scrollercolor cyan,lightblack
