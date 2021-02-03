@@ -166,9 +166,9 @@ qr() (
 		-d) # decode QR code from webcam and print to stdout
 			zbarcam --raw > "$tmp" &
 			# exit zbarcam after first successful scan
-			trap 'kill -9 $!; exit' 0 1 2 3 6
+			trap 'kill -9 $!; rm -f "$tmp"; exit' 0 1 2 3 6
 			while [ ! -s "$tmp" ]; do sleep 1; done
-			cat "$tmp" && rm "$tmp";;
+			cat "$tmp";;
 		*) echo 'usage: qr [ -c "STRING" | -d ] [ < stdin ]' && exit 1
 	esac
 )
