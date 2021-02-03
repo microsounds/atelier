@@ -155,25 +155,6 @@ ledger() (
 	~/Scripts/nano_overlay.sh -f "$file"
 )
 
-# output QR code from stdin / decode QR code to stdout
-qr() (
-	key="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
-	tmp="${XDG_RUNTIME_DIR:-/tmp}/.$key"
-	case "$1" in
-		-c) # create QR from stdin/string argument
-			[ ! -f /dev/stdin ] || set -- -r /dev/stdin
-			qrencode -s 1 -o - "$@" | command feh - -Z --force-aliasing;;
-		-d) # decode QR image from stdin/webcam
-			unset f; [ ! -f /dev/stdin ] || f='img'
-			zbar${f:-cam} --raw - < /dev/stdin > "$tmp" 2> /dev/null &
-			# exit after first successful scan
-			trap 'kill $! 2> /dev/null; rm -f "$tmp"; exit' 0 1 2 3 6
-			while [ ! -s "$tmp" ]; do sleep 1; done
-			cat "$tmp";;
-		*) echo 'usage: qr [ -c "STRING" | -d ] [ < stdin ]' && exit 1
-	esac
-)
-
 # automatically run ~/.once.d post-install scripts
 post-install() (
 	for f in ~/.once.d/*; do
