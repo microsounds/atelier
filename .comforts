@@ -29,7 +29,7 @@ openssh-client
 parallel
 pcmanfm ffmpegthumbnailer gtk2-engines breeze-icon-theme
 progress
-qrencode
+qrencode zbar-tools
 rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
 sc
 screen
