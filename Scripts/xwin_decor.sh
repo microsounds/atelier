@@ -17,6 +17,7 @@ setwall='feh --no-fehbg --bg-fill -g +0+0 -'
 [ ! -f "$config" ] && exit || read -r dir < "$config"
 [ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
 
+[ ! -z "$dir" ] || exit
 sel="$(find "$dir" -type f | egrep '\.(jpe?g|png|mkv|mp4)$' | shuf -n 1)"
 [ ! -z "$sel" ] || exit
 case "$sel" in
