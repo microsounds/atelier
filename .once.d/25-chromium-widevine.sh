@@ -23,7 +23,7 @@ trap finish 0 1 2 3 6
 
 mkdir -v "$TMP"
 if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
-	ar -p "$TMP/$DEB" "$DATA" | xz -d | tar -C "$TMP" -xv "./$EXTRACT"
+	ar -p "$TMP/$DEB" "$DATA" | xz -d | tar -xv -C "$TMP" "./$EXTRACT"
 	sudo rm -rf "$TARGET"
 	sudo mv -v "$TMP/$EXTRACT" "$TARGET"
 fi

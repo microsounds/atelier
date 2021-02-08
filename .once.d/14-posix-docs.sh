@@ -7,4 +7,4 @@ BINARY='susv4-2018.tar.bz2'
 INSTALL="$HOME/.local/share/doc"
 
 mkdir -pv "$INSTALL"
-wget -q -O - "$SOURCE/$BINARY" | tar -xvj -C "$INSTALL" || exit 1
+wget -q -O - "$SOURCE/$BINARY" | bzip2 -d | tar -xv -C "$INSTALL" || exit 1
