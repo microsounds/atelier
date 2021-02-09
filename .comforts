@@ -28,7 +28,7 @@ openssh-client
 *openssh-server
 parallel
 pcmanfm ffmpegthumbnailer gtk2-engines breeze-icon-theme
-progress
+pv progress
 qrencode zbar-tools
 rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
 sc
