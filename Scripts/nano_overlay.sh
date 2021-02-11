@@ -158,7 +158,7 @@ mode_ctags() {
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
 random_bits() {
-	tr -cd 'a-z0-9' < /dev/urandom | dd count=1 bs="$1" 2> /dev/null
+	{ tr -cd 'a-z0-9' | dd count=1 bs="$1"; } < /dev/urandom 2> /dev/null
 }
 
 get_response() {
@@ -183,6 +183,7 @@ mode_encrypt() {
 	# global settings
 	magic='Salted__'
 	cipher='-aes-256-cbc -pbkdf2'
+	crypt="openssl enc $cipher -pass env:pass"
 	# temp file directory
 	prefix="${XDG_RUNTIME_DIR:-/tmp}"
 
@@ -204,10 +205,10 @@ mode_encrypt() {
 				$magic) state='encrypted';;
 			esac
 		fi
-		# no state - file is plaintext, ask to overwrite when finished
+		# no state: file is plaintext, ask to overwrite when finished
 
 		mesg_st "Password for '$f'${state:+ ($state)}: "
-		pass="$(get_response)" && printf '\n'
+		export pass="$(get_response)" && printf '\n'
 		if [ "$state" != 'encrypted' ]; then # verify password
 			orig="$pass"
 			mesg_st 'Verify password: '
@@ -216,25 +217,25 @@ mode_encrypt() {
 			unset orig
 		fi
 
-		trap '[ ! -f "$tmp" ] || shred -z -u "$tmp"' 0 1 2 3 6
-		if [ "$state" = 'encrypted' ]; then # decrypt file
-			openssl enc $cipher -pass "pass:$pass" -d < "$f" | xz -d > "$tmp" ||
-				quit 'Invalid password'
+		trap 'rm -rf "$tmp"' 0 1 2 3 6
+		if [ "$state" = 'encrypted' ]; then # attempt file unpack
+			{ $crypt -d | xz -d; } < "$f" > "$tmp" || quit 'Invalid password'
 			init="$(sha256sum < "$tmp")" # monitor changes
 		fi
-		[ -z "$state" ] && cp "$f" "$tmp" # copy existing file
+		[ -z "$state" ] && cat < "$f" > "$tmp" # copy existing file
 
 		# open plaintext file for editing
 		[ ! -z "$EXTERN_EDITOR" ] && ext='announce'
 		$ext ${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
 
-		if [ -f "$tmp" ]; then
-			if [ -z "$state" ]; then # ask to overwrite original
+		if [ -f "$tmp" ]; then # conditionally repack
+			if [ -z "$state" ]; then # no state: ask to overwrite original
 				mesg_st "Overwrite original file '$f'? (yes/no): "
 				prompt_user && state='ok'
 			fi
-			if [ ! -z "$state" ] && [ "$init" != "$(sha256sum < "$tmp")" ]; then
-				xz -z < "$tmp" | openssl enc $cipher -pass "pass:$pass" -e > "$f"
+			if [ ! -z "$state" ] && \
+				[ "$init" != "$(sha256sum < "$tmp")" ]; then
+				{ xz -z | $crypt -e; } < "$tmp" > "$f"
 			fi
 		fi
 		unset pass state
