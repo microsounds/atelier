@@ -4,9 +4,6 @@
 /* night drive v.1 ~microsounds */
 /* 気付かなかったーー */
 
-#define str(s) _xstr(s)
-#define _xstr(s) #s
-
 /* special */
 #define FGCOLOR	#FFFFFF
 #define FGLIGHT	#B24A7A /* CDE salmon pink */

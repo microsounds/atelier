@@ -3,9 +3,6 @@
 
 /* overcast rainy v.1 ~microsounds */
 
-#define str(s) _xstr(s)
-#define _xstr(s) #s
-
 /* special */
 #define FGCOLOR	#4D4D4C
 #define FGLIGHT	#D8A2BB

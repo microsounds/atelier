@@ -1,9 +1,6 @@
 #ifndef XTERM_H
 #define XTERM_H
 
-#define str(s) _xstr(s)
-#define _xstr(s) #s
-
 /* special */
 #define FGCOLOR	#FFFFFF
 #define FGLIGHT	#FFFFFF

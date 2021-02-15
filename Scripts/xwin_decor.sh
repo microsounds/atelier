@@ -3,12 +3,10 @@
 
 # fallback tiling background
 bitmaps="$HOME/.local/share/X11/bitmaps"
-cpp <<- EOF | egrep -v '^(#|$)' | while read -r color; do
+cpp <<- EOF | egrep -v '^(#|$)' | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 	#include <colors/nightdrive.h>
-	-bg str(COLOR15) -fg str(COLOR1)
+	-bg COLOR15 -fg COLOR1
 EOF
-	echo "$color" | xargs -o xsetroot -bitmap "$bitmaps/diag.xbm"
-done
 
 # custom wallpaper
 # select random image or video frame from directory indicated by ~/.xdecor

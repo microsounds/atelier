@@ -2,6 +2,9 @@
 
 /* ux color theme */
 #include <colors/nightdrive.h>
+#define str(s) _xstr(s)
+#define _xstr(s) #s
+
 static const char col_gray1[] = str(BGCOLOR);
 static const char col_gray2[] = str(BGLIGHT);
 static const char col_gray3[] = str(FGCOLOR);
