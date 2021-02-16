@@ -1,10 +1,12 @@
 /* ~/.config/dwm/config.h: dwm/dmenu user configuration */
 
+/* utilities */
+#define _xstr(s) #s
+#define str(s) _xstr(s)
+#define font(name, px) str(name:pixelsize=px)
+
 /* ux color theme */
 #include <colors/nightdrive.h>
-#define str(s) _xstr(s)
-#define _xstr(s) #s
-
 static const char col_gray1[] = str(BGCOLOR);
 static const char col_gray2[] = str(BGLIGHT);
 static const char col_gray3[] = str(FGCOLOR);
@@ -17,22 +19,30 @@ static const char *colors[][3]= {
 };
 
 /* ux appearance */
-static const unsigned int borderpx = 1; /* window border width in px */
-static const unsigned int snap = 16;    /* snap pixel */
+static const unsigned int borderpx = 1; /* window border width */
+static const unsigned int snap = 16;    /* snap to edge distance */
 static const int showbar = 1;
 static const int topbar = 1;
 static const char *fonts[] = {
-	"Liberation Serif:pixelsize=16",    /* normal */
-	"Dejima:pixelsize=16"               /* fallback japanese */
+	font(Liberation Serif, 16),         /* normal */
+	font(Dejima, 16)                    /* fallback japanese */
 };
-static const char dmenufont[] = "Liberation Serif:pixelsize=16";
+static const char dmenufont[] = font(Liberation Serif, 16);
 
-/* tagging */
+/* layouts */
+static const float mfact = 0.55;        /* master area size */
+static const int nmaster = 1;           /* windows in master area */
+static const int resizehints = 0;       /* ignore sizing hints */
 static const char *tags[] = {
 	"あ", "か", "さ", "た", "な",
 /* 	"は", "ま", "や", "ら", "わ" */
 };
-
+static const Layout layouts[] = {
+	/* symbol	arrange function */
+	{ "堅い",	tile },
+	{ "中心",	monocle },
+	{ "浮く",	NULL },
+};
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -43,21 +53,18 @@ static const Rule rules[] = {
 	{ "XClock",        NULL,       NULL,       1,            1,           -1 },
 };
 
-/* layout(s) */
-static const float mfact = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resize */
-
-static const Layout layouts[] = {
-	/* symbol     arrange function */
-	{ "堅い",      tile },
-	{ "中心",      monocle },
-	{ "浮く",      NULL },
-};
-
 /* built-in commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = {
+	"dmenu_run",
+	"-m", dmenumon,
+	"-fn", dmenufont,
+	"-nb", col_gray1,
+	"-nf", col_gray3,
+	"-sb", col_cyan,
+	"-sf", col_gray4,
+	NULL
+};
 
 /* key definitions */
 #define CTRL ControlMask
@@ -140,4 +147,3 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
