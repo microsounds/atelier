@@ -86,8 +86,8 @@ Both `xrdb` and `dwm` compilation make use of the C preprocessor to configure co
 Individual color schemes are stored as C header files containing preprocessor macros representing color hex codes in [`~/.local/include`](.local/include). This directory is appended to `$C_INCLUDE_PATH` at login.
 
 * [`.xresources`](.xresources), [scripts](Scripts/xwin_decor.sh) and [C source code](.config/dwm/config.h) can `#include <colors/example.h>` to reference color macros
-	* `{FG,BG}COLOR` for primary UX colors
-	* `{FG,BG}LIGHT` for highlight UX colors
+	* `{FG,BG}COLOR` for terminal fg/bg colors
+	* `{FG,BG}LIGHT` for UX highlight colors
 	* `COLOR0..COLOR15` for the 16 standard ANSI terminal colors
 * Invoking shell function `reload` will reload changes to `.xresources` and refresh your terminal instance.
 	* _Optionally, you can temporarily apply another existing color scheme by naming it as an argument._
