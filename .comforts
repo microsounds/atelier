@@ -15,7 +15,6 @@ figlet
 file
 *gimp
 git make gcc wget curl
-gparted udevil ntfs-3g exfat-utils dosfstools sshfs
 htop
 jq
 *kdenlive
@@ -28,7 +27,7 @@ nano exuberant-ctags openssl ledger
 openssh-client
 *openssh-server
 parallel
-pcmanfm ffmpegthumbnailer gtk2-engines breeze-icon-theme
+pcmanfm lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
 pv progress
 qrencode zbar-tools
 rxvt-unicode fonts-go fonts-noto-mono fonts-vlgothic
@@ -40,6 +39,7 @@ ssh-askpass
 suckless-tools libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 sudo
 task-laptop acpi lm-sensors network-manager bluez
+gparted udevil ntfs-3g exfat-utils dosfstools sshfs
 *valgrind
 *virt-manager
 vrms
