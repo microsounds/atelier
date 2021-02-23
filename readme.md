@@ -50,19 +50,26 @@ _You can re-run them anytime without ill effects, some scripts apply only to spe
 | `1*` | Changes to [`~/.local`](.local) file hierarchy, such as sideloaded 3rd party software. |
 | `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are considered unsightly hacks._ |
 
-## Main hotkeys
-| shift + | super + | key |
+## Window manager
+`dwm` keybinds are the [defaults](https://ratfactor.com/dwm) with several exceptions.
+Primary modkey `Mod1` is super instead of alt.
+
+| shift + | alt + | key |
 | --: | --: | :-- |
-| | terminal | return |
+| | kill window | F4 |
+| counter-clockwise | switch focused window | tab |
+| **shift +** | **super +** | **key** |
+| float window<sup>[toggle]</sup> | monocle window<sup>[toggle]</sup> | space |
+| set as master window<sup>[toggle]</sup> | terminal | return |
 | | file manager | e |
 | reboot | shutdown | F1 |
 | hibernate | sleep | F2 |
 | | display off | F3 |
 | | _reserved_ | F4 |
-| configure displays | switch active display | F5 |
+| configure displays | switch active display<sup>[toggle]</sup> | F5 |
 | minimum brightness | lower brightness 10% | F6 |
 | maximum brightness | raise brightness 10% | F7 |
-| | toggle mute | F8 |
+| | mute<sup>[toggle]</sup> | F8 |
 | | lower volume 5% | F9 |
 | | raise volume 5% | F10 |
 | | randomize wallpaper | F11 |
