@@ -84,7 +84,7 @@ Search/Everything/Caps lock key serves as the super key. Same as above, with the
 || next | down |
 || home | left |
 || end | right |
-| delete | F11 | power <sup>Fn keys past F10 are not implemented correctly.</sup> |
+| _disabled_ | _disabled_ | power |
 || delete | backspace |
 
 # Some environment notes
