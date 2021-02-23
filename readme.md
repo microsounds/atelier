@@ -75,6 +75,18 @@ Primary modkey `Mod1` is super instead of alt.
 | | randomize wallpaper | F11 |
 | | _reserved_ | F12 |
 
+### Reduced layout for Chromebooks
+Search/Everything/Caps lock key serves as the super key. Same as above, with the following changes:
+
+| shift + | alt gr + | key |
+| --: | --: | :-- |
+|| prior | up |
+|| next | down |
+|| home | left |
+|| end | right |
+| delete | F11 | power <sup>Fn keys past F10 are not implemented correctly.</sup> |
+|| delete | backspace |
+
 # Some environment notes
 ## X server invocation
 No login manager is used, login to `tty1` to start the graphical shell.
