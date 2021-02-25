@@ -32,6 +32,8 @@ ctrl + alt + Delete
 {_,shift +} XF86MonBrightness{Down,Up}
 	xbacklight -{dec 10,set 1,inc 10,set 100}
 # audio
+shift + super + {F8,XF86AudioMute}
+	pavucontrol
 super + F{8,9,10}
 	amixer -q sset Master {toggle,5%-,5%+}
 XF86Audio{Mute,LowerVolume,RaiseVolume}

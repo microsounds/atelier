@@ -69,7 +69,7 @@ Primary modkey `Mod1` is super instead of alt.
 | configure displays | switch active display<sup>[toggle]</sup> | F5 |
 | minimum brightness | lower brightness 10% | F6 |
 | maximum brightness | raise brightness 10% | F7 |
-| | mute<sup>[toggle]</sup> | F8 |
+| configure audio | mute<sup>[toggle]</sup> | F8 |
 | | lower volume 5% | F9 |
 | | raise volume 5% | F10 |
 | | randomize wallpaper | F11 |
