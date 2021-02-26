@@ -9,9 +9,10 @@ case $vendor in
 esac
 
 ## daemons tied to this X server instance
-lxpolkit &
 urxvtd -o &
 ~/Scripts/wm_status.sh -pm & # status bar
+pcmanfm -d &
+lxpolkit &
 
 # mangle sxhkd config at runtime
 {	echo "# !! overwritten by $0 at startup !!" > ~/.config/sxhkd/sxhkdrc
