@@ -65,7 +65,7 @@ Primary modkey `Mod1` is super instead of alt.
 | reboot | shutdown | F1 |
 | hibernate | sleep | F2 |
 | | display off | F3 |
-| | _reserved_ | F4 |
+| | calculator | F4 |
 | configure displays | switch active display<sup>[toggle]</sup> | F5 |
 | minimum brightness | lower brightness 10% | F6 |
 | maximum brightness | raise brightness 10% | F7 |

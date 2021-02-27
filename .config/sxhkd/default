@@ -23,6 +23,9 @@ ctrl + alt + Delete
 # display off
 {super + F3,XF86ScreenSaver}
 	sleep 1; xset dpms force off
+# calculator
+{super + F4,XF86Calculator}
+	visual orpie
 # switch displays
 {_,shift +} {super + F5,XF86Display}
 	{~/Scripts/xrandr_cycle.sh,arandr}
