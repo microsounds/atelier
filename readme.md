@@ -78,14 +78,14 @@ Primary modkey `Mod1` is super instead of alt.
 ### Reduced layout for Chromebooks
 Search/Everything/Caps lock key serves as the super key. Same as above, with the following changes:
 
-| shift + | alt gr + | key |
-| --: | --: | :-- |
-|| prior | up |
-|| next | down |
-|| home | left |
-|| end | right |
-| _disabled_ | _disabled_ | power |
-|| delete | backspace |
+| alt gr + | key | remarks |
+| --: | :-- | :-- |
+| prior | up | |
+| next | down | |
+| home | left | |
+| end | right | |
+| delete | backspace | |
+| F11 | delete | same as power key, keystroke repeat not available |
 
 # Some environment notes
 ## X server invocation
