@@ -144,15 +144,17 @@ nano() (
 	command nano "$@"
 )
 
-# runs ledger, decrypts ledger file for viewing
+# encrypted ledger wrapper for 'xz | openssl' packed files
 # suspend to make changes to plaintext ledger directly
 # changes are saved if plaintext ledger is modified
-ledger() (
-	file="$HOME/.private.d/ledger.dat"
-	[ ! -f "$file" ] && echo "'$file' not found." && exit
+ledger-enc() (
+	quit() { echo "$@"; exit; }
+	[ ! -z "$1" ] || quit 'usage: ledger-enc [file]'
+	[ -f "$1" ] || quit 'File not found.'
+	file="$1" && shift
 	export EXTERN_EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
-	~/Scripts/nano_overlay.sh -f "$file"
+	command nano -f "$file"
 )
 
 # automatically run ~/.once.d post-install scripts
