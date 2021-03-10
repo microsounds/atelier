@@ -153,7 +153,7 @@ mode_ctags() {
 ##                  If the file exists but isn't encrypted, user will be
 ##                  prompted to overwrite the original file.
 ##                  * Scripts can provide the following environment variables
-##                    to edit the decrypted file using another command.
+##                    to open the decrypted file using another command.
 ##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
@@ -188,6 +188,8 @@ mode_encrypt() {
 	prefix="${XDG_RUNTIME_DIR:-/tmp}"
 
 	for f in "$@"; do
+		# empty filename?
+		[ ! -z "$f" ] || continue
 		# file permissions
 		for g in "$prefix" "$(derive_parent "$f")"; do
 			[ ! -w "$g" ] && quit "'$g' is unwritable"
@@ -225,8 +227,9 @@ mode_encrypt() {
 		[ -z "$state" ] && cat < "$f" > "$tmp" # copy existing file
 
 		# open plaintext file for editing
-		[ ! -z "$EXTERN_EDITOR" ] && ext='announce'
-		$ext ${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
+		# on external control, announce what is being done
+		${EXTERN_EDITOR:+ announce} \
+			${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
 
 		if [ -f "$tmp" ]; then # conditionally repack
 			if [ -z "$state" ]; then # no state: ask to overwrite original
