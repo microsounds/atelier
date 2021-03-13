@@ -48,7 +48,8 @@ _You can re-run them anytime without ill effects, some scripts apply only to spe
 | -- | -- |
 | `0*` | System-wide changes performed **through** the package manager. |
 | `1*` | Changes to [`~/.local`](.local) file hierarchy, such as sideloaded 3rd party software. |
-| `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are considered unsightly hacks._ |
+| `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are hacks._ |
+| `c*` | System-wide changes affecting chromebook hardware only. |
 
 ## Window manager
 `dwm` keybinds are the [defaults](https://ratfactor.com/dwm) with several exceptions.
