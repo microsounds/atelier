@@ -4,7 +4,7 @@
 ## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
 
-# use nano overlay instead of standard nano for interactive features
+# interactive features will call another nano_overlay instance
 ACTUAL_EDITOR='/usr/bin/nano'
 EDITOR="$0"
 
@@ -226,8 +226,9 @@ mode_encrypt() {
 		fi
 		[ -z "$state" ] && cat < "$f" > "$tmp" # copy existing file
 
-		# open plaintext file for editing
-		# on external control, announce what is being done
+		# default behavior: open plaintext file with restricted nano
+		EDITOR="$EDITOR -R"
+		# external script control: announce what is being done
 		${EXTERN_EDITOR:+ announce} \
 			${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
 

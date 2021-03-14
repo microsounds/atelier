@@ -1,7 +1,7 @@
 ## ~/.profile: executed by the command interpreter for login shells.
 
 # editor
-export EDITOR='nano'
+export EDITOR='nano -R'
 
 ## ~/.local file hierarchy
 export PATH="$HOME/.local/bin:$PATH"
