@@ -5,6 +5,7 @@
 
 # bash specific
 HISTCONTROL=ignoredups
+PROMPT_COMMAND=set_prompt
 
 # bash-completion
 . '/usr/share/bash-completion/bash_completion'
@@ -21,28 +22,17 @@ export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
 
 # set terminal prompt
 # embed git status information if available
-PROMPT_COMMAND=_set_prompt
-_set_prompt() {
+set_prompt() {
 	if [ ! -z $COLOR ]; then
 		u='\[\e[1;32m\]' # user/hostname color
 		p='\[\e[1;34m\]' # path color
 		r='\[\e[0m\]'  # reset
 	fi
-	# is this a git worktree?
-	if git_info="$(~/Scripts/git_status.sh -${COLOR:-n}e)"; then
-		topdir="$(command git rev-parse --show-toplevel)"
-		suffix="${PWD##$topdir}"
-		prefix="${topdir%/*}/"
-		# if $HOME is a git repo, relative path aliasing will fail
-		if echo "$prefix" | grep -q "^$HOME"; then
-			prefix="~${prefix##$HOME}"
-		fi
-		# <prefix>/±repo:branch*/<suffix>
-		path="${p}${prefix}${r}${git_info}${p}${suffix}${r}"
-	fi
+
 	# set window title and prompt
-	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${path:-${p}\w${r}}\$ "
-	unset u p r path git_info topdir suffix prefix
+	git_path="$(~/Scripts/git_status.sh -pe${COLOR:-n})"
+	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}\w${r}}\$ "
+	unset u p r git_path
 }
 
 # compare file mtimes
