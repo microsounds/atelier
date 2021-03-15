@@ -10,26 +10,26 @@ HISTCONTROL=ignoredups
 . '/usr/share/bash-completion/bash_completion'
 
 # color support
-export _COLOR=1; case $TERM in
+export COLOR=1; case $TERM in
 	*color | linux) ;; # known color terminals
-	*) [ $(tput colors) -lt 8 ] && unset _COLOR
+	*) [ $(tput colors) -lt 8 ] && unset COLOR
 esac
 
 # $OLDPWD persistence between sessions
-export _LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
-[ -f "$_LASTDIR" ] && read -r OLDPWD < "$_LASTDIR"
+export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
+[ -f "$LASTDIR" ] && read -r OLDPWD < "$LASTDIR"
 
 # set terminal prompt
 # embed git status information if available
 PROMPT_COMMAND=_set_prompt
 _set_prompt() {
-	if [ ! -z $_COLOR ]; then
+	if [ ! -z $COLOR ]; then
 		u='\[\e[1;32m\]' # user/hostname color
 		p='\[\e[1;34m\]' # path color
 		r='\[\e[0m\]'  # reset
 	fi
 	# is this a git worktree?
-	if git_info="$(~/Scripts/git_status.sh -${_COLOR+e}n)"; then
+	if git_info="$(~/Scripts/git_status.sh -${COLOR:-n}e)"; then
 		topdir="$(command git rev-parse --show-toplevel)"
 		suffix="${PWD##$topdir}"
 		prefix="${topdir%/*}/"
@@ -88,7 +88,7 @@ done && unset f
 ls() (
 	# identify file types regardless of color support
 	arg='--classify' # fallback
-	[ ! -z $_COLOR ] && arg='--color'
+	[ ! -z $COLOR ] && arg='--color'
 	command ls --literal --group-directories-first $arg "$@"
 )
 
@@ -109,7 +109,7 @@ cd() {
 
 	# preserve $OLDPWD between sessions
 	command cd "$@"
-	echo "$PWD" > "$_LASTDIR"
+	echo "$PWD" > "$LASTDIR"
 }
 
 # runs shell documentation through a pager
