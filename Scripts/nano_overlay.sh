@@ -5,10 +5,13 @@
 ##  -h, --help      Displays this message.
 
 # interactive features will call another nano_overlay instance
-ACTUAL_EDITOR='/usr/bin/nano'
 EDITOR="$0"
+ACTUAL_EDITOR='/usr/bin/nano'
+TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
-mesg_st() { printf '%s%s' "${mode:+[$mode] }" "$1"; } # for prompts
+# utilities
+mesg_wipe() { printf '\r'; } # for long running tasks
+mesg_st() { printf '%s%s' "${name:+[$name] }" "$1"; } # for prompts
 mesg() { mesg_st "$1"; printf '\n'; }
 quit() { mesg "$1, exiting." 1>&2; exit 1; }
 announce() { echo "$@" 1>&2; "$@"; }
@@ -68,7 +71,7 @@ ex_parser() {
 }
 
 mode_ctags() {
-	mode='ctags'
+	name='ctags'
 	# find root directory containing ctags index
 	# prefixes all relative filenames found
 	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
@@ -83,7 +86,7 @@ mode_ctags() {
 
 	# session persistence
 	unset matches
-	backup="${XDG_RUNTIME_DIR:-/tmp}/.${0##*/}-$mode"
+	backup="$TEMP_DIR/.${0##*/}-$name"
 	if [ -f "${backup}-cached" ]; then
 		read -r prev_query < "${backup}-query"
 		read -r prev_hash < "${backup}-hash"
@@ -157,8 +160,24 @@ mode_ctags() {
 ##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
 
-random_bits() {
-	{ tr -cd 'a-z0-9' | dd count=1 bs="$1"; } < /dev/urandom 2> /dev/null
+# encryption constants
+aes_magic='Salted__'
+aes_crypt='openssl enc -aes-256-cbc -pbkdf2'
+rsa_crypt='openssl rsautl -pkcs'
+
+verify_header() {
+	header="$(dd bs="${#1}" count=1)" < /dev/stdin 2> /dev/null
+	case "$header" in
+		"$1") return 0;;
+		*) return 1;;
+	esac
+}
+
+random_bytes() {
+	dd bs="$1" count=1 < /dev/urandom 2> /dev/null
+}
+random_ascii() {
+	{ tr -cd 'a-z0-9' | dd bs="$1" count=1; } < /dev/urandom 2> /dev/null
 }
 
 get_response() {
@@ -179,36 +198,29 @@ prompt_user() {
 }
 
 mode_encrypt() {
-	mode='encrypt'
-	# global settings
-	magic='Salted__'
-	cipher='-aes-256-cbc -pbkdf2'
-	crypt="openssl enc $cipher -pass env:pass"
-	# temp file directory
-	prefix="${XDG_RUNTIME_DIR:-/tmp}"
+	name='encrypt'
 
 	for f in "$@"; do
 		# empty filename?
 		[ ! -z "$f" ] || continue
 		# file permissions
-		for g in "$prefix" "$(derive_parent "$f")"; do
+		for g in "$TEMP_DIR" "$(derive_parent "$f")"; do
 			[ ! -w "$g" ] && quit "'$g' is unwritable"
 		done
 
-		# randomize filename
-		while :; do tmp="$prefix/${f##*/}.$(random_bits 7)"
+		# create non-colliding filename
+		while :; do tmp="$TEMP_DIR/${f##*/}.$(random_ascii 7)"
 			[ -f "$tmp" ] || break
 		done
 
 		# determine file state
-		[ ! -f "$f" ] && state='new file' # file doesn't exist, do nothing
+		[ ! -f "$f" ] && state='new' # file doesn't exist yet
 		if [ -f "$f" ]; then # is this an encrypted file?
-			case "$(dd bs=${#magic} count=1 < "$f" 2> /dev/null)" in
-				$magic) state='encrypted';;
-			esac
+			verify_header "$aes_magic" < "$f" && state='encrypted'
 		fi
 		# no state: file is plaintext, ask to overwrite when finished
 
+		# obtain encryption password from user
 		mesg_st "Password for '$f'${state:+ ($state)}: "
 		export pass="$(get_response)" && printf '\n'
 		if [ "$state" != 'encrypted' ]; then # verify password
@@ -219,9 +231,11 @@ mode_encrypt() {
 			unset orig
 		fi
 
+		# attempt file unpack
 		trap 'rm -rf "$tmp"' 0 1 2 3 6
-		if [ "$state" = 'encrypted' ]; then # attempt file unpack
-			{ $crypt -d | xz -d; } < "$f" > "$tmp" || quit 'Invalid password'
+		if [ "$state" = 'encrypted' ]; then
+			{ $aes_crypt -pass 'env:pass' -d | xz -d; } < "$f" > "$tmp" ||
+				quit 'Invalid password'
 			init="$(sha256sum < "$tmp")" # monitor changes
 		fi
 		[ -z "$state" ] && cat < "$f" > "$tmp" # copy existing file
@@ -232,21 +246,22 @@ mode_encrypt() {
 		${EXTERN_EDITOR:+ announce} \
 			${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
 
-		if [ -f "$tmp" ]; then # conditionally repack
+		# conditionally repack file on file change
+		if [ -f "$tmp" ]; then
 			if [ -z "$state" ]; then # no state: ask to overwrite original
 				mesg_st "Overwrite original file '$f'? (yes/no): "
 				prompt_user && state='ok'
 			fi
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp")" ]; then
-				{ xz -z | $crypt -e; } < "$tmp" > "$f"
+				{ xz -z | $aes_crypt -pass 'env:pass' -e; } < "$tmp" > "$f"
 			fi
 		fi
 		unset pass state
 	done
 }
 
-mode='overlay'
+name='overlay'
 # overlay command line options
 if [ ! -z "$1" ]; then
 	# steal options not supported by GNU nano
