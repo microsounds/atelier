@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.8 — interactive external overlay for GNU nano
+## nano_overlay.sh v0.9 — interactive external overlay for GNU nano
 ## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
 
@@ -10,7 +10,6 @@ ACTUAL_EDITOR='/usr/bin/nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
 # utilities
-mesg_wipe() { printf '\r'; } # for long running tasks
 mesg_st() { printf '%s%s' "${name:+[$name] }" "$1"; } # for prompts
 mesg() { mesg_st "$1"; printf '\n'; }
 quit() { mesg "$1, exiting." 1>&2; exit 1; }
@@ -149,8 +148,8 @@ mode_ctags() {
 	$EDITOR "$@"
 }
 
-## Open an xz(1) compressed and openssl(1) encrypted file for editing.
-##  -f <filename>   Prompts the user for a encryption password.
+## Open a password/SSH RSA protected plaintext file for editing.
+##  -f <filename>   Prompts the user for a AES encryption password.
 ##  or --encrypt    Decrypts file for editing, re-encrypts if file is modified.
 ##                  Creates file if it doesn't already exist.
 ##                  If the file exists but isn't encrypted, user will be
@@ -159,6 +158,26 @@ mode_ctags() {
 ##                    to open the decrypted file using another command.
 ##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
+##  -j <filename>  Same as above, but uses RSA asymmetric encryption to
+##  or --rsa       generate keyfile using the current user's SSH RSA key pair.
+##                 User will be prompted for RSA private key passphrase for
+##                 decryption if needed.
+##                 ** RSA private key must be in legacy PEM format.
+##                    Use 'ssh-keygen -p -m pem' to convert to PEM as needed.
+
+# mode_encrypt expected file format
+# | [ openssl enc'd data ]
+# | [ xz compressed data ]
+# V [ plaintext file === ]
+
+# mode_encrypt_rsa expected file format, filenames are significant
+# | [ xz compressed data ========== ]
+# | [ tar archive ================= ]
+# |  | filenames: [ enc ]  [ key ] |
+# |                  |        |
+# | [ openssl enc'd data ] [ RSA encrypted keyfile ]
+# | [ xz compressed data ] [ plain keyfile ======= ]
+# V [ plaintext file === ]
 
 # encryption constants
 aes_magic='Salted__'
@@ -174,6 +193,8 @@ verify_header() {
 }
 
 random_bytes() {
+	# OpenSSL chokes on keyfiles that start with NULL bytes
+	printf '%b' '!'
 	dd bs="$1" count=1 < /dev/urandom 2> /dev/null
 }
 random_ascii() {
@@ -232,7 +253,7 @@ mode_encrypt() {
 		fi
 
 		# attempt file unpack
-		trap 'rm -rf "$tmp"' 0 1 2 3 6
+		trap 'rm -rf "$tmp"*' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then
 			{ $aes_crypt -pass 'env:pass' -d | xz -d; } < "$f" > "$tmp" ||
 				quit 'Invalid password'
@@ -254,10 +275,102 @@ mode_encrypt() {
 			fi
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp")" ]; then
-				{ xz -z | $aes_crypt -pass 'env:pass' -e; } < "$tmp" > "$f"
+				{ xz -z | $aes_crypt -pass 'env:pass' -e; } \
+					< "$tmp" > "${tmp}.1" && mv "${tmp}.1" "$f"
 			fi
 		fi
 		unset pass state
+	done
+}
+
+mode_encrypt_rsa() {
+	name='rsa'
+
+	# RSA constants
+	rsa_private="$HOME/.ssh/id_rsa"
+	rsa_public="$HOME/.ssh/id_rsa.pub.pkcs8"
+
+	# on first run, create public PEM key
+	[ -f "$rsa_private" ] ||
+		quit "Expected RSA private key at '$rsa_private'"
+	if [ ! -f "$rsa_public" ]; then
+		ssh-keygen -f "$rsa_private" -e -m pkcs8 > "$rsa_public"
+		mesg "Created PKCS8 public PEM key at '$rsa_public'"
+	fi
+
+	for f in "$@"; do
+		# empty filename?
+		[ ! -z "$f" ] || continue
+		# file permissions
+		for g in "$TEMP_DIR" "$(derive_parent "$f")"; do
+			[ ! -w "$g" ] && quit "'$g' is unwritable"
+		done
+
+		# create non-colliding directory name
+		while :; do tmp="$TEMP_DIR/${f##*/}.$(random_ascii 7)"
+			[ -d "$tmp" ] || break
+		done
+
+		# determine file state
+		[ ! -f "$f" ] && state='new' # file doesn't exist yet
+		if [ -f "$f" ]; then # is this an encrypted file?
+			{ xz -d | tar -xO enc; } < "$f" 2> /dev/null | \
+				verify_header "$aes_magic" && state='encrypted'
+		fi
+		# no state: file is plaintext, ask to overwrite when finished
+
+		# attempt file unpack
+		mkdir -p "$tmp"
+		trap 'rm -rf "$tmp"*' 0 1 2 3 6
+		if [ "$state" = 'encrypted' ]; then
+
+			mkfifo -m 600 "$tmp/pipe"
+			{	xz -d | tar -xO key | \
+				$rsa_crypt -inkey "$rsa_private" -decrypt ||
+					quit 'Wrong private key or key not in PEM format'
+			} < "$f" > "$tmp/pipe" &
+			{	xz -d | tar -xO enc | \
+				$aes_crypt -pass "file:$tmp/pipe" -d | xz -d ||
+					quit 'Invalid passfile'
+			} < "$f" > "$tmp/enc"
+			init="$(sha256sum < "$tmp/enc")" # monitor changes
+		fi
+		[ -z "$state" ] && cat < "$f" > "$tmp/enc" # copy existing file
+
+		# default behavior: open plaintext file with restricted nano
+		EDITOR="$EDITOR -R"
+		# external script control: announce what is being done
+		${EXTERN_EDITOR:+ announce} \
+			${EXTERN_EDITOR:-$EDITOR} "$tmp/enc" $EXTERN_ARGS
+
+		# conditionally repack file on file change
+		if [ -f "$tmp/enc" ]; then
+			if [ -z "$state" ]; then # no state: ask to overwrite original
+				mesg_st "Overwrite original file '$f'? (yes/no): "
+				prompt_user && state='ok'
+			fi
+			if [ ! -z "$state" ] && \
+				[ "$init" != "$(sha256sum < "$tmp/enc")" ]; then
+				# generate new keyfile of size proportional
+				# to RSA key size in bytes minus padding overhead
+				size="$(ssh-keygen -f "$rsa_private" -l)"
+				size="${size%${size#* }}"
+				size="$((((size / 8) / 100) * 99))"
+				random_bytes "$size" > "$tmp/key"
+
+				# repack file in place, abort if interrupted
+				{	rm "$tmp/enc"
+					xz -z | $aes_crypt -pass "file:$tmp/key" -e > "$tmp/enc" ||
+						quit 'Interrupted or write error'
+				} < "$tmp/enc"
+				{	rm "$tmp/key"
+					$rsa_crypt -pubin -inkey "$rsa_public" -encrypt > "$tmp/key" ||
+						quit 'Public key not in PEM format'
+				} < "$tmp/key"
+				tar -cC "$tmp" enc key | xz -z > "$tmp/new" && mv "$tmp/new" "$f"
+			fi
+		fi
+		unset state
 	done
 }
 
@@ -270,6 +383,7 @@ if [ ! -z "$1" ]; then
 			h | help) mode_help 1>&2 && exit 1;;
 			e | ctags) shift && mode_ctags "$@" && exit;;
 			f | encrypt) shift && mode_encrypt "$@" && exit;;
+			j | rsa) shift && mode_encrypt_rsa "$@" && exit;;
 		esac
 	done
 fi

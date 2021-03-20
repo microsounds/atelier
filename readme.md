@@ -143,7 +143,8 @@ Several commands are extended to include impure functions, such as purposefully 
 	| opt | function |
 	| -- | -- |
 	| `-e, --ctags`<br>`<tag> <#>`  | Jumps into file containing `ctags` definition matching `<tag>`.<br>Optional `<#>` selects from multiple matches, `all` will open all of them. |
-	| `-f, --encrypt`<br>`<file>` | Opens a password-protected plaintext file packed using `xz \| openssl`.<br>File will be created if it doesn't exist. |
+	| `-f, --encrypt`<br>`<file>` | Opens a password-protected plaintext file using AES encryption only. <br>File will be created if it doesn't exist. |
+	| `-j, --rsa`<br>`<file>` | Opens an SSH RSA key pair-protected plaintext file using RSA+AES encryption. <br>File will be created if it doesn't exist. |
 
 [scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
 [shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png
