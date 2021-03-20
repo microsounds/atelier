@@ -179,7 +179,10 @@ mode_ctags() {
 # | [ xz compressed data ] [ plain keyfile ======= ]
 # V [ plaintext file === ]
 
-# encryption constants
+# compression settings
+xz='xz -T0 -0'
+
+# encryption settings
 aes_magic='Salted__'
 aes_crypt='openssl enc -aes-256-cbc -pbkdf2'
 rsa_crypt='openssl rsautl -pkcs'
@@ -193,7 +196,7 @@ verify_header() {
 }
 
 random_bytes() {
-	# OpenSSL chokes on keyfiles that start with NULL bytes
+	# openssl chokes on keyfiles that start with NULL bytes
 	printf '%b' '!'
 	dd bs="$1" count=1 < /dev/urandom 2> /dev/null
 }
@@ -255,7 +258,7 @@ mode_encrypt() {
 		# attempt file unpack
 		trap 'rm -rf "$tmp"*' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then
-			{ $aes_crypt -pass 'env:pass' -d | xz -d; } < "$f" > "$tmp" ||
+			{ $aes_crypt -pass 'env:pass' -d | $xz -d; } < "$f" > "$tmp" ||
 				quit 'Invalid password'
 			init="$(sha256sum < "$tmp")" # monitor changes
 		fi
@@ -275,7 +278,7 @@ mode_encrypt() {
 			fi
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp")" ]; then
-				{ xz -z | $aes_crypt -pass 'env:pass' -e; } \
+				{ $xz -z | $aes_crypt -pass 'env:pass' -e; } \
 					< "$tmp" > "${tmp}.1" && mv "${tmp}.1" "$f"
 			fi
 		fi
@@ -314,7 +317,7 @@ mode_encrypt_rsa() {
 		# determine file state
 		[ ! -f "$f" ] && state='new' # file doesn't exist yet
 		if [ -f "$f" ]; then # is this an encrypted file?
-			{ xz -d | tar -xO enc; } < "$f" 2> /dev/null | \
+			{ $xz -d | tar -xO enc; } < "$f" 2> /dev/null | \
 				verify_header "$aes_magic" && state='encrypted'
 		fi
 		# no state: file is plaintext, ask to overwrite when finished
@@ -325,12 +328,12 @@ mode_encrypt_rsa() {
 		if [ "$state" = 'encrypted' ]; then
 
 			mkfifo -m 600 "$tmp/pipe"
-			{	xz -d | tar -xO key | \
+			{	$xz -d | tar -xO key | \
 				$rsa_crypt -inkey "$rsa_private" -decrypt ||
 					quit 'Wrong private key or key not in PEM format'
 			} < "$f" > "$tmp/pipe" &
-			{	xz -d | tar -xO enc | \
-				$aes_crypt -pass "file:$tmp/pipe" -d | xz -d ||
+			{	$xz -d | tar -xO enc | \
+				$aes_crypt -pass "file:$tmp/pipe" -d | $xz -d ||
 					quit 'Invalid passfile'
 			} < "$f" > "$tmp/enc"
 			init="$(sha256sum < "$tmp/enc")" # monitor changes
@@ -360,14 +363,14 @@ mode_encrypt_rsa() {
 
 				# repack file in place, abort if interrupted
 				{	rm "$tmp/enc"
-					xz -z | $aes_crypt -pass "file:$tmp/key" -e > "$tmp/enc" ||
+					$xz -z | $aes_crypt -pass "file:$tmp/key" -e > "$tmp/enc" ||
 						quit 'Interrupted or write error'
 				} < "$tmp/enc"
 				{	rm "$tmp/key"
 					$rsa_crypt -pubin -inkey "$rsa_public" -encrypt > "$tmp/key" ||
 						quit 'Public key not in PEM format'
 				} < "$tmp/key"
-				tar -cC "$tmp" enc key | xz -z > "$tmp/new" && mv "$tmp/new" "$f"
+				tar -cC "$tmp" enc key | $xz -z > "$tmp/new" && mv "$tmp/new" "$f"
 			fi
 		fi
 		unset state
