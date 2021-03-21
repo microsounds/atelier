@@ -149,7 +149,7 @@ mode_ctags() {
 	$EDITOR "$@"
 }
 
-## Open a password/SSH RSA protected plaintext file for editing.
+## Open a password protected plaintext file for editing.
 ##  -f <filename>   Prompts the user for a AES encryption password.
 ##  or --encrypt    Decrypts file for editing, re-encrypts if file is modified.
 ##                  Creates file if it doesn't already exist.
@@ -159,25 +159,10 @@ mode_ctags() {
 ##                    to open the decrypted file using another command.
 ##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
 ##                  ** Requires OpenSSL 1.1.1 or later.
-##  -j <filename>  Same as above, but uses RSA asymmetric encryption to
-##  or --rsa       generate keyfile using the current user's SSH RSA key pair.
-##                 User will be prompted for RSA private key passphrase for
-##                 decryption if needed.
-##                 ** RSA private key must be in legacy PEM format.
-##                    Use 'ssh-keygen -p -m pem' to convert to PEM as needed.
 
 # mode_encrypt expected file format
 # | [ openssl enc'd data ]
 # | [ xz compressed data ]
-# V [ plaintext file === ]
-
-# mode_encrypt_rsa expected file format, filenames are significant
-# | [ xz compressed data ========== ]
-# | [ tar archive ================= ]
-# |  | filenames: [ enc ]  [ key ] |
-# |                  |        |
-# | [ openssl enc'd data ] [ RSA encrypted keyfile ]
-# | [ xz compressed data ] [ plain keyfile ======= ]
 # V [ plaintext file === ]
 
 # compression settings
@@ -286,6 +271,23 @@ mode_encrypt() {
 		unset pass state
 	done
 }
+
+## Open an SSH RSA key pair protected plaintext file for editing.
+##  -j <filename>  Same as above, but uses RSA asymmetric encryption to
+##  or --rsa       generate keyfile using the current user's SSH RSA key pair.
+##                 User will be prompted for RSA private key passphrase for
+##                 decryption if needed.
+##                 ** RSA private key must be in legacy PEM format.
+##                    Use 'ssh-keygen -p -m pem' to convert to PEM as needed.
+
+# mode_encrypt_rsa expected file format, filenames are significant
+# | [ xz compressed data ========== ]
+# | [ tar archive ================= ]
+# |  | filenames: [ enc ]  [ key ] |
+# |                  |        |
+# | [ openssl enc'd data ] [ RSA encrypted keyfile ]
+# | [ xz compressed data ] [ plain keyfile ======= ]
+# V [ plaintext file === ]
 
 mode_encrypt_rsa() {
 	name='rsa'
