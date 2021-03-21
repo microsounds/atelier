@@ -10,6 +10,7 @@ ACTUAL_EDITOR='/usr/bin/nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
 # utilities
+mesg_wipe() { printf '\r'; }
 mesg_st() { printf '%s%s' "${name:+[$name] }" "$1"; } # for prompts
 mesg() { mesg_st "$1"; printf '\n'; }
 quit() { mesg "$1, exiting." 1>&2; exit 1; }
@@ -332,17 +333,18 @@ mode_encrypt_rsa() {
 		mkdir -p "$tmp"
 		trap 'rm -rf "$tmp"*' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then
-
+			mesg_st 'Decrypting... '
 			mkfifo -m 600 "$tmp/pipe"
 			{	$xz -d | tar -xO key | \
 				$rsa_crypt -inkey "$rsa_private" -decrypt ||
-					quit 'Wrong private key or key not in PEM format'
+					quit 'Invalid private key or key not in PEM format'
 			} < "$f" > "$tmp/pipe" &
 			{	$xz -d | tar -xO enc | \
 				$aes_crypt -pass "file:$tmp/pipe" -d | $xz -d ||
 					quit 'Invalid passfile'
 			} < "$f" > "$tmp/enc"
 			init="$(sha256sum < "$tmp/enc")" # monitor changes
+			mesg_wipe
 		fi
 		[ -z "$state" ] && cat < "$f" > "$tmp/enc" # copy existing file
 
@@ -360,8 +362,8 @@ mode_encrypt_rsa() {
 			fi
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp/enc")" ]; then
-				# generate new keyfile of size proportional
-				# to RSA key size in bytes minus padding overhead
+				mesg_st 'Saving to disk... '
+				# generate new RSA key sized keyfile minus padding overhead
 				size="$(ssh-keygen -f "$rsa_private" -l)"
 				size="${size%${size#* }}"
 				size="$((((size / 8) / 100) * 99))"
@@ -377,6 +379,7 @@ mode_encrypt_rsa() {
 						quit 'Public key not in PEM format'
 				} < "$tmp/key"
 				tar -cC "$tmp" enc key | $xz -z > "$tmp/new" && mv "$tmp/new" "$f"
+				mesg_wipe
 			fi
 		fi
 		unset state
