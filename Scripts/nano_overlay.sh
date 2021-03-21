@@ -293,12 +293,18 @@ mode_encrypt_rsa() {
 	rsa_private="$HOME/.ssh/id_rsa"
 	rsa_public="$HOME/.ssh/id_rsa.pub.pkcs8"
 
-	# on first run, create public PEM key
 	[ -f "$rsa_private" ] ||
 		quit "Expected RSA private key at '$rsa_private'"
+
+	# on first run, convert existing keys to PEM format
 	if [ ! -f "$rsa_public" ]; then
-		ssh-keygen -f "$rsa_private" -e -m pkcs8 > "$rsa_public"
-		mesg "Created PKCS8 public PEM key at '$rsa_public'"
+		mesg "Creating PKCS8 public PEM key at '$rsa_public'"
+		announce ssh-keygen -f "$rsa_private" -e -m pkcs8 > "$rsa_public"
+	fi
+	read -r rsa_header < "$rsa_private"
+	if [ "$rsa_header" != '-----BEGIN RSA PRIVATE KEY-----' ]; then
+		mesg "Converting private key at '$rsa_private' to PEM format."
+		announce ssh-keygen -f "$rsa_private" -p -m pem
 	fi
 
 	for f in "$@"; do
