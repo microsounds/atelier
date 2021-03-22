@@ -10,9 +10,9 @@ ACTUAL_EDITOR='/usr/bin/nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
 # utilities
-mesg_wipe() { printf '\r'; }
-mesg_st() { printf '%s%s' "${name:+[$name] }" "$1"; } # for prompts
-mesg() { mesg_st "$1"; printf '\n'; }
+mesg_wipe() { printf '\r' 1>&2; }
+mesg_st() { printf '%s%s' "${name:+[$name] }" "$1" 1>&2; } # for prompts
+mesg() { mesg_st "$1"; printf '\n' 1>&2; }
 quit() { mesg "$1, exiting." 1>&2; exit 1; }
 announce() { echo "$@" 1>&2; "$@"; }
 
