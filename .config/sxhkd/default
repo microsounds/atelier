@@ -8,7 +8,7 @@ super + Escape
 super + Return
 	urxvtc
 # file manager
-super + e
+{super + e,XF86Explorer}
 	pcmanfm
 # task manager
 ctrl + alt + Delete
@@ -44,3 +44,8 @@ XF86Audio{Mute,LowerVolume,RaiseVolume}
 # randomize wallpaper
 super + F11
 	~/Scripts/xwin_decor.sh
+
+# reserved for future use
+# XF86Launch1
+# XF86Tools
+# X86FAudio{Stop,Play,Prev,Next}
