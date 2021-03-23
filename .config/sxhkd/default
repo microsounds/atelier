@@ -10,6 +10,9 @@ super + Return
 # file manager
 {super + e,XF86Explorer}
 	pcmanfm
+# browser
+XF86WWW
+	chromium
 # task manager
 ctrl + alt + Delete
 	visual htop

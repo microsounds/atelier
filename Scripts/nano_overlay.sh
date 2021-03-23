@@ -391,7 +391,7 @@ mode_encrypt_rsa() {
 name='overlay'
 # overlay command line options
 if [ ! -z "$1" ]; then
-	# steal options not supported by GNU nano
+	# steal switches previously unused by GNU nano 3.x and earlier
 	for f in $(echo "$1" | grep '^-' | sed 's/^\-*//'); do
 		case $f in
 			h | help) mode_help 1>&2 && exit 1;;
