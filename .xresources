@@ -25,6 +25,14 @@ URxvt.saveLines: 2048
 URxvt.scrollBar: false
 URxvt.urgentOnBell: true
 
+/* disable non-standard ctrl+shift hijacking */
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+URxvt.keysym.C-S-Up: \033[1;6A
+URxvt.keysym.C-S-Down: \033[1;6B
+URxvt.keysym.C-S-Right: \033[1;6C
+URxvt.keysym.C-S-Left: \033[1;6D
+
 /* terminal color theme */
 #include <colors/nightdrive.h>
 
