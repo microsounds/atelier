@@ -3,12 +3,6 @@
 ## custom syntax
 include ~/.local/share/nano/*.nanorc
 
-## disable ^S to save
-unbind ^S main
-
-## uncomment to justify plaintext
-#set fill 80
-
 ## editor
 set smooth
 set softwrap
@@ -28,21 +22,23 @@ set positionlog
 unset historylog
 unset suspend # suspendable
 
+## disallow saving with ^S
+unbind ^S main
+
 ## ui
-#set indicator
-#unset stateflags
-set nopauses
-set constantshow
-unset quickblank
-set nohelp
 unset morespace
+set nohelp
+set constantshow
+set nopauses # deprecated in v5
 unset linenumbers
+#set indicator
 
 ## color scheme
-set keycolor brightblue
-set functioncolor white
-set numbercolor white
 set titlecolor black,cyan
+#set promptcolor black,cyan
 set statuscolor black,white
 set errorcolor black,red
-#set scrollercolor cyan,lightblack
+set numbercolor white # italic,lightblack
+#set scrollercolor lightblack
+set keycolor brightblue # bold,blue
+set functioncolor white
