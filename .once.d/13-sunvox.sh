@@ -8,6 +8,9 @@ PROGRAM='sunvox'
 ARCH='linux_x86_64'
 INSTALL="$HOME/.local"
 
+# network connectivity
+ping -c 1 '8.8.8.8' > /dev/null || exit 1
+
 finish() {
 	rm -rv "$TMP"
 	echo 'Done.'
@@ -31,4 +34,4 @@ wget -q -O - "$SOURCE" | grep 'title_version' \
 	mv "$TMP/$PROGRAM" "$SHARE"
 	TARGET="$(find "$SHARE/$PROGRAM" | grep "$ARCH/${PROGRAM}$")"
 	ln -sfv  "$TARGET" "$INSTALL/bin"
-done || exit 1
+done

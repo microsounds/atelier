@@ -5,6 +5,9 @@
 TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://www.nano-editor.org/download.php'
 
+# network connectivity
+ping -c 1 '8.8.8.8' > /dev/null || exit 1
+
 finish() {
 	rm -rfv "$TMP"
 	echo 'Done.'
