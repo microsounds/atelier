@@ -18,12 +18,13 @@ git make gcc wget curl
 htop
 jq
 *kdenlive
+ledger
 *libreoffice-writer libreoffice-calc
 m4
 man-db
 mesa-utils
 mpv youtube-dl ffmpeg mediainfo
-nano exuberant-ctags openssl ledger
+nano exuberant-ctags openssl libncurses-dev
 openssh-client
 *openssh-server
 orpie

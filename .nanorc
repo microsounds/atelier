@@ -1,10 +1,10 @@
-## ~/.nanorc: nano 3.x user config
+## ~/.nanorc: nano 5.x user config
 
 ## custom syntax
 include ~/.local/share/nano/*.nanorc
 
 ## editor
-set smooth
+unset jumpyscrolling
 set softwrap
 set tabsize 4
 set autoindent
@@ -20,25 +20,23 @@ set unix
 set locking
 set positionlog
 unset historylog
-unset suspend # suspendable
+unset suspendable
 
 ## disallow saving with ^S
 unbind ^S main
 
 ## ui
-unset morespace
+set emptyline
 set nohelp
 set constantshow
-set nopauses # deprecated in v5
 unset linenumbers
-#set indicator
+set indicator
 
 ## color scheme
 set titlecolor black,cyan
-#set promptcolor black,cyan
 set statuscolor black,white
 set errorcolor black,red
-set numbercolor white # italic,lightblack
-#set scrollercolor lightblack
-set keycolor brightblue # bold,blue
+set numbercolor lightblack
+set scrollercolor lightblack
+set keycolor bold,blue
 set functioncolor white
