@@ -149,11 +149,14 @@ ledger-enc() (
 
 # automatically run ~/.once.d post-install scripts
 post-install() (
+	retries=10
 	[ $(id -u) -eq 0 ] && { echo 'You must not be root.'; exit 1; }
 	for f in ~/.once.d/*; do
+		unset iters
 		while announce ">>> Running '${f##*/}'" && ! $f; do
-			announce 'Retrying...'
-			sleep 1
+			iters=$((iters + 1))
+			announce "Retrying... (attempt $iters/$retries)"
+			[ $iters -lt $retries ] && sleep 1 || exit 1
 		done
 	done
 )

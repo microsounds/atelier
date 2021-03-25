@@ -5,9 +5,6 @@
 TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://www.nano-editor.org/download.php'
 
-# network connectivity
-ping -c 1 '8.8.8.8' > /dev/null || exit 1
-
 finish() {
 	rm -rfv "$TMP"
 	echo 'Done.'
@@ -17,8 +14,11 @@ finish() {
 trap finish 0 1 2 3 6
 
 mkdir -v "$TMP"
+
 echo 'Fetching latest version...'
-wget -q -O - "$SOURCE" | egrep -o '<a href=".*\.tar\.xz">' \
+scrape="$(wget -q -O - "$SOURCE")" || exit 1
+
+echo "$scrape" | egrep -o '<a href=".*\.tar\.xz">' \
 	| head -n 1 | tr '"' '\t' | cut -f2 | while read LATEST; do
 	url="${SOURCE%/*}$LATEST"
 	version="${LATEST##*/}"

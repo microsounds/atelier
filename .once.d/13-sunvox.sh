@@ -8,9 +8,6 @@ PROGRAM='sunvox'
 ARCH='linux_x86_64'
 INSTALL="$HOME/.local"
 
-# network connectivity
-ping -c 1 '8.8.8.8' > /dev/null || exit 1
-
 finish() {
 	rm -rv "$TMP"
 	echo 'Done.'
@@ -20,8 +17,11 @@ finish() {
 trap finish 0 1 2 3 6
 
 mkdir -v "$TMP"
+
 # fetch version information
-wget -q -O - "$SOURCE" | grep 'title_version' \
+scrape="$(wget -q -O - "$SOURCE")" || exit 1
+
+echo "$scrape" | grep 'title_version' \
      | egrep -o 'v([0-9.])+[a-z]?' | while read VERSION; do
 	# download and unzip
 	FILENAME="$PROGRAM-${VERSION##v}.zip"

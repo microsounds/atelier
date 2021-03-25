@@ -47,4 +47,4 @@ gparted udevil ntfs-3g exfat-utils dosfstools sshfs
 vrms
 xdiskusage
 xorg xdotool xsel xbacklight sxhkd arandr
-zip gzip bzip2 xz-utils p7zip pigz pbzip2
+zip gzip bzip2 xz-utils p7zip pigz pbzip2 zip unzip
