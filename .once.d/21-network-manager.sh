@@ -2,6 +2,9 @@
 
 # NetworkManager tweaks
 
+# unit testing bypass
+! in-container || exit 0
+
 # don't wait on networking during startup
 sudo systemctl disable NetworkManager-wait-online.service
 

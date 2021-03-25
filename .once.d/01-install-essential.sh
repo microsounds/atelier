@@ -3,6 +3,9 @@
 # installs essential package list
 # ask to install optional package groups
 
+# unit testing, bypass interactive prompts
+! in-container || env='DEBIAN_FRONTEND=noninteractive'
+
 prompt_user() {
 	while read -r res; do
 		case "$(echo "$res" | tr 'A-Z' 'a-z')" in
@@ -34,5 +37,5 @@ for f in $(cat ~/.comforts); do
 	pkgs="$pkgs $f"
 done
 
-echo "$pkgs" | xargs sudo apt-get -y install || exit 1
+echo "$pkgs" | xargs sudo $env apt-get -y install || exit 1
 sudo apt-get clean

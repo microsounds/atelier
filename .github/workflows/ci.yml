@@ -1,0 +1,18 @@
+name: CI
+on: [ push, pull_request ]
+
+jobs:
+  Install:
+     runs-on: ubuntu-latest
+     container: debian:stable-slim
+     steps:
+       - name: Install prerequisites
+         run: apt-get update && apt-get install -y git wget sudo
+       - name: Checkout dotfiles
+         run: git clone --bare https://github.com/microsounds/atelier ~/.config/meta
+       - name: Bootstrap system
+         run: git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
+       - name: Run post-install scripts
+         run: bash -lic 'yes n | post-install'
+         env:
+           TERM: rxvt

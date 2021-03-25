@@ -8,7 +8,7 @@ Basic installation instructions are provided, along with some documentation for 
 ![scrot]
 > _Pictured: Debian stable, a "graphical shell" environment consisting mostly of Xorg, dwm, sxhkd, and urxvtd._
 
-# Quick start
+# Quick start [![build]](https://github.com/microsounds/atelier/blob/master/.github/workflows/ci.yml)
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
 	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be booted._
 2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
@@ -148,3 +148,4 @@ Several commands are extended to include impure functions, such as purposefully 
 
 [scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
 [shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png
+[build]: https://github.com/microsounds/atelier/actions/workflows/ci.yml/badge.svg

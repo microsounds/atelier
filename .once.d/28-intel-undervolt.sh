@@ -20,6 +20,9 @@ finish() {
 	exit
 }
 
+# unit testing bypass
+! in-container || exit 0
+
 grep 'GenuineIntel' < /proc/cpuinfo > /dev/null || exit
 
 trap finish 0 1 2 3 6
