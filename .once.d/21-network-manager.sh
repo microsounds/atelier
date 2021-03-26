@@ -2,7 +2,7 @@
 
 # NetworkManager tweaks
 
-# unit testing bypass
+# not needed during unit testing
 ! in-container || exit 0
 
 # don't wait on networking during startup

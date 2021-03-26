@@ -6,8 +6,7 @@ CONF='/etc/default/grub'
 KEY='GRUB_CMDLINE_LINUX_DEFAULT'
 OPTION='quiet mitigations=off'
 
-
-# unit testing bypass
+# not needed during unit testing
 ! in-container || exit 0
 
 # append required key if it doesn't exist

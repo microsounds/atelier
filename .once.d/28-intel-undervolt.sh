@@ -20,7 +20,7 @@ finish() {
 	exit
 }
 
-# unit testing bypass
+# not needed during unit testing
 ! in-container || exit 0
 
 grep 'GenuineIntel' < /proc/cpuinfo > /dev/null || exit

@@ -2,13 +2,14 @@
 This is my primary computing setup, a self-contained graphical shell environment for Debian GNU/Linux.
 * Git is used to maintain an identical and reproducible setup across multiple machines.
 * A series of post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
+	* _Unit testing ensures a reproducible installation with each new change to post-install scripts._
 
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
 ![scrot]
 > _Pictured: Debian stable, a "graphical shell" environment consisting mostly of Xorg, dwm, sxhkd, and urxvtd._
 
-# Quick start [![build]](https://github.com/microsounds/atelier/blob/master/.github/workflows/ci.yml)
+# Quick start [![build]](.github/workflows/ci.yml)
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
 	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be booted._
 2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
@@ -28,21 +29,20 @@ Basic installation instructions are provided, along with some documentation for 
 # Usage notes
 ## Using `git meta`
 For local-scope changes, files in `$HOME` are versioned and mangled in place using Git.
-* `$HOME` is considered the detached working tree for the git **bare repo** located in `~/.config/meta`.
-* The `meta` alias prefixes git commands with `--git-dir=$HOME/.config/meta --work-tree=$HOME`
+* `$HOME` is considered the detached working tree for a git **bare repo** located at `~/.config/meta`
+* The `meta` alias prefixes all git commands with `--git-dir=$HOME/.config/meta --work-tree=$HOME`
 * `meta status` will ignore files not manually added or tracked by this git repo.
 * Invoking `git` outside of a valid git directory will append the `meta` alias automatically.
 	* _`init` and `clone` commands are unaffected._
 
 ## Using `~/.once.d` post-install scripts
-All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d), you can run them all at once with shell function `post-install`.
+All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d), you can run them all at once with shell function `post-install`. Each script is self-contained, you can run them individually, anytime.
 
-_You can re-run them anytime without ill effects, some scripts apply only to specific hardware, they will **NOT** touch the system even if they are run._
-
-* System-wide changes that require root access are avoided as much as possible, as these are hacks.
-* Sideloaded software is installed to [`~/.local/bin`](.local/bin) instead of `/usr/local/bin`
+* Some scripts only apply to specific hardware configurations, and will exit even if they are run.
+* Scripts affecting `systemd` or the bootloader will be skipped in virtualized container contexts.
+* Sideloaded software is installed to [`~/.local/bin`](.local/bin) when possible.
 * [`~/.comforts`](.comforts) descrbes the full list of non-optional package groups that will be installed.
-	* Optional package groups are marked with an asterisk, you will be asked to approve these at runtime.
+	* Optional package groups are marked with an *asterisk, you will be prompted to approve these at runtime.
 
 | series | function |
 | -- | -- |

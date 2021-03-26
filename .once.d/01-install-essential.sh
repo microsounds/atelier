@@ -3,7 +3,7 @@
 # installs essential package list
 # ask to install optional package groups
 
-# unit testing, bypass interactive prompts
+# bypass interactive prompts during unit testing
 ! in-container || env='DEBIAN_FRONTEND=noninteractive'
 
 prompt_user() {
