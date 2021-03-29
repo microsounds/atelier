@@ -4,7 +4,7 @@ alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
 chromium
-cmark-gfm optipng jpegoptim
+cmark-gfm optipng jpegoptim jq
 cpp
 *cups libnss-mdns
 dc
@@ -16,7 +16,6 @@ file
 *gimp
 git make gcc wget curl
 htop
-jq
 *kdenlive
 ledger
 *libreoffice-writer libreoffice-calc
