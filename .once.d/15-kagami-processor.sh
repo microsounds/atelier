@@ -1,10 +1,9 @@
 #!/usr/bin/env sh
 
-# install pfetch utility
-# cute system information tool
+# install kagami static microblog processor
 
 TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
-REPO='https://github.com/dylanaraps/pfetch'
+REPO='https://github.com/microsounds/kagami'
 
 finish() {
 	rm -rf "$TMP"
