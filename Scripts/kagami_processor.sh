@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-#v# kagami v0.4 — static microblog processor
-#v# (c) 2020 microsounds <https://github.com/microsounds>, GPLv3+
+#v# kagami v0.4.1 — static microblog processor
+#v# (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -119,30 +119,9 @@ simple_date() (
 	date -d "1970-01-01 UTC $1 seconds" '+%B %Y'
 )
 
-# derive full date and moon phase from a timestamp
-fancy_date() (
+full_date() (
 	[ ! -z "$1" ] || [ "$1" -eq "$1" ] 2> /dev/null || return 1
-	# calculate days since a specific new moon
-	# divide by length of lunar cycle
-	# express currently elapsed cycle progress in percent
-	known=633381600 # Jan 26th, 1990 was a new moon
-	cycle=$(echo "scale=2; (($1 - $known) / 86400) / 29.53" | bc)
-	cycle=${cycle#*.} # absolute value
-	# map progress to an available glyph
-	phase='🌕 🌖 🌗 🌘 🌑 🌑 🌒 🌓 🌔 🌕'
-	map=$(((${cycle#0} / 10) + 1))
-	moon=$(echo "$phase" | tr ' ' '\n' | tail -n +$map | head -n 1)
-
-	# current date
-	timest=$(date -d "1970-01-01 UTC $1 seconds" '+%-e %a, %b x, %Y')
-	day="${timest%% *}"
-	case $day in
-		1 | [!1]1) day="${day}st";;
-		2 | [!1]2) day="${day}nd";;
-		3 | [!1]3) day="${day}rd";;
-		*) day="${day}th"
-	esac
-	echo "$moon ${timest#* }" | sed "s/x/$day/"
+	date -d "1970-01-01 UTC $1 seconds" '+%d %b %Y'
 )
 
 # get page title from first '<h1>' heading in markdown file
@@ -188,6 +167,7 @@ mformat='[A-Za-z0-9_]+'
 # global environment macros
 VERSION="$("$0" --version | grep '^kagami')"
 DOC_ROOT="$working_dir"
+DATE_FUNCTION='full_date' # fallback date function
 
 # import user-provided macros
 [ -f "$config_dir/macros" ] && . "$config_dir/macros"
@@ -241,8 +221,8 @@ process_dir() (
 			# local environment macros
 			timest="$(md_timestamp "$orig")"
 			TITLE="$(md_title "$orig")"
-			CREATED="$(fancy_date $(echo "$timest" | tail -n +1 | head -n 1))"
-			UPDATED="$(fancy_date $(echo "$timest" | tail -n +2 | head -n 1))"
+			CREATED="$($DATE_FUNCTION $(echo "$timest" | tail -n +1 | head -n 1))"
+			UPDATED="$($DATE_FUNCTION $(echo "$timest" | tail -n +2 | head -n 1))"
 
 			# { concat; } | { macro; } > output
 			# process entire output file in memory to reduce disk write latency
