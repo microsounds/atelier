@@ -150,7 +150,7 @@ ledger-enc() (
 # automatically run ~/.once.d post-install scripts
 post-install() (
 	retries=10
-	! in-container && [ $(id -u) -eq 0 ] && \
+	! is-container && [ $(id -u) -eq 0 ] && \
 		{ echo 'You must not be root.'; exit 1; }
 	for f in ~/.once.d/*; do
 		unset iters

@@ -4,11 +4,11 @@
 # Downloads and extracts proprietary Widevine content decryption plugin from Google Chrome
 # into your existing Chromium installation to enable use of DRM restricted streaming services.
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://dl.google.com/linux/direct'
 DEB='google-chrome-stable_current_amd64.deb'
 DATA='data.tar.xz'
 EXTRACT='opt/google/chrome/WidevineCdm'
+TMP="$(mk-tempdir)"
 
 # default install location
 TARGET="/usr/lib/chromium/${EXTRACT##*/}"

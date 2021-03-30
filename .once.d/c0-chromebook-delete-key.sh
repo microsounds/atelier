@@ -3,8 +3,7 @@
 # systemd-logind chromebook hack
 # disables power key so it can be remapped as Delete/F11
 
-read vendor < /sys/devices/virtual/dmi/id/sys_vendor
-[ "$vendor" != 'GOOGLE' ] && exit 0
+! is-chromebook && exit 0
 
 CONF='/etc/systemd/logind.conf'
 KEY='HandlePowerKey'

@@ -3,10 +3,10 @@
 # defines standard apt repositories
 # adds deb-multimedia repos
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
 DEB='deb-multimedia-keyring_2016.8.1_all.deb'
 CONF='/etc/apt/sources.list'
+TMP="$(mk-tempdir)"
 
 finish() {
 	rm -rv "$TMP"
@@ -23,6 +23,7 @@ sudo tee "$CONF" <<- EOF
 	deb http://security.debian.org/debian-security stable/updates main contrib non-free
 	deb http://www.deb-multimedia.org/ stable main non-free
 EOF
+
 mkdir -v "$TMP"
 if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
 	sudo dpkg -i "$TMP/$DEB"

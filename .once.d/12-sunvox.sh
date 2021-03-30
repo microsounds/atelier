@@ -2,11 +2,11 @@
 
 # automated sunvox install script
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://www.warmplace.ru/soft/sunvox'
 PROGRAM='sunvox'
 ARCH='linux_x86_64'
 INSTALL="$HOME/.local"
+TMP="$(mk-tempdir)"
 
 finish() {
 	rm -rv "$TMP"
@@ -16,11 +16,10 @@ finish() {
 
 trap finish 0 1 2 3 6
 
-mkdir -v "$TMP"
-
 # fetch version information
 scrape="$(wget -q -O - "$SOURCE")" || exit 1
 
+mkdir -v "$TMP"
 echo "$scrape" | grep 'title_version' \
      | egrep -o 'v([0-9.])+[a-z]?' | while read VERSION; do
 	# download and unzip

@@ -7,10 +7,10 @@ for f in \
 do lsusb -d "$f" && found=1; done
 [ ! -z "$found" ] || exit 0
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://http.kali.org/kali/pool/contrib/r/realtek-rtl88xxau-dkms'
 DEB="$(wget -q -O - "$SOURCE" | egrep -o '<a href=".*\.deb">' | \
 	tr '"' "\t" | cut -f2 | tail -n 1)"
+TMP="$(mk-tempdir)"
 
 finish() {
 	rm -rv "$TMP"

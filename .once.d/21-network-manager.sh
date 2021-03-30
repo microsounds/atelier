@@ -3,7 +3,7 @@
 # NetworkManager tweaks
 
 # not needed during unit testing
-! in-container || exit 0
+! is-container || exit 0
 
 # don't wait on networking during startup
 sudo systemctl disable NetworkManager-wait-online.service

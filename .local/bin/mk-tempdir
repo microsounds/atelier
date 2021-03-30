@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# return a non-colliding temporary dir name
+while :; do
+	prefix="${XDG_RUNTIME_DIR:-/tmp}"
+	key=$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1) 2> /dev/null
+	dir="$prefix/$key"
+	[ ! -d "$dir" ] || continue
+
+	echo "$dir" && exit 0
+done

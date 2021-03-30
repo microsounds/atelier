@@ -10,9 +10,9 @@
 # heat spreaders that, over time, degrade their thermal performance at
 # sustained full load unless you delid or increase physical cooler size.
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 REPO='https://github.com/kitsunyan/intel-undervolt'
 CONF='/etc/intel-undervolt.conf'
+TMP="$(mk-tempdir)"
 
 finish() {
 	rm -rf "$TMP"
@@ -21,7 +21,7 @@ finish() {
 }
 
 # not needed during unit testing
-! in-container || exit 0
+! is-container || exit 0
 
 grep 'GenuineIntel' < /proc/cpuinfo > /dev/null || exit
 

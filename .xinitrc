@@ -2,11 +2,7 @@
 ## ~/.xinitrc: X Windows user configuration
 
 ## keymap overrides
-read vendor < /sys/devices/virtual/dmi/id/sys_vendor
-unset layout
-case $vendor in
-	GOOGLE) layout='chromebook';;
-esac
+! is-chromebook || layout='chromebook'
 
 ## run-once
 # mangle xkb keyboard layout at runtime

@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# detect if running on chromebook hardware
+read vendor < /sys/devices/virtual/dmi/id/sys_vendor
+case "$vendor" in GOOGLE) exit 0;; esac
+exit 1

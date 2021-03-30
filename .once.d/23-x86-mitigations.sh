@@ -7,7 +7,7 @@ KEY='GRUB_CMDLINE_LINUX_DEFAULT'
 OPTION='quiet mitigations=off'
 
 # not needed during unit testing
-! in-container || exit 0
+! is-container || exit 0
 
 # append required key if it doesn't exist
 grep -q "$KEY" < "$CONF" || echo "$KEY" | sudo tee -a "$CONF"

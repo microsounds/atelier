@@ -2,8 +2,8 @@
 
 # backports latest version of GNU nano
 
-TMP="/tmp/$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 SOURCE='https://www.nano-editor.org/download.php'
+TMP="$(mk-tempdir)"
 
 finish() {
 	rm -rfv "$TMP"
@@ -11,13 +11,12 @@ finish() {
 	exit
 }
 
-trap finish 0 1 2 3 6
-
-mkdir -v "$TMP"
-
 echo 'Fetching latest version...'
 scrape="$(wget -q -O - "$SOURCE")" || exit 1
 
+trap finish 0 1 2 3 6
+
+mkdir -v "$TMP"
 echo "$scrape" | egrep -o '<a href=".*\.tar\.xz">' \
 	| head -n 1 | tr '"' '\t' | cut -f2 | while read LATEST; do
 	url="${SOURCE%/*}$LATEST"

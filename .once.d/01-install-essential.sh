@@ -4,7 +4,7 @@
 # ask to install optional package groups
 
 # bypass interactive prompts during unit testing
-! in-container || env='DEBIAN_FRONTEND=noninteractive'
+! is-container || env='DEBIAN_FRONTEND=noninteractive'
 
 prompt_user() {
 	while read -r res; do

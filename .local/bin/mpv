@@ -1,10 +1,6 @@
 #!/usr/bin/env sh
 
 # disable hardware acceleration on chromebooks
-unset opt
-read -r vendor < /sys/devices/virtual/dmi/id/sys_vendor
-case $vendor in
-	GOOGLE) opt='chromebook';;
-esac
+! is-chromebook || opt='chromebook'
 
 exec /usr/bin/mpv --profile="${opt:-normal}" "$@"
