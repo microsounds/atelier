@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# installs essential package list
+# installs from essential package list described in ~/.comforts
 # ask to install optional package groups
 
 # bypass interactive prompts during unit testing
