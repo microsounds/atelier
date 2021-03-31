@@ -16,16 +16,15 @@ setwall='feh --no-fehbg --bg-fill -g +0+0 -'
 [ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
 
 [ ! -z "$dir" ] || exit
-sel="$(find "$dir" -type f | egrep '\.(jpe?g|png|mkv|mp4)$' | shuf -n 1)"
+sel="$(find "$dir" -type f | \
+	egrep '\.(jpe?g|png|mkv|mp4|web(m|p))$' | shuf -n 1)"
 [ ! -z "$sel" ] || exit
 case "$sel" in
-	*jpg|*jpeg|*png) $setwall < "$sel";;
+	*jpg|*jpeg|*png|*webp) $setwall < "$sel";;
 	*)
-		mediainfo "$sel" --output='Video;%FrameCount% %FrameRate%' \
-			| while read -r f_count fps; do
-			v_length="$(echo "scale=2; $f_count * (1 / $fps)" | bc)"
-			seed="$(od -N 4 -t u -A n < /dev/urandom | tr -d ' ')"
-			ffmpeg -ss "$((seed % ${v_length%.*}))" -i "$sel" -vframes 1 \
-				-q:v 0 -f image2pipe -vcodec png - 2> /dev/null | $setwall
-		done;;
+		while seed="$(od -N 4 -t u -A n < /dev/urandom)"; do
+			seed=$((seed % 100))
+			[ $seed -lt 15 ] || [ $seed -gt 85 ] || break
+		done
+		ffmpegthumbnailer -i "$sel" -s 0 -c png -t $seed -o - | $setwall
 esac
