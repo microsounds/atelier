@@ -76,9 +76,12 @@ for f in feh mpv pcmanfm xdiskusage; do
 done && unset f
 
 ls() (
+	# files with full permissions
+	export LS_COLORS='ow=107;30;01'
 	# identify file types regardless of color support
 	arg='--classify' # fallback
 	[ ! -z $COLOR ] && arg='--color'
+
 	command ls --literal --group-directories-first $arg "$@"
 )
 
