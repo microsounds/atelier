@@ -70,6 +70,9 @@ alias mkdir='mkdir -p'
 alias cp='cp -i'
 alias mv='mv -i'
 
+# preserve ANSI colors
+alias less='less -R'
+
 # enable terminal swallowing for selected X applications
 for f in feh mpv pcmanfm xdiskusage; do
 	alias "$f"="swallow $f"
