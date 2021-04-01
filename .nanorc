@@ -1,6 +1,6 @@
 ## ~/.nanorc: nano 5.x user config
 
-## custom syntax
+## syntax highlighting
 include ~/.local/share/nano/*.nanorc
 
 ## editor

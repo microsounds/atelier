@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
 
 # backports latest version of GNU nano
+# patches custom syntax overrides
 
 SOURCE='https://www.nano-editor.org/download.php'
+INSTALL="$HOME/.local"
 TMP="$(mk-tempdir)"
 
 finish() {
@@ -30,7 +32,21 @@ echo "$scrape" | egrep -o '<a href=".*\.tar\.xz">' \
 
 	echo "Fetching $version from '$url'"
 	wget -q -O - "$url" | xz -d | tar -xv -C "$TMP"
+
 	cd "$TMP/$version"
-	./configure --prefix=/usr --sysconfdir=/etc --disable-nls
-	make && sudo make install-strip
+	./configure --prefix="$INSTALL" --sysconfdir=/dev/null --disable-nls
+	make install-strip
+
+	# move stuff around
+	mv "$share/extra/debian.nanorc" "$share"
+	rm -f "$share/markdown.nanorc"
+
+	# inject custom syntax rules for C-like languages
+	share="$INSTALL/share/nano"
+	for f in c javascript; do
+		syn="$share/$f.nanorc"
+		{	rm "$syn"
+			sed "/^comment/r $share/stdc.syntax" > "$syn"
+		} < "$syn"
+	done
 done

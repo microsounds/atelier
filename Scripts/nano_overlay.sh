@@ -5,8 +5,9 @@
 ##  -h, --help      Displays this message.
 
 # interactive features will call another nano_overlay instance
+# call first nano found in $PATH
 EDITOR="$0"
-ACTUAL_EDITOR='/usr/bin/nano'
+ACTUAL_EDITOR='nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
 # utilities

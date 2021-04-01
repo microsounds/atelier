@@ -41,7 +41,7 @@ All system-wide changes are performed through automated scripts located in [`~/.
 * Some scripts only apply to specific hardware configurations, and will exit even if they are run.
 * Scripts affecting `systemd` or the bootloader will be skipped in virtualized container contexts.
 * Sideloaded software is installed to [`~/.local/bin`](.local/bin) when possible.
-* [`~/.comforts`](.comforts) descrbes the full list of non-optional package groups that will be installed.
+* [`~/.comforts`](.comforts) describes the full list of non-optional package groups that will be installed.
 	* Optional package groups are marked with an *asterisk, you will be prompted to approve these at runtime.
 
 | series | function |
@@ -124,8 +124,8 @@ In the case of video files, a random video frame from that file will be taken an
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
-2. Scripts and symlinks in `~/.local/bin`
-	* Some are shell functions posing as scripts so they'll work in `dmenu` and external scripts.
+2. Executables and symlinks in `~/.local/bin`
+	* Some are shell functions promoted to scripts so they'll work in `dmenu` or outside of a terminal context.
 3. `/usr/bin` system executables
 
 ## `cd`
@@ -137,8 +137,7 @@ Several commands are extended to include impure functions, such as purposefully 
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
 
 ## `nano`
-* Invoking `nano` calls a shell function which generates customized syntax files for some C-like languages.
-* Arguments are passed verbatim to [`nano_overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extensions:
+* `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extensions:
 
 	| opt | function |
 	| -- | -- |

@@ -63,6 +63,11 @@ swallow() (
 #
 ## external use
 
+# enable terminal swallowing for selected X applications
+for f in feh mpv pcmanfm xdiskusage; do
+	alias "$f"="swallow $f"
+done && unset f
+
 # create parent directories
 alias mkdir='mkdir -p'
 
@@ -70,13 +75,11 @@ alias mkdir='mkdir -p'
 alias cp='cp -i'
 alias mv='mv -i'
 
-# preserve ANSI colors
+# keep ANSI colors while paging
 alias less='less -R'
 
-# enable terminal swallowing for selected X applications
-for f in feh mpv pcmanfm xdiskusage; do
-	alias "$f"="swallow $f"
-done && unset f
+# use external overlay for GNU nano
+alias nano='nano-overlay'
 
 ls() (
 	# files with full permissions
@@ -128,18 +131,6 @@ git() (
 	command git $alias "$@"
 )
 
-# inject custom syntax highlighting rules for C-like languages
-nano() (
-	my="$XDG_DATA_HOME/nano"; def='/usr/share/nano'
-	for f in c javascript; do
-		if is_newer "$my/stdc.syntax" "$my/$f.nanorc"; then
-			sed "/^comment/r $my/stdc.syntax" > "$my/$f.nanorc" \
-				< "$def/$f.nanorc"
-		fi
-	done
-	command nano "$@"
-)
-
 # encrypted ledger wrapper for 'xz | openssl' packed files
 # suspend to make changes to plaintext ledger directly
 # changes are saved if plaintext ledger is modified
@@ -150,7 +141,7 @@ ledger-enc() (
 	file="$1" && shift
 	export EXTERN_EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
-	command nano -f "$file"
+	nano-overlay -f "$file"
 )
 
 # automatically run ~/.once.d post-install scripts

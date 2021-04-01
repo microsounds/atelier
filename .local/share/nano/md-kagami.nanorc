@@ -1,7 +1,7 @@
-## ~/.local/share/nano/markdown.nanorc: markdown syntax
+## ~/.local/share/nano/md-kagami.nanorc: kagami flavored markdown syntax
 
 syntax markdown "\.m(ar)?k?d(ow)?n?$"
-comment "<!--|-->"
+comment "<!-- | -->"
 
 ## inline HTML
 # tags
