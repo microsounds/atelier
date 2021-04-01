@@ -19,8 +19,8 @@ color cyan "\!?\[[^\[]+\](\([^\(]+\))?"
 # macros
 color brightred "\{[A-Za-z0-9_]+\}"
 # code blocks
-color red "`[^`]*`"
-color red start="```" end="```"
+color magenta "`[^`]*`"
+color magenta start="```" end="```"
 # comments
 color yellow start="<!--" end="-->"
 
