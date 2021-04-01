@@ -16,9 +16,9 @@
 
 # decorate root window, callback to redraw on display change
 xrdb ~/.xresources && {
-	for f in ~/Scripts/xwin_*; do
-		"$f" &
-		xeventbind resolution "$f" &
+	for f in widgets decor; do
+		"xwin-$f" &
+		xeventbind resolution "xwin-$f" &
 	done
 } &
 
@@ -33,7 +33,7 @@ xset b off &
 	done
 } && sxhkd &
 
-~/Scripts/wm_status.sh -pm & # status bar
+xwin-statusd -pm &
 urxvtd -o &
 pcmanfm -d &
 lxpolkit &

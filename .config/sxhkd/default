@@ -31,7 +31,7 @@ ctrl + alt + Delete
 	visual orpie
 # switch displays
 {_,shift +} {super + F5,XF86Display}
-	{~/Scripts/xrandr_cycle.sh,arandr}
+	{xrandr-cycle,arandr}
 # brightness
 {_,shift +} super + F{6,7}
 	xbacklight -{dec 10,set 1,inc 10,set 100}
@@ -46,7 +46,7 @@ XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
 # randomize wallpaper
 super + F11
-	~/Scripts/xwin_decor.sh
+	xwin-decor
 
 # reserved for future use
 # XF86Launch1

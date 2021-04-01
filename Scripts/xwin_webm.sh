@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## webm.sh v0.5
+## xwin_webm.sh v0.5
 ## Press Ctrl+C to stop recording, press Ctrl+C again to cancel.
 
 # simple screen recorder

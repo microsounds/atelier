@@ -30,7 +30,7 @@ set_prompt() {
 	fi
 
 	# set window title and prompt
-	git_path="$(~/Scripts/git_status.sh -pe${COLOR:-n})"
+	git_path="$(git-status -pe${COLOR:-n})"
 	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}\w${r}}\$ "
 	unset u p r git_path
 }
