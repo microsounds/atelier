@@ -37,12 +37,10 @@ echo "$scrape" | egrep -o '<a href=".*\.tar\.xz">' \
 	./configure --prefix="$INSTALL" --sysconfdir=/dev/null --disable-nls
 	make install-strip
 
-	# move stuff around
-	mv "$share/extra/debian.nanorc" "$share"
-	rm -f "$share/markdown.nanorc"
-
 	# inject custom syntax rules for C-like languages
 	share="$INSTALL/share/nano"
+	mv "$share/extra/debian.nanorc" "$share"
+	rm -f "$share/markdown.nanorc"
 	for f in c javascript; do
 		syn="$share/$f.nanorc"
 		{	rm "$syn"
