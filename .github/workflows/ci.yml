@@ -5,7 +5,6 @@ on:
     - .profile
     - .bashrc
     - .once.d/*
-    - .github/workflows/*
 
 jobs:
   Install:
@@ -29,7 +28,7 @@ jobs:
            TERM: rxvt
          run: |
            colors
-           nano -V && [ -f ~/.local/share/nano/c.nanorc ]
+           fgrep -q 'stdc.syntax' < ~/.local/share/nano/c.nanorc 
            echo '#include <colors/nightdrive.h>' | cpp
            twopass ffmpeg -loglevel quiet -s 1920x1080 -t 0.1 -f rawvideo \
              -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
