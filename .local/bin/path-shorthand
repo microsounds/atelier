@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+# return a stylized pathname
+
+# truncate pathnames in $HOME with ~/ prefix
+[ "$HOME" = "${PWD%${PWD##"$HOME"}}" ] && echo "~${PWD##"$HOME"}" && exit
+
+# truncate long pathnames outside $HOME to final N dirs
+prefix="$PWD"
+for f in $(seq ${DIR_COUNT:-4}); do
+	prefix="${prefix%/*}"
+done
+
+path="${PWD#"$prefix"}"
+[ "$PWD" = "$path" ] ||	path="..$path"
+
+echo "$path"
+

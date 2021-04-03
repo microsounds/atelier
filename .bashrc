@@ -20,7 +20,10 @@ esac
 export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
 [ -f "$LASTDIR" ] && read -r OLDPWD < "$LASTDIR"
 
-# set terminal prompt
+# truncate long prompt pathnames outside $HOME to last N dirs
+export DIR_COUNT=3
+
+# set window title and terminal prompt
 # embed git status information if available
 set_prompt() {
 	if [ ! -z $COLOR ]; then
@@ -30,9 +33,9 @@ set_prompt() {
 	fi
 
 	# set window title and prompt
-	git_path="$(git-status -pe${COLOR:-n})"
-	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}\w${r}}\$ "
-	unset u p r git_path
+	git_path="$(path-gitstatus -pe${COLOR:-n})" || path="$(path-shorthand)"
+	PS1="\[\e]0;\u@\h: $path\a\]${u}\u@\h${r}:${git_path:-${p}$path${r}}\$ "
+	unset u p r path git_path
 }
 
 # compare file mtimes
