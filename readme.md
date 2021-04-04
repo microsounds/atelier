@@ -1,4 +1,15 @@
-# _dotfiles—atelier_![shimeji]
+# <div align="center">_dotfiles—"atelier"_![shimeji]</div>
+<div align="center">
+	<img src="https://img.shields.io/github/commit-activity/m/microsounds/atelier?logo=github">
+	<img src="https://img.shields.io/github/repo-size/microsounds/atelier?logo=github">
+	<a href="https://github.com/microsounds/atelier/actions/workflows/ci.yml"><img src="https://github.com/microsounds/atelier/actions/workflows/ci.yml/badge.svg"></a>
+	<br>
+	<a href="https://debian.org/distrib/"><img src="https://img.shields.io/badge/Debian-buster-%23c70036.svg?logo=debian"></a>
+	<a href="https://dwm.suckless.org/"><img src="https://img.shields.io/badge/suckless-dwm-%23224488?logo=suckless"></a>
+	<a href="https://nano-editor.org/"><img src="https://shields.io/badge/Editor-GNU%20nano-%23440077?logo=windows-terminal"></a>
+	<a href="https://www.youtube.com/watch?v=UL8IpdFGeHU"><img src="https://img.shields.io/badge/theme-night drive-%2363B0B0?logo=github-sponsors"></a>
+</div>
+
 This is my primary computing setup, a self-contained graphical shell environment for Debian GNU/Linux.
 * Git is used to maintain an identical and reproducible setup across multiple machines.
 * A series of post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
@@ -9,7 +20,7 @@ Basic installation instructions are provided, along with some documentation for 
 ![scrot]
 > _Pictured: Debian stable, a "graphical shell" environment consisting mostly of Xorg, dwm, sxhkd, and urxvtd._
 
-# Quick start [![os]](https://www.debian.org/distrib/) [![build]](.github/workflows/ci.yml)
+# Quick start
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
 	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be booted._
 2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
@@ -147,6 +158,3 @@ Several commands are extended to include impure functions, such as purposefully 
 
 [scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
 [shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png
-
-[os]: https://img.shields.io/badge/Debian-buster-red.svg?style=flat&logo=debian
-[build]: https://github.com/microsounds/atelier/actions/workflows/ci.yml/badge.svg
