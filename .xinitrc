@@ -33,9 +33,16 @@ xset b off &
 	done
 } && sxhkd &
 
+# restore versioned pcmanfm config at runtime
+{	for f in ~/.config/fm/*; do
+		file="${f##*/}"; dir="${file%.*}"
+		mkdir ~/.config/$dir
+		cp $f ~/.config/$dir/$file
+	done
+} && pcmanfm -d &
+
 xwin-statusd -pm &
 urxvtd -o &
-pcmanfm -d &
 lxpolkit &
 
 exec dwm
