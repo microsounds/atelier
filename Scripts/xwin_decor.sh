@@ -3,7 +3,7 @@
 
 # fallback tiling background
 bitmaps="$HOME/.local/share/X11/bitmaps"
-cpp <<- EOF | egrep -v '^(#|$)' | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
+cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 	#include <colors/nightdrive.h>
 	-bg COLOR15 -fg COLOR1
 EOF

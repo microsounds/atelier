@@ -6,10 +6,11 @@
 
 ## run-once
 # mangle xkb keyboard layout at runtime
-{	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
+{	cfg="$HOME/.config/xkb"
+	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
 	for f in $layout; do
-		if [ -f ~/.config/xkb/$f.xkb ]; then
-			xkbcomp -merge ~/.config/xkb/$f.xkb $DISPLAY > /dev/null 2>&1
+		if [ -f "$cfg/$f.xkb" ]; then
+			xkbcomp -merge "$cfg/$f.xkb" $DISPLAY 2> /dev/null
 		fi
 	done
 } &
@@ -27,14 +28,17 @@ xset b off &
 
 ## session daemons
 # mangle sxhkd config at runtime
-{	echo "# !! overwritten by $0 at startup !!" > ~/.config/sxhkd/sxhkdrc
+{	cfg="$HOME/.config/sxhkd"
+	echo "# !! $0: DO NOT EDIT !!" > "$cfg/sxhkdrc"
 	for f in default $layout; do
-		cat ~/.config/sxhkd/$f >> ~/.config/sxhkd/sxhkdrc
+		# do not strip '\t', sxhkd 0.5.x chokes on excess newlines
+		cpp -P -traditional-cpp < "$cfg/$f" \
+			| grep . >> "$cfg/sxhkdrc" 2> /dev/null
 	done
 } && sxhkd &
 
 # restore versioned pcmanfm config at runtime
-{	for f in ~/.config/fm/*; do
+{	for f in ~/.config/fm/*.conf; do
 		file="${f##*/}"; dir="${file%.*}"
 		mkdir ~/.config/$dir
 		cp $f ~/.config/$dir/$file
