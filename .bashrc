@@ -196,7 +196,7 @@ colors() (
 reload() {
 	find ~/.local/include/colors -type f | while read -r f; do
 		if echo "${f##*/}" | fgrep -q "${@:-nightdrive}"; then
-			sed "/#include/a #include \"$f\"" ~/.xresources | xrdb -
+			sed "/#include <colors/c #include \"$f\"" ~/.xresources | xrdb -
 		fi
 	done
 	exec urxvtc

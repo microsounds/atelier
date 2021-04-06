@@ -111,17 +111,21 @@ At startup, `startx` will pass hardware-specific `xorg.conf` files to the X serv
 Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
 Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
-## X resources and color
-Both `xrdb` and `dwm` compilation make use of the C preprocessor to configure color schemes.
+## X resources and theming
+For consistency, `xinit`, `dwm` and other scripts make use of the C preprocessor to mangle config files and configure color schemes.
 
-Individual color schemes are stored as C header files containing preprocessor macros representing color hex codes in [`~/.local/include`](.local/include). This directory is appended to `$C_INCLUDE_PATH` at login.
+Theme settings and indivdual color schemes are stored as C header files containing preprocessor macros representing color hex codes in [`~/.local/include`](.local/include). This directory is appended to `$C_INCLUDE_PATH` at login.
 
-* [`.xresources`](.xresources), [scripts](Scripts/xwin_decor.sh) and [C source code](.config/dwm/config.h) can `#include <colors/example.h>` to reference color macros
-	* `{FG,BG}COLOR` for terminal fg/bg colors
-	* `{FG,BG}LIGHT` for UX highlight colors
-	* `COLOR0..COLOR15` for the 16 standard ANSI terminal colors
 * Invoking shell function `reload` will reload changes to `.xresources` and refresh your terminal instance.
 	* _Optionally, you can temporarily apply another existing color scheme by naming it as an argument._
+
+### List of available macros
+* `{FG,BG}COLOR` for terminal fg/bg colors
+* `{FG,BG}LIGHT` for UX highlight colors
+* `COLOR0..COLOR15` for the 16 standard ANSI terminal colors
+* `FN_{TERM,UX,TEXT}` for specific font faces
+* `FN_{TERM,UX}_JP` for matching fallback fonts
+* `FN_{TERM,UX,TEXT}_SIZE` for matching font sizes
 
 ## X root window decoration
 Using _optional_ config file `~/.xdecor`, you can designate an absolute path to a directory containing videos or images to use as a wallpaper.

@@ -1,5 +1,8 @@
 /* ~/.xresources: X resources user configuration */
 
+#include <theme.h>
+#include <colors/nightdrive.h>
+
 /* xft */
 Xft.dpi: 96
 Xft.antialias: true
@@ -10,13 +13,9 @@ Xft.lcdfilter: lcddefault
 Xft.rgba: rgb
 
 /* rxvt-unicode */
-#define font(name, px)	xft:name:pixelsize=px
-
-/* terminal fonts	normal               fallback japanese */
-#define FONT_SERIF	font(Go Mono, 13),   font(Dejima, 13)
-#define FONT_SANS	font(Noto Mono, 13), font(VL Gothic, 13)
-
-URxvt.font: FONT_SERIF
+/*          normal                           fallback japanese */
+URxvt.font: xft:font(FN_TERM, FN_TERM_SIZE), \
+	xft:font(FN_TERM_JP, FN_TERM_SIZE)
 URxvt.letterSpace: -2
 URxvt.lineSpace: -1
 URxvt.geometry: 96x24
@@ -34,8 +33,6 @@ URxvt.keysym.C-S-Right: \033[1;6C
 URxvt.keysym.C-S-Left: \033[1;6D
 
 /* terminal color theme */
-#include <colors/nightdrive.h>
-
 URxvt.cursorColor: FGCOLOR
 URxvt.foreground: FGCOLOR
 URxvt.background: BGCOLOR

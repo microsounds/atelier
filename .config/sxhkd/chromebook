@@ -1,4 +1,4 @@
-# ~/.config/sxhkd/chromebook: chromebook specific hacks
+## ~/.config/sxhkd/chromebook: chromebook specific hacks
 
 # reset unreliable touchpad driver
 ctrl + F2

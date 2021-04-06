@@ -23,25 +23,28 @@ xrdb ~/.xresources && {
 	done
 } &
 
-dconf load '/' < ~/.config/dconf/user.conf &
+# GTK config
+cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0 &
+dconf load '/' < ~/.config/gtk/gtk3.conf &
+
+# disable PC speaker
 xset b off &
 
 ## session daemons
 # mangle sxhkd config at runtime
 {	cfg="$HOME/.config/sxhkd"
-	echo "# !! $0: DO NOT EDIT !!" > "$cfg/sxhkdrc"
+	echo "## !! $0: DO NOT EDIT !!" > "$cfg/sxhkdrc"
 	for f in default $layout; do
-		# do not strip '\t', sxhkd 0.5.x chokes on excess newlines
-		cpp -P -traditional-cpp < "$cfg/$f" \
-			| grep . >> "$cfg/sxhkdrc" 2> /dev/null
+		# sxhkd 0.5.x chokes on excess newlines
+		cpp -P < "$cfg/$f" | grep . >> "$cfg/sxhkdrc" 2> /dev/null
 	done
 } && sxhkd &
 
 # restore versioned pcmanfm config at runtime
 {	for f in ~/.config/fm/*.conf; do
 		file="${f##*/}"; dir="${file%.*}"
-		mkdir ~/.config/$dir
-		cp $f ~/.config/$dir/$file
+		mkdir -p ~/.config/$dir
+		cp "$f" ~/.config/$dir/$file
 	done
 } && pcmanfm -d &
 

@@ -1,12 +1,9 @@
 /* ~/.config/dwm/config.h: dwm/dmenu user configuration */
 
-/* utilities */
-#define _xstr(s) #s
-#define str(s) _xstr(s)
-#define font(name, px) str(name:pixelsize=px)
+#include <theme.h>
+#include <colors/nightdrive.h>
 
 /* ux color theme */
-#include <colors/nightdrive.h>
 static const char col_gray1[] = str(BGCOLOR);
 static const char col_gray2[] = str(BGLIGHT);
 static const char col_gray3[] = str(FGCOLOR);
@@ -24,10 +21,10 @@ static const unsigned int snap = 16;    /* snap to edge distance */
 static const int showbar = 1;
 static const int topbar = 1;
 static const char *fonts[] = {
-	font(Liberation Serif, 16),         /* normal */
-	font(Dejima, 16)                    /* fallback japanese */
+	str(font(FN_HEADER, FN_HEADER_SIZE)),         /* normal */
+	str(font(FN_HEADER_JP, FN_HEADER_SIZE))       /* fallback japanese */
 };
-static const char dmenufont[] = font(Liberation Serif, 16);
+static const char dmenufont[] = str(font(FN_HEADER, FN_HEADER_SIZE));
 
 /* layouts */
 static const float mfact = 0.55;        /* master area size */

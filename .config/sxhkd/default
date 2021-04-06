@@ -1,12 +1,23 @@
-# ~/.config/sxhkd/default: sxhkd user configuration
+## ~/.config/sxhkd/default: wm-independent keybinds
 
-# reload config
-super + Escape
-	pkill -USR1 -x sxhkd
+#include <theme.h>
+#include <colors/nightdrive.h>
 
+# terminate X session
+ctrl + shift + q
+	pkill X
+
+# launcher
+super + p
+	dmenu_path | dmenu -f \
+		-fn str(font(FN_HEADER, FN_HEADER_SIZE)) \
+		-nb str(BGCOLOR) \
+		-sb str(FGLIGHT) \
+		-sf str(FGCOLOR) \
+	| sh
 # terminal
 super + Return
-	urxvtc
+	urxvtc || urxvt
 # file manager
 {super + e,XF86Explorer}
 	pcmanfm
