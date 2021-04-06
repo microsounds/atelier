@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 
 # sideload utilities described in ~/.comforts-git
-# listed git repos must have a makefile and an install recipe
+# listed git repos must have a makefile and a conventional install recipe
+
+INSTALL="$HOME/.local"
 
 finish() {
 	rm -rf "$TMP"
@@ -20,6 +22,9 @@ for f in $(cat ~/.comforts-git); do
 	echo "Installing from '$f'"
 	TMP="$(mk-tempdir)"
 	git clone "$f" "$TMP" || exit 1
-	make -C "$TMP" install PREFIX="$HOME/.local" || exit 1
+	if [ -x "$TMP/configure" ]; then # autoconf configure
+		cd "$TMP" && ./configure --prefix="$INSTALL"
+	fi
+	make -C "$TMP" install PREFIX="$INSTALL" || exit 1
 	rm -rf "$TMP"
 done
