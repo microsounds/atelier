@@ -73,6 +73,7 @@ Primary modkey `Mod1` is super instead of alt.
 | **shift +** | **super +** | **key** |
 | float window<sup>[toggle]</sup> | monocle window<sup>[toggle]</sup> | space |
 | set as master window<sup>[toggle]</sup> | terminal | return |
+| | launcher | p |
 | | file manager | e |
 | reboot | shutdown | F1 |
 | hibernate | sleep | F2 |
@@ -123,9 +124,9 @@ Theme settings and indivdual color schemes are stored as C header files containi
 * `{FG,BG}COLOR` for terminal fg/bg colors
 * `{FG,BG}LIGHT` for UX highlight colors
 * `COLOR0..COLOR15` for the 16 standard ANSI terminal colors
-* `FN_{TERM,UX,TEXT}` for specific font faces
-* `FN_{TERM,UX}_JP` for matching fallback fonts
-* `FN_{TERM,UX,TEXT}_SIZE` for matching font sizes
+* `FN_{TERM,HEADER,TEXT}` for specific font faces
+* `FN_{TERM,HEADER}_JP` for matching fallback fonts
+* `FN_{TERM,HEADER,TEXT}_SIZE` for matching font sizes
 
 ## X root window decoration
 Using _optional_ config file `~/.xdecor`, you can designate an absolute path to a directory containing videos or images to use as a wallpaper.

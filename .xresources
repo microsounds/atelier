@@ -14,8 +14,7 @@ Xft.rgba: rgb
 
 /* rxvt-unicode */
 /*          normal                           fallback japanese */
-URxvt.font: xft:font(FN_TERM, FN_TERM_SIZE), \
-	xft:font(FN_TERM_JP, FN_TERM_SIZE)
+URxvt.font: xft:font(FN_TERM, FN_TERM_SIZE), xft:font(FN_TERM_JP, FN_TERM_SIZE)
 URxvt.letterSpace: -2
 URxvt.lineSpace: -1
 URxvt.geometry: 96x24

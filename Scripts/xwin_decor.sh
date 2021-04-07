@@ -2,7 +2,7 @@
 # decorate root window
 
 # fallback tiling background
-bitmaps="$HOME/.local/share/X11/bitmaps"
+bitmaps="$XDG_DATA_HOME/X11/bitmaps"
 cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 	#include <colors/nightdrive.h>
 	-bg COLOR15 -fg COLOR1

@@ -11,9 +11,8 @@ ctrl + shift + q
 super + p
 	dmenu_path | dmenu -f \
 		-fn str(font(FN_HEADER, FN_HEADER_SIZE)) \
-		-nb str(BGCOLOR) \
-		-sb str(FGLIGHT) \
-		-sf str(FGCOLOR) \
+		-nb str(BGCOLOR) -sb str(FGLIGHT) \
+		-nf str(FGCOLOR) -sf str(FGCOLOR) \
 	| sh
 # terminal
 super + Return
@@ -21,6 +20,7 @@ super + Return
 # file manager
 {super + e,XF86Explorer}
 	pcmanfm
+
 # browser
 XF86WWW
 	chromium

@@ -50,18 +50,9 @@ static const Rule rules[] = {
 	{ "XClock",        NULL,       NULL,       1,            1,           -1 },
 };
 
-/* built-in commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = {
-	"dmenu_run",
-	"-m", dmenumon,
-	"-fn", dmenufont,
-	"-nb", col_gray1,
-	"-nf", col_gray3,
-	"-sb", col_cyan,
-	"-sf", col_gray4,
-	NULL
-};
+/* disable spawn/dmenu invocation, handled by sxhkd */
+#define dmenucmd NULL
+static char dmenumon[2] = "0";
 
 /* key definitions */
 #define CTRL ControlMask
@@ -72,9 +63,6 @@ static const char *dmenucmd[] = {
 /* primary modkey */
 #define MODKEY SUPER
 
-/* command macros */
-#define TERM "urxvtc"
-#define SHCMD(cmd) {.v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 /*	 modifier                       key       function        argument */
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -84,10 +72,8 @@ static const char *dmenucmd[] = {
 
 static Key keys[] = {
 /* basic */
-	{ CTRL|SHIFT,                   XK_q,      quit,           {0} },
 	{ MODKEY|SHIFT,                 XK_q,      quit,           {0} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 /* kill window */
 	{ ALT,                          XK_F4,     killclient,     {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
@@ -135,7 +121,6 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD(TERM) },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

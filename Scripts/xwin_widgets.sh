@@ -33,8 +33,8 @@ for prog in $LIST; do
 	# waste time while prog launches
 	while ! window="$(xwininfo -name "$prog" 2> /dev/null)"; do :; done
 	win_id=$(echo "$window" | egrep -o '0x[0-9a-f]+' | head -n 1)
-	xdotool windowsize $win_id $SIZE $SIZE
-	xdotool windowmove $win_id $XPOS $YPOS
+	xdotool windowsize --sync $win_id $SIZE $SIZE &
+	xdotool windowmove --sync $win_id $XPOS $YPOS &
 	jump=$((SIZE + GAP)) # determine placement
 	if [ ! -z $VERT ]; then
 		[ $((YPOS - jump)) -lt 0 ] && jump=$((jump * -1))
