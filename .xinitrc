@@ -48,7 +48,7 @@ xset b off &
 	done
 } && pcmanfm -d &
 
-xwin-statusd -pm &
+xwin-statusd -qpm | xargs -n 1 xsetroot -name &
 urxvtd -o &
 lxpolkit &
 

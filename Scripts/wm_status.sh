@@ -1,16 +1,28 @@
 #!/usr/bin/env sh
 
-# wm_status.sh v0.2
-# non-blocking status bar daemon
-# prints formatted status information to xsetroot
+# wm_status.sh v0.3
+# non-blocking status line daemon
+# prints formatted status information to stdout
 
-# option flags
+# global option flags
 for f in $(echo "${@#-}" | sed 's/./& /g'); do
 	case $f in
 		p) pad=' ';; # -p for extra padding
+		q) quote='"';; # -q to enquote output for xargs
 		m) invert=1;; # -m for reverse video moon phase
 	esac
 done
+
+# global delimiter
+delim='・'
+
+# generate sed script for final output
+IFS=''
+script="s/${delim}$//" # strip trailing delimiter
+for f in $pad $quote; do # surround output with special characters
+	script="$script;s/^/${f}&/;s/$/&${f}/"
+done
+unset IFS
 
 # FIFO location
 prog="${0##*/}"
@@ -19,7 +31,6 @@ FIFO="${XDG_RUNTIME_DIR:-/tmp}/.${prog%.*}.$key"
 
 abort() {
 	rm -rf "$FIFO"
-	xsetroot -name ''
 	kill -- -$$
 }
 
@@ -185,7 +196,7 @@ launch current_time 10
 
 while read -r module data; do
 	# receive module output and append delimiter
-	eval "$module=\"$data・\""
+	eval "$module=\"$data$delim\""
 
 	# conditionally revoke modules
 	case "$data" in
@@ -193,9 +204,9 @@ while read -r module data; do
 		*abled) unset IP;; # no internet
 	esac
 
-	# compose status bar
+	# compose all available modules
 	bar="${FAN:-$TEMP}${WTTR}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
 
-	# strip delimiter from last module
-	echo "'$pad$(echo "$bar" | sed 's/・$//')$pad'" | xargs xsetroot -name
+	# output final formatted status line
+	echo "$bar" | sed -e "$script"
 done < "$FIFO"
