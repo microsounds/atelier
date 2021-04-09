@@ -34,7 +34,7 @@ set_prompt() {
 
 	# set window title and prompt
 	git_path="$(path-gitstatus -pe${COLOR:-n})" || path="$(path-shorthand)"
-	PS1="\[\e]0;\u@\h: $path\a\]${u}\u@\h${r}:${git_path:-${p}$path${r}}\$ "
+	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}$path${r}}\$ "
 	unset u p r path git_path
 }
 
