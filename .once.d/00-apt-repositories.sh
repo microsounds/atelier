@@ -3,7 +3,7 @@
 # defines standard apt repositories
 # adds deb-multimedia repos
 
-SOURCE='http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
+SOURCE='https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
 DEB='deb-multimedia-keyring_2016.8.1_all.deb'
 CONF='/etc/apt/sources.list'
 TMP="$(mk-tempdir)"
@@ -18,10 +18,10 @@ trap finish 0 1 2 3 6
 
 echo "Writing to '$CONF'"
 sudo tee "$CONF" <<- EOF
-	deb http://deb.debian.org/debian/ stable main contrib non-free
-	deb http://deb.debian.org/debian/ stable-updates main contrib non-free
-	deb http://security.debian.org/debian-security stable/updates main contrib non-free
-	deb http://www.deb-multimedia.org/ stable main non-free
+	deb https://deb.debian.org/debian/ stable main contrib non-free
+	deb https://deb.debian.org/debian/ stable-updates main contrib non-free
+	deb https://security.debian.org/debian-security stable/updates main contrib non-free
+	deb https://www.deb-multimedia.org/ stable main non-free
 EOF
 
 mkdir -v "$TMP"
