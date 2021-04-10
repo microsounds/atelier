@@ -173,6 +173,7 @@ xz='xz -T0 -0'
 aes_magic='Salted__'
 aes_crypt='openssl enc -aes-256-cbc -pbkdf2'
 rsa_crypt='openssl rsautl -pkcs'
+rsa_verify='openssl rsa -noout -text'
 
 verify_header() {
 	header="$(dd bs="${#1}" count=1)" < /dev/stdin 2> /dev/null
@@ -300,16 +301,22 @@ mode_encrypt_rsa() {
 	[ -f "$rsa_private" ] ||
 		quit "Expected RSA private key at '$rsa_private'"
 
-	# on first run, convert existing keys to PEM format
-	if [ ! -f "$rsa_public" ]; then
-		mesg "Creating PKCS8 public PEM key at '$rsa_public'"
-		announce ssh-keygen -f "$rsa_private" -e -m pkcs8 > "$rsa_public"
-	fi
 	read -r rsa_header < "$rsa_private"
+	# on first run, convert existing keys to PEM format
 	if [ "$rsa_header" != '-----BEGIN RSA PRIVATE KEY-----' ]; then
 		mesg "Converting private key at '$rsa_private' to PEM format."
 		announce ssh-keygen -f "$rsa_private" -p -m pem
 	fi
+	if [ ! -f "$rsa_public" ]; then
+		mesg "Creating PKCS8 public PEM key at '$rsa_public'"
+		announce ssh-keygen -f "$rsa_private" -e -m pkcs8 > "$rsa_public"
+	fi
+
+	# sanity check, obtain key length
+	rsa_bits="$($rsa_verify -pubin -in "$rsa_public" \
+		| egrep -o '[0-9]+' | head -n 1)"
+	[ $rsa_bits -ge 1024 ] && [ $rsa_bits -le 16384 ] ||
+		quit "Could not obtain RSA key length for '$rsa_private'"
 
 	for f in "$@"; do
 		# empty filename?
@@ -366,11 +373,9 @@ mode_encrypt_rsa() {
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp/enc")" ]; then
 				mesg_st 'Saving to disk... '
-				# generate new RSA key sized keyfile minus padding overhead
-				size="$(ssh-keygen -f "$rsa_private" -l)"
-				size="${size%${size#* }}"
-				size="$((((size / 8) / 100) * 99))"
-				random_bytes "$size" > "$tmp/key"
+				# generate new keyfile proportional in size
+				# to key length minus padding
+				random_bytes "$((((rsa_bits / 8) / 100) * 99))" > "$tmp/key"
 
 				# repack file in place, abort if interrupted
 				{	rm "$tmp/enc"
