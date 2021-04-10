@@ -3,6 +3,7 @@
 alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
+*brasero
 chromium
 cmark-gfm optipng jpegoptim jq
 cpp
