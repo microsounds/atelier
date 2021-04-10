@@ -144,7 +144,7 @@ ledger-enc() (
 	file="$1" && shift
 	export EXTERN_EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
-	nano-overlay -f "$file"
+	nano-overlay -j "$file"
 )
 
 # automatically run ~/.once.d post-install scripts
