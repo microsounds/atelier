@@ -13,7 +13,7 @@ super + p
 		-fn str(font(FN_HEADER, FN_HEADER_SIZE)) \
 		-nb str(BGCOLOR) -sb str(FGLIGHT) \
 		-nf str(FGCOLOR) -sf str(FGCOLOR) \
-	| sh
+	| sh &
 # terminal
 super + Return
 	urxvtc || urxvt
