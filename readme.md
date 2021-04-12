@@ -61,6 +61,7 @@ All system-wide changes are performed through automated scripts located in [`~/.
 | `1*` | Changes to [`~/.local`](.local) file hierarchy, such as sideloaded 3rd party software. |
 | `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are hacks._ |
 | `c*` | System-wide changes affecting chromebook hardware only. |
+| `a*` | Android-specific hacks only. |
 
 ## Window manager
 `dwm` keybinds are the [defaults](https://ratfactor.com/dwm) with several exceptions.
