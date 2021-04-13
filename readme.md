@@ -37,6 +37,11 @@ Basic installation instructions are provided, along with some documentation for 
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
+## Quick start for Termux (Android)
+Currently, only a basic shell environment in single-user mode is supported.
+1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
+2. Post-install: Run only `~/.once.d/a0-android-termux.sh` to apply android-specific hacks.
+
 # Usage notes
 ## Using `git meta`
 For local-scope changes, files in `$HOME` are versioned and mangled in place using Git.
