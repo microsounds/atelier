@@ -26,9 +26,6 @@ rm -f /etc/motd
 # reset meta upstream
 ~/.once.d/02-meta-config.sh
 
-# strip unsupported .nanorc flags
-sed -e '/scroller/d' -i ~/.nanorc
-
 # termux-specific
 # install fonts
 CONF="$HOME/.termux"
