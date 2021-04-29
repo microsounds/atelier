@@ -129,6 +129,17 @@ For use with multi-monitor and/or complicated display setups, you can override t
 ```
 Commands in the file are passed to `xrandr` line by line at startup if it exists.
 For example, this configuration would suit a 2 monitor layout with the right monitor mounted vertically.
+
+### `~/.xdecor`
+You can designate one or more paths to directories containing images or videos for use as a wallpaper using _optional_ config file `~/.xdecor`
+```
+~/Pictures/some/path
+/media/sd_card/some/path
+```
+
+If it exists, [`xwin_decor`](Scripts/xwin_decor.sh) will randomly pick a directory and file within it and set it as the wallpaper on startup.
+In the case of video files, a random video frame from that file will be taken and set as the wallpaper using `ffmpeg`.
+
 ## X resources and theming
 For consistency, `xinit`, `dwm` and other scripts make use of the C preprocessor to mangle config files and configure color schemes.
 
@@ -145,14 +156,6 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 * `FN_{TERM,HEADER,TEXT}` for specific font faces
 * `FN_{TERM,HEADER}_JP` for matching fallback fonts
 * `FN_{TERM,HEADER,TEXT}_SIZE` for matching font sizes
-
-## X root window decoration
-Using _optional_ config file `~/.xdecor`, you can designate an absolute path to a directory containing videos or images to use as a wallpaper.
-```
-$ pwd > ~/.xdecor
-```
-If configured, [`xwin_decor`](Scripts/xwin_decor.sh) will pick a random file within it and set it as the wallpaper on startup.
-In the case of video files, a random video frame from that file will be taken and set as the wallpaper using `ffmpeg`.
 
 ## Non-standard commands
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
