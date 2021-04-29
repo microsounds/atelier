@@ -9,7 +9,7 @@ cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 EOF
 
 # custom wallpaper
-# select random image or video frame from directory indicated by ~/.xdecor
+# select random image or video frame from a directory indicated by ~/.xdecor
 rand() { od -N 4 -t u -A n < /dev/urandom; }
 setwall='feh --no-fehbg --bg-fill -g +0+0 -'
 config="$HOME/.xdecor"
@@ -17,6 +17,7 @@ config="$HOME/.xdecor"
 [ -f "$config" ] || exit
 lines=$(wc -l) < "$config"
 
+# select random directory
 { grep . | tail -n $((($(rand) % lines) + 1)) | head -n 1; } < "$config" \
 	| while read -r dir; do
 	[ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
@@ -27,7 +28,7 @@ lines=$(wc -l) < "$config"
 	case "$sel" in
 		*jpg|*jpeg|*png|*webp) $setwall < "$sel";;
 		*)
-			while seed=$(($(rand) % 100)); do
+			while seed=$(($(rand) % 100)); do # exclude OP/EDs
 				[ $seed -lt 15 ] || [ $seed -gt 85 ] || break
 			done
 			ffmpegthumbnailer -i "$sel" -s 0 -c png -t $seed -o - | $setwall

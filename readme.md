@@ -57,6 +57,8 @@ All system-wide changes are performed through automated scripts located in [`~/.
 * Some scripts only apply to specific hardware configurations, and will exit even if they are run.
 * Scripts affecting `systemd` or the bootloader will be skipped in virtualized container contexts.
 * Sideloaded software is installed to [`~/.local/bin`](.local/bin) when possible.
+* [`~/.comforts-git`](.comforts-git) describes small sideloaded utilities that will be installed automatically at runtime via git.
+	* Repos must have a valid makefile install recipe using the `$(PREFIX)` metaphor.
 * [`~/.comforts`](.comforts) describes the full list of non-optional package groups that will be installed.
 	* Optional package groups are marked with an *asterisk, you will be prompted to approve these at runtime.
 
