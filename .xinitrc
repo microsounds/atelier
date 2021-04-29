@@ -5,6 +5,16 @@
 ! is-chromebook || layout='chromebook'
 
 ## run-once
+# ~/.xrandr: invoke optional display overrides
+[ -f ~/.xrandr ] && {
+	while read -r line; do
+		[ ! -z "$line" ] && case "$line" in
+			\#*) continue;;
+			*) xrandr $line
+		esac
+	done < ~/.xrandr
+} &
+
 # mangle xkb keyboard layout at runtime
 {	cfg="$HOME/.config/xkb"
 	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'

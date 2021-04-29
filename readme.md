@@ -118,10 +118,22 @@ At startup, `startx` will pass hardware-specific `xorg.conf` files to the X serv
 Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
 Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
+## Optional X windows configuration
+### `~/.xrandr`
+For use with multi-monitor and/or complicated display setups, you can override the default display layout with one or more commands to `xrandr` saved to _optional_ config file `~/.xrandr`
+
+```
+# two monitors, right is vertical
+--output HDMI-0 --primary --rotate normal
+--output HDMI-1 --right-of HDMI-0 --rotate right
+```
+Commands in the file are passed to `xrandr` line by line at startup if it exists.
+For example, this configuration would suit a 2 monitor layout with the right monitor mounted vertically.
 ## X resources and theming
 For consistency, `xinit`, `dwm` and other scripts make use of the C preprocessor to mangle config files and configure color schemes.
 
-Theme settings and indivdual color schemes are stored as C header files containing preprocessor macros representing color hex codes in [`~/.local/include`](.local/include). This directory is appended to `$C_INCLUDE_PATH` at login.
+Theme settings and indivdual color schemes are stored as C header files containing preprocessor macros representing color hex codes in [`~/.local/include`](.local/include).
+This directory is appended to `$C_INCLUDE_PATH` at login.
 
 * Invoking shell function `reload` will reload changes to `.xresources` and refresh your terminal instance.
 	* _Optionally, you can temporarily apply another existing color scheme by naming it as an argument._
