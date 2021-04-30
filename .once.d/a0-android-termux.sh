@@ -7,7 +7,12 @@
 uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
 
 # install prerequisites
-pkg install -y wget git proot clang openssl-tool openssh bash-completion
+cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
+	wget git proot       # req'd for bootstrap
+	clang                # provides cpp
+	openssl-tool openssh # nano-overlay
+	bash-completion
+EOF
 
 # allow use of standard file locations like /tmp
 ! fgrep -q 'termux-chroot' < ~/.profile && \
