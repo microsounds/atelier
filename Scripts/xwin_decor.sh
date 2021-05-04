@@ -8,32 +8,43 @@ cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 	-bg COLOR15 -fg COLOR1
 EOF
 
-# custom wallpaper
-# select random image or video frame from a directory indicated by ~/.xdecor
-rand() { od -N 4 -t u -A n < /dev/urandom; }
-setwall='feh --no-fehbg --bg-fill -g +0+0 -'
-config="$HOME/.xdecor"
+# select N random images or video frames from any directory
+# indicated by ~/.xdecor, one for each active display
+rand() {
+	{ od -N 4 -t u -A n | tr -d ' '; } < /dev/urandom
+}
 
+temp="$(mk-tempdir)" && mkdir -p "$temp"
+trap 'rm -rf "$temp"' 0 1 2 3 6
+
+config="$HOME/.xdecor"
 [ -f "$config" ] || exit
 lines=$(wc -l) < "$config"
 
-# select random directory
-{ grep . | tail -n $((($(rand) % lines) + 1)) | head -n 1; } < "$config" \
-	| while read -r dir; do
-	[ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
-	[ ! -z "$dir" ] || exit
-	sel="$(find "$dir" -type f | \
-		egrep '\.(jpe?g|png|mkv|mp4|web(m|p))$' | shuf -n 1)"
-	[ ! -z "$sel" ] || exit
-	case "$sel" in
-		*jpg|*jpeg|*png|*webp) $setwall < "$sel";;
-		*)
-			while seed=$(($(rand) % 100)); do # exclude OP/EDs
-				[ $seed -lt 15 ] || [ $seed -gt 85 ] || break
-			done
-			ffmpegthumbnailer -i "$sel" -s 0 -c png -t $seed -o - | $setwall
-	esac
+# iterate through all active displays
+xrandr | fgrep '*' | while read -r dpy; do
+	# randomly select directory
+	{ grep . | tail -n $((($(rand) % lines) + 1)) | head -n 1; } < "$config" \
+		| while read -r dir; do
+		[ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
+		[ ! -z "$dir" ] || exit
+
+		# randomly select file
+		find "$dir" -type f \
+			| egrep '\.(jpe?g|png|mkv|mp4|web(m|p))$' | shuf -n 1 \
+			| while read -r sel; do
+			[ ! -z "$sel" ] || exit
+
+			case "$sel" in
+				*mkv|*mp4|*webm) # video file
+					while seed=$(($(rand) % 100)); do # exclude OP/EDs
+						[ $seed -lt 15 ] || [ $seed -gt 85 ] || break
+					done
+					ffmpegthumbnailer -i "$sel" -s 0 -c png -t $seed -o - ;;
+				*) cat "$sel"
+			esac
+		done
+	done > "$temp/$(rand)"
 done
 
-
-
+find "$temp" -type f | xargs feh --no-fehbg --bg-fill -g +0+0
