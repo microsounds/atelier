@@ -1,11 +1,15 @@
 #!/usr/bin/env sh
 # launch xload and xclock in a corner somewhere
-# dwm ignores EWMH resizing by default and requires float overrides
+# dowm ignore EMWH resize hints in tiling mode
+# start in floating mode or override widgets to always float
 
 # constants
-LIST="xload xclock"
-COUNT=$(echo "$LIST" | wc -w)
-SCREEN=$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | sed -n 1p)
+LIST='xload xclock'
+for f in $LIST; do COUNT=$((COUNT + 1)); done # calculate distance
+
+# xdotool cannot span across multiple connected displays
+SCREEN=$(xrandr | grep '[^dis]connected' | egrep -o '([0-9]+x?)+' \
+	| fgrep 'x' | head -n 1)
 SIZE=130  # window size
 GAP=15    # gap between windows
 EDGE=20   # distance from screen border
