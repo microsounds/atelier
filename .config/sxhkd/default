@@ -3,10 +3,10 @@
 #include <theme.h>
 #include <colors/nightdrive.h>
 
+## essential
 # terminate X session
 ctrl + shift + q
 	pkill X
-
 # launcher
 super + p
 	dmenu_path | dmenu -f \
@@ -20,17 +20,11 @@ super + Return
 # file manager
 {super + e,XF86Explorer}
 	pcmanfm
-
-# browser
-XF86WWW
-	chromium
-# task manager
-ctrl + alt + Delete
-	visual htop
-# screenshots (add delay for interactive mode)
-{_,shift +} Print
+# screenshots
+super + {_,shift +} Print
 	{scrot,sleep 0.2; scrot -s}
 
+## function keys
 # power
 {_,shift +} super + F{1,2}
 	systemctl {poweroff,reboot,suspend,hibernate}
@@ -59,7 +53,18 @@ XF86Audio{Mute,LowerVolume,RaiseVolume}
 super + F11
 	xwin-decor
 
-# reserved for future use
-# XF86Launch1
+## misc
+# task manager
+ctrl + alt + Delete
+	visual htop
+
+## non-standard keyboard hotkeys only
+XF86Eject
+	eject
+XF86WWW
+	chromium
+
+## reserved for future use
 # XF86Tools
+# XF86Launch1,5,6
 # X86FAudio{Stop,Play,Prev,Next}
