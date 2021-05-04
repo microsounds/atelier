@@ -23,6 +23,9 @@ URxvt.saveLines: 2048
 URxvt.scrollBar: false
 URxvt.urgentOnBell: true
 
+/* dump terminal logs to file */
+URxvt.print-pipe: cat > "$HOME/$(date '+%Y-%m-%d-%H%M%S')_term.log"
+
 /* disable non-standard ctrl+shift hijacking */
 URxvt.iso14755: false
 URxvt.iso14755_52: false
