@@ -126,10 +126,10 @@ For use with multi-monitor and/or complicated display setups, you can override t
 
 ```
 # two monitors, right is vertical
---output HDMI-0 --primary --rotate normal
---output HDMI-1 --right-of HDMI-0 --rotate right
+--output HDMI-0 --auto --primary --rotate normal
+--output HDMI-1 --auto --right-of HDMI-0 --rotate right
 ```
-Commands in the file are passed to `xrandr` line by line at startup if it exists.
+Commands in this file are passed to [`xrandr-cycle`](Scripts/xrandr_cycle.sh) line by line at startup if it exists.
 For example, this configuration would suit a 2 monitor layout with the right monitor mounted vertically.
 
 ### `~/.xdecor`
@@ -139,7 +139,7 @@ You can designate one or more paths to directories containing images or videos f
 /media/sd_card/some/path
 ```
 
-If it exists, [`xwin_decor`](Scripts/xwin_decor.sh) will randomly pick a directory and file within it and set it as the wallpaper on startup.
+If it exists, [`xwin-decor`](Scripts/xwin_decor.sh) will randomly pick a directory and file within it and set it as the wallpaper on startup.
 In the case of video files, a random video frame from that file will be taken and set as the wallpaper using `ffmpeg`.
 
 ## X resources and theming

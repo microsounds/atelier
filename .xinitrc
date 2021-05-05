@@ -6,14 +6,7 @@
 
 ## run-once
 # ~/.xrandr: invoke optional display overrides
-[ -f ~/.xrandr ] && {
-	while read -r line; do
-		[ ! -z "$line" ] && case "$line" in
-			\#*) continue;;
-			*) xrandr $line
-		esac
-	done < ~/.xrandr
-} &
+xrandr-cycle -d &
 
 # mangle xkb keyboard layout at runtime
 {	cfg="$HOME/.config/xkb"
