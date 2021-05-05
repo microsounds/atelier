@@ -22,7 +22,7 @@ config="$HOME/.xdecor"
 lines=$(wc -l) < "$config"
 
 # iterate through all active displays
-xrandr | fgrep '*' | while read -r dpy; do
+xrandr -q | fgrep '*' | while read -r dpy; do
 	# randomly select directory
 	{ grep . | tail -n $((($(rand) % lines) + 1)) | head -n 1; } < "$config" \
 		| while read -r dir; do

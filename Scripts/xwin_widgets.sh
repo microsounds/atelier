@@ -8,7 +8,7 @@ LIST='xload xclock'
 for f in $LIST; do COUNT=$((COUNT + 1)); done # calculate distance
 
 # xdotool cannot span across multiple connected displays
-SCREEN=$(xrandr | grep '[^dis]connected' | egrep -o '([0-9]+x?)+' \
+SCREEN=$(xrandr -q | grep '[^dis]connected' | egrep -o '([0-9]+x?)+' \
 	| fgrep 'x' | head -n 1)
 SIZE=130  # window size
 GAP=15    # gap between windows
