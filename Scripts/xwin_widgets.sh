@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+
+# xwin_widgets.sh v0.3
 # launch xload and xclock in a corner somewhere
 # dowm ignore EMWH resize hints in tiling mode
 # start in floating mode or override widgets to always float

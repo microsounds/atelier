@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+
+# xwin_decor.sh v0.7
 # decorate root window
 
 # fallback tiling background
