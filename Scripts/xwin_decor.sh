@@ -23,6 +23,10 @@ shuffle() {
 }
 
 ffmpeg_cat() {
+	# low performance version
+	is-chromebook && ffmpegthumbnailer -i "$1" -s 0 -c png \
+		-t $((($(rand) % 100) + 1)) -o - && return
+
 	mediainfo "$1" --inform='Video;%FrameCount% %FrameRate%' \
 		| while read -r f_count fps; do
 		secs=$(echo "scale=2; $f_count * (1 / $fps)" | bc)
