@@ -18,10 +18,10 @@ trap finish 0 1 2 3 6
 
 echo "Writing to '$CONF'"
 sudo tee "$CONF" <<- EOF
-	deb https://deb.debian.org/debian/ stable main contrib non-free
-	deb https://deb.debian.org/debian/ stable-updates main contrib non-free
-	deb https://security.debian.org/debian-security stable/updates main contrib non-free
-	deb https://www.deb-multimedia.org/ stable main non-free
+	deb https://deb.debian.org/debian bullseye main contrib non-free
+	deb https://deb.debian.org/debian bullseye-updates main contrib non-free
+	deb https://security.debian.org/debian-security bullseye-security main contrib non-free
+	deb https://www.deb-multimedia.org bullseye main non-free
 EOF
 
 mkdir -v "$TMP"

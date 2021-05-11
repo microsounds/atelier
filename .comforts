@@ -4,6 +4,7 @@ alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
 *brasero
+calendar
 chromium
 cmark-gfm optipng jpegoptim jq
 cpp
@@ -15,7 +16,7 @@ feh
 figlet
 file
 *gimp
-git make gcc wget curl
+git make gcc wget curl aria2
 htop
 *kdenlive
 ledger
