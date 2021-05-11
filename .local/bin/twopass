@@ -13,8 +13,8 @@ case "$1" in
 	*) error 'Not a valid ffmpeg command'
 esac
 
-# isolate final arg
-final_opt="$(eval "echo \$$(($#))")"
+# isolate final opt
+eval final_opt=\"\${$#}\"
 for f in "$@"; do
 	shift
 	[ "$f" = "$final_opt" ] && continue
@@ -24,9 +24,7 @@ done
 on_exit() { rm -fv $key*.log; }
 trap on_exit 0 1 2 3 6
 
-for f in $(seq 2); do
-	case $f in
-		1) announce "$@" -passlogfile $key -pass $f -f null /dev/null;;
-		2) announce "$@" -passlogfile $key -pass $f "$final_opt";;
-	esac
-done
+for f in 1 2; do case $f in
+	1) announce "$@" -passlogfile $key -pass $f -f null /dev/null;;
+	2) announce "$@" -passlogfile $key -pass $f "$final_opt";;
+esac; done

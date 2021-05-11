@@ -30,27 +30,11 @@ FINAL="$PWD/$(date '+%Y-%m-%d-%H%M%S')_${RES}_${NAME%.*}.webm"
 
 info() { echo "\e[1;${1}m${2}\e[0m"; }
 
-# rewrite ffmpeg command to use 2-pass encoding
-twopass() {
-	final_opt="$(eval "echo \$$(($#))")"
-	for f in "$@"; do
-		shift
-		[ "$f" = "$final_opt" ] && continue
-		set -- "$@" "$f"
-	done
-	for f in $(seq 2); do
-		info $INFO "Pass $f encoding..."
-		case $f in
-			1) "$@" -passlogfile $KEY -pass $f -f null /dev/null;;
-			2) "$@" -passlogfile $KEY -pass $f "$final_opt";;
-		esac
-	done
-}
-
 to_webm() {
 	iter=$((iter + 1))
 	if [ $iter -lt 2 ]; then
-		twopass ffmpeg -hide_banner -loglevel info -i "$TEMP" -c:v libvpx \
+		# rewrite ffmpeg command to use 2-pass encoding
+		twopass ffmpeg -loglevel panic -i "$TEMP" -c:v libvpx \
 			-b:v $BITRATE -crf $CONSTQ -fs $SIZE -vf scale=$SCALE \
 			-fs $SIZE -threads $CORES -an "$FINAL"
 		rm -fv "$PWD/$KEY"*
