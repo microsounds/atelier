@@ -9,7 +9,7 @@ on:
 jobs:
   Install:
      runs-on: ubuntu-latest
-     container: debian:stable
+     container: debian:bullseye
      steps:
        - name: Install prerequisites
          run: apt-get update && apt-get install -y git wget sudo
