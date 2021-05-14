@@ -36,3 +36,4 @@ jobs:
            EOF
            twopass ffmpeg -loglevel quiet -s 1920x1080 -t 0.2 -f rawvideo \
              -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
+           screenfetch
