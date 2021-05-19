@@ -146,8 +146,7 @@ upcoming() (
 	now=$(date -d "$today" '+%s')
 	# expected format: one or more of 'YYYY/MM/DD\tMSG\n'
 	{ nano-overlay -j "$1"; echo "$today Today"; } \
-		| { sed 's/#.*$//g' | sort | grep .; } \
-		| while read -r date msg; do
+		| sed 's/#.*$//g' | sort | grep . | while read -r date msg; do
 		epoch=$(date -d "$date" '+%s') || exit 1
 		days=$(((epoch - now) / 86400))
 		[ $days -eq 0 ] && unset days
