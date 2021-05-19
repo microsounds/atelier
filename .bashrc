@@ -134,6 +134,27 @@ git() (
 	command git $alias "$@"
 )
 
+# encrypted calendar wrapper for 'xz | openssl' packed files
+# sorts a list of upcoming dates
+upcoming() (
+	quit() { echo "$@"; exit; }
+	[ ! -z "$1" ] || quit 'usage: upcoming [file]'
+	[ -f "$1" ] || quit 'File not found.'
+	export EXTERN_EDITOR='cat'
+
+	today="$(date '+%Y/%m/%d')"
+	now=$(date -d "$today" '+%s')
+	# expected format: one or more of 'YYYY/MM/DD\tMSG\n'
+	{ nano-overlay -j "$1"; echo "$today Today"; } \
+		| { sed 's/#.*$//g' | sort | grep .; } \
+		| while read -r date msg; do
+		epoch=$(date -d "$date" '+%s') || exit 1
+		days=$(((epoch - now) / 86400))
+		[ $days -eq 0 ] && unset days
+		printf '%s%s %s\n' "$date" "${days:+ ($days days)}" "${msg:-(none)}"
+	done
+)
+
 # encrypted ledger wrapper for 'xz | openssl' packed files
 # suspend to make changes to plaintext ledger directly
 # changes are saved if plaintext ledger is modified
