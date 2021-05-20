@@ -19,9 +19,8 @@ prompt_user() {
 IFS='
 '
 unset pkgs
-for f in $(cat ~/.comforts); do
+for f in $(cat ~/.comforts | sed 's/#.*$//g'); do
 	case "${f%${f#?}}" in
-		\#) continue;; # comments
 		\*) # package groups with an asterisk are optional, prompt user
 			f="${f#?}"
 			# don't ask if package group is fully installed
