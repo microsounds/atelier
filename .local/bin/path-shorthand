@@ -3,7 +3,7 @@
 # return a stylized pathname
 
 # truncate pathnames in $HOME with ~/ prefix
-[ "$HOME" = "${PWD%${PWD##"$HOME"}}" ] && echo "~${PWD##"$HOME"}" && exit
+[ "$HOME" = "${PWD%"${PWD##"$HOME"}"}" ] && echo "~${PWD##"$HOME"}" && exit
 
 # truncate long pathnames outside $HOME to final N dirs
 prefix="$PWD"
