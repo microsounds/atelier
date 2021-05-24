@@ -24,7 +24,7 @@ jobs:
          shell: bash -le {0}
          env:
            TERM: rxvt
-         run: yes y | post-install
+         run: yes n | post-install
        - name: Run environment smoke tests
          shell: bash -le {0}
          env:
