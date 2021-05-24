@@ -20,8 +20,8 @@ esac
 export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
 [ -f "$LASTDIR" ] && read -r OLDPWD < "$LASTDIR"
 
-# truncate long prompt pathnames outside $HOME to last N dirs
-export DIR_COUNT=3
+# truncate long prompt pathnames over N characters
+export PATH_WIDTH=50
 
 # set window title and terminal prompt
 # embed git status information if available

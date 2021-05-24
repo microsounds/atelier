@@ -3,16 +3,17 @@
 # return a stylized pathname
 
 # truncate pathnames in $HOME with ~/ prefix
-[ "$HOME" = "${PWD%"${PWD##"$HOME"}"}" ] && echo "~${PWD##"$HOME"}" && exit
+[ "$HOME" = "${PWD%"${PWD##"$HOME"}"}" ] && PWD="~${PWD##"$HOME"}"
 
-# truncate long pathnames outside $HOME to final N dirs
-prefix="$PWD"
-for f in $(seq ${DIR_COUNT:-4}); do
-	prefix="${prefix%/*}"
+# truncate long pathnames to last N chars
+# dynamically generate parameter expansion wildcard
+size=$((${#PWD} - ${PATH_WIDTH:-50}))
+i=0; while [ $i -lt $size ]; do
+	wildcard="${wildcard}?"
+	i=$((i + 1))
 done
 
-path="${PWD#"$prefix"}"
-[ "$PWD" = "$path" ] ||	path="..$path"
-
+# denote truncated path, ignore leading spaces
+path="${PWD#$wildcard}"
+[ "$PWD" = "$path" ] || path="..${path# }"
 echo "$path"
-
