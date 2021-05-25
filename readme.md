@@ -120,7 +120,7 @@ At startup, `startx` will pass hardware-specific `xorg.conf` files to the X serv
 Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
 Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
-## Optional X windows configuration
+## Optional X Window configuration
 ### `~/.xrandr`
 For use with multi-monitor and/or complicated display setups, you can override the default display layout with one or more commands to `xrandr` saved to _optional_ config file `~/.xrandr`
 

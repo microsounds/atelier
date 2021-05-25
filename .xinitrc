@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-## ~/.xinitrc: X Windows user configuration
+## ~/.xinitrc: X Window user configuration
 
 ## keymap overrides
 ! is-chromebook || layout='chromebook'
