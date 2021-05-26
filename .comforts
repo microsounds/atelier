@@ -6,13 +6,13 @@ bash bash-completion shellcheck
 *brasero
 calendar
 chromium
-cmark-gfm optipng jpegoptim jq
+cmark-gfm jq
 cpp
 *cups printer-driver-cups-pdf libnss-mdns
 dc
 dconf-cli
 dkms
-feh
+feh jpegoptim optipng findimagedupes
 figlet
 file
 *gimp
@@ -42,7 +42,7 @@ ssh-askpass
 suckless-tools libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 sudo
 task-laptop acpi lm-sensors network-manager bluez
-gparted udevil ntfs-3g exfat-utils dosfstools sshfs
+gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
 *valgrind
 *virt-manager
 vrms
