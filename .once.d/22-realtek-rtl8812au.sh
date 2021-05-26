@@ -7,11 +7,6 @@ for f in \
 do lsusb -d "$f" && found=1; done
 [ ! -z "$found" ] || exit 0
 
-SOURCE='https://http.kali.org/kali/pool/contrib/r/realtek-rtl88xxau-dkms'
-DEB="$(wget -q -O - "$SOURCE" | egrep -o '<a href=".*\.deb">' | \
-	tr '"' "\t" | cut -f2 | tail -n 1)"
-TMP="$(mk-tempdir)"
-
 finish() {
 	rm -rv "$TMP"
 	echo 'Done.'
@@ -20,8 +15,17 @@ finish() {
 
 trap finish 0 1 2 3 6
 
+TMP="$(mk-tempdir)"
 mkdir -v "$TMP"
-echo "Fetching '$DEB'..."
-if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
-	sudo dpkg -i "$TMP/$DEB"
-fi
+
+for f in 8814 88xx; do
+	SOURCE="https://http.kali.org/kali/pool/contrib/r/realtek-rtl${f}au-dkms"
+	DEB="$(wget -q -O - "$SOURCE" | egrep -o '<a href=".*\.deb">' | \
+		tr '"' "\t" | cut -f2 | tail -n 1)"
+
+	echo "Fetching '$DEB'..."
+	if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
+		sudo dpkg -i "$TMP/$DEB"
+	fi
+done
+
