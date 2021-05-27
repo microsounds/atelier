@@ -10,7 +10,7 @@
 CONF='/etc/default/grub'
 KEY='GRUB_CMDLINE_LINUX_DEFAULT'
 
-UUID="$(/usr/sbin/blkid | grep 'swap' | head -n 1 | tr ' ' '\n' | grep '^UUID')"
+UUID="$(sudo blkid | grep 'swap' | head -n 1 | tr ' ' '\n' | grep '^UUID')"
 OPTION="resume=$UUID loglevel=0 mitigations=off"
 
 # append required key if it doesn't exist
