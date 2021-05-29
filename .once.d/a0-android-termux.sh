@@ -41,6 +41,7 @@ DEB="${SOURCE##*/}"
 
 mkdir -p "$CONF"
 if wget "$SOURCE" -O "$CONF/$DEB" || exit 1; then
+	sleep 1 # termux will crash otherwise
 	ar -p "$CONF/$DEB" 'data.tar.xz' | xz -d \
 		| tar -xO --wildcards '*Go-Mono.ttf' > "$CONF/font.ttf"
 	rm -f "$CONF/$DEB"
