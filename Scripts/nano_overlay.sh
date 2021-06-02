@@ -345,6 +345,8 @@ mode_encrypt_rsa() {
 		trap 'rm -rf "$tmp"*' 0 1 2 3 6
 		if [ "$state" = 'encrypted' ]; then
 			mesg_st 'Decrypting... '
+
+			# write decrypted keyfile to pipe
 			mkfifo -m 600 "$tmp/pipe"
 			{	$xz -d | tar -xO key | \
 				$rsa_crypt -inkey "$rsa_private" -decrypt ||
@@ -374,20 +376,21 @@ mode_encrypt_rsa() {
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp/enc")" ]; then
 				mesg_st 'Saving to disk... '
-				# generate new keyfile proportional in size
-				# to key length minus padding
-				random_bytes "$((((rsa_bits / 8) / 100) * 99))" > "$tmp/key"
+
+				# create new keyfile to match key length
+				# write decrypted keyfile to pipe
+				random_bytes "$((((rsa_bits / 8) / 100) * 99))" \
+					| tee "$tmp/pipe" \
+					| { $rsa_crypt -pubin -inkey "$rsa_public" -encrypt ||
+						quit 'Public key not in PEM format'; } > "$tmp/key" &
 
 				# repack file in place, abort if interrupted
 				{	rm "$tmp/enc"
-					$xz -z | $aes_crypt -pass "file:$tmp/key" -e > "$tmp/enc" ||
+					$xz -z | $aes_crypt -pass "file:$tmp/pipe" -e > "$tmp/enc" ||
 						quit 'Interrupted or write error'
 				} < "$tmp/enc"
-				{	rm "$tmp/key"
-					$rsa_crypt -pubin -inkey "$rsa_public" -encrypt > "$tmp/key" ||
-						quit 'Public key not in PEM format'
-				} < "$tmp/key"
-				tar -cC "$tmp" enc key | $xz -z > "$tmp/new" && mv "$tmp/new" "$f"
+				tar -cC "$tmp" enc key \
+					| $xz -z > "$tmp/new" && mv "$tmp/new" "$f"
 				mesg_wipe
 			fi
 		fi
