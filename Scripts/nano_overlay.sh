@@ -341,13 +341,13 @@ mode_encrypt_rsa() {
 		# no state: file is plaintext, ask to overwrite when finished
 
 		# attempt file unpack
-		mkdir -p "$tmp"
 		trap 'rm -rf "$tmp"*' 0 1 2 3 6
+		mkdir -p "$tmp"
+		mkfifo -m 600 "$tmp/pipe"
 		if [ "$state" = 'encrypted' ]; then
 			mesg_st 'Decrypting... '
 
 			# write decrypted keyfile to pipe
-			mkfifo -m 600 "$tmp/pipe"
 			{	$xz -d | tar -xO key | \
 				$rsa_crypt -inkey "$rsa_private" -decrypt ||
 					quit 'Invalid private key or key not in PEM format'
@@ -379,10 +379,11 @@ mode_encrypt_rsa() {
 
 				# create new keyfile to match key length
 				# write decrypted keyfile to pipe
-				random_bytes "$((((rsa_bits / 8) / 100) * 99))" \
-					| tee "$tmp/pipe" \
-					| { $rsa_crypt -pubin -inkey "$rsa_public" -encrypt ||
-						quit 'Public key not in PEM format'; } > "$tmp/key" &
+				{	random_bytes "$((((rsa_bits / 8) / 100) * 99))" \
+						| tee "$tmp/pipe" \
+						| $rsa_crypt -pubin -inkey "$rsa_public" -encrypt ||
+							quit 'Public key not in PEM format'
+				} > "$tmp/key" &
 
 				# repack file in place, abort if interrupted
 				{	rm "$tmp/enc"
