@@ -33,7 +33,7 @@ super + {_,shift +} Print
 	sleep 1; xset dpms force off
 # calculator
 {super + F4,XF86Calculator}
-	visual orpie
+	grpn
 # switch displays
 {_,shift +} {super + F5,XF86Display}
 	{xrandr-cycle,arandr}

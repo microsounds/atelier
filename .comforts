@@ -17,6 +17,7 @@ figlet
 file
 *gimp
 git make gcc wget curl aria2
+grpn
 htop
 *kdenlive
 ledger
@@ -28,7 +29,6 @@ mpv youtube-dl ffmpeg mediainfo
 nano exuberant-ctags openssl libncurses-dev
 openssh-client
 *openssh-server
-orpie
 parallel
 pcmanfm lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
 pv progress

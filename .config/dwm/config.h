@@ -48,6 +48,7 @@ static const Rule rules[] = {
 	/* class           instance    title       tags mask     isfloating   monitor */
 	{ "XLoad",         NULL,       NULL,       1,            1,           -1 },
 	{ "XClock",        NULL,       NULL,       1,            1,           -1 },
+	{ "Grpn",          NULL,       NULL,       0,            1,           -1 },
 };
 
 /* disable spawn/dmenu invocation, handled by sxhkd */
