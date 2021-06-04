@@ -11,6 +11,7 @@ cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	wget git proot       # req'd for bootstrap
 	clang                # provides cpp
 	openssl-tool openssh # nano-overlay
+	ledger
 	bash-completion
 EOF
 
