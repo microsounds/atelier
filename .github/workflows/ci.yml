@@ -25,13 +25,13 @@ jobs:
          env:
            TERM: rxvt
          run: yes n | post-install
-       - name: Run environment smoke tests
+       - name: Run shell environment tests
          shell: bash -le {0}
          env:
            TERM: rxvt
          run: |
+           fgrep 'stdc.syntax' < ~/.local/share/nano/c.nanorc
            colors
-           nano -V && fgrep -q 'stdc.syntax' < ~/.local/share/nano/c.nanorc 
            cpp -P <<- EOF
                #include <colors/nightdrive.h>
            EOF
@@ -39,3 +39,17 @@ jobs:
              -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
            mpv --vo=null noise.webm
            screenfetch
+       - name: Run nano_overlay and openssl tests
+         shell: bash -le {0}
+         env:
+           TERM: rxvt
+           EXTERN_EDITOR: cat
+           SECRET: ">‿<"
+         run: |
+           mkdir ~/.ssh
+           ssh-keygen -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -m pem
+           echo "$SECRET" > ok
+           yes y | nano-overlay -j ok
+           { xz -d | tar -xO enc | file -; } < ok | fgrep 'openssl'
+           nano-overlay -j ok | fgrep "$SECRET" && \
+             printf '\e[1;30;102m%s\e[0m\n' "ALL TESTS OK $SECRET"
