@@ -379,7 +379,7 @@ mode_encrypt_rsa() {
 
 				# create new keyfile to match key length
 				# write decrypted keyfile to pipe
-				{	random_bytes "$((((rsa_bits / 8) / 100) * 99))" \
+				{	random_bytes "$((((rsa_bits / 8) / 100) * 95))" \
 						| tee "$tmp/pipe" \
 						| $rsa_crypt -pubin -inkey "$rsa_public" -encrypt ||
 							quit 'Public key not in PEM format'

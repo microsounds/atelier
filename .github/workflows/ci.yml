@@ -32,6 +32,7 @@ jobs:
          env:
            TERM: rxvt
          run: |
+           GIT_WORK_TREE="$HOME" GIT_DIR="$HOME/.config/meta" path-gitstatus -p
            fgrep 'stdc.syntax' < ~/.local/share/nano/c.nanorc
            colors
            cpp -P <<- EOF
@@ -47,13 +48,13 @@ jobs:
            TERM: rxvt
            EXTERN_EDITOR: cat
          run: |
-           for f in $(seq 1024 $((1024 * 16)) | shuf | tail -n 3); do
+           for f in $(seq 1024 $((1024 * 6)) | shuf | tail -n 100); do
              SECRET="$f tapioca milk teas >‿<"
-             mkdir ~/.ssh
-             ssh-keygen -f ~/.ssh/id_rsa -t rsa -b $f -N '' -m pem
+             mkdir -p ~/.ssh
+             ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b $f -N '' -m pem
              echo "$SECRET" > ok
-             yes y | nano-overlay -j ok
-             { xz -d | tar -xO enc | file -; } < ok | fgrep 'openssl'
-             nano-overlay -j ok | fgrep "$SECRET"
-             rm -rf ~/.ssh ok
+             yes y | nano-overlay -j ok || exit 1
+             { xz -d | tar -xO enc | file -; } < ok | fgrep 'openssl' || exit 1
+             nano-overlay -j ok | fgrep "$SECRET" || exit 1
+             rm -rf ~/.ssh
            done && printf '\e[1;30;102m %s \e[0m\n' 'ALL TESTS OK'
