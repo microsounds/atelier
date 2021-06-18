@@ -25,12 +25,12 @@ super + {_,shift +} Print
 	{scrot,sleep 0.2; scrot -s}
 
 ## function keys
-# power
+# power/suspend/hibernate
 {_,shift +} super + F{1,2}
 	systemctl {poweroff,reboot,suspend,hibernate}
-# display off
-{super + F3,XF86ScreenSaver}
-	sleep 1; xset dpms force off
+# display off/hibernate+reboot
+{_,shift +} super + F3
+	{sleep 1; xset dpms force off, systemctl hybrid-sleep}
 # calculator
 {super + F4,XF86Calculator}
 	grpn
