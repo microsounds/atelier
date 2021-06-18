@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+# utility for appending, uncommenting and/or overwriting options
+# in privileged conf files using the "KEY=OPTION" format
+
+[ $# -eq 2 ] ||
+	{ echo "usage: ${0##*/} 'KEY=OPTION' '/path/to/file.conf'"; exit 1; }
+
+case "$1" in
+	*=*);;
+	*) echo "Malformed key '$1'" && exit 1
+esac
+
+KEY="${1%%=*}"
+OPTION="${1#*=}"
+CONF="$2"
+
+# surround long options with quotes
+i=0; for f in $OPTION; do
+	[ $i -gt 1 ] && OPTION="\"$OPTION\"" && break
+	i=$((i + 1))
+done
+
+# append required key if it doesn't exist
+sudo touch "$CONF"
+grep -q "$KEY" < "$CONF" || echo "$KEY" | sudo tee -a "$CONF"
+sed "/.*$KEY/c $KEY=$OPTION" < "$CONF" | sudo tee "$CONF"
