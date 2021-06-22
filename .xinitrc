@@ -30,8 +30,8 @@ xrdb ~/.xresources && {
 cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0 &
 dconf load '/' < ~/.config/gtk/gtk3.conf &
 
-# disable PC speaker
-xset b off &
+# disable bell in bash prompt
+echo 'set bell-style none' > ~/.inputrc &
 
 ## session daemons
 # mangle sxhkd config at runtime
