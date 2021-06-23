@@ -2,6 +2,9 @@
 
 # return a stylized pathname
 
+# no such file or directory
+[ ! -z "$PWD" ] || exit 1
+
 # truncate pathnames in $HOME with ~/ prefix
 [ "$HOME" = "${PWD%"${PWD##"$HOME"}"}" ] && PWD="~${PWD##"$HOME"}"
 
