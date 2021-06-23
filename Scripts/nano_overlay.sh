@@ -186,7 +186,7 @@ verify_header() {
 random_bytes() {
 	# openssl chokes on keyfiles that start with NULL bytes
 	printf '%b' '!'
-	dd bs="$1" count=1 < /dev/urandom 2> /dev/null
+	dd bs="$(($1 - 1))" count=1 < /dev/urandom 2> /dev/null
 }
 random_ascii() {
 	{ tr -cd 'a-z0-9' | dd bs="$1" count=1; } < /dev/urandom 2> /dev/null
@@ -377,9 +377,9 @@ mode_encrypt_rsa() {
 				[ "$init" != "$(sha256sum < "$tmp/enc")" ]; then
 				mesg_st 'Saving to disk... '
 
-				# create new keyfile to match key length
+				# create new keyfile to match key length - PKCS1 padding
 				# write decrypted keyfile to pipe
-				{	random_bytes "$((((rsa_bits / 8) / 100) * 95))" \
+				{	random_bytes "$(((rsa_bits / 8) - 11))" \
 						| tee "$tmp/pipe" \
 						| $rsa_crypt -pubin -inkey "$rsa_public" -encrypt ||
 							quit 'Public key not in PEM format'
