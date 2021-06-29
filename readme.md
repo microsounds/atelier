@@ -27,7 +27,7 @@ Basic installation instructions are provided, along with some documentation for 
 	* Log back in to apply changes to group membership.
 3. Bootstrap the system automatically with a hard git reset from this repo, this is done only once.
 	```shell
-	$ git clone --bare [remote] ~/.config/meta
+	$ git clone --bare {GIT_REMOTE}/atelier ~/.config/meta
 	$ git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
 	# Invoke the login shell to apply changes made to the environment
 	$ exec $SHELL -l
@@ -170,6 +170,7 @@ Several commands are extended to include impure functions, such as purposefully 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.
 * `cd` offers the following extensions:
+
 	| opt | function |
 	| -- | -- |
 	| `...`, `....`, etc. | Shorthand for `../../`, `../../../` and so on. |
