@@ -22,13 +22,12 @@ LINUX_PATCH='https://notabug.org/Krock/GI-on-Linux'
 export PATH="/opt/wine-stable/bin:$PATH"
 export WINE='wine64'
 export WINEPREFIX="$INSTALL_DIR"
-
-$WINE --version | tr -- '-.' '\t' | cut -f2- | while read -r maj min patch; do
-	[ $maj -ge 6 ] && [ $min -ge 3 ] && break
-	echo 'Wine version too old, install 5.3 or later.'
+WINEVER='5.3'
+$WINE --version | tr '-' '\t' | cut -f2 | while read -r ver; do
+	[ $(echo "${ver%.*} >= $WINEVER" | bc) -eq 1 ] && break
+	echo "Wine version too old, install $WINEVER or later."
 	kill -- $$
 done
-
 
 # download additional components if required
 [ -d "$INSTALL_DIR" ] || $WINE wineboot -u
