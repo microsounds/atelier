@@ -1,10 +1,9 @@
 #!/usr/bin/env sh
 
 # defines standard apt repositories
-# adds deb-multimedia repos
+# adds supplementary repos
 
-SOURCE='https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
-DEB='deb-multimedia-keyring_2016.8.1_all.deb'
+BRANCH='bullseye' # released 2021/07
 CONF='/etc/apt/sources.list'
 TMP="$(mk-tempdir)"
 
@@ -16,18 +15,34 @@ finish() {
 
 trap finish 0 1 2 3 6
 
+mkdir -v "$TMP"
+mkdir -v "${CONF}.d"
 echo "Writing to '$CONF'"
 sudo tee "$CONF" <<- EOF
-	deb https://deb.debian.org/debian bullseye main contrib non-free
-	deb https://deb.debian.org/debian bullseye-updates main contrib non-free
-	deb https://security.debian.org/debian-security bullseye-security main contrib non-free
-	deb https://www.deb-multimedia.org bullseye main non-free
+	deb https://deb.debian.org/debian $BRANCH main contrib non-free
+	deb https://deb.debian.org/debian $BRANCH-updates main contrib non-free
+	deb https://security.debian.org/debian-security $BRANCH-security main contrib non-free
 EOF
 
-mkdir -v "$TMP"
-if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
-	sudo dpkg -i "$TMP/$DEB"
-	for f in update dist-upgrade autopurge clean; do
-		sudo apt-get -y $f
-	done
-fi
+# deb-multimedia
+SRC='https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
+KEY='deb-multimedia-keyring_2016.8.1_all.deb'
+
+wget "$SRC/$KEY" -O "$TMP/$KEY" || exit 1
+sudo dpkg -i "$TMP/$KEY"
+sudo tee "${CONF}.d/deb-multimedia.list" <<- EOF
+	deb https://www.deb-multimedia.org $BRANCH main non-free
+EOF
+
+# wine-hq
+SRC='https://dl.winehq.org/wine-builds'
+KEY='winehq.key'
+
+wget "$SRC/$KEY" -O "$TMP/$KEY" || exit 1
+sudo apt-key add "$TMP/$KEY"
+sudo tee "${CONF}.d/wine-hq.list" <<- EOF
+	deb https://dl.winehq.org/wine-builds/debian/ $BRANCH main
+EOF
+sudo dpkg --add-architecture i386
+
+yes y | bash -lc update
