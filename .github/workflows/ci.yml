@@ -15,7 +15,7 @@ jobs:
      container: debian:bullseye
      steps:
        - name: Install prerequisite software
-         run: apt-get update && apt-get install -y git wget sudo
+         run: apt-get update && apt-get install -y git wget sudo gnupg
        - name: Checkout dotfiles and bootstrap system
          run: |
            git clone --bare \
