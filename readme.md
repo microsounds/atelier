@@ -23,7 +23,7 @@ Basic installation instructions are provided, along with some documentation for 
 # Quick start
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
 	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be booted._
-2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
+2. Install `git`, `gnupg1`, `wget`, and `sudo`, then add yourself to the `sudo` group.
 	* Log back in to apply changes to group membership.
 3. Bootstrap the system automatically with a hard git reset from this repo, this is done only once.
 	```shell
