@@ -163,7 +163,7 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
-2. Executables and symlinks in `~/.local/bin`
+2. Executables and symlinks in [`~/.local/bin`](.local/bin)
 	* Some are shell functions promoted to scripts so they'll work in `dmenu` or outside of a terminal context.
 3. `/usr/bin` system executables
 
@@ -175,6 +175,11 @@ Several commands are extended to include impure functions, such as purposefully 
 	| -- | -- |
 	| `...`, `....`, etc. | Shorthand for `../../`, `../../../` and so on. |
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
+
+## `chromium`
+`chromium` was extended to mangle the user-hostile per-profile `Preferences` JSON file with a series of chained `jq` filters in [`~/.config/chromium/settings.conf`](.config/chromium/settings.conf), applying persistent settings in order.
+
+C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xAARRGGBB` in two's complement hexadecimal with alpha channel always set to `0xFF`
 
 ## `nano`
 * `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extensions:

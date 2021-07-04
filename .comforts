@@ -6,7 +6,7 @@ bash bash-completion shellcheck
 *brasero
 calendar
 chromium
-cmark-gfm jq
+cmark-gfm
 cpp
 *cups printer-driver-cups-pdf libnss-mdns simple-scan
 dc
@@ -19,6 +19,7 @@ file
 git make gcc wget curl aria2
 grpn
 htop
+jq
 *kdenlive
 ledger
 *libreoffice-writer libreoffice-calc
@@ -49,4 +50,5 @@ vrms
 *wine-stable cabextract
 xdiskusage
 xorg xdotool xsel xbacklight sxhkd arandr
-zip gzip bzip2 xz-utils p7zip pigz pbzip2 zip unzip
+xxd
+zip unzip gzip bzip2 xz-utils p7zip pigz pbzip2

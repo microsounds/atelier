@@ -1,5 +1,34 @@
 #!/usr/bin/env sh
 
+# inject persistent settings into chromium's JSON config
+# DO NOT mangle config if chromium is running
+CONF="$HOME/.config/chromium/Default/Preferences"
+MINE="$HOME/.config/chromium/settings.conf"
+if ! ps -e | fgrep -q 'chromium'; then
+	# pipe multiple jq filters together
+	# remove trailing newline
+	IFS='
+	'
+	unset json hex
+	for f in $(cpp -P < "$MINE" 2> /dev/null); do
+		json="${json}.$f|"
+	done
+	json="${json%|}"
+	unset IFS
+
+	# rewrite hex colors to signed integer representing 0xAARRGGBB
+	# in two's complement hexadecimal with alpha channel always 0xFF
+	for f in $(echo "$json" | egrep -o '\#[A-Fa-f0-9]{6}'); do
+		for g in FF $(echo "$f" | tr -d '#' | sed -E 's/.{2}/& /g'); do
+			hex="$g$hex"
+		done
+		int="$(echo "0x$hex" | xxd -r | od -A n -t dI | tr -d ' ')"
+		json="$(echo "$json" | sed "s/$f/$int/g")"
+	done
+
+	jq -Mc "$json" < "$CONF" > "$CONF.1" && mv "$CONF.1" "$CONF"
+fi
+
 # disable hardware acceleration on chromebooks
 ! is-chromebook || opt='--disable-gpu-compositing'
 
