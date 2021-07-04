@@ -2,31 +2,36 @@
 
 # inject persistent settings into chromium's JSON config
 # DO NOT mangle config if chromium is running
-CONF="$HOME/.config/chromium/Default/Preferences"
-MINE="$HOME/.config/chromium/settings.conf"
+CONF="$HOME/.config/chromium"
 if ! ps -e | fgrep -q 'chromium'; then
-	# pipe multiple jq filters together
-	# remove trailing newline
-	IFS='
-	'
-	unset json hex
-	for f in $(cpp -P < "$MINE" 2> /dev/null); do
-		json="${json}.$f|"
-	done
-	json="${json%|}"
-	unset IFS
+	for f in 'Default/Preferences' 'Local State'; do
+		mine="$(echo "${f#*/}" | tr ' A-Z' '_a-z').conf"
+		[ -f "$CONF/$mine" ] || continue
 
-	# rewrite hex colors to signed integer representing 0xAARRGGBB
-	# in two's complement hexadecimal with alpha channel always 0xFF
-	for f in $(echo "$json" | egrep -o '\#[A-Fa-f0-9]{6}'); do
-		for g in FF $(echo "$f" | tr -d '#' | sed -E 's/.{2}/& /g'); do
-			hex="$g$hex"
+		# pipe multiple jq filters together
+		# remove trailing newline
+		IFS='
+		'
+		unset json hex
+		for g in $(cpp -P < "$CONF/$mine" 2> /dev/null); do
+			json="${json}.$g|"
 		done
-		int="$(echo "0x$hex" | xxd -r | od -A n -t dI | tr -d ' ')"
-		json="$(echo "$json" | sed "s/$f/$int/g")"
-	done
+		json="${json%|}"
+		unset IFS
 
-	jq -Mc "$json" < "$CONF" > "$CONF.1" && mv "$CONF.1" "$CONF"
+		# rewrite hex colors to signed integer representing 0xAARRGGBB
+		# in two's complement hexadecimal with alpha channel always 0xFF
+		for g in $(echo "$json" | egrep -o '\#[A-Fa-f0-9]{6}'); do
+			for h in FF $(echo "$g" | tr -d '#' | sed -E 's/.{2}/& /g'); do
+				hex="$h$hex"
+			done
+			int="$(echo "0x$hex" | xxd -r | od -A n -t dI | tr -d ' ')"
+			json="$(echo "$json" | sed "s/$g/$int/g")"
+		done
+
+		jq -Mc "$json" < "$CONF/$f" > "$CONF/$f.1" && \
+			mv "$CONF/$f.1" "$CONF/$f"
+	done
 fi
 
 # disable hardware acceleration on chromebooks

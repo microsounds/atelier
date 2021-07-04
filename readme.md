@@ -177,7 +177,9 @@ Several commands are extended to include impure functions, such as purposefully 
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
 
 ## `chromium`
-`chromium` was extended to mangle the user-hostile per-profile `Preferences` JSON file with a series of chained `jq` filters in [`~/.config/chromium/settings.conf`](.config/chromium/settings.conf), applying persistent settings in order.
+`chromium` was extended to mangle the user-hostile per-profile `Preferences` and global `Local State` JSON files with a series of chained `jq` filters stored in the following files, applying persistent settings in order.
+* [`~/.config/chromium/preferences.conf`](.config/chromium/preferences.conf)
+* [`~/.config/chromium/local_state.conf`](.config/chromium/local_state.conf)
 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xAARRGGBB` in two's complement hexadecimal with alpha channel always set to `0xFF`
 
