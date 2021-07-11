@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-# detect if running in a restricted docker container
-[ -f /.dockerenv ]

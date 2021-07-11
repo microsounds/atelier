@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# moonphase v0.2
+# moonphase-date v0.2
 # return stylized moonphase and current date timestamp
 
 # option flags

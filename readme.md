@@ -163,9 +163,11 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
-2. Executables and symlinks in [`~/.local/bin`](.local/bin)
+2. Non-interactive shell library functions [`~/.local/lib`](.local/lib)
+	* Shell script snippets used by multiple scripts to reduce clutter.
+3. Normal executables and symlinks in [`~/.local/bin`](.local/bin)
 	* Some are shell functions promoted to scripts so they'll work in `dmenu` or outside of a terminal context.
-3. `/usr/bin` system executables
+4. `/usr/bin` system-wide executables
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved between sessions.

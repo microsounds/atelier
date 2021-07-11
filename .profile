@@ -4,7 +4,8 @@
 export EDITOR='nano -R'
 
 ## ~/.local file hierarchy
-export PATH="$HOME/.local/bin:$PATH"
+# append shell libraries, normal executables
+export PATH="$HOME/.local/lib:$HOME/.local/bin:$PATH"
 export C_INCLUDE_PATH="$HOME/.local/include"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"

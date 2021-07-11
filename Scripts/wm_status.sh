@@ -152,7 +152,7 @@ sound() (
 
 current_date() (
 	# current date
-	echo "DATE $(moonphase ${invert+-i})"
+	echo "DATE $(moonphase-date ${invert+-i})"
 )
 
 current_time() (
