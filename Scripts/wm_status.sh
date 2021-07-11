@@ -9,7 +9,7 @@ for f in $(echo "${@#-}" | sed 's/./& /g'); do
 	case $f in
 		p) pad=' ';; # -p for extra padding
 		q) quote='"';; # -q to enquote output for xargs
-		m) invert=1;; # -m for reverse video moon phase
+		m) invert=1;; # -m for reverse video glyphs
 	esac
 done
 
@@ -151,30 +151,8 @@ sound() (
 )
 
 current_date() (
-	# calculate days since a specific new moon
-	# divide by length of lunar cycle
-	# express currently elapsed cycle progress in percent
-	now=$(date '+%s')
-	known=633381600 # Jan 26th, 1990 was a new moon
-	cycle=$(echo "scale=2; (($now - $known) / 86400) / 29.53" | bc)
-	cycle=${cycle#*.} # absolute value
-	# map cycle progress to an available glyph
-	# reverse video: switch new/full moon glyphs for use with dark backgrounds
-	phases='🌑 🌒 🌓 🌔 🌕\n🌕 🌖 🌗 🌘 🌑'
-	map=$(((${cycle#0} / 10) + 1))
-	moon=$(echo "$phases" | sort ${invert:+-r} | tr ' ' '\n' \
-		| tail -n +$map | head -n 1)
-
 	# current date
-	timest="$(date '+%-e %a, %b x')"
-	day="${timest%% *}"
-	case $day in
-		1 | [!1]1) day="${day}st";;
-		2 | [!1]2) day="${day}nd";;
-		3 | [!1]3) day="${day}rd";;
-		*) day="${day}th"
-	esac
-	echo "DATE $moon ${timest#* }" | sed "s/x/$day/"
+	echo "DATE $(moonphase ${invert+-i})"
 )
 
 current_time() (
