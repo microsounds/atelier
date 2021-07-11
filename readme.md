@@ -181,7 +181,7 @@ Several commands are extended to include impure functions, such as purposefully 
 * [`~/.config/chromium/preferences.conf`](.config/chromium/preferences.conf)
 * [`~/.config/chromium/local_state.conf`](.config/chromium/local_state.conf)
 
-C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xAARRGGBB` in two's complement hexadecimal with alpha channel always set to `0xFF`
+C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
 ## `nano`
 * `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extensions:

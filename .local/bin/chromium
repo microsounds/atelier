@@ -19,7 +19,7 @@ if ! ps -e | fgrep -q 'chromium'; then
 		json="${json%|}"
 		unset IFS
 
-		# rewrite hex colors to signed integer representing 0xAARRGGBB
+		# rewrite #RRGGBB hex colors to signed integer representing 0xBBGGRRAA
 		# in two's complement hexadecimal with alpha channel always 0xFF
 		for g in $(echo "$json" | egrep -o '\#[A-Fa-f0-9]{6}'); do
 			for h in FF $(echo "$g" | tr -d '#' | sed -E 's/.{2}/& /g'); do
