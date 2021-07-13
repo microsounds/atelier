@@ -20,51 +20,52 @@ super + Return
 # file manager
 {super + e,XF86Explorer}
 	pcmanfm
-# screenshots
+# take screenshot
 super + {_,shift +} Print
 	{scrot,sleep 0.2; scrot -s}
+# task manager
+ctrl + alt + Delete
+	visual htop
 
 ## function keys
-# power/suspend/hibernate
+# F1, F2: power/sleep/hibernate
 {_,shift +} super + F{1,2}
 	systemctl {poweroff,reboot,suspend,hibernate}
-# display off/hibernate+reboot
+# F3: display off/hibernate+reboot
 {_,shift +} super + F3
 	{sleep 1; xset dpms force off, systemctl hybrid-sleep}
-# calculator
+# F4: calculator
 {super + F4,XF86Calculator}
 	grpn
-# switch displays
+# F5: toggle active displays
 {_,shift +} {super + F5,XF86Display}
 	{xrandr-cycle,arandr}
-# brightness
+# F6, F7: adjust brightness
 {_,shift +} super + F{6,7}
 	xbacklight -{dec 10,set 1,inc 10,set 100}
 {_,shift +} XF86MonBrightness{Down,Up}
 	xbacklight -{dec 10,set 1,inc 10,set 100}
-# audio
+# F8, F9, F10: adjust audio
 shift + super + {F8,XF86AudioMute}
 	pavucontrol
 super + F{8,9,10}
 	amixer -q sset Master {toggle,5%-,5%+}
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
-# randomize wallpaper
+# F11: randomize wallpaper
 super + F11
 	xwin-decor
 
-## misc
-# task manager
-ctrl + alt + Delete
-	visual htop
-
-## non-standard keyboard hotkeys only
+## optional keyboard hotkeys
+XF86{WWW,HomePage}
+	chromium
 XF86Eject
 	eject
-XF86WWW
-	chromium
 
 ## reserved for future use
-# XF86Tools
-# XF86Launch1,5,6
-# X86FAudio{Stop,Play,Prev,Next}
+# F12
+# Scroll_Lock
+# Pause
+# XF86Tools (probably a music player)
+# X86FAudio{Prev,Next,Play,Stop}
+# XF86Launch1,5,6 (???)

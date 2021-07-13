@@ -12,6 +12,7 @@ cpp
 dc
 dconf-cli
 dkms
+eject
 feh jpegoptim optipng findimagedupes
 figlet
 file
