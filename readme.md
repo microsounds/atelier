@@ -83,9 +83,9 @@ Primary modkey `Mod1` is super instead of alt.
 | set as master window<sup>[toggle]</sup> | terminal | return |
 | | launcher | p |
 | | file manager | e |
-| partial | screenshot | Print |
-| | _reserved_ | Scroll Lock |
-| | _reserved_ | Pause |
+| partial screenshot | screenshot | print |
+| | _reserved_ | scroll lock |
+| | _reserved_ | pause |
 | reboot | shutdown | F1 |
 | hibernate | sleep | F2 |
 | hibernate + reboot | display off | F3 |
