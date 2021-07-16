@@ -4,15 +4,10 @@
 #include <colors/nightdrive.h>
 
 /* ux color theme */
-static const char col_gray1[] = str(BGCOLOR);
-static const char col_gray2[] = str(BGLIGHT);
-static const char col_gray3[] = str(FGCOLOR);
-static const char col_gray4[] = str(FGCOLOR); /* foreground text */
-static const char col_cyan[]  = str(FGLIGHT);
 static const char *colors[][3]= {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan },
+	/*               fg            bg            border   */
+	[SchemeNorm] = { str(FGCOLOR), str(BGCOLOR), str(BGLIGHT) },
+	[SchemeSel]  = { str(FGCOLOR), str(FGLIGHT), str(FGLIGHT) },
 };
 
 /* ux appearance */
@@ -46,8 +41,11 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class           instance    title       tags mask     isfloating   monitor */
+	/* permanent */
 	{ "XLoad",         NULL,       NULL,       1,            1,           -1 },
 	{ "XClock",        NULL,       NULL,       1,            1,           -1 },
+	/* always center */
+	{ "Xmessage",      NULL,       NULL,       0,            1,           -1 },
 	{ "Grpn",          NULL,       NULL,       0,            1,           -1 },
 };
 
