@@ -18,8 +18,12 @@ for f in dwm-6.2; do
 		git fetch --tags origin master || exit 1
 	fi
 	if git checkout -f "$VERSION"; then
-		# apply patches
-		[ ! -d patches ] || for g in patches/*; do patch < $g; done
+		if [ -d patches ]; then # apply patches
+			for g in patches/*.diff; do
+				echo "[patch] $g..."
+				patch < $g
+			done
+		fi
 		make install PREFIX="$HOME/.local"
 	fi
 done

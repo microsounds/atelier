@@ -1,6 +1,11 @@
---- dwm.c
-+++ dwm.c
-@@ -1110,7 +1110,7 @@
+# change monocle window counter appearance
+# for dwm 6.2
+
+diff --git a/dwm.c b/dwm.c
+index 4465af1..35a40c1 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1110,7 +1110,7 @@ monocle(Monitor *m)
  		if (ISVISIBLE(c))
  			n++;
  	if (n > 0) /* override layout symbol */

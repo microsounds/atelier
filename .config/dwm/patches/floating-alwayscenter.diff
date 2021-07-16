@@ -1,0 +1,17 @@
+# implicitly center floating windows
+# for dwm 6.2
+# based on: https://dwm.suckless.org/patches/alwayscenter
+
+diff --git a/dwm.c b/dwm.c
+index 4465af1..5f9420b 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1056,6 +1056,8 @@ manage(Window w, XWindowAttributes *wa)
+ 	updatewindowtype(c);
+ 	updatesizehints(c);
+ 	updatewmhints(c);
++	c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
++	c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+ 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+ 	grabbuttons(c, 0);
+ 	if (!c->isfloating)

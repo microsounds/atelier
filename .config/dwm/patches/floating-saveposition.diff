@@ -1,0 +1,49 @@
+# save/restore last floating window position when toggling tiled/floating mode
+# for dwm 6.2
+# based on: https://dwm.suckless.org/patches/save_floats
+
+diff --git a/dwm.c b/dwm.c
+index 4465af1..9f5a400 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -88,6 +88,7 @@ struct Client {
+ 	char name[256];
+ 	float mina, maxa;
+ 	int x, y, w, h;
++	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
+ 	int oldx, oldy, oldw, oldh;
+ 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
+ 	int bw, oldbw;
+@@ -1055,6 +1056,10 @@ manage(Window w, XWindowAttributes *wa)
+ 	configure(c); /* propagates border_width, if size doesn't change */
+ 	updatewindowtype(c);
+ 	updatesizehints(c);
++	c->sfx = c->x;
++	c->sfy = c->y;
++	c->sfw = c->w;
++	c->sfh = c->h;
+ 	updatewmhints(c);
+ 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+ 	grabbuttons(c, 0);
+@@ -1713,9 +1718,18 @@ togglefloating(const Arg *arg)
+ 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
+ 		return;
+ 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
+-	if (selmon->sel->isfloating)
+-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+-			selmon->sel->w, selmon->sel->h, 0);
++	if (selmon->sel->isfloating) {
++		/* restore last known float dimensions */
++		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
++			selmon->sel->sfw, selmon->sel->sfh, False);
++	}
++	else {
++		/* save last known float dimensions */
++		selmon->sel->sfx = selmon->sel->x;
++		selmon->sel->sfy = selmon->sel->y;
++		selmon->sel->sfw = selmon->sel->w;
++		selmon->sel->sfh = selmon->sel->h;
++	}
+ 	arrange(selmon);
+ }
+ 
