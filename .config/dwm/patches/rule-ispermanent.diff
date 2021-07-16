@@ -1,0 +1,59 @@
+# appends rule and client flag: ispermanent
+# prevents accidental closing
+# for dwm 6.2
+# based on: https://dwm.suckless.org/patches/ispermanent
+
+diff --git a/config.def.h b/config.def.h
+index 1c0b587..35b0f8d 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -26,9 +26,9 @@ static const Rule rules[] = {
+ 	 *	WM_CLASS(STRING) = instance, class
+ 	 *	WM_NAME(STRING) = title
+ 	 */
+-	/* class      instance    title       tags mask     isfloating   monitor */
+-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
++	/* class      instance    title       tags mask     isfloating   ispermanent  monitor */
++	{ "Gimp",     NULL,       NULL,       0,            1,           0,           -1 },
++	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           0,           -1 },
+ };
+ 
+ /* layout(s) */
+diff --git a/dwm.c b/dwm.c
+index 4465af1..d2620e3 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -93,6 +93,7 @@ struct Client {
+ 	int bw, oldbw;
+ 	unsigned int tags;
+ 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
++	int ispermanent;
+ 	Client *next;
+ 	Client *snext;
+ 	Monitor *mon;
+@@ -138,6 +139,7 @@ typedef struct {
+ 	const char *title;
+ 	unsigned int tags;
+ 	int isfloating;
++	int ispermanent;
+ 	int monitor;
+ } Rule;
+ 
+@@ -298,6 +300,7 @@ applyrules(Client *c)
+ 		&& (!r->instance || strstr(instance, r->instance)))
+ 		{
+ 			c->isfloating = r->isfloating;
++			c->ispermanent = r->ispermanent;
+ 			c->tags |= r->tags;
+ 			for (m = mons; m && m->num != r->monitor; m = m->next);
+ 			if (m)
+@@ -1001,7 +1004,7 @@ keypress(XEvent *e)
+ void
+ killclient(const Arg *arg)
+ {
+-	if (!selmon->sel)
++	if (!selmon->sel || selmon->sel->ispermanent)
+ 		return;
+ 	if (!sendevent(selmon->sel, wmatom[WMDelete])) {
+ 		XGrabServer(dpy);

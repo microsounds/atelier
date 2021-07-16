@@ -35,18 +35,19 @@ static const Layout layouts[] = {
 	{ "中心",	monocle },
 	{ "浮く",	NULL },
 };
+
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class           instance    title       tags mask     isfloating   monitor */
+	/* class           instance    title       tags mask     isfloating  ispermanent monitor */
 	/* permanent */
-	{ "XLoad",         NULL,       NULL,       1,            1,           -1 },
-	{ "XClock",        NULL,       NULL,       1,            1,           -1 },
-	/* always center */
-	{ "Xmessage",      NULL,       NULL,       0,            1,           -1 },
-	{ "Grpn",          NULL,       NULL,       0,            1,           -1 },
+	{ "XLoad",         NULL,       NULL,       1,            1,          1,	         -1 },
+	{ "XClock",        NULL,       NULL,       1,            1,          1,          -1 },
+	/* always float */
+	{ "Xmessage",      NULL,       NULL,       0,            1,          0,          -1 },
+	{ "Grpn",          NULL,       NULL,       0,            1,          0,          -1 },
 };
 
 /* disable spawn/dmenu invocation, handled by sxhkd */
