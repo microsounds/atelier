@@ -19,7 +19,6 @@ static const char *fonts[] = {
 	str(font(FN_HEADER, FN_HEADER_SIZE)),         /* normal */
 	str(font(FN_HEADER_JP, FN_HEADER_SIZE))       /* fallback japanese */
 };
-static const char dmenufont[] = str(font(FN_HEADER, FN_HEADER_SIZE));
 
 /* layouts */
 static const float mfact = 0.55;        /* master area size */
