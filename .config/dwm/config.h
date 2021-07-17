@@ -1,4 +1,4 @@
-/* ~/.config/dwm/config.h: dwm/dmenu user configuration */
+/* ~/.config/dwm/config.h: dwm user configuration */
 
 #include <theme.h>
 #include <colors/nightdrive.h>
