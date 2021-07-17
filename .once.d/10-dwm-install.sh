@@ -21,9 +21,9 @@ for f in dwm-6.2; do
 		if [ -d patches ]; then # apply patches
 			for g in patches/*.diff; do
 				echo "[patch] $g..."
-				patch < $g
+				patch < $g || exit 1
 			done
 		fi
-		make install PREFIX="$HOME/.local"
+		make install PREFIX="$HOME/.local" || exit 1
 	fi
 done
