@@ -21,9 +21,9 @@ super + Return
 # take screenshot
 super + {_,shift +} Print
 	{scrot,sleep 0.2; scrot -s}
-# task manager
-ctrl + alt + Delete
-	visual htop
+# task manager/syslog
+ctrl + alt + {Delete,Insert}
+	visual {htop,watch -n 0.1 'dmesg --color=always | tac'}
 
 ## function keys
 # F1, F2: power/sleep/hibernate
