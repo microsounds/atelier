@@ -11,3 +11,5 @@ done
 conf-append 'HybridSleepMode=reboot' '/etc/systemd/sleep.conf'
 conf-append 'HibernateDelaySec=0s' '/etc/systemd/sleep.conf'
 
+# allow unprivileged users to view kernel syslog
+conf-append 'kernel.dmesg_restrict = 0' '/etc/sysctl.conf'
