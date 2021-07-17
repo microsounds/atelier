@@ -13,7 +13,7 @@ for f in dwm-6.2 dmenu-5.0; do
 		git meta checkout "$CONFIG" || mkdir -v "$CONFIG"
 	fi
 
-	# git clone doesn't allow existing files files
+	# do not clone, rebuild git directory in place
 	if cd "$CONFIG" && ! git status 2> /dev/null; then
 		git init
 		git remote add origin "$ORIGIN"
