@@ -6,16 +6,12 @@
 ## essential
 # terminate X session
 ctrl + shift + q
-	xmessage 'Terminate X session?' \
-		-buttons 'Yes:1,No:0' -default 'Yes' -timeout 5 \
-		|| pkill X
+	printf '✓\n✘' | dmenu -f \
+		-p 'Terminate X session?' -sb str(COLOR6) -sf str(COLOR0) \
+		| fgrep -q '✓' && pkill X &
 # launcher
 super + p
-	dmenu_path | dmenu -f \
-		-fn str(font(FN_HEADER, FN_HEADER_SIZE)) \
-		-nb str(BGCOLOR) -sb str(FGLIGHT) \
-		-nf str(FGCOLOR) -sf str(FGCOLOR) \
-	| sh &
+	dmenu_path | dmenu -f | sh &
 # terminal
 super + Return
 	urxvtc || urxvt
