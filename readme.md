@@ -98,6 +98,9 @@ Primary modkey `Mod1` is super instead of alt.
 | | raise volume 5% | F10 |
 | | randomize wallpaper | F11 |
 | | _reserved_ | F12 |
+| | **ctrl + alt +** | **key**<sup>[special]</sup> |
+| | task manager | delete |
+| | syslog | insert |
 
 ### Reduced layout for Chromebooks
 Search/Everything/Caps lock key serves as the super key. Same as above, with the following changes:
