@@ -15,6 +15,9 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
 
+## ssh-agent
+eval "$(ssh-agent -st 3600)" > /dev/null
+
 ## login shell
 # start X server if tty1
 case $(tty) in

@@ -28,10 +28,10 @@ ctrl + alt + {Delete,Insert}
 ## function keys
 # F1, F2: power/sleep/hibernate
 {_,shift +} super + F{1,2}
-	systemctl {poweroff,reboot,suspend,hibernate}
+	ssh-add -D && systemctl {poweroff,reboot,suspend,hibernate}
 # F3: display off/hibernate+reboot
 {_,shift +} super + F3
-	{sleep 1; xset dpms force off, systemctl hybrid-sleep}
+	ssh-add -D && {sleep 1; xset dpms force off, systemctl hybrid-sleep}
 # F4: calculator/networking
 {_,shift +} {super + F4,XF86Calculator}
 	{grpn,visual nmtui}

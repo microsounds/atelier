@@ -18,18 +18,20 @@ figlet
 file
 *gimp
 git make gcc wget curl aria2
+gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
 grpn
 htop
 jq
 *kdenlive
 ledger
 *libreoffice-writer libreoffice-calc
+libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 m4
 man-db
 mesa-utils
 mpv youtube-dl ffmpeg mediainfo
-nano exuberant-ctags openssl libncurses-dev
-openssh-client
+nano libncurses-dev openssl exuberant-ctags
+openssh-client ssh-askpass-gnome
 *openssh-server
 parallel
 pcmanfm lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
@@ -40,11 +42,8 @@ sc
 screen
 screenfetch
 scrot
-ssh-askpass
-libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 sudo
 task-laptop acpi lm-sensors network-manager bluez
-gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
 *valgrind
 *virt-manager
 vrms
