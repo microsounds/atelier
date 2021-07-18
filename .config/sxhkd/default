@@ -32,9 +32,9 @@ ctrl + alt + {Delete,Insert}
 # F3: display off/hibernate+reboot
 {_,shift +} super + F3
 	{sleep 1; xset dpms force off, systemctl hybrid-sleep}
-# F4: calculator
-{super + F4,XF86Calculator}
-	grpn
+# F4: calculator/networking
+{_,shift +} {super + F4,XF86Calculator}
+	{grpn,visual nmtui}
 # F5: toggle active displays
 {_,shift +} {super + F5,XF86Display}
 	{xrandr-cycle,arandr}
