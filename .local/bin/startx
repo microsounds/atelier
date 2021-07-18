@@ -1,5 +1,16 @@
 #!/usr/bin/env sh
 
+# X server configuration
+
+# conditionally recompile dwm/dmenu
+for f in dwm dmenu; do
+	if ! bin="$(which $f)" > /dev/null || \
+		! is-newer "$bin" ~/.config/$f/config.h; then
+		~/.once.d/10-dwm-install.sh
+		break
+	fi
+done
+
 # ~/.config/xorg/*.conf
 # force xorg.conf on specific hardware to fix screen tearing
 # assuming Xorg can only see one active display adapter at a time
@@ -12,6 +23,6 @@ for f in $(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|3d controller)'); do
 		ati|amd|radeon) xopt='amd'; break;;
 	esac
 done
-[ ! -z "$xopt" ] && xopt="$(id -u)-override/$xopt.conf"
+[ ! -z "$xopt" ] && xopt="-config $(id -u)-override/$xopt.conf"
 
-exec /usr/bin/startx "$@" -- ${xopt:+-config} "$xopt"
+exec /usr/bin/startx "$@" -- $xopt

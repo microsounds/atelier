@@ -40,13 +40,6 @@ set_prompt() {
 	unset u p r path git_path
 }
 
-# compare file mtimes
-# files being compared might not exist yet, assume 1st file is always newer
-is_newer() (
-	res="$(find "$1" -newer "$2" 2> /dev/null)" || return 0
-	[ ! -z "$res" ]
-)
-
 # internal echo function
 announce() (
 	msg="$@";

@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+# usage: is-newer file1 file2
+# return 0 if file1 is newer than file2
+# assume file1 is always newer in case one or both files are non-existent
+# POSIX sh implementation of -nt operator in certain test(1) implementations
+
+res="$(find "$1" -newer "$2" 2> /dev/null)" || return 0
+[ ! -z "$res" ]
+

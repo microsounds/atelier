@@ -41,7 +41,7 @@ screen
 screenfetch
 scrot
 ssh-askpass
-suckless-tools libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
+libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 sudo
 task-laptop acpi lm-sensors network-manager bluez
 gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
