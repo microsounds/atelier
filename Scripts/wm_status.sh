@@ -46,6 +46,13 @@ launch() {
 	done > "$FIFO" &
 }
 
+ssh_agent() (
+	# list number of active keys stored in agent
+	num=$(ssh-add -l) && \
+		num=$(echo "$num" | wc -l) || unset num
+	echo "SSH ⚿×${num:-none}"
+)
+
 fan_speed() (
 	# express fan speed in RPM if supported
 	sensors -u | egrep 'fan[0-9]+_input' | head -n 1 | while read -r _ rpm; do
@@ -161,6 +168,7 @@ current_time() (
 )
 
 # update every n seconds
+launch ssh_agent 5
 launch fan_speed 10
 launch temps 15
 #launch cpu_speed 1
@@ -178,12 +186,12 @@ while read -r module data; do
 
 	# conditionally revoke modules
 	case "$data" in
-		0*|none) eval "unset $module";; # fan spindown/no internet
+		0*|*none) eval "unset $module";; # fan spindown/no internet
 		*abled) unset IP;; # no internet
 	esac
 
 	# compose all available modules
-	bar="${FAN:-$TEMP}${WTTR}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
+	bar="${SSH}${FAN:-$TEMP}${WTTR}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
 
 	# output final formatted status line
 	echo "$bar" | sed -e "$script"
