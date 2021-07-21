@@ -2,10 +2,15 @@
 
 ## nano_overlay.sh v1.0 — interactive external overlay for GNU nano
 ## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
+## Usage: nano-overlay [OVERLAY OPTS] [--] [OPTIONS] [[+LINE[,COLUMN]] FILE]...
 ##  -h, --help      Displays this message.
 ##  -i, --identity  Use an OpenSSH compatible keypair to encrypt/decrypt.
 ##                  This may be a private key, or a public key with the private
 ##                  half in the same directory or available to ssh-agent(1).
+##  --              Stop processing nano_overlay arguments, passes subsequent
+##                  arguments to nano untouched. Subsequent uses of -- also
+##                  stops processing nano arguments, all further arguments
+##                  will be interpreted as literal filenames.
 
 # constants
 # interactive features will recursively call nano_overlay
@@ -35,7 +40,8 @@ derive_parent() {
 
 mode_help() {
 	$ACTUAL_EDITOR -h
-	grep '^##' "$0" | sed 's/^## //'
+	{ dd bs=80 count=1 2> /dev/null | tr '\0' '*'; printf '\n'; } < /dev/zero
+	{ grep '^##' | sed 's/^## //'; } < "$0"
 }
 
 ## Search and jump to source code definitions provided by POSIX ctags(1).
