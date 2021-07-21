@@ -566,7 +566,7 @@ for f in "$@"; do case "$f" in
 	-i|--identity) id_key="${2%.pub}" && shift 2;;
 
 	# stop processing args meant for nano_overlay
-	--) break;;
+	--) shift && break;;
 
 	# mode_ctags: avoid creating lockfiles when seeking multiple files
 	# the same file might be opened multiple times at different positions
