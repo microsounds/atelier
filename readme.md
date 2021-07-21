@@ -197,8 +197,10 @@ C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` w
 	| opt | function |
 	| -- | -- |
 	| `-e, --ctags`<br>`<tag> <#>`  | Jumps into file containing `ctags` definition matching `<tag>`.<br>Optional `<#>` selects from multiple matches, `all` will open all of them. |
-	| `-f, --encrypt`<br>`<file>` | Opens a password-protected plaintext file using AES encryption only. <br>File will be created if it doesn't exist. |
-	| `-j, --rsa`<br>`<file>` | Opens an SSH RSA key pair-protected plaintext file using RSA+AES encryption. <br>File will be created if it doesn't exist. |
+	| `-f, --encrypt`<br>`<file>` | Opens AES encrypted text file with a plaintext password. <br>File will be created if it doesn't exist. |
+	| `-j, --rsa`<br>`<file>` | Open AES encrypted text file with generic RSA keypair in PEM format. <br>File will be created if it doesn't exist. |
+	| `-s, --ssh-sign`<br>`<file>` | Open AES encrypted text file with a nonce value signed with SSH private key. <br>File will be created if it doesn't exist. |
+	| `-i, --identity`<br>`<key>` | Use an OpenSSL compatible keypair to encrypt/decrypt. <br>Can be a private key or a public key with private half stored in `ssh-agent` |
 
 [scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
 [shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png
