@@ -50,13 +50,28 @@ jobs:
            TERM: rxvt
            EXTERN_EDITOR: cat
          run: |
-           for f in $(seq 1024 $((1024 * 6)) | shuf | tail -n 100); do
-             SECRET="$f tapioca milk teas >‿<"
-             mkdir -p ~/.ssh
-             ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b $f -N '' -m pem
-             echo "$SECRET" > ok
-             yes y | nano-overlay -j ok || exit 1
-             { xz -d | tar -xO enc | file -; } < ok | fgrep 'openssl' || exit 1
-             nano-overlay -j ok | fgrep "$SECRET" || exit 1
-             rm -rf ~/.ssh
+           for f in $(seq 50); do
+             for g in rsa ed25519; do
+               case $g in
+                 rsa) bits=$(seq 1024 $((1024 * 6)) | shuf | head -n 1);;
+                 ed25519) bits=256;;
+               esac
+               secret="$f taro bubble teas! >‿<"
+               echo "$secret" > ok
+               echo "$g-$bits" | figlet -f big
+               yes y | ssh-keygen -q -f "$g-$bits" -t $g -b $bits -N '' -m pem
+               echo "ENCRYPTING"
+               yes y | nano-overlay -i "$g-$bits" -s ok || exit 1
+               { gzip -d | tar -xO enc | file -; } < ok | fgrep 'openssl' || exit 1
+               echo "READBACK"
+               nano-overlay -i "$g-$bits" -s ok | fgrep "$secret" || exit 1
+               if [ -f prev_key ]; then
+                 echo "TESTING PREVIOUS ITERATION KEY"
+                 nano-overlay -i prev_key -s ok && \
+                 { echo "!!!! SECURITY FAILURE !!!!" | figlet -f banner; exit 1; }
+               fi
+               mv -v "$g-$bits" prev_key
+               mv -v "$g-$bits.pub" prev_key.pub
+               rm -rf "$g-$bits"*
+             done
            done

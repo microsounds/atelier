@@ -1,12 +1,16 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v0.9 — interactive external overlay for GNU nano
+## nano_overlay.sh v1.0 — interactive external overlay for GNU nano
 ## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
 ##  -h, --help      Displays this message.
+##  -i, --identity  Use an OpenSSH compatible keypair to encrypt/decrypt.
+##                  This may be a private key, or a public key with the private
+##                  half in the same directory or available to ssh-agent(1).
 
-# interactive features will call another nano_overlay instance
-# call first nano found in $PATH
+# constants
+# interactive features will recursively call nano_overlay
 EDITOR="$0"
+# call first nano found in $PATH
 ACTUAL_EDITOR='nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
@@ -150,30 +154,33 @@ mode_ctags() {
 	$EDITOR "$@"
 }
 
-## Open a password protected plaintext file for editing.
-##  -f <filename>   Prompts the user for a AES encryption password.
+## Notes on encryption routines
+## ** External scripts can provide the following $ENVIRONMENT_VARIABLES
+##    to open the decrypted file using another command that's not nano.
+##    Internally, decrypted file will be passed as follows:
+##    >> $EXTERN_EDITOR $decrypted_file $EXTERN_ARGS <<
+## ** Requires OpenSSL 1.1.1 (2018-09-11) or later.
+## ** Requires OpenSSH 8.1 (2019-10-09) or later.
+
+## Open AES encrypted text file with a plaintext password
+##  -f <filename>   Interactively prompts user for an AES decryption password.
 ##  or --encrypt    Decrypts file for editing, re-encrypts if file is modified.
 ##                  Creates file if it doesn't already exist.
 ##                  If the file exists but isn't encrypted, user will be
 ##                  prompted to overwrite the original file.
-##                  * Scripts can provide the following environment variables
-##                    to open the decrypted file using another command.
-##                    eg. $EXTERN_EDITOR "$decrypted_file" $EXTERN_ARGS
-##                  ** Requires OpenSSL 1.1.1 or later.
 
-# mode_encrypt expected file format
-# | [ openssl enc'd data ]
-# | [ xz compressed data ]
+# mode_encrypt file format (＊indicates external)
+# ┬ [ openssl enc'd data ]〈───[＊password ]
+# │ [ xz'd data ======== ]   (decrypt)
 # V [ plaintext file === ]
 
 # compression settings
-xz='xz -T0 -0'
+gz='gzip -1c'
+xz='xz -0c -T0'
 
-# encryption settings
+# common
 aes_magic='Salted__'
 aes_crypt='openssl enc -aes-256-cbc -pbkdf2'
-rsa_crypt='openssl rsautl -pkcs'
-rsa_verify='openssl rsa -noout -text'
 
 verify_header() {
 	header="$(dd bs="${#1}" count=1)" < /dev/stdin 2> /dev/null
@@ -184,9 +191,10 @@ verify_header() {
 }
 
 random_bytes() {
-	# openssl chokes on keyfiles that start with NULL bytes
-	printf '%b' '!'
-	dd bs="$(($1 - 1))" count=1 < /dev/urandom 2> /dev/null
+	# openssl expects human-readable keyfiles
+	# files CANNOT start with NULL bytes
+	# data past the first newline character is ignored
+	{ dd bs="$1" count=1 | tr -d '\0\n'; } < /dev/urandom 2> /dev/null
 }
 random_ascii() {
 	{ tr -cd 'a-z0-9' | dd bs="$1" count=1; } < /dev/urandom 2> /dev/null
@@ -266,7 +274,7 @@ mode_encrypt() {
 			fi
 			if [ ! -z "$state" ] && \
 				[ "$init" != "$(sha256sum < "$tmp")" ]; then
-				{ $xz -z | $aes_crypt -pass 'env:pass' -e; } \
+				{ $xz | $aes_crypt -pass 'env:pass' -e; } \
 					< "$tmp" > "${tmp}.1" && mv "${tmp}.1" "$f"
 			fi
 		fi
@@ -274,28 +282,37 @@ mode_encrypt() {
 	done
 }
 
-## Open an SSH RSA key pair protected plaintext file for editing.
-##  -j <filename>  Same as above, but uses RSA asymmetric encryption to
-##  or --rsa       generate keyfile using the current user's SSH RSA key pair.
-##                 User will be prompted for RSA private key passphrase for
-##                 decryption if needed.
-##                 ** RSA private key must be in legacy PEM format.
-##                    Use 'ssh-keygen -p -m pem' to convert to PEM as needed.
+## Open AES encrypted text file with generic RSA keypair in PEM format
+##  -j <filename>   Uses a generic RSA public key to encrypt a one-time
+##  or --rsa        randomized keyfile which is used for AES encryption.
+##                  User will be prompted for RSA private key passphrase for
+##                  decryption if needed. ssh-agent(1) is NOT supported.
+##                  Default fallback key is ~/.ssh/id_rsa if '-i' is not used.
+##                  Required files will be generated or converted on first use.
+##                  ** RSA private key must be in legacy PEM format.
+##                     Use 'ssh-keygen -p -m pem' to convert to PEM as needed.
 
-# mode_encrypt_rsa expected file format, filenames are significant
-# | [ xz compressed data ========== ]
-# | [ tar archive ================= ]
-# |  | filenames: [ enc ]  [ key ] |
-# |                  |        |
-# | [ openssl enc'd data ] [ RSA encrypted keyfile ]
-# | [ xz compressed data ] [ plain keyfile ======= ]
+# mode_encrypt_rsa file format (＊indicates external)
+# ┬ [ xz'd data = ]
+# ╎ [ tar archive ]  ┌─[ RSA encrypted keyfile ]
+# ╎    │       │     │             │
+# ╎ [ enc ] [ key ]  │  (decrypt)  ├──[＊private key ]
+# ╎    │       └─────┘             │
+# ╎ [ openssl enc'd data ]〈───[＊plain keyfile ]
+# ╎ [ xz'd data ======== ]   (decrypt)
 # V [ plaintext file === ]
+
+# specific to mode_encrypt_rsa
+rsa_crypt='openssl rsautl -pkcs'
+rsa_verify='openssl rsa -noout -text'
 
 mode_encrypt_rsa() {
 	name='rsa'
 
-	# RSA keypair constants
-	rsa_private="$HOME/.ssh/id_rsa"
+	# identity constants
+	# fallback to ~/.ssh/id_rsa
+	[ ! -z "$id_key" ] || id_key="$HOME/.ssh/id_rsa"
+	rsa_private="$id_key"
 	rsa_public="${rsa_private}.pub.pkcs8"
 
 	[ -f "$rsa_private" ] ||
@@ -387,11 +404,11 @@ mode_encrypt_rsa() {
 
 				# repack file in place, abort if interrupted
 				{	rm "$tmp/enc"
-					$xz -z | $aes_crypt -pass "file:$tmp/pipe" -e > "$tmp/enc" ||
+					$xz | $aes_crypt -pass "file:$tmp/pipe" -e > "$tmp/enc" ||
 						quit 'Interrupted or write error'
 				} < "$tmp/enc"
 				tar -cC "$tmp" enc key \
-					| $xz -z > "$tmp/new" && mv "$tmp/new" "$f"
+					| $xz > "$tmp/new" && mv "$tmp/new" "$f"
 				mesg_wipe
 			fi
 		fi
@@ -399,19 +416,126 @@ mode_encrypt_rsa() {
 	done
 }
 
-name='overlay'
-# overlay command line options
-if [ ! -z "$1" ]; then
-	# steal switches previously unused by GNU nano 3.x and earlier
-	for f in $(echo "$1" | grep '^-' | sed 's/^\-*//'); do
-		case $f in
-			h | help) mode_help 1>&2 && exit 1;;
-			e | ctags) shift && mode_ctags "$@" && exit;;
-			f | encrypt) shift && mode_encrypt "$@" && exit;;
-			j | rsa) shift && mode_encrypt_rsa "$@" && exit;;
-		esac
+
+## Open AES encrypted text file with a nonce value signed with SSH private key
+##  -s <filename>   Uses an existing SSH private key to sign a one-time nonce
+##  or --ssh-sign   value to create a keyfile which is used for AES encryption.
+##                  This option allows seamless integration with ssh-agent(1),
+##                  which falls back to the first available key in the agent if
+##                  '-i' is not used.
+##                  If a passphrase-protected key passed with '-i' is not added
+##                  to the agent, you will be required to input passphrase
+##                  during encryption and decryption steps.
+
+# mode_encrypt_ssh_sign file format (＊indicates external)
+# ┬ [ gzip'd data ]
+# ╎ [ tar archive ]  ┌─[ one-time nonce keyfile ]
+# ╎    │       │     │             │
+# ╎ [ enc ] [ key ]  │  (generate) ├──[＊private key ]
+# ╎    │       └─────┘             │
+# ╎ [ openssl enc'd data ]〈───[＊signed nonce keyfile ]
+# ╎ [ gzip'd data ====== ]   (decrypt)
+# V [ plaintext file === ]
+
+# specific to mode_encrypt_ssh_sign
+nonce_bytes=1024
+
+# cryptographically sign data with SSH private key
+sign_file() {
+	sig="$(ssh-keygen -Y sign -n file -f "$1")" 2> /dev/null ||
+		quit "Matching private key for '$1' not found"
+	echo "$sig" | tail -n +2 | head -n -1 | tr -d '\n'
+
+}
+
+mode_encrypt_ssh_sign() {
+	name='ssh-sign'
+
+	# identity constants
+	# fallback to first key held by ssh-agent
+	if [ -z "$id_key" ]; then
+		id_key=$(ssh-add -l) || quit 'Add identities to ssh-agent or use -i'
+		id_key="$(echo "$id_key" | head -n 1 | tr ' ' '\t' | cut -f3)"
+	fi
+
+	for f in "$@"; do
+		# empty filename?
+		[ ! -z "$f" ] || continue
+
+		# file permissions
+		for g in "$TEMP_DIR" "$(derive_parent "$f")"; do
+			[ ! -w "$g" ] && quit "'$g' is unwritable"
+		done
+
+		# create non-colliding directory name
+		while :; do tmp="$TEMP_DIR/${f##*/}.$(random_ascii 7)"
+			[ -d "$tmp" ] || break
+		done
+
+		# determine file state
+		[ ! -f "$f" ] && state='new' # file doesn't exist yet
+		if [ -f "$f" ]; then # is this an encrypted file?
+			{ $gz -d | tar -xO enc; } < "$f" 2> /dev/null | \
+				verify_header "$aes_magic" && state='encrypted'
+		fi
+ 		# no state: file is plaintext, ask to overwrite when finished
+
+		# attempt file unpack
+		trap 'rm -rf "$tmp"*' 0 1 2 3 6
+		mkdir -p "$tmp"
+		mkfifo -m 600 "$tmp/pipe"
+		if [ "$state" = 'encrypted' ]; then
+			mesg_st 'Decrypting... '
+
+			# reconstruct passfile from one-time nonce keyfile
+			# sign with private key held by ssh-agent and write to pipe
+			{ $gz -d | tar -xO key | sign_file "$id_key"; } < "$f" \
+				> "$tmp/pipe" &
+
+			{	$gz -d | tar -xO enc | \
+				$aes_crypt -pass "file:$tmp/pipe" -d | $gz -d ||
+					quit 'Wrong key used to sign passfile'
+			} < "$f" > "$tmp/enc"
+			init="$(sha256sum < "$tmp/enc")" # monitor changes
+			mesg_wipe
+		fi
+		[ -z "$state" ] && cat < "$f" > "$tmp/enc" # copy existing file
+
+		# default behavior: open plaintext file with restricted nano
+		EDITOR="$EDITOR -R"
+		# external script control: announce what is being done
+		${EXTERN_EDITOR:+ announce} \
+			${EXTERN_EDITOR:-$EDITOR} "$tmp/enc" $EXTERN_ARGS
+
+		# conditionally repack file on file change
+		if [ -f "$tmp/enc" ]; then
+			if [ -z "$state" ]; then # no state: ask to overwrite original
+				mesg_st "Overwrite original file '$f'? (yes/no): "
+				prompt_user && state='ok'
+			fi
+			if [ ! -z "$state" ] && \
+				[ "$init" != "$(sha256sum < "$tmp/enc")" ]; then
+				mesg_st 'Saving to disk... '
+
+				# generate one-time nonce keyfile
+				# sign with private key held by ssh-agent and write to pipe
+				random_bytes "$nonce_bytes" | tee "$tmp/key" \
+					| sign_file "$id_key" > "$tmp/pipe" &
+
+				# repack file in place, abort if interrupted
+				{	rm "$tmp/enc"
+					$gz | $aes_crypt -pass "file:$tmp/pipe" -e > "$tmp/enc" ||
+						quit 'Interrupted or write error'
+				} < "$tmp/enc"
+
+				tar -cC "$tmp" enc key \
+					| $gz > "$tmp/new" && mv "$tmp/new" "$f"
+				mesg_wipe
+			fi
+		fi
+		unset state
 	done
-fi
+}
 
 # housekeeping
 # incrementally purge stale entries from filepos_history
@@ -427,17 +551,30 @@ for f in "$HOME/.nano" "$XDG_DATA_HOME/nano"; do
 	break
 done &
 
-# housekeeping
-# append options/refuse to open certain files
-unset seeks opt
+# overlay command line options
+name='overlay'
+unset id_key seeks opt
 for f in "$@"; do case "$f" in
-	-*);; # don't act on flags
-	+[0-9]*)
-		# mode_ctags: avoid creating lockfiles when seeking multiple files
-		# the same file might be opened multiple times at different positions
-		# open in view-only mode to avoid lockfile warnings on the same file
-		# nano versions before 4.8 will ignore this and create lockfiles anyway
-		seeks=$((seeks + 1)) && [ "$seeks" -gt 1 ] && opt="${opt}v";;
+
+	# interactive overlay options
+	# steal certain switches used by GNU nano
+	-h|--help) mode_help 1>&2 && exit;;
+	-e|--ctags) shift && mode_ctags "$@" && exit;;
+	-f|--encrypt) shift && mode_encrypt "$@" && exit;;
+	-j|--rsa) shift && mode_encrypt_rsa "$@" && exit;;
+	-s|--ssh-sign) shift && mode_encrypt_ssh_sign "$@" && exit;;
+	-i|--identity) id_key="${2%.pub}" && shift 2;;
+
+	# stop processing args meant for nano_overlay
+	--) break;;
+
+	# mode_ctags: avoid creating lockfiles when seeking multiple files
+	# the same file might be opened multiple times at different positions
+	# open in view-only mode to avoid lockfile warnings on the same file
+	# nano versions before 4.8 will ignore this and create lockfiles anyway
+	+[0-9]*) seeks=$((seeks + 1)) && [ "$seeks" -gt 1 ] && opt="${opt}v";;
+
+	# append GNU nano options/refuse to open certain files
 	*)
 		# opening a directory by mistake
 		[ -d "$f" ] && quit "'$f' is a directory"
@@ -455,6 +592,7 @@ for f in "$@"; do case "$f" in
 			rm -f "$lock"
 		fi
 esac; done
+[ ! -z "$opt" ] && opt="-$(echo "$opt" | tr -s 'a-z')"
 
 wait
-exec $ACTUAL_EDITOR ${opt:+-$(echo "$opt" | tr -s 'a-z')} "$@"
+exec $ACTUAL_EDITOR $opt "$@"
