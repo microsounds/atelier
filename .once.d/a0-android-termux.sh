@@ -14,6 +14,8 @@ cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	ledger
 	bash-completion
 EOF
+# setup storage
+yes y | termux-setup-storage
 
 # allow use of standard file locations like /tmp
 ! fgrep -q 'termux-chroot' < ~/.profile && \
