@@ -3,7 +3,7 @@
 alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
-*brasero
+*brasero xorriso
 calendar
 chromium
 cmark-gfm
