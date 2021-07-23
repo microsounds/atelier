@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+# prompt user to Yes/No confirm destructive actions
+# usage: user-confirm "[prompt text]"
+
+[ ! -z "$1" ] || exit 1
+
+printf "%s" "$@ (y/n): "
+
+while read -r res; do
+	case "$(echo "$res" | tr 'A-Z' 'a-z')" in
+		y | yes) return 0;;
+		n | no) return 1;;
+	esac
+	printf "%s" "Please confirm (y/n): "
+done
+

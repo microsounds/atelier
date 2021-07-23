@@ -6,16 +6,6 @@
 # bypass interactive prompts during unit testing
 ! is-container || env='DEBIAN_FRONTEND=noninteractive'
 
-prompt_user() {
-	while read -r res; do
-		case "$(echo "$res" | tr 'A-Z' 'a-z')" in
-			y | yes) return 0;;
-			n | no) return 1;;
-		esac
-		printf "%s" "Please confirm (y/n): "
-	done
-}
-
 IFS='
 '
 unset pkgs
@@ -30,8 +20,7 @@ for f in $(cat ~/.comforts | sed 's/#.*$//g'); do
 				dpkg -s "$g" > /dev/null 2>&1 || { not_inst=1; break; }
 			done
 			[ -z "$not_inst" ] && continue
-			printf "%s" "Install optional package(s) $f?: "
-			prompt_user || continue;;
+			user-confirm "Install optional package(s) $f?" || continue;;
 	esac
 	pkgs="$pkgs $f"
 done
