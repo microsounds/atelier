@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+
+# usage: scramble [-d] [FILE|DIR]
+# make use of several quirks of nano_overlay to
+# mass scramble/descramble files using --ssh-sign
+# if no file/directory is passed, assume current working dir
+
+mode='En'
+for f in $@; do case $f in
+	--) break;;
+	-d)
+		mode='De'
+		for g in "$@"; do
+			shift
+			[ "$g" = '-d' ] && continue
+			set -- "$@" "$g"
+		done;;
+esac; done
+
+file="${1:-$PWD}"
+[ -d "$file" ] && mass='all files within'
+msg="${mode}crypt${mass:+ $mass} '$file'?"
+
+user-confirm "$msg" && \
+	user-confirm "REALLY $msg" || exit 1
+
+find "${1:-$PWD}" -type f | while read -r f; do
+	case "$mode" in
+		En)
+			# force overlay to no-op file and spam yes to overwrite
+			export EXTERN_EDITOR=':'
+			yes y | nano-overlay -s "$f" || exit 1;;
+		De)
+			# force overlay to cat cleartext to stdout and overwrite
+			export EXTERN_EDITOR='cat'
+			yes n | nano-overlay -s "$f" > "$f.1" && mv "$f.1" "$f" || exit 1;;
+	esac
+done
