@@ -21,8 +21,12 @@ file="${1:-$PWD}"
 [ -d "$file" ] && mass='all files within'
 msg="${mode}crypt${mass:+ $mass} '$file'?"
 
-user-confirm "$msg" && \
-	user-confirm "REALLY $msg" || exit 1
+# prompt user
+# force add'l prompts if targeting directory
+for f in $(seq $((${mass:+1 +} 1))); do
+	user-confirm "$msg" || exit 1
+	msg="REALLY $msg"
+done
 
 find "${1:-$PWD}" -type f | while read -r f; do
 	case "$mode" in
