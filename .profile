@@ -21,6 +21,6 @@ eval "$(ssh-agent -st 3600)" > /dev/null
 ## login shell
 # start X server if tty1
 case $(tty) in
-	*tty1) exec startx > /dev/null 2>&1;;
+	*tty1) exec startx;;
 	*) case $0 in *bash) . "$HOME/.bashrc";; esac
 esac

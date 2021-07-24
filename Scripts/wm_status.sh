@@ -31,7 +31,7 @@ FIFO="${XDG_RUNTIME_DIR:-/tmp}/.${prog%.*}.$key"
 
 abort() {
 	rm -rf "$FIFO"
-	kill -- -$$
+	kill -- -$$ 2> /dev/null
 }
 
 trap abort 0 1 2 3 6

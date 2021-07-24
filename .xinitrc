@@ -39,7 +39,8 @@ echo 'set bell-style none' > ~/.inputrc &
 	echo "## !! $0: DO NOT EDIT !!" > "$cfg/sxhkdrc"
 	for f in default $layout; do
 		# sxhkd 0.5.x chokes on excess newlines
-		cpp -P < "$cfg/$f" | grep . >> "$cfg/sxhkdrc" 2> /dev/null
+		# ignore cpp syntax misuse
+		cpp -P < "$cfg/$f" 2> /dev/null | grep . >> "$cfg/sxhkdrc"
 	done
 } && sxhkd &
 
