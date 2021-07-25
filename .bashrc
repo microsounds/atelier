@@ -140,7 +140,7 @@ upcoming() (
 	today="$(date '+%Y/%m/%d')"
 	now=$(date -d "$today" '+%s')
 	# expected format: one or more of 'YYYY/MM/DD\tMSG\n'
-	nano-overlay -j "$1" | sed 's/#.*$//g' | sort | grep . \
+	nano-overlay -s "$1" | sed 's/#.*$//g' | sort | grep . \
 		| while read -r date msg; do
 		epoch=$(date -d "$date" '+%s') || exit 1
 		days=$(((epoch - now) / 86400))
@@ -164,7 +164,7 @@ ledger-enc() (
 	file="$1" && shift
 	export EXTERN_EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
-	nano-overlay -j "$file"
+	nano-overlay -s "$file"
 )
 
 # automatically run ~/.once.d post-install scripts
