@@ -8,7 +8,6 @@ unset jumpyscrolling
 set softwrap
 set tabsize 4
 set autoindent
-set multibuffer
 set wordchars "$-:._"
 set matchbrackets "(<[{)>]}"
 set trimblanks
@@ -22,7 +21,17 @@ set positionlog
 unset historylog
 unset suspendable
 
-## disallow saving with ^S
+## keybinds/macros
+## use M-V to insert keystroke literals
+##   shell paste
+##   cut current line, execute as shell command, paste output underneath
+##   allow shell commands within inline comments
+bind M-1 "echo "" | sed 's/^#*//' | sh" main
+##   shell linter (DESTRUCTIVE!)
+##   cut current line, execute as shell command, accept buffer as stdin,
+##   return to top of buffer, paste original line
+bind M-0 "|\" main
+##  disallow saving with ^S
 unbind ^S main
 
 ## ui

@@ -266,8 +266,6 @@ mode_encrypt() {
 		fi
 		[ -z "$state" ] && cat < "$f" > "$tmp" # copy existing file
 
-		# default behavior: open plaintext file with restricted nano
-		EDITOR="$EDITOR -R"
 		# external script control: announce what is being done
 		${EXTERN_EDITOR:+ announce} \
 			${EXTERN_EDITOR:-$EDITOR} "$tmp" $EXTERN_ARGS
@@ -384,8 +382,6 @@ mode_encrypt_rsa() {
 		fi
 		[ -z "$state" ] && cat < "$f" > "$tmp/enc" # copy existing file
 
-		# default behavior: open plaintext file with restricted nano
-		EDITOR="$EDITOR -R"
 		# external script control: announce what is being done
 		${EXTERN_EDITOR:+ announce} \
 			${EXTERN_EDITOR:-$EDITOR} "$tmp/enc" $EXTERN_ARGS
@@ -507,8 +503,6 @@ mode_encrypt_ssh_sign() {
 		fi
 		[ -z "$state" ] && cat < "$f" > "$tmp/enc" # copy existing file
 
-		# default behavior: open plaintext file with restricted nano
-		EDITOR="$EDITOR -R"
 		# external script control: announce what is being done
 		${EXTERN_EDITOR:+ announce} \
 			${EXTERN_EDITOR:-$EDITOR} "$tmp/enc" $EXTERN_ARGS
