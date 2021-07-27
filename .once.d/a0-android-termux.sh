@@ -17,9 +17,15 @@ EOF
 # setup storage
 yes y | termux-setup-storage
 
+# termux-chroot
 # allow use of standard file locations like /tmp
-! fgrep -q 'termux-chroot' < ~/.profile && \
-	sed '1s/^/termux-chroot\n/' -i ~/.profile
+# note: termux sources .bashrc before .profile on all logins
+! fgrep -q 'termux-chroot' < ~/.bashrc && \
+	sed -i ~/.bashrc -e \
+		'1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec termux-chroot; }\n/'
+
+# prevent termux from sourcing .bashrc twice every login
+sed -i ~/.profile -e '/X server/q'
 
 # allow use of standard file descriptors on devices without root
 fd=0; for f in stdin stdout stderr; do
