@@ -59,7 +59,7 @@ swallow() (
 )
 
 #
-## external use
+## external use aliases/shell functions
 
 # enable terminal swallowing for selected X applications
 for f in feh mpv pcmanfm xdiskusage; do
@@ -129,7 +129,9 @@ git() (
 	command git $alias "$@"
 )
 
-# encrypted calendar wrapper for 'xz | openssl' packed files
+#
+## accounting/timekeeping routines based around nano-overlay
+
 # sorts a list of upcoming dates
 upcoming() (
 	quit() { echo "$@"; exit; }
@@ -151,12 +153,11 @@ upcoming() (
 		esac
 		printf '%s %s %s\n' "* $date" "($away)" "${msg:-(none)}"
 		[ $days -lt 90 ] && ncal -b -d "$date" -H "$date"
-	done
+	done || exit 1
 )
 
-# encrypted ledger wrapper for 'xz | openssl' packed files
-# suspend to make changes to plaintext ledger directly
-# changes are saved if plaintext ledger is modified
+
+# similar to gzcat for nano-overlay | ledger -f -
 ledger-enc() (
 	quit() { echo "$@"; exit; }
 	[ ! -z "$1" ] || quit 'usage: ledger-enc [file]'
@@ -166,6 +167,18 @@ ledger-enc() (
 	export EXTERN_ARGS="$@"
 	nano-overlay -s "$file"
 )
+
+# rename files to a generic filename
+mv-generic() (
+	for f in "$1"; do
+		[ -f "$1" ] || exit 1
+		new="$(sha1sum < "$1" | tr ' ' '\t' | cut -f1)"
+		mv -iv "$f" "$new.${f#*.}"
+	done
+)
+
+#
+## atelier dotfile mangling and rice routines
 
 # automatically run ~/.once.d post-install scripts
 post-install() (
