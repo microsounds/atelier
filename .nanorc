@@ -26,7 +26,7 @@ unset suspendable
 ##   shell paste
 ##   cut current line, execute as shell command, paste output underneath
 ##   allow shell commands within inline comments
-bind M-1 "echo "" | sed 's/^#*//' | sh" main
+bind M-1 "echo "" | sed 's/^#*//' | sh" main
 ##   shell linter (DESTRUCTIVE!)
 ##   cut current line, execute as shell command, accept buffer as stdin,
 ##   return to top of buffer, paste original line
