@@ -158,10 +158,21 @@ mode_ctags() {
 		set -- "$@" "+$pos" "$file"
 	done
 
+	# same file might be opened multiple times at different positions
+	# open in read-only mode to avoid lockfile warnings on the same file
+	# on nano 4.8 or later
+	unset multi
+	for f in "$@"; do
+		case "$f" in +[0-9]*) continue;; esac
+		multi="$multi\n$f"
+	done
+	multi="$(echo "$multi" | sort | uniq -d)"
+
 	# mode_ctags may be called from within nano's execute mode (^R^X)
 	# terminal doesn't like it when you replace current nano instance
 	# with a subshell, clear screen on exit to minimize issues
-	printf '\ec'; $EDITOR "$@"
+	printf '\ec'
+	$EDITOR ${multi:+-v} "$@"
 }
 
 ## Notes on encryption routines
@@ -557,7 +568,7 @@ done &
 
 # overlay command line options
 name='overlay'
-unset id_key seeks opt
+unset id_key opt
 for f in "$@"; do case "$f" in
 
 	# interactive overlay options
@@ -571,12 +582,6 @@ for f in "$@"; do case "$f" in
 
 	# stop processing args meant for nano_overlay
 	--) shift && break;;
-
-	# mode_ctags: avoid creating lockfiles when seeking multiple files
-	# the same file might be opened multiple times at different positions
-	# open in view-only mode to avoid lockfile warnings on the same file
-	# nano versions before 4.8 will ignore this and create lockfiles anyway
-	+[0-9]*) seeks=$((seeks + 1)) && [ "$seeks" -gt 1 ] && opt="${opt}v";;
 
 	# append GNU nano options/refuse to open certain files
 	*)
