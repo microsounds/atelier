@@ -157,7 +157,11 @@ mode_ctags() {
 		file="${line%	*}"; pos="${line#*	}"
 		set -- "$@" "+$pos" "$file"
 	done
-	$EDITOR "$@"
+
+	# mode_ctags may be called from within nano's execute mode (^R^X)
+	# terminal doesn't like it when you replace current nano instance
+	# with a subshell, clear screen on exit to minimize issues
+	printf '\ec'; $EDITOR "$@"
 }
 
 ## Notes on encryption routines

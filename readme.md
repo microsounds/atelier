@@ -197,15 +197,25 @@ Several commands are extended to include impure functions, such as purposefully 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
 ## `nano`
-* `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extensions:
+_Note: `nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
+
+* `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extended options:
 
 	| opt | function |
 	| -- | -- |
 	| `-e, --ctags`<br>`<tag> <#>`  | Jumps into file containing `ctags` definition matching `<tag>`.<br>Optional `<#>` selects from multiple matches, `all` will open all of them. |
-	| `-f, --encrypt`<br>`<file>` | Opens AES encrypted text file with a plaintext password. <br>File will be created if it doesn't exist. |
+	| `-f, --encrypt`<br>`<file>` | Open AES encrypted text file with a plaintext password. <br>File will be created if it doesn't exist. |
 	| `-j, --rsa`<br>`<file>` | Open AES encrypted text file with generic RSA keypair in PEM format. <br>File will be created if it doesn't exist. |
 	| `-s, --ssh-sign`<br>`<file>` | Open AES encrypted text file with a nonce value signed with SSH private key. <br>File will be created if it doesn't exist. |
 	| `-i, --identity`<br>`<key>` | Use an OpenSSL compatible keypair to encrypt/decrypt. <br>Can be a private key or a public key with private half stored in `ssh-agent` |
+
+* Once inside the actual `nano`, the following keybind macros are available:
+
+	| key | function |
+	| -- | -- |
+	| `M-0` | Execute current line as shell command and pipe contents of buffer as stdin.<br>_Destructively replaces entire contents of buffer, useful for formatting._ |
+	| `M-1` | Execute current line as shell command and paste output in current buffer.<br>_Inline comments ok._ |
+	| `M-2` | Select token underneath cursor and jump into it's `ctags` definition(s).<br>_Requires valid `tags` file in current or a parent directory._ |
 
 [scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
 [shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png

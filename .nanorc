@@ -16,21 +16,30 @@ set atblanks
 set unix
 
 ## convenience
-set locking
+unset locking
 set positionlog
 unset historylog
 unset suspendable
 
-## keybinds/macros
+## keybind macros
 ## use M-V to insert keystroke literals
-##   shell paste
+
+##   execute current line
 ##   cut current line, execute as shell command, paste output underneath
 ##   allow shell commands within inline comments
 bind M-1 "echo "" | sed 's/^#*//' | sh" main
-##   shell linter (DESTRUCTIVE!)
+
+##   jump to ctags definition
+##   move cursor to right of word, mark to beginning, copy marked region,
+##   paste cutbuffer as search token for nano-overlay --ctags mode,
+##   open all matches in sub-shelled nano instance
+bind M-2 "[C[D6nano-overlay -e '' all 1>&0 2>&0" main
+
+##   execute formatter (DESTRUCTIVE!)
 ##   cut current line, execute as shell command, accept buffer as stdin,
 ##   return to top of buffer, paste original line
 bind M-0 "|\" main
+
 ##  disallow saving with ^S
 unbind ^S main
 
