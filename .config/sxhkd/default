@@ -6,14 +6,17 @@
 ## essential
 # terminate X session
 ctrl + shift + q
+	aplay ~/.local/share/sfx/other/othr03.wav & \
 	printf '✓\n✘' | dmenu -f \
 		-p 'Terminate X session?' -sb str(COLOR6) -sf str(COLOR0) \
 		| fgrep -q '✓' && pkill X &
 # launcher
 super + p
+	aplay ~/.local/share/sfx/other/othr02.wav & \
 	dmenu_path | dmenu -f | sh &
 # terminal
 super + Return
+	aplay ~/.local/share/sfx/other/othr01.wav & \
 	urxvtc || urxvt
 # file manager
 {super + e,XF86Explorer}
@@ -21,6 +24,10 @@ super + Return
 # take screenshot
 super + {_,shift +} Print
 	{scrot,sleep 0.2; scrot -s}
+# ssh-agent
+super + BackSpace
+	aplay ~/.local/share/sfx/other/othr09.wav & \
+	! ssh-add -l && ssh-add || ssh-add -D
 # task manager/syslog
 ctrl + alt + {Delete,Insert}
 	visual {htop,watch -n 0.1 'dmesg | tac'}

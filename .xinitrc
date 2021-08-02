@@ -56,4 +56,7 @@ xwin-statusd -qpm | xargs -n 1 xsetroot -name &
 urxvtd -o &
 lxpolkit &
 
+# startup sound
+aplay ~/.local/share/sfx/btn/btn16.wav &
+
 exec dwm

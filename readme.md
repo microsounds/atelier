@@ -88,6 +88,7 @@ Primary modkey `Mod1` is super instead of alt.
 | set as master window<sup>[toggle]</sup> | terminal | return |
 | | launcher | p |
 | | file manager | e |
+| | ssh-add<sup>[toggle]</sup> | backspace |
 | partial screenshot | screenshot | print |
 | | _reserved_ | scroll lock |
 | | _reserved_ | pause |
