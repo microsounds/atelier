@@ -57,6 +57,6 @@ urxvtd -o &
 lxpolkit &
 
 # startup sound
-aplay ~/.local/share/sfx/btn/btn16.wav &
+sfx-play btn16 &
 
 exec dwm
