@@ -3,12 +3,17 @@
 # defines standard apt repositories
 # adds supplementary repos
 
-BRANCH='bullseye' # released 2021/07
+# force completely unattended upgrade
+export DEBIAN_FRONTEND='noninteractive'
+
+BRANCH='bullseye' # released 2021/08
 CONF='/etc/apt/sources.list'
+APTCONF='/etc/apt/apt.conf.d/non-interactive'
 TMP="$(mk-tempdir)"
 
 finish() {
 	rm -rv "$TMP"
+	sudo rm -rv "$APTCONF"
 	echo 'Done.'
 	exit
 }
@@ -44,5 +49,10 @@ sudo tee "${CONF}.d/wine-hq.list" <<- EOF
 	deb https://dl.winehq.org/wine-builds/debian/ $BRANCH main
 EOF
 sudo dpkg --add-architecture i386
+
+# temporarily disable all prompts
+cat <<- EOF | sudo tee "$APTCONF"
+	DPkg::options { "--force-confdef"; "--force-confnew"; }
+EOF
 
 yes y | bash -lc update

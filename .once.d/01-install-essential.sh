@@ -3,9 +3,6 @@
 # installs from essential package list described in ~/.comforts
 # ask to install optional package groups
 
-# bypass interactive prompts during unit testing
-! is-container || env='DEBIAN_FRONTEND=noninteractive'
-
 IFS='
 '
 unset pkgs
@@ -24,6 +21,9 @@ for f in $(cat ~/.comforts | sed 's/#.*$//g'); do
 	esac
 	pkgs="$pkgs $f"
 done
+
+# force completely unattended install
+export DEBIAN_FRONTEND='noninteractive'
 
 echo "$pkgs" | xargs sudo $env apt-get -y install || exit 1
 sudo apt-get clean
