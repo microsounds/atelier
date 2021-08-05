@@ -3,25 +3,23 @@
 alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
-*brasero xorriso
+*brasero xorriso eject
 calendar
-chromium
+chromium jq
 cmark-gfm
 cpp
 *cups printer-driver-cups-pdf libnss-mdns simple-scan
 dc
 dconf-cli
 dkms
-eject
 feh jpegoptim optipng findimagedupes
 figlet
 file
 *gimp
-git make gcc wget curl aria2
+git make gcc
 gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
 grpn
 htop
-jq
 *kdenlive
 ledger
 *libreoffice-writer libreoffice-calc
@@ -47,6 +45,7 @@ task-laptop acpi lm-sensors network-manager bluez
 *valgrind
 *virt-manager
 vrms
+wget curl aria2
 *wine-stable cabextract
 xdiskusage
 xorg xdotool xsel xbacklight sxhkd arandr
