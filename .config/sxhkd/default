@@ -12,11 +12,9 @@ ctrl + shift + q
 		| fgrep -q '✓' && pkill X &
 # launcher
 super + p
-	sfx-play othr02 & \
 	dmenu_path | dmenu -f | sh &
 # terminal
 super + Return
-	sfx-play othr01 & \
 	urxvtc || urxvt
 # file manager
 {super + e,XF86Explorer}
@@ -26,7 +24,7 @@ super + {_,shift +} Print
 	{scrot,sleep 0.2; scrot -s}
 # ssh-agent
 super + BackSpace
-	sfx-play othr09 & \
+	sfx-play btn16 & \
 	! ssh-add -l && ssh-add || ssh-add -D
 # task manager/syslog
 ctrl + alt + {Delete,Insert}
