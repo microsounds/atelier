@@ -22,7 +22,7 @@ Basic installation instructions are provided, along with some documentation for 
 
 # Quick start
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
-	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be booted._
+	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be kicked._
 2. Install `git`, `gnupg1`, `wget`, and `sudo`, then add yourself to the `sudo` group.
 	* Log back in to apply changes to group membership.
 3. Bootstrap the system automatically with a hard git reset from this repo, this is done only once.
@@ -33,7 +33,7 @@ Basic installation instructions are provided, along with some documentation for 
 	$ exec $SHELL -l
 	```
 4. Run `post-install` in the shell to run post-install scripts automatically.
-	* _Sets up the package manager, installs essential packages, compiles the window manager, etc._
+	* _Sets up the package manager, installs essential packages, compiles window manager, text editor, etc._
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
@@ -45,7 +45,8 @@ Basic installation instructions are provided, along with some documentation for 
 Currently, only a basic shell environment in single-user mode is supported.
 
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
-2. Post-install: Run only `~/.once.d/a0-android-termux.sh` to apply android-specific hacks and terminal emulator theming.
+2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
+	* Applies android-specific hacks and termux specific dotfiles for theming and softkeys.
 
 # Usage notes
 ## Using `git meta`

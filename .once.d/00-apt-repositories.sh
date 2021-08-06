@@ -2,6 +2,7 @@
 
 # defines standard apt repositories
 # adds supplementary repos
+# pulls in upgrades if needed
 
 BRANCH='bullseye' # released 2021/08
 CONF='/etc/apt/sources.list'
