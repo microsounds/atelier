@@ -123,7 +123,7 @@ help() (
 # implicitly set git dir to ~/.config/meta if outside a git dir
 git() (
 	case "$1" in
-		init | clone | meta) ;;
+		-C | init | clone | meta) ;;
 		*) command git status > /dev/null 2>&1 || alias='meta'
 	esac
 	command git $alias "$@"
