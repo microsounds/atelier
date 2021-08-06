@@ -37,6 +37,11 @@ Basic installation instructions are provided, along with some documentation for 
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
+<sub><i>
+	NOTE: When performing installation on obsolete versions of Debian, `apt` may send installer prompts that that cannot be bypassed.<br>
+	Comment out the last line in [`~/.once.d/00-apt-repositories.sh`](.once.d/00-apt-repositories.sh) and run `update` manually after running `post-install`
+</i></sub>
+
 <a href="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
 	<img height="150px" align="right" src="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
 </a>
@@ -197,8 +202,10 @@ Several commands are extended to include impure functions, such as purposefully 
 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
+_NOTE: You may have to manually select `Customize -> Color and Theme` and apply a random color scheme within Chromium's new tab page for externally customized color options to take effect on next launch._
+
 ## `nano`
-_Note: `nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
+_NOTE: `nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
 
 * `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extended options:
 
