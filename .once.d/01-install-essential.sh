@@ -23,7 +23,7 @@ for f in $(cat ~/.comforts | sed 's/#.*$//g'); do
 done
 
 # force completely unattended install
-export DEBIAN_FRONTEND='noninteractive'
 
-echo "$pkgs" | xargs sudo $env apt-get -y install || exit 1
+echo "$pkgs" \
+	| xargs sudo DEBIAN_FRONTEND='noninteractive' apt-get -y install || exit 1
 sudo apt-get clean

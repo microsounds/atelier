@@ -3,9 +3,6 @@
 # defines standard apt repositories
 # adds supplementary repos
 
-# force completely unattended upgrade
-export DEBIAN_FRONTEND='noninteractive'
-
 BRANCH='bullseye' # released 2021/08
 CONF='/etc/apt/sources.list'
 APTCONF='/etc/apt/apt.conf.d/non-interactive'
