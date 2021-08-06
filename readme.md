@@ -37,11 +37,6 @@ Basic installation instructions are provided, along with some documentation for 
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
-<sub><i>
-	NOTE: When performing installation on obsolete versions of Debian, `apt` may send installer prompts that that cannot be bypassed.<br>
-	Comment out the last line in [`~/.once.d/00-apt-repositories.sh`](.once.d/00-apt-repositories.sh) and run `update` manually after running `post-install`
-</i></sub>
-
 <a href="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
 	<img height="150px" align="right" src="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
 </a>
