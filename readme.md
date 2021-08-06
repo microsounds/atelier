@@ -192,13 +192,13 @@ Several commands are extended to include impure functions, such as purposefully 
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
 
 ## `chromium`
+_NOTE: On first-run, `chromium` will momentarily exit and restart to rebuild configuration and enable use of externally customized color options._
+
 `chromium` was extended to mangle the user-hostile per-profile `Preferences` and global `Local State` JSON files with a series of chained `jq` filters stored in the following files, applying persistent settings in order.
 * [`~/.config/chromium/preferences.conf`](.config/chromium/preferences.conf)
 * [`~/.config/chromium/local_state.conf`](.config/chromium/local_state.conf)
 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
-
-_NOTE: You may have to manually select `Customize -> Color and Theme` and apply a random color scheme within Chromium's new tab page for externally customized color options to take effect on next launch._
 
 ## `nano`
 _NOTE: `nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
