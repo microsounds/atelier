@@ -52,4 +52,5 @@ cat <<- EOF | sudo tee "$APTCONF"
 	DPkg::options { "--force-confdef"; "--force-confnew"; }
 EOF
 
-yes y | bash -lc update
+# run shell function update() non-interactively
+yes y | bash -lc 'update'

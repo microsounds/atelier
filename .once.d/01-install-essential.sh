@@ -3,6 +3,9 @@
 # installs from essential package list described in ~/.comforts
 # ask to install optional package groups
 
+# force apt non-interactive mode
+env='DEBIAN_FRONTEND=noninteractive'
+
 IFS='
 '
 unset pkgs
@@ -24,6 +27,5 @@ done
 
 # force completely unattended install
 
-echo "$pkgs" \
-	| xargs sudo DEBIAN_FRONTEND='noninteractive' apt-get -y install || exit 1
+echo "$pkgs" | xargs sudo $env apt-get -y install || exit 1
 sudo apt-get clean

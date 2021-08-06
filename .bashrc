@@ -196,10 +196,14 @@ post-install() (
 )
 
 # check for updates, purge old kernel versions
+# if called from a script, run in unattended mode
 update() (
+	env='DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a'
+	case "$-" in *i*) unset env;; esac
+
 	for f in update dist-upgrade autopurge clean; do
 		announce ">>> $f"
-		sudo apt-get "$f" || exit
+		sudo $env apt-get "$f" || exit
 	done
 	# semantic versioning sort, zero-pad numbers to 3 digits
 	pad="$(tr '\0' '0' < /dev/zero | dd bs=3 count=1 2> /dev/null)"
@@ -208,7 +212,7 @@ update() (
 		| sort -r | sed -E -e "s/0*([0-9]+)/\1/g" -e 's/image/\*/' \
 		| tail -n +2); do
 		announce "removing $f..."
-		sudo apt-get autopurge "$f" || exit
+		sudo $env apt-get autopurge "$f" || exit
 	done
 )
 
