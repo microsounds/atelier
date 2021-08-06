@@ -6,6 +6,7 @@
 
 BRANCH='bullseye' # released 2021/08
 CONF='/etc/apt/sources.list'
+TRUSTED='/etc/apt/trusted.gpg.d'
 APTCONF='/etc/apt/apt.conf.d/non-interactive'
 TMP="$(mk-tempdir)"
 
@@ -42,7 +43,7 @@ SRC='https://dl.winehq.org/wine-builds'
 KEY='winehq.key'
 
 wget "$SRC/$KEY" -O "$TMP/$KEY" || exit 1
-sudo apt-key add "$TMP/$KEY"
+sudo cp -v "$TMP/$KEY" "$TRUSTED/${KEY%.*}.asc"
 sudo tee "${CONF}.d/wine-hq.list" <<- EOF
 	deb https://dl.winehq.org/wine-builds/debian/ $BRANCH main
 EOF
