@@ -461,7 +461,7 @@ nonce_bytes=1024
 sign_file() {
 	sig="$(ssh-keygen -Y sign -n file -f "$1")" 2> /dev/null ||
 		quit "Matching private key for '$1' not found"
-	echo "$sig" | tail -n +2 | head -n -1 | tr -d '\n'
+	echo "$sig" | sed -e '/^-/d' | tr -d '\n'
 
 }
 
