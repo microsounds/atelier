@@ -70,7 +70,8 @@ done && unset f
 alias mkdir='mkdir -p'
 
 # prompt before overwrite
-alias cp='cp -i'
+# preserve timestamps
+alias cp='cp -ip'
 alias mv='mv -i'
 
 # keep ANSI colors while paging
