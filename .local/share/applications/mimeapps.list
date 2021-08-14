@@ -1,0 +1,15 @@
+[Default Applications]
+text/plain=nano.desktop
+text/x-c=nano.desktop
+
+image/jpeg=feh.desktop
+image/png=feh.desktop
+image/gif=feh.desktop
+
+video/webm=mpv.desktop
+video/H264=mpv.desktop
+video/x-matroska=mpv.desktop
+
+application/pdf=chromium.desktop
+
+inode/directory=pcmanfm.desktop

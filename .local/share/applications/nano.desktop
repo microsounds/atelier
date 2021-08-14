@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=nano %F
+Terminal=true
+Type=Application
+MimeType=text/plain
