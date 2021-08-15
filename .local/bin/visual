@@ -2,12 +2,13 @@
 
 # Usage: visual [command]
 # X window wrapper for terminal programs
+# opens a new terminal if not open already
 
-[ ! -z "$DISPLAY" ] || exit 1
-
-# opens a terminal if not open already
-case "$(tty)" in
-	'not a tty') shim='urxvtc -e';;
-esac
+unset shim
+if [ ! -z "$DISPLAY" ]; then
+	case "$(tty)" in
+		'not a tty') shim='urxvtc -e';;
+	esac
+fi
 
 $shim "$@"

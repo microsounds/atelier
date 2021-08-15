@@ -19,6 +19,11 @@ EDITOR="$0"
 ACTUAL_EDITOR='nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
+# mode_ctags may be called from within nano's execute mode (^R^X)
+# many terminals will not clear the prompt correctly upon quitting the top-most
+# nano instance when mode_ctags is used this way, setting TERM to linux seems to help
+[ $SHLVL -gt 2 ] && export TERM=linux
+
 # utilities
 mesg_wipe() { printf '\r' 1>&2; }
 mesg_st() { printf '%s%s' "${name:+[$name] }" "$1" 1>&2; } # for prompts
@@ -167,12 +172,7 @@ mode_ctags() {
 		multi="$multi\n$f"
 	done
 	multi="$(echo "$multi" | sort | uniq -d)"
-
-	# mode_ctags may be called from within nano's execute mode (^R^X)
-	# terminal doesn't like it when you replace current nano instance
-	# with a subshell, clear screen on exit to minimize issues
-	printf '\ec'
-	$EDITOR ${multi:+-v} "$@"
+	exec $EDITOR ${multi:+-v} "$@"
 }
 
 ## Notes on encryption routines
