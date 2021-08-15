@@ -8,7 +8,7 @@ calendar
 chromium jq
 cmark-gfm
 cpp
-*cups printer-driver-cups-pdf libnss-mdns simple-scan
+*cups libnss-mdns simple-scan sane-airscan
 dc
 dconf-cli
 dkms
