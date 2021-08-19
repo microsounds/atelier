@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Usage: visual [command]
-# X window wrapper for terminal programs
+# X window wrapper for terminal applications
 # opens a new terminal if not open already
 
 unset shim
