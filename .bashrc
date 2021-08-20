@@ -16,7 +16,7 @@ export COLOR=1; case $TERM in
 	*) [ $(tput colors) -lt 8 ] && unset COLOR
 esac
 
-# $OLDPWD persistence between sessions
+# persist $OLDPWD between sessions
 export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
 [ -f "$LASTDIR" ] && read -r OLDPWD < "$LASTDIR"
 
@@ -38,6 +38,9 @@ set_prompt() {
 		|| path="('${PWD##*/}' no longer exists)" # no such file or directory
 	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}${path}${r}}\$ "
 	unset u p r path git_path
+
+	# command history persistence across sessions
+	history -a; history -c; history -r
 }
 
 # internal echo function
