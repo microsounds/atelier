@@ -72,15 +72,19 @@ ex_parser() {
 		case "$addr" in [!0-9]*)
 			# start/end delimiter can be one of '/' or '?'
 			# delete text not contained within delimited zone
+			# '?' performs backwards search
+			order='cat'
 			de="${addr%"${addr#?}"}"
 			addr="${addr#*"$de"}"; addr="${addr%"$de"*}"
+			case "$de" in '?') order='tac'; esac
+
 			# strip optional regex anchors
 			[ "${addr%"${addr#?}"}" = '^' ] && addr="${addr#^}"
 			[ "${addr#"${addr%?}"}" = '$' ] && addr="${addr%$}"
 			# strip escapes for slash \/ => /, backslash \\ => \
 			addr="$(echo "$addr" | sed 's,\\/,/,g;s,\\\\,\\,g')"
 			# return 2 if command is outdated
-			addr="$(fgrep -n "$addr" < "$file")" || return 2;;
+			addr="$(fgrep -n "$addr" < "$file" | $order)" || return 2;;
 		esac
 		echo "${addr%%[!0-9]*}"
 	done < /dev/stdin
