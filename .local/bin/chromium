@@ -48,8 +48,5 @@ if ! ps -e | fgrep -q 'chromium'; then
 	done
 fi
 
-# disable hardware acceleration on chromebooks
-! is-chromebook || opt='--disable-gpu-compositing'
-
 # redirect cache writes to ramdisk
 /usr/bin/chromium $opt --disk-cache-dir="$XDG_CACHE_HOME/${0##*/}" "$@"

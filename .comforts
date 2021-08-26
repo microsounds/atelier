@@ -9,6 +9,7 @@ chromium jq
 cmark-gfm
 cpp
 *cups libnss-mdns simple-scan sane-airscan
+desktop-base
 dc
 dconf-cli
 dkms
