@@ -28,9 +28,12 @@ echo "$scrape" | grep 'title_version' \
 	unzip "$TMP/$FILENAME" -d "$TMP"
 
 	# purge previous installation
-	SHARE="$INSTALL/share"
-	rm -rf "$SHARE/$PROGRAM"
-	mv "$TMP/$PROGRAM" "$SHARE"
-	TARGET="$(find "$SHARE/$PROGRAM" | grep "$ARCH/${PROGRAM}$")"
-	ln -sfv  "$TARGET" "$INSTALL/bin"
+	OPT="$INSTALL/opt"
+	rm -rf "$OPT/$PROGRAM"
+	mkdir -p "$OPT/$PROGRAM"
+	mv "$TMP/$PROGRAM" "$OPT/$PROGRAM"
+
+	# generate relative pathname for symlink
+	TARGET="$(find "$OPT/$PROGRAM" | grep "$ARCH/${PROGRAM}$")"
+	ln -sfv  "..${TARGET#"$INSTALL"}" "$INSTALL/bin"
 done

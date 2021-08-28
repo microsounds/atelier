@@ -4,12 +4,12 @@
 # install and/or launch Genshin Impact under Wine 5.3 or later
 # use '-l' flag to run the official launcher (for updates, etc.)
 # some warnings:
-# - requires over 30GiB of available free space in ~/.local/share
+# - requires over 30GiB of available free space in ~/.local/opt
 # - do NOT launch the game using the official launcher
 # - linux patches violate miHoYo terms of service, you might get banned
 
 PATCH_VER='200'
-INSTALL_DIR="$HOME/.local/share/genshin-impact"
+INSTALL_DIR="$HOME/.local/opt/genshin-impact"
 LAUNCHER='drive_c/Program Files/Genshin Impact/launcher.exe'
 GAME_FILES="${LAUNCHER%/*}/Genshin Impact game"
 DPY_RES="$(xrandr -q | grep '[^dis]connected' \
@@ -25,18 +25,19 @@ LINUX_PATCH='https://notabug.org/Krock/GI-on-Linux'
 export PATH="/opt/wine-stable/bin:$PATH"
 export WINE='wine64'
 export WINEPREFIX="$INSTALL_DIR"
-WINEVER='5.3'
+WINE_VER='5.3'
 $WINE --version || { echo "Install wine-stable."; exit 1; }
 $WINE --version | tr '-' '\t' | cut -f2 | while read -r ver; do
-	[ $(echo "${ver%.*} >= $WINEVER" | bc) -eq 1 ] && break
-	echo "Wine version too old, install $WINEVER or later."
+	[ $(echo "${ver%.*} >= $WINE_VER" | bc) -eq 1 ] && break
+	echo "Wine version too old, install $WINE_VER or later."
 	kill -- $$
 done
 
 # download additional components if required
 [ -d "$INSTALL_DIR" ] || $WINE wineboot -u
 
-if [ ! -f "$INSTALL_DIR/$LAUNCHER" ]; then
+# first-run, download required files interactively
+if [ ! -f "$INSTALL_DIR/$GAME_FILES/launcher.bat" ]; then
 	for f in "$WINETRICKS" "$INSTALLER"; do
 		if [ ! -f "$INSTALL_DIR/${f##*/}" ]; then
 			wget -P "$INSTALL_DIR" "$f" || exit 1
@@ -51,17 +52,25 @@ if [ ! -f "$INSTALL_DIR/$LAUNCHER" ]; then
 		sh "$INSTALL_DIR/${WINETRICKS##*/}" "$f"
 	done
 
-	# download game when prompted, do not launch the game
+# follow prompts and install game when prompted, do not launch the game
+	xmessage -default okay \
+		'Download and install the official launcher when prompted.
+IMPORTANT: Exit without launching the official launcher. Do NOT select "RUN NOW".'
 	$WINE "$INSTALL_DIR/${INSTALLER##*/}"
+
+	xmessage -default okay \
+		'Download and install the official game files to the default location when prompted.
+IMPORTANT: Exit without launching the game. Do NOT use the official launcher to run the game.'
+	$WINE "$INSTALL_DIR/$LAUNCHER"
 fi
 
 # download and apply linux patches
-[ ! -d "$INSTALL_DIR/patch" ] && git clone "$LINUX_PATCH" "$INSTALL_DIR/patch"
+[ -d "$INSTALL_DIR/patch" ] || git clone "$LINUX_PATCH" "$INSTALL_DIR/patch"
 git -C "$INSTALL_DIR/patch" pull
 
 cd "$INSTALL_DIR/$GAME_FILES"
 for f in patch patch_anti_logincrash; do
-	bash "$INSTALL_DIR/patch/$PATCH_VER/$f.sh"
+	yes y | bash "$INSTALL_DIR/patch/$PATCH_VER/$f.sh"
 done
 
 case "$1" in

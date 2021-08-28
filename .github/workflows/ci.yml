@@ -1,13 +1,5 @@
 name: CI
-on:
-  push:
-    paths:
-    - .github/workflows/*
-    - .profile
-    - .bashrc
-    - .local/bin/*
-    - .once.d/*
-    - Scripts/*
+on: [ push, pull_request ]
 
 jobs:
   Install:
@@ -15,7 +7,7 @@ jobs:
      container: debian:bullseye
      steps:
        - name: Install prerequisite software
-         run: apt-get update && apt-get install -y git gnupg1 wget sudo
+         run: apt-get update && apt-get install -y git wget sudo
        - name: Checkout dotfiles and bootstrap system
          run: |
            git clone --bare \
@@ -42,15 +34,13 @@ jobs:
              -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
            mpv --vo=null noise.webm
            screenfetch
-           printf '%s' 'System install size: '; du -sh / 2> /dev/null || :
-           printf '%s' 'Local install size: '; du -sh $HOME 2> /dev/null || :
-       - name: Stress test nano_overlay and it's dependencies
+       - name: Test nano_overlay and it's dependencies
          shell: bash -le {0}
          env:
            TERM: rxvt
            EXTERN_EDITOR: cat
          run: |
-           for f in $(seq 50); do
+           for f in $(seq 10); do
              for g in rsa ed25519; do
                case $g in
                  rsa) bits=$(seq 1024 $((1024 * 6)) | shuf | head -n 1);;
