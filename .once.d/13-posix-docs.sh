@@ -7,8 +7,13 @@ ARCHIVE='https://web.archive.org/web/20180412190321'
 
 SOURCE='https://pubs.opengroup.org/onlinepubs/9699919799/download'
 BINARY='susv4-2018.tgz'
-INSTALL="$HOME/.local/share/doc"
+VERSION='POSIX.1-2017'
+INSTALL_DIR="$HOME/.local/share/doc"
 
-mkdir -pv "$INSTALL"
+# version check
+mkdir -pv "$INSTALL_DIR"
+grep -qr "$VERSION" "$INSTALL_DIR" && \
+	echo "$VERSION already installed." && exit 0
+
 wget -q -O - "$ARCHIVE/$SOURCE/$BINARY" \
-	| gzip -d | tar -xv -C "$INSTALL" || exit 1
+	| gzip -d | tar -xv -C "$INSTALL_DIR" || exit 1

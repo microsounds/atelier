@@ -17,11 +17,17 @@ finish() {
 trap finish 0 1 2 3 6
 
 # fetch version information
+echo 'Fetching latest version...'
 scrape="$(wget -q -O - "$SOURCE")" || exit 1
 
 mkdir -v "$TMP"
 echo "$scrape" | grep 'title_version' \
      | egrep -o 'v([0-9.])+[a-z]?' | while read VERSION; do
+
+	# version check
+	sunvox -? | fgrep -q "$VERSION" && \
+		echo "$VERSION already installed." && exit 0
+
 	# download and unzip
 	FILENAME="$PROGRAM-${VERSION##v}.zip"
 	wget "$SOURCE/$FILENAME" -O "$TMP/$FILENAME"
