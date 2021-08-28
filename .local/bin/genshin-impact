@@ -1,11 +1,14 @@
 #!/usr/bin/env sh
 
+# usage: genshin-impact [-l]
 # install and/or launch Genshin Impact under Wine 5.3 or later
+# use '-l' flag to run the official launcher (for updates, etc.)
 # some warnings:
-# - requires over 20GiB of available free space in ~/.local/share
+# - requires over 30GiB of available free space in ~/.local/share
+# - do NOT launch the game using the official launcher
 # - linux patches violate miHoYo terms of service, you might get banned
 
-VER='161'
+PATCH_VER='200'
 INSTALL_DIR="$HOME/.local/share/genshin-impact"
 LAUNCHER='drive_c/Program Files/Genshin Impact/launcher.exe'
 GAME_FILES="${LAUNCHER%/*}/Genshin Impact game"
@@ -39,8 +42,6 @@ if [ ! -f "$INSTALL_DIR/$LAUNCHER" ]; then
 			wget -P "$INSTALL_DIR" "$f" || exit 1
 		fi
 	done
-	# download linux patches
-	git clone "$LINUX_PATCH" "$INSTALL_DIR/patch"
 
 	# winetricks
 	# DXVK v1.9.0 required
@@ -54,10 +55,16 @@ if [ ! -f "$INSTALL_DIR/$LAUNCHER" ]; then
 	$WINE "$INSTALL_DIR/${INSTALLER##*/}"
 fi
 
-# linux patches
+# download and apply linux patches
+[ ! -d "$INSTALL_DIR/patch" ] && git clone "$LINUX_PATCH" "$INSTALL_DIR/patch"
+git -C "$INSTALL_DIR/patch" pull
+
 cd "$INSTALL_DIR/$GAME_FILES"
 for f in patch patch_anti_logincrash; do
-	bash "$INSTALL_DIR/patch/$VER/$f.sh"
+	bash "$INSTALL_DIR/patch/$PATCH_VER/$f.sh"
 done
 
-$WINE explorer /desktop="anyname,$DPY_RES" cmd /c "$INSTALL_DIR/$GAME_FILES/launcher.bat"
+case "$1" in
+	'-l' ) $WINE "$INSTALL_DIR/$LAUNCHER";;
+	*) $WINE explorer /desktop="genshin,$DPY_RES" cmd /c "$INSTALL_DIR/$GAME_FILES/launcher.bat"
+esac
