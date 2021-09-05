@@ -22,5 +22,5 @@ eval "$(ssh-agent -st 3600)" > /dev/null
 # start X server if tty1
 case $(tty) in
 	*tty1) exec startx;;
+	*) exec $SHELL
 esac
-exec $SHELL
