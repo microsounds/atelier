@@ -136,7 +136,7 @@ power() (
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
 		for f in $acpi; do case $f in
-			charged) btime_v="$btime_v till charged";;
+			charged) btime_v="$btime_v 'til charged";;
 			remaining) btime_v="$btime_v left";;
 		esac; done
 	fi
