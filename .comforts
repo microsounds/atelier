@@ -6,7 +6,6 @@ bash bash-completion shellcheck
 *brasero xorriso eject
 calendar
 chromium jq
-cmark-gfm
 cpp
 *cups libnss-mdns simple-scan sane-airscan
 dc
@@ -31,6 +30,7 @@ mpv youtube-dl ffmpeg mediainfo
 nano libncurses-dev openssl exuberant-ctags
 openssh-client ssh-askpass-gnome
 *openssh-server
+pandoc cmark-gfm
 parallel
 pcmanfm lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
 pv progress
