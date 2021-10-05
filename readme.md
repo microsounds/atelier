@@ -29,7 +29,7 @@ Basic installation instructions are provided, along with some documentation for 
 	```shell
 	$ git clone --bare {GIT_REMOTE}/atelier ~/.config/meta
 	$ git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
-	 # Invoke the login shell to apply changes made to the environment
+	>> Invoke the login shell to apply changes made to the environment
 	$ exec $SHELL -l
 	```
 4. Run `post-install` in the shell to run post-install scripts automatically.
@@ -138,7 +138,7 @@ Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that point
 For use with multi-monitor and/or complicated display setups, you can override the default display layout with one or more commands to `xrandr` saved to _optional_ config file `~/.xrandr`
 
 ```
- # two monitors, right is vertical
+>> e.g. two monitors, right is mounted vertically
 --output HDMI-0 --auto --primary --rotate normal
 --output HDMI-1 --auto --right-of HDMI-0 --rotate right
 ```
