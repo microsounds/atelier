@@ -128,6 +128,11 @@ help() (
 git() (
 	case "$1" in
 		-C | init | clone | meta) ;;
+		sync) # quickly sync dotfiles and ~/Git directory
+				command git meta pull -v
+				find ~/Git -name '*.git' -type d | while read -r f; do
+					command git -C "${f%/*}" pull -v
+				done && return;;
 		*) command git status > /dev/null 2>&1 || alias='meta'
 	esac
 	command git $alias "$@"

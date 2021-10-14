@@ -13,7 +13,7 @@
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
 	# quickly commit changes and push
 	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
-	sync = "!f() { git checkin; git push; }; f"
+	shove = "!f() { git checkin; git push; }; f"
 
 [init]
 	defaultBranch = master
