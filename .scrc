@@ -1,9 +1,8 @@
 # ~/.scrc: spreadsheet calculator config
 
-set color
 set numeric
 set craction = 1
 
 # currency
 format 5 = "$#,0.&"
-color 1 = @cyan;@black
+
