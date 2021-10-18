@@ -201,17 +201,20 @@ _NOTE: On first-run, `chromium` will momentarily exit and restart to rebuild con
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
 ## `git`
-`git` aliases are defined in [`~/.gitconfig`](.gitconfig) or implemented in interactive shell function `git()`.
+`git` aliases are defined in [`~/.gitconfig`](.gitconfig) or implemented in interactive shell function `git()`
 
-This is a critical component of the graphic shell environment. See *Usage Notes* for more information.
+See *Usage Notes* for more information.
 
-| alias | function |
-| -- | -- |
-| `summary` | Outlines the last 20 commits with a commit graph. |
-| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to the `git` command, added implicitly when outside a git directory. |
-| `flatten` | Automatically merges `--fixup` commits out of existence if found within the latest 5 commits. |
-| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
-| `shove` | Runs `checkin` and pushes immediately. |
+* _This is a critical component of the graphic shell environment, some aliases are cumulative in nature._
+
+	| alias | function |
+	| -- | -- |
+	| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to a `git` command, added implicitly when outside a git diroctory. |
+	| `summary` | Outlines the last 20 commits with a commit graph. |
+	| `flatten` | Automatically merges `--fixup` commits out of existence if found within the latest 5 commits. |
+	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
+	| `shove` | Runs `checkin` and pushes immediately. |
+	| `sync` | Runs `git meta pull` and then recurses through `~/Git` and runs `git pull` on every existing `git` repo found. |
 
 ## `nano`
 _NOTE: `nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
