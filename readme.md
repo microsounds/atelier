@@ -123,7 +123,8 @@ Search/Everything/Caps lock key serves as the super key. Same as above, with the
 
 # Some environment notes
 ## X server invocation
-No login manager is used, login to `tty1` to start the graphical shell.
+No display manager is used, login to `tty1` to start the graphical shell.
+
 All daemons and services required to support the graphical shell are initialized along with the X server and are terminated when the user terminates the session.
 
 `systemd` unit services, cronjobs and similar mechanisms are avoided.
@@ -172,7 +173,7 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 * `FN_{TERM,HEADER}_JP` for matching fallback fonts
 * `FN_{TERM,HEADER,TEXT}_SIZE` for matching font sizes
 
-## Non-standard commands
+# Non-standard commands
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
