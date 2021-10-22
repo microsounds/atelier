@@ -36,7 +36,7 @@ set_prompt() {
 	# eg. directory deleted and remade with the same name
 	cd "$PWD" 2> /dev/null
 
-	# set window title and prompt
+	# set window title with OSC '\e]0;<title>\a' and prompt
 	git_path="$(path-gitstatus -pe${COLOR:-n})" \
 		|| path="$(path-shorthand)" \
 		|| path="('${PWD##*/}' no longer exists)" # no such file or directory
@@ -71,6 +71,12 @@ swallow() (
 # enable terminal swallowing for selected X applications
 for f in feh mpv pcmanfm xdiskusage; do
 	alias "$f"="swallow $f"
+done && unset f
+
+# use xterm default colors on TUI applications that
+# force their own background colors
+for f in nmtui sc; do
+	eval "$f() { palette xterm; command $f \"\$@\"; palette; }"
 done && unset f
 
 # create parent directories
@@ -242,7 +248,8 @@ colors() (
 	done
 )
 
-# reload terminal configuration, pass optional colorscheme name
+# reload terminal configuration through xrdb
+# accepts optional colorscheme name
 reload() {
 	find ~/.local/include/colors -type f | while read -r f; do
 		if echo "${f##*/}" | fgrep -q "${@:-nightdrive}"; then

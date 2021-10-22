@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+# usage: palette [scheme name]
+# set color palette using OSC escape codes
+
+# append scheme filename for the preprocessor
+scheme="$(find ~/.local/include/colors -type f | fgrep "${@:-nightdrive}")"
+[ -z "$scheme" ] && { echo "Invalid scheme name."; exit 1; }
+scheme="#include \"$scheme\"
+"
+
+# every attempt was made to automate this as a single for loop with
+# eval variable indirection but this mixes OSC escapes and newline literals
+# which cannot be combined when using eval, this is a limitation of posix shell
+
+# most terminal emulators support the following escape codes
+# - OSC '\e]4;1;#RRGGBB;...15;#RRGGBB;\a' for setting color palette
+# - OSC '\e]10;#RRGGBB\a' for fg color
+# - OSC '\e]11;#RRGGBB\a' for bg color
+# - OSC '\e]12;#RRGGBB\a' for cursor color
+
+{	for f in $(seq 0 15); do
+		pal="$pal$f;COLOR$f;"
+	done
+	pal="$(echo "$scheme$pal" | cpp -P)"
+	printf '\e]4;%s\a' "$pal"
+} &
+fg='FGCOLOR'; fg="$(echo "$scheme$fg" | cpp -P | tr -d ' ')"; printf '\e]10;%s\a' "$fg"
+bg='BGCOLOR'; bg="$(echo "$scheme$bg" | cpp -P | tr -d ' ')"; printf '\e]11;%s\a' "$bg"
+printf '\e]12;%s\a' "$fg"
+

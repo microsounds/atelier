@@ -162,8 +162,12 @@ For consistency, `xinit`, `dwm` and other scripts make use of the C preprocessor
 Theme settings and indivdual color schemes are stored as C header files containing preprocessor macros representing color hex codes in [`~/.local/include`](.local/include).
 This directory is appended to `$C_INCLUDE_PATH` at login.
 
-* Invoking shell function `reload` will reload changes to `.xresources` and refresh your terminal instance.
-	* _Optionally, you can temporarily apply another existing color scheme by naming it as an argument._
+* Using shell function `reload` will reload changes to `.xresources` and hard-reset your current terminal instance.
+* Use command `palette` to soft-reset color scheme using OSC terminal escapes without losing the current shell.
+
+_Optionally, you can apply another existing color scheme by naming it as an argument.
+This can be useful when dealing with TUI applications that force their own background colors._
+
 
 ### List of available macros
 * `{FG,BG}COLOR` for terminal fg/bg colors
@@ -177,7 +181,7 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
-2. Non-interactive shell library functions [`~/.local/lib`](.local/lib)
+2. Non-interactive shell library executables [`~/.local/lib`](.local/lib)
 	* Shell script snippets used by multiple scripts to reduce clutter.
 3. Normal executables and symlinks in [`~/.local/bin`](.local/bin)
 	* Some are shell functions promoted to scripts so they'll work in `dmenu` or outside of a terminal context.
