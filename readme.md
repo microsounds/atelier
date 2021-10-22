@@ -143,6 +143,7 @@ For use with multi-monitor and/or complicated display setups, you can override t
 --output HDMI-0 --auto --primary --rotate normal
 --output HDMI-1 --auto --right-of HDMI-0 --rotate right
 ```
+
 Commands in this file are passed to [`xrandr-cycle`](Scripts/xrandr_cycle.sh) line by line at startup if it exists.
 For example, this configuration would suit a 2 monitor layout with the right monitor mounted vertically.
 
@@ -242,6 +243,45 @@ _NOTE: `nano` keybind macros make use of inline non-printable control characters
 	| `M-1` | Execute current line as shell command and paste output in current buffer.<br>_Inline comments ok._ |
 	| `M-2` | Select token underneath cursor and jump into it's `ctags` definition(s) within the same shell.<br>_Requires valid `tags` file in current or a parent directory._ |
 	| `M-4` | Select token underneath cursor and jump into it's `ctags` definition(s) in a new terminal window.<br>_Requires valid `tags` file in current or a parent directory._ |
+
+## `sc` (spreadsheet calculator)
+`sc` supports macros to some degree, but it's macro documentation is largely non-existent or difficult to understand.
+
+Instead, the shell function `sc()` offers an easier to understand macro system for mangling `.sc` spreadsheet files at runtime.
+* `sc` will automatically run any executable sharing the same initial name as the `.sc` file.
+	* _eg. `sheet1.sc` will run `sheet1.sc.1`, `sheet1.scx`, etc. if they exist in the same directory and are executable at runtime._
+* You can write an arbitrarly complex pre-run macro script in any language, so long as it is made aware of it's own filename at runtime.
+	* _Because the `sc` file format is plaintext, you can generate `sc` syntax with just a shell script._
+
+### `sc` pre-run macro example
+* This is an example of a conditional macro script for an inventory spreadsheet that color-codes cells when specific strings are found.
+
+	```shell
+	#!/usr/bin/env sh
+	# apply colors to specific strings in column B
+
+	file="${0%.*}" # derive .sc file name from name of this script
+
+	# remove all instances of color from the file in place
+	{ rm "$file"; egrep -v '^color' > "$file"; } < "$file"
+
+	cat <<- EOF >> "$file" # set some non-default colors
+		color 3 = @black;@red
+		color 4 = @black;@yellow
+		color 5 = @black;@green
+	EOF
+	# select only string cells from column B, apply colors based on string contents
+	# sc format: leftstring B2 = "example string"
+	egrep '^((left|right)string|label)' < "$file" | while read -r cmd cell _ str; do
+		case "$cell" in B*)
+			case "$str" in
+				*broken*) echo "color $cell:$cell 3";;
+				*bad*) echo "color $cell:$cell 4";;
+				*working*) echo "color $cell:$cell 5";;
+			esac;;
+		esac
+	done >> "$file"
+	```
 
 [scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
 [shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png

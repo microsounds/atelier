@@ -75,7 +75,7 @@ done && unset f
 
 # use fallback default colors on TUI applications that
 # force their own background colors
-for f in nmtui sc; do
+for f in nmtui; do
 	eval "$f() { palette campbell; command $f \"\$@\"; palette; }"
 done && unset f
 
@@ -146,6 +146,22 @@ git() (
 		*) command git status > /dev/null 2>&1 || alias='meta'
 	esac
 	command git $alias "$@"
+)
+
+# fallback to normal color scheme
+# allows running macro scripts to mangle the .sc file at runtime
+sc() (
+	palette campbell
+	# run executable sc macro scripts in the same dir if they exist
+	# macro scripts must share the same initial name as .sc file
+	# eg. sheet1.sc -> ./sheet1.sc*
+	for f in "$@"; do
+		for g in "$f"*; do
+			[ -x "$g" ] && ./"$g"
+		done
+	done
+	command sc "$@"
+	palette
 )
 
 #
