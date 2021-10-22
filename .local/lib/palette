@@ -14,7 +14,7 @@ scheme="#include \"$scheme\"
 # which cannot be combined when using eval, this is a limitation of posix shell
 
 # most terminal emulators support the following escape codes
-# - OSC '\e]4;1;#RRGGBB;...15;#RRGGBB;\a' for setting color palette
+# - OSC '\e]4;0;#RRGGBB;...15;#RRGGBB;\a' for setting color palette
 # - OSC '\e]10;#RRGGBB\a' for fg color
 # - OSC '\e]11;#RRGGBB\a' for bg color
 # - OSC '\e]12;#RRGGBB\a' for cursor color

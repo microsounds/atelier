@@ -1,5 +1,6 @@
 # ~/.scrc: spreadsheet calculator config
 
+set color
 set numeric
 set craction = 1
 
