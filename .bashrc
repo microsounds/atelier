@@ -73,10 +73,10 @@ for f in feh mpv pcmanfm xdiskusage; do
 	alias "$f"="swallow $f"
 done && unset f
 
-# use xterm default colors on TUI applications that
+# use fallback default colors on TUI applications that
 # force their own background colors
 for f in nmtui sc; do
-	eval "$f() { palette xterm; command $f \"\$@\"; palette; }"
+	eval "$f() { palette campbell; command $f \"\$@\"; palette; }"
 done && unset f
 
 # create parent directories
