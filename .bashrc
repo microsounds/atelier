@@ -146,6 +146,7 @@ git() (
 
 # fallback to normal color scheme
 # allows running macro scripts to mangle the .sc file at runtime
+# remove unwanted backup files appended with .sc~
 sc() (
 	palette campbell
 	# run executable sc macro scripts in the same dir if they exist
@@ -157,6 +158,7 @@ sc() (
 		done
 	done
 	command sc "$@"
+	for f in "$@"; do rm -rf "${f}~"; done
 	palette
 )
 
