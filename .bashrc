@@ -32,10 +32,6 @@ set_prompt() {
 		r='\[\e[0m\]'  # reset
 	fi
 
-	# follow current directory through inode changes
-	# eg. directory deleted and remade with the same name
-	cd "$PWD" 2> /dev/null
-
 	# set window title with OSC '\e]0;<title>\a' and prompt
 	git_path="$(path-gitstatus -pe${COLOR:-n})" \
 		|| path="$(path-shorthand)" \
