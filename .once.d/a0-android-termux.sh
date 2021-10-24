@@ -9,11 +9,13 @@ uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
 # install prerequisites
 cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	wget git proot       # req'd for bootstrap
-	clang                # provides cpp
+	clang binutils       # provides cpp
 	openssl-tool openssh # nano-overlay
 	ledger
 	bash-completion
 EOF
+# update existing
+pkg update -y
 # setup storage
 yes y | termux-setup-storage
 
