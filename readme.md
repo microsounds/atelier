@@ -17,7 +17,7 @@ This is my primary computing setup, a self-contained graphical shell environment
 
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
-![scrot]
+[![scrot]][scrot]
 > _Pictured: Debian stable, a "graphical shell" environment consisting mostly of Xorg, dwm, sxhkd, and urxvtd._
 
 # Quick start
@@ -38,11 +38,11 @@ Basic installation instructions are provided, along with some documentation for 
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
 <a href="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
-	<img height="150px" align="right" src="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
+	<img width="125px" align="right" src="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot2.png">
 </a>
 
 ## Quick start on Termux for Android
-Currently, only a basic shell environment in single-user mode is supported.
+> Currently, only a basic shell environment in single-user mode is supported.
 
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
