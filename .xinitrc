@@ -33,6 +33,9 @@ dconf load '/' < ~/.config/gtk/gtk3.conf &
 # disable bell in bash prompt
 echo 'set bell-style none' > ~/.inputrc &
 
+# prevents dbus applications from hanging on startup
+dbus-update-activation-environment --systemd DISPLAY &
+
 ## session daemons
 # mangle sxhkd config at runtime
 {	cfg="$HOME/.config/sxhkd"
