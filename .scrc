@@ -7,4 +7,3 @@ set craction = 1
 
 # currency
 format 5 = "$#,0.&"
-
