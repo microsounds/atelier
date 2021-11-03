@@ -12,6 +12,8 @@
 ! is-chromebook && exit 0
 
 sudo tee '/etc/modprobe.d/i915.conf' <<- EOF
-	# disable panel-self refresh to mitigate system hangs and instability
+	# disable panel self-refresh to avoid random system hangs
 	options i915 enable_psr=0
+	# disable most forms of processor idling to avoid system hangs at peak load
+	options intel_idle max_cstate=1
 EOF
