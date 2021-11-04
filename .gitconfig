@@ -10,7 +10,7 @@
 	# home directory version control
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 	# squash fixups
-	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i HEAD~5
+	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i --root
 	# quickly commit changes and push
 	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
 	shove = "!f() { git checkin; git push; }; f"

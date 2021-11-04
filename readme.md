@@ -217,7 +217,7 @@ See *Usage Notes* for more information.
 	| -- | -- |
 	| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to a `git` command, added implicitly when outside a git directory. |
 	| `summary` | Outlines the last 20 commits with a commit graph. |
-	| `flatten` | Automatically merges `--fixup` commits out of existence if found within the latest 5 commits. |
+	| `flatten` | Automatically melds `--fixup/squash` commits out of existence starting from the root commit. |
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
 	| `shove` | Runs `checkin` and pushes immediately. |
 	| `sync` | Runs `git meta pull` and then recurses through `~/Git` and runs `git pull` on every existing `git` repo found. |
