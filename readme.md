@@ -206,6 +206,9 @@ _NOTE: On first-run, `chromium` will momentarily exit and restart to rebuild con
 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
+### Chrome Enterprise Policy
+`chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during post-install, which automatically installs several useful extensions on first-run, including [uBlock Origin](https://ublockorigin.com).
+
 ## `git`
 `git` aliases are defined in [`~/.gitconfig`](.gitconfig) or implemented in interactive shell function `git()`
 
