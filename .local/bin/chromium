@@ -1,11 +1,14 @@
 #!/usr/bin/env sh
 
-# chromium external persistent configuration
+# chromium persistent configuration overlay script
 
 # DO NOT mangle config if chromium is running
 CONF="$HOME/.config/chromium"
-if ! ps -e | fgrep -q 'chromium'; then
+is_running() {
+	ps -e | fgrep -q 'chromium'
+}
 
+if ! is_running; then
 	# on first-run, regenerate chromium config
 	if [ ! -d "$CONF/Default" ]; then
 		# checkout persistent settings if deleted
