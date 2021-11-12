@@ -70,8 +70,8 @@ All system-wide changes are performed through automated scripts located in [`~/.
 
 | series | function |
 | -- | -- |
-| `0*` | System-wide changes performed **through** the package manager. |
-| `1*` | Changes to [`~/.local`](.local) file hierarchy, such as sideloaded 3rd party software. |
+| `0*` | System-wide changes performed through the package manager. |
+| `1*` | Changes to [`~/.local`](.local) file hierarchy, such as locally installed software and resources. |
 | `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are hacks._ |
 | `c*` | System-wide changes affecting chromebook hardware only. |
 | `a*` | Android-specific hacks only. |

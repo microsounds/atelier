@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# sideload utilities described in ~/.comforts-git
+# install utilities described in ~/.comforts-git
 # listed git repos must have a makefile and a conventional install recipe
 
 INSTALL="$HOME/.local"
