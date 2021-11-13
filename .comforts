@@ -1,4 +1,4 @@
-## ~/.comforts: essential and optional package groups
+## ~/.comforts: essential and *optional package groups
 
 alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
