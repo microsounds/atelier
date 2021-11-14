@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # installs from essential package list described in ~/.comforts
-# ask to install optional package groups
+# ask to install optional package groups prepended with *asterisk
 
 # force apt non-interactive mode
 env='DEBIAN_FRONTEND=noninteractive'
