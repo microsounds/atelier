@@ -24,6 +24,7 @@ static const char *fonts[] = {
 static const float mfact = 0.55;        /* master area size */
 static const int nmaster = 1;           /* windows in master area */
 static const int resizehints = 0;       /* ignore sizing hints */
+static const int lockfullscreen = 1;    /* force fullscreen focus */
 static const char *tags[] = {
 	"あ", "か", "さ", "た", "な",
 /* 	"は", "ま", "や", "ら", "わ" */
