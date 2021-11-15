@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+# inject custom syntax rules for C-like languages
+INSTALL="$HOME/.local"
+share="$INSTALL/share/nano"
+mv "$share/extra/debian.nanorc" "$share"
+rm -f "$share/markdown.nanorc"
+for f in c javascript; do
+	syn="$share/$f.nanorc"
+	{	rm "$syn"
+		sed "/^comment/r $share/stdc.syntax" > "$syn"
+	} < "$syn"
+done

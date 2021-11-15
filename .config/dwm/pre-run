@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+# apply dwm patches
+if [ -d patches ]; then
+	for g in patches/*.diff; do
+		echo "[patch] $g..."
+		patch < $g || exit 1
+	done
+fi
+

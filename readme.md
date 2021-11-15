@@ -58,15 +58,18 @@ For local-scope changes, files in `$HOME` are versioned and mangled in place usi
 	* _`init` and `clone` commands are unaffected._
 
 ## Using `~/.once.d` post-install scripts
-All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d), you can run them all at once with shell function `post-install`. Each script is self-contained, you can run them individually, anytime.
+All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d), you can run them all at once with shell function `post-install`.
+Each script is self-contained, you can run them individually, anytime.
 
 * Some scripts only apply to specific hardware configurations, and will exit even if they are run.
 * Scripts affecting `systemd` or the bootloader will be skipped in virtualized container contexts.
-* Sideloaded software is installed to [`~/.local/bin`](.local/bin) when possible.
-* [`~/.comforts-git`](.comforts-git) describes small sideloaded utilities that will be installed automatically at runtime via git.
-	* Repos must have a valid makefile install recipe using the `$(PREFIX)` metaphor.
+* Locally installed software is installed to [`~/.local/bin`](.local/bin) when possible.
 * [`~/.comforts`](.comforts) describes the full list of non-optional package groups that will be installed.
 	* Optional package groups are marked with an *asterisk, you will be prompted to approve these at runtime.
+* [`~/.comforts-git`](.comforts-git) describes utilities compiled and installed from their upstream git sources.
+	* Sources marked with an *asterisk will be mirrored to `~/.config/${URL##*/}`
+		* Utilities installed this way can utilize existing `pre-run` and `post-run` install ~~hacks~~ scripts.
+	* Repos must have a typical `./configure` and/or `make install PREFIX=...` metaphor to build correctly.
 
 | series | function |
 | -- | -- |

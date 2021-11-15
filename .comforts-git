@@ -1,6 +1,11 @@
-## ~/.comforts-git: essential upstream utilities
+## ~/.comforts-git: essential and *persistent upstream git utilities
 
+*https://git.suckless.org/dwm
+*https://git.suckless.org/dmenu
+
+https://github.com/ritave/xeventbind
 https://github.com/microsounds/kagami
 https://github.com/dylanaraps/pfetch
 https://github.com/sjmulder/trickle
-https://github.com/ritave/xeventbind
+
+*https://git.savannah.gnu.org/git/nano

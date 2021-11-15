@@ -26,6 +26,5 @@ for f in $(cat ~/.comforts | sed 's/#.*$//g'); do
 done
 
 # force completely unattended install
-
 echo "$pkgs" | xargs sudo $env apt-get -y install || exit 1
 sudo apt-get clean

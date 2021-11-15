@@ -1,15 +1,6 @@
 #!/usr/bin/env sh
 
-# X server configuration
-
-# conditionally recompile dwm/dmenu
-for f in dwm dmenu; do
-	if ! bin="$(which $f)" > /dev/null || \
-		! is-newer "$bin" ~/.config/$f/config.h; then
-		~/.once.d/10-dwm-install.sh
-		break
-	fi
-done
+# X server runtime configuration
 
 # ~/.config/xorg/*.conf
 # force xorg.conf on specific hardware to fix screen tearing
