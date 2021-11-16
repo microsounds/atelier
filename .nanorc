@@ -6,6 +6,7 @@ include ~/.local/share/nano/*.nanorc
 ## editor
 unset jumpyscrolling
 set softwrap
+set fill 79
 set tabsize 4
 set autoindent
 set wordchars "$-:._"
@@ -20,6 +21,11 @@ unset locking
 set positionlog
 unset historylog
 unset suspendable
+
+##  keybinds
+bind ^Z undo main
+##   disable Ctrl+S to save
+unbind ^S main
 
 ## keybind macros
 ## use M-V to insert keystroke literals
@@ -41,9 +47,6 @@ bind M-4 "[C[D6visual nano-overlay -e '' all &" main
 ##   cut current line, execute as shell command, accept buffer as stdin,
 ##   return to top of buffer, paste original line
 bind M-0 "|\" main
-
-##  disallow saving with ^S
-unbind ^S main
 
 ## ui
 set emptyline
