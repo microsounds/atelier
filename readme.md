@@ -236,6 +236,7 @@ _NOTE: `nano` keybind macros make use of inline non-printable control characters
 	| opt | function |
 	| -- | -- |
 	| `-e, --ctags <tag> <#>`  | Jumps into file containing `ctags` definition matching `<tag>`.<br>Optional `<#>` selects from multiple matches, `all` will open all of them. |
+	| `-c, --ctags-dict <file1>...` | Enable project-wide autocomplete by appending condensed dictionary of all `ctags` keywords to all files.<br>Dictionary will be removed upon exiting. |
 	| `-f, --encrypt <file>` | Open AES encrypted text file with a plaintext password. <br>File will be created if it doesn't exist. |
 	| `-j, --rsa <file>` | Open AES encrypted text file with generic RSA keypair in PEM format. <br>File will be created if it doesn't exist. |
 	| `-s, --ssh-sign <file>` | Open AES encrypted text file with a nonce value signed with SSH private key. <br>File will be created if it doesn't exist. |

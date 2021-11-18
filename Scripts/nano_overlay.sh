@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v1.0 — interactive external overlay for GNU nano
+## nano_overlay.sh v1.1 — interactive external overlay for GNU nano
 ## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
 ## Usage: nano-overlay [OVERLAY OPTS] [--] [OPTIONS] [[+LINE[,COLUMN]] FILE]...
 ##  -h, --help      Displays this message.
@@ -49,6 +49,18 @@ mode_help() {
 	{ grep '^##' | sed 's/^## //'; } < "$0"
 }
 
+ctags_find_root() {
+	# find root directory containing ctags index
+	# sets $PWD to this directory if found
+	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
+	[ ! -z "$PWD" ] ||
+		quit 'No index found in this or any parent directories up to /'
+
+	# validate index and get version
+	ver="$(fgrep '!_TAG_FILE_FORMAT' < "$PWD/tags" | cut -f2)"
+	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
+}
+
 ## Search and jump to source code definitions provided by POSIX ctags(1).
 ##  -e <tag> <#>    If a ctags index file exists in the current or a parent
 ##  or --ctags      directory, search through it for '<tag>' and open the file
@@ -92,16 +104,10 @@ ex_parser() {
 
 mode_ctags() {
 	name='ctags'
-	# find root directory containing ctags index
-	# prefixes all relative filenames found
-	while [ ! -z "$PWD" ] && [ ! -f "$PWD/tags" ]; do PWD="${PWD%/*}"; done
-	[ ! -z "$PWD" ] ||
-		quit 'No index found in this or any parent directories up to /'
 
-	# validate index and get version
-	ver="$(fgrep '!_TAG_FILE_FORMAT' < "$PWD/tags" | cut -f2)"
-	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
-
+	# find ctags index
+	# relative filenames will be made relative to this directory
+	ctags_find_root
 	[ ! -z "$1" ] || quit 'No tag query given'
 
 	# session persistence
@@ -177,6 +183,42 @@ mode_ctags() {
 	done
 	multi="$(echo "$multi" | sort | uniq -d)"
 	exec $EDITOR ${multi:+-v} "$@"
+}
+
+## Enable project-wide word fragment autocomplete provided by POSIX ctags(1).
+##  -c <file1>...   Enables project-wide keyword autocomplete within nano.
+##  or --ctags-dict If a ctags index file exists in the current or a parent
+##                  directory, append it's keywords to all files opened by
+##                  nano in the form of a condensed keyword dictionary at the
+##                  end of the file.
+##                  Condensed keyword dictionary will be removed upon exiting.
+
+ctags_dict_append() {
+	name='ctags-dict'
+
+	# extends nano autocomplete to include all keywords in ctags index
+	# by appending condensed keyword dictionary to the end of every input file
+	# magic identifier appended for easy removal
+	CTAGS_DICT="$(date '+%s%N' | sha256sum | tr -s ' ' '\t' | cut -f1)"
+	ctags_find_root
+
+	for f in "$@"; do
+		[ ! -f "$f" ] && continue
+		{	printf '%s\n%s\n' "$CTAGS_DICT" \
+				"${0##*/}: ctags in-place autocomplete keyword dictionary"
+			cut -f1 | sort | uniq | tr -s '\n ' ' '
+		} < "$PWD/tags" | fold -s -w 78 | sed 's/^/# &/' >> "$f"
+	done
+}
+
+ctags_dict_purge() {
+	# cleanly remove ctags keyword dictionary on exit
+	for f in "$@"; do
+		[ ! -f "$f" ] && continue
+		# don't overwrite symlinks
+		[ -L "$f" ] && f="$(ls -la "$f")" && f="${f#*-> }"
+		{ rm -f "$f"; sed -n "/$CTAGS_DICT/q;p" > "$f"; } < "$f"
+	done
 }
 
 ## Notes on encryption routines
@@ -572,13 +614,14 @@ done &
 
 # overlay command line options
 name='overlay'
-unset id_key opt
+unset id_key opt CTAGS_DICT
 for f in "$@"; do case "$f" in
 
 	# interactive overlay options
 	# steal certain switches used by GNU nano
 	-h|--help) mode_help 1>&2 && exit;;
 	-e|--ctags) shift && mode_ctags "$@" && exit;;
+	-c|--ctags-dict) shift && ctags_dict_append "$@" && break;;
 	-f|--encrypt) shift && mode_encrypt "$@" && exit;;
 	-j|--rsa) shift && mode_encrypt_rsa "$@" && exit;;
 	-s|--ssh-sign) shift && mode_encrypt_ssh_sign "$@" && exit;;
@@ -608,4 +651,5 @@ esac; done
 [ ! -z "$opt" ] && opt="-$(echo "$opt" | tr -s 'a-z')"
 
 wait
-exec $ACTUAL_EDITOR $opt "$@"
+$ACTUAL_EDITOR $opt "$@"
+[ ! -z "$CTAGS_DICT" ] && ctags_dict_purge "$@" &
