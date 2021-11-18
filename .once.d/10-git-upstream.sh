@@ -43,7 +43,8 @@ for f in $(cat ~/.comforts-git); do
 				git init
 				git remote add origin "$f"
 			fi
-			git fetch --tags origin master || exit 1;;
+			git fetch --tags origin master || exit 1
+			git merge FETCH_HEAD || exit 1;;
 		*) # git clone and discard afterward
 			trap finish 0 1 2 3 6
 			TMP="$(mk-tempdir)"
@@ -52,7 +53,7 @@ for f in $(cat ~/.comforts-git); do
 	esac
 
 	# checkout latest and install
-	git reset --hard && git checkout master
+	git reset --hard && git checkout master || exit 1
 
 	[ -x "$TMP/pre-run" ] && ./pre-run # pre-run hacks
 	if [ -x "$TMP/configure" ]; then # autoconf configure
