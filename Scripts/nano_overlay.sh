@@ -206,7 +206,7 @@ ctags_dict_append() {
 		[ ! -f "$f" ] && continue
 		{	printf '%s\n%s\n' "$CTAGS_DICT" \
 				"${0##*/}: ctags in-place autocomplete keyword dictionary"
-			cut -f1 | sort | uniq | tr -s '\n ' ' '
+			cut -f1 | grep -v '^!_TAG_' | sort | uniq | tr -s '\n' ' '
 		} < "$PWD/tags" | fold -s -w 78 | sed 's/^/# &/' >> "$f"
 	done
 }
@@ -651,5 +651,5 @@ esac; done
 [ ! -z "$opt" ] && opt="-$(echo "$opt" | tr -s 'a-z')"
 
 wait
+[ ! -z "$CTAGS_DICT" ] && trap 'ctags_dict_purge "$@" &' 0 1 2 3 6
 $ACTUAL_EDITOR $opt "$@"
-[ ! -z "$CTAGS_DICT" ] && ctags_dict_purge "$@" &
