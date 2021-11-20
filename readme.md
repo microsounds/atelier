@@ -13,7 +13,7 @@
 This is my primary computing setup, a self-contained graphical shell environment for Debian GNU/Linux.
 * Git is used to maintain an identical and reproducible setup across multiple machines.
 * A series of post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
-	* _Unit testing ensures a reproducible installation with each new change to post-install scripts._
+	* _A [suite of unit tests](.github/workflows/ci.yml) ensures a reproducible installation with each revision._
 
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
@@ -54,6 +54,7 @@ For local-scope changes, files in `$HOME` are versioned and mangled in place usi
 * `$HOME` is considered the detached working tree for a git **bare repo** located at `~/.config/meta`
 * The `meta` alias prefixes all git commands with `--git-dir=$HOME/.config/meta --work-tree=$HOME`
 * `meta status` will ignore files not manually added or tracked by this git repo.
+	* _This is achieved using the `status.showUntrackedFiles no` repository option and not via manually updating `~/.gitignore` as is commonly done._
 * Invoking `git` outside of a valid git directory will append the `meta` alias automatically.
 	* _`init` and `clone` commands are unaffected._
 
