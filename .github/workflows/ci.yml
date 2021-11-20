@@ -19,22 +19,18 @@ jobs:
          env:
            TERM: rxvt
          run: yes n | post-install
-       - name: Assert and test selected components of the shell environment
+       - name: Push updates to website using kagami
          shell: bash -le {0}
          env:
-           TERM: rxvt
+           GH_PAT: ${{ secrets.GH_PAT }}
+           SITE_REPO: microsounds/microsounds.github.io
          run: |
-           GIT_WORK_TREE="$HOME" GIT_DIR="$HOME/.config/meta" path-gitstatus -p
-           fgrep 'stdc.syntax' < ~/.local/share/nano/c.nanorc
-           colors
-           cpp -P <<- EOF
-               #include <colors/nightdrive.h>
-           EOF
-           twopass ffmpeg -loglevel quiet -s 1920x1080 -t 0.2 -f rawvideo \
-             -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
-           mpv --vo=null noise.webm
-           screenfetch
-       - name: Test nano_overlay and it's dependencies
+           git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
+           cd ~/site
+           kagami
+           git remote set-url origin "https://$GH_PAT@github.com/$SITE_REPO"
+           git shove
+       - name: Test nano_overlay ssh-sign file encryption
          shell: bash -le {0}
          env:
            TERM: rxvt
@@ -65,3 +61,19 @@ jobs:
                rm -rf "$g-$bits"*
              done
            done
+           rm -rf ~/site
+       - name: Test various assertions and sanity checks
+         shell: bash -le {0}
+         env:
+           TERM: rxvt
+         run: |
+           GIT_WORK_TREE="$HOME" GIT_DIR="$HOME/.config/meta" path-gitstatus -p
+           fgrep 'stdc.syntax' < ~/.local/share/nano/c.nanorc
+           colors
+           cpp -P <<- EOF
+               #include <colors/nightdrive.h>
+           EOF
+           twopass ffmpeg -loglevel quiet -s 1920x1080 -t 0.2 -f rawvideo \
+             -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
+           mpv --vo=null noise.webm
+           screenfetch
