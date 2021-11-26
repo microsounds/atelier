@@ -15,7 +15,9 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
 
-## ssh-agent
+## ssh-agent daemon
+# persist for current session only, return 0 on logout
+trap 'ssh-agent -k > /dev/null || :' 0 1 2 3 6
 eval "$(ssh-agent -st 3600)" > /dev/null
 
 ## login shell
