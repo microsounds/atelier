@@ -9,7 +9,7 @@ ctrl + shift + q
 	sfx-play othr03 & \
 	printf '✓\n✘' | dmenu -f \
 		-p 'Terminate X session?' -sb str(COLOR6) -sf str(COLOR0) \
-		| fgrep -q '✓' && pkill X &
+		| fgrep -q '✓' && pkill -t "tty$XDG_VTNR" X &
 # launcher
 super + p
 	dmenu_path | dmenu -f | sh &
