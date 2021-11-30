@@ -17,5 +17,7 @@ sudo tee '/etc/modprobe.d/i915.conf' <<- EOF
 	# disable most forms of processor idling to avoid system hangs at peak load
 	options intel_idle max_cstate=1
 	# disable intel_pstate driver to use intel_cpufreq fallback
+	# intel_cpufreq very likely already falls back to acpi-cpufreq via kernel
+	# argument intel_pstate=disable
 	blacklist intel_pstate
 EOF
