@@ -87,7 +87,10 @@ color="$clean" # default color
 [ ! -z "$tree" ] && color="$dirty" && bits="$bits*" # files modified
 [ ! -z "$untracked" ] && color="$dirty" && bits="$bits%" # untracked files
 [ ! -z "$unmerged" ] && branch="<!>$branch" # merge conflict
-[ -f "$git_dir/refs/stash" ] && bits="^$bits" # stash exists
+[ -f "$git_dir/refs/stash" ] || { # stash exists?
+	[ -f "$git_dir/packed-refs" ] &&
+		fgrep -q 'refs/stash' "$git_dir/packed-refs"
+} && bits="^$bits"
 
 # parse option flags
 for f in $(echo "${@#-}" | sed 's/./& /g'); do case $f in
