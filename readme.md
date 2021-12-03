@@ -18,7 +18,8 @@ This is my primary computing setup, a self-contained graphical shell environment
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
 [![scrot]][scrot]
-> _Pictured: Debian stable, a "graphical shell" environment consisting mostly of Xorg, dwm, sxhkd, and urxvtd._
+> **PICTURED**<br>
+> _Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
 
 # Quick start
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
@@ -42,7 +43,9 @@ Basic installation instructions are provided, along with some documentation for 
 </a>
 
 ## Quick start on Termux for Android
-> Currently, only a basic shell environment in single-user mode is supported.
+> **NOTE**<br>
+> _Currently, only a basic shell environment in single-user mode is supported.<br>
+> This is meant to be a lightweight port with modifications, do not initiate a full `post-install`._
 
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
@@ -211,7 +214,7 @@ _NOTE: On first-run, `chromium` will momentarily exit and restart to rebuild con
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
 ### Managed policy overrides
-`chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during post-install, which automatically installs several useful extensions on first-run, including [uBlock Origin](https://ublockorigin.com).
+`chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during [post-install](.once.d/29-chromium-extensions.sh), which automatically installs several useful extensions on first-run, including [uBlock Origin](https://ublockorigin.com).
 
 ## `git`
 `git` aliases are defined in [`~/.gitconfig`](.gitconfig) or implemented in interactive shell function `git()`
