@@ -9,6 +9,8 @@
 	summary = log --oneline --decorate --graph -n 16
 	# home directory version control
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
+	# list all tracked filenames in repo, for use with xargs
+	list-files = ls-tree -r HEAD --name-only --full-tree
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i --root
 	# quickly commit changes and push

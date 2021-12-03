@@ -186,7 +186,7 @@ This can be useful when dealing with TUI applications that force their own backg
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
 
 1. Interactive shell functions defined in [`~/.bashrc`](.bashrc)
-2. Non-interactive shell library executables [`~/.local/lib`](.local/lib)
+2. Non-interactive shell library executables in [`~/.local/lib`](.local/lib)
 	* Shell script snippets used by multiple scripts to reduce clutter.
 3. Normal executables and symlinks in [`~/.local/bin`](.local/bin)
 	* Some are shell functions promoted to scripts so they'll work in `dmenu` or outside of a terminal context.
@@ -222,8 +222,9 @@ See *Usage Notes* for more information.
 
 	| alias | function |
 	| -- | -- |
-	| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to a `git` command, added implicitly when outside a git directory. |
+	| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to a `git` command.<br>_(Added implicitly when outside a git directory.)_ |
 	| `summary` | Outlines the last 20 commits with a commit graph. |
+	| `list-files` | List all tracked filenames in repo, ideally for use with xargs. |
 	| `flatten` | Automatically melds `--fixup/squash` commits out of existence starting from the root commit. |
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
 	| `shove` | Runs `checkin` and pushes immediately. |
