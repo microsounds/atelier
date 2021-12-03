@@ -50,6 +50,7 @@ Basic installation instructions are provided, along with some documentation for 
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
 	* Applies android-specific hacks and termux specific dotfiles for theming and softkeys.
+3. When pulling changes from upstream, always stash changes to prevent merge conflicts.
 
 # Usage notes
 ## Using `git meta`
