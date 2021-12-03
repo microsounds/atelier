@@ -18,4 +18,12 @@
 #define FN_HEADER_JP   Dejima
 #define FN_HEADER_SIZE 16
 
+/*
+ * Fallback glyphs and FN_EMOJI (future)
+ * Emoji glyphs are currently provided by fallback font DejaVu Sans in
+ * all applications, future changes to Debian might necessitate introducing a
+ * subset of DejaVu Sans or another font with just emoji glyphs to
+ * selectively override FN_{TERM,TEXT,HEADER}, generated during post-install.
+ */
+
 #endif /* THEME_H */
