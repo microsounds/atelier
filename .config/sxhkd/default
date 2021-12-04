@@ -21,11 +21,13 @@ super + Return
 	pcmanfm
 # take screenshot
 super + {_,shift +} Print
-	{scrot,sleep 0.2; scrot -s}
+	{scrot,sleep 0.2; scrot -sf}; \
+	notify-send -t 1 'Screenshot saved.'
 # ssh-agent
 super + BackSpace
 	sfx-play btn16 & \
-	! ssh-add -l && ssh-add || ssh-add -D
+	! ssh-add -l && ssh-add || ssh-add -D; \
+	ssh-add -l | notify-send -t 2
 # task manager/syslog
 ctrl + alt + {Delete,Insert}
 	visual {htop,watch -n 0.1 'dmesg | tac'}
@@ -42,17 +44,19 @@ ctrl + alt + {Delete,Insert}
 	{grpn,visual nmtui}
 # F5: toggle active displays
 {_,shift +} {super + F5,XF86Display}
-	{xrandr-cycle,arandr}
+	{xrandr-cycle | tail -n +2 | head -n 1 | notify-send,arandr}
 # F6, F7: adjust brightness
 {_,shift +} super + F{6,7}
-	xbacklight -{dec 10,set 1,inc 10,set 100}
+	xbacklight -{dec 10,set 1,inc 10,set 100}; \
+	xbacklight -get | xargs -I '*' notify-send -t 0.3 'Backlight: *%'
 {_,shift +} XF86MonBrightness{Down,Up}
 	xbacklight -{dec 10,set 1,inc 10,set 100}
 # F8, F9, F10: adjust audio
 shift + super + {F8,XF86AudioMute}
 	pavucontrol
 super + F{8,9,10}
-	amixer -q sset Master {toggle,5%-,5%+}
+	amixer sset Master {toggle,5%-,5%+} | egrep -e '[0-9]+%' \
+		| egrep -o '\[.+\]' | head -n 1 | xargs -I '*' notify-send -t 0.4 '🔉 *' &
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer -q sset Master {toggle,5%-,5%+}
 # F11: randomize wallpaper
