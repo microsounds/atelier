@@ -206,7 +206,8 @@ Several commands are extended to include impure functions, such as purposefully 
 	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
 
 ## `chromium`
-_NOTE: On first-run, `chromium` will momentarily exit and restart to rebuild configuration and enable use of externally customized color options._
+> **NOTE**<br>
+>_On first-run, `chromium` will momentarily exit and restart to rebuild configuration and enable use of externally customized color options._
 
 `chromium` was extended to mangle the user-hostile per-profile `Preferences` and global `Local State` JSON files with a series of chained `jq` filters stored in the following files, applying persistent settings in order.
 * [`~/.config/chromium/preferences.conf`](.config/chromium/preferences.conf)
@@ -228,14 +229,15 @@ See *Usage Notes* for more information.
 	| -- | -- |
 	| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to a `git` command.<br>_(Added implicitly when outside a git directory.)_ |
 	| `summary` | Outlines the last 20 commits with a commit graph. |
-	| `list-files` | List all tracked filenames in repo, ideally for use with xargs. |
+	| `list-files` | List all tracked filenames in repo, ideally for use with `xargs`. |
 	| `flatten` | Automatically melds `--fixup/squash` commits out of existence starting from the root commit. |
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
 	| `shove` | Runs `checkin` and pushes immediately. |
 	| `sync` | Runs `git meta pull` and then recurses through `~/Git` and runs `git pull` on every existing `git` repo found. |
 
 ## `nano`
-_NOTE: `nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
+> **NOTE**<br>
+> _`nano` keybind macros make use of inline non-printable control characters, you must use `nano` or `cat -v` to view [`~/.nanorc`](.nanorc) correctly._
 
 * `nano` is an alias for [`nano-overlay`](Scripts/nano_overlay.sh) which mangles config files and offers the following extended options:
 
@@ -256,6 +258,14 @@ _NOTE: `nano` keybind macros make use of inline non-printable control characters
 	| `M-1` | Execute current line as shell command and paste output in current buffer.<br>_Inline comments ok._ |
 	| `M-2` | Select token underneath cursor and jump into it's `ctags` definition(s) within the same shell.<br>_Requires valid `tags` file in current or a parent directory._ |
 	| `M-4` | Select token underneath cursor and jump into it's `ctags` definition(s) in a new terminal window.<br>_Requires valid `tags` file in current or a parent directory._ |
+
+## `notify-send`
+This particular [`notify-send`](.local/lib/notify-send) implements only `-t` for expiration time in seconds,
+because it doesn't tie into any `dbus`-based notification daemon implementing the [Desktop Notifications Specification](https://www.galago-project.org/specs/notification/0.9/index.html).
+
+Instead, it's just a shell script that writes to a named pipe that gets picked up by [`xwin-statusd`](Scripts/wm_status.sh) as a simple way to implement OSD text and single-line notifications.
+
+Unlike other implementations, you can pass notifications/OSD text as an argument or via stdin without using `xargs`.
 
 ## `sc` (spreadsheet calculator)
 `sc` supports macros to some degree, but it's macro documentation is largely non-existent or difficult to understand.
