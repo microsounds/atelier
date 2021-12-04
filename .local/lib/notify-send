@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# usage: notify-send [ -t display_sec ] [ message ] [ < stdin ]
+# send notifications and OSD messages through xwin-statusd
+# accepts message arguments or first line passed through stdin
+
+NFIFO="$HOME/.notify"
+[ -p "$NFIFO" ] ||
+	{ echo "${0##*/}: Cannot write to '$NFIFO', exiting." 1>&2; exit 1; }
+
+unset SECS
+case "$1" in
+	-t) SECS="$2" && shift 2;;
+	-h) { grep '^# ' | sed 's/# //'; } < "$0"; exit;;
+esac
+SECS="${SECS:-5}" # default is 5 seconds
+
+echo "$SECS ${@:-$(cat /dev/stdin)}" >> "$HOME/.notify"
+

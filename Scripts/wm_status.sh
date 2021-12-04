@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# wm_status.sh v0.3
+# wm_status.sh v0.4
 # non-blocking status line daemon
 # prints formatted status information to stdout
 
@@ -24,18 +24,27 @@ for f in $pad $quote; do # surround output with special characters
 done
 unset IFS
 
-# FIFO location
+# FIFO locations
 prog="${0##*/}"
 key="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
 FIFO="${XDG_RUNTIME_DIR:-/tmp}/.${prog%.*}.$key"
 
+# notification FIFO written to by notify-send
+NFIFO="$HOME/.notify"
+
 abort() {
-	rm -rf "$FIFO"
+	rm -rf "$FIFO" "$NFIFO"
 	kill -- -$$ 2> /dev/null
 }
 
 trap abort 0 1 2 3 6
-mkfifo "$FIFO"
+mkfifo "$FIFO" "$NFIFO"
+
+# monitor and redirect notifications from notify-send
+{	while read -r msg < "$NFIFO"; do
+		echo "MSG $msg"
+	done
+} > "$FIFO" &
 
 # thread loop
 launch() {
@@ -184,7 +193,12 @@ while read -r module data; do
 	# receive module output and append delimiter
 	eval "$module=\"$data$delim\""
 
-	# conditionally revoke modules
+	# stop everything to display notification
+	# expected format: '[n display sec] [message]'
+	[ ! -z "$MSG" ] &&
+		echo "${MSG#* }" | sed -e "$script" && sleep "${MSG%% *}" && unset MSG
+
+	# conditionally delete non-message modules
 	case "$data" in
 		0*|*none) eval "unset $module";; # fan spindown/no internet
 		*abled) unset IP;; # no internet
@@ -195,4 +209,5 @@ while read -r module data; do
 
 	# output final formatted status line
 	echo "$bar" | sed -e "$script"
+
 done < "$FIFO"
