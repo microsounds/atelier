@@ -3,7 +3,7 @@
 ## xwin_webm.sh v0.5
 ## Press Ctrl+C to stop recording, press Ctrl+C again to cancel.
 
-# simple screen recorder
+# simple screen recorder, edit settings to suit
 # outputs soundless vp8 webm as required by certain anime imageboards
 
 # colors
@@ -16,12 +16,15 @@ SIZE=2.8M
 CONSTQ=31
 BITRATE=3M # 4M
 SCALE=-1:-1 # 800:-1
-FPS=60 # 25
+FPS=25 # 25
+
+# x,y,w,h display constants
+OFFSET='0,0' # x,y
+RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -n 1)" # WxH
 
 # system
-KEY="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=10 count=1 2> /dev/null)"
-RES="$(xdpyinfo | grep 'dim' | egrep -o '([0-9]+x?)+' | head -n 1)"
 NAME="${0##*/}" # derive script name
+KEY="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=10 count=1 2> /dev/null)"
 CORES="$(grep -c '^proc' /proc/cpuinfo)"
 
 # filenames
@@ -48,4 +51,4 @@ to_webm() {
 info $INFO "$(cat $0 | grep '^##' | sed 's/## //g')"
 iter=0; trap to_webm 2
 ffmpeg -loglevel panic -threads $CORES -framerate $FPS -video_size $RES \
-	-f x11grab -i :0.0+0,0 -c:v libx264 -qp 0 -preset ultrafast "$TEMP"
+	-f x11grab -i :0.0+$OFFSET -c:v libx264 -qp 0 -preset ultrafast "$TEMP"
