@@ -119,7 +119,7 @@ cd() {
 	echo "$PWD" > "$LASTDIR"
 }
 
-# runs shell documentation through a pager
+# reformat bash online documentation with man pager
 help() (
 	[ -z "$1" ] && command help
 	for f in $@; do # decorate bold text
@@ -127,6 +127,29 @@ help() (
 			page="$(echo "$page" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
 			printf "%b" "$page" | less -R
 		fi
+	done
+)
+
+
+# search and reformat POSIX.1-2017 online documentation with man pager
+posix() (
+	abort() {
+		echo 'usage: posix [ section no. ] "SEARCH TERM"' 1>&2; exit 1;
+	}
+	docs="$HOME/.local/share/doc/susv4-2018"
+	[ "$#" -eq 2 ] || abort
+	case "$1" in
+		1) docs="$docs/utilities";; # XCU - posix shell
+		2) docs="$docs/functions";; # XSH - *NIX syscalls
+		3) docs="$docs/basedefs";; # XBD - C standard library
+		*) abort
+	esac
+	find "$docs" -type f | while read -r file; do
+		title="${file##*/}"
+		title="${title%.*}"
+		case "$2" in
+			"$title") { pandoc -s -f html -t man | man -l -; } < "$file"
+		esac
 	done
 )
 
