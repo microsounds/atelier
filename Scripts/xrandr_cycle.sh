@@ -6,17 +6,16 @@
 announce() { echo "$@"; "$@"; }
 
 # option flags
-for f in $@; do
-	case $f in
-		-d) # apply custom display layout from ~/.xrandr
-			[ -f ~/.xrandr ] && while read -r line; do
-				[ ! -z "$line" ] && case "$line" in
-					\#*) continue;;
-					*) announce xrandr $line
-				esac
-			done < ~/.xrandr && exit;;
-	esac
-done
+for f in "$@"; do case "$f" in
+	-d) # apply custom display layout from ~/.xrandr
+		[ -f ~/.xrandr ] && while read -r line; do
+			[ ! -z "$line" ] && case "$line" in
+				\#*) continue;;
+				*) announce xrandr $line
+			esac
+		done < ~/.xrandr
+		exit;;
+esac; done
 
 IFS='
 '
