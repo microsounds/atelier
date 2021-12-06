@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# yt-dlp's makefile builds everything within the git repo and then never copies
+# it to your system for some reason
+# eg. ./home/user/.local/bin instead of ~/.local/bin
+
+cd ."$HOME/.local" && cp -vr * "$HOME/.local"
