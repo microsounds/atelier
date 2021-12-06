@@ -6,7 +6,7 @@
 # if no file/directory is passed, assume current working dir
 
 mode='En'
-for f in $@; do case $f in
+for f in "$@"; do case "$f" in
 	--) break;;
 	-d)
 		mode='De'

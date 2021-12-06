@@ -12,8 +12,8 @@ for f in $(echo "${@#-}" | sed 's/./& /g'); do
 		h) html=1;; # for use in kagami, force display glyphs as text
 	esac
 done
-for f in $@; do case $f in
-	[0-9]*) now="$f";; # use specific unix date instead of now
+for f in "$@"; do case "$f" in
+	[1-9][0-9]*) now="$f";; # use specific unix date instead of now
 esac; done
 [ ! -z "$now" ] || now="$(date '+%s')"
 

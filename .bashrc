@@ -122,7 +122,7 @@ cd() {
 # reformat bash online documentation with man pager
 help() (
 	[ -z "$1" ] && command help
-	for f in $@; do # decorate bold text
+	for f in "$@"; do # decorate bold text
 		if page="$(command help -m "$f")"; then
 			page="$(echo "$page" | sed -E 's/[A-Z]{2,}/\\e[1m&\\e[0m/g')"
 			printf "%b" "$page" | less -R
