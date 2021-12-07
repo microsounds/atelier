@@ -6,12 +6,17 @@
 
 # persistent install mode
 # git sources prepended with *asterisk will be mirrored to ~/.config/${URL##*/}
-# persistent install mode also allows for configuration hacks in the form of
-# pre-run and post-run scripts located in their dedicated ~/.config directory
+
+# user-provided installation scripts
+# installation can be customized before or after the build process with
+# existing executable scripts named {pre,post}-run in
+# ~/.config/upstream/${prog} or at the root of a persistently installed
+# program's install directory.
 # eg. you want to apply patches, mangle the install after installation, etc.
 
 INSTALL="$HOME/.local"
 PERSIST="$HOME/.config"
+SCRIPTS="$HOME/.config/upstream"
 
 finish() {
 	rm -rf "$TMP"
@@ -54,6 +59,9 @@ for f in $(cat ~/.comforts-git); do
 
 	# checkout latest and install
 	git reset --hard && git checkout master || exit 1
+
+	# copy existing installation scripts if available
+	[ -d "$SCRIPTS/$prog" ] && cp -v "$SCRIPTS/$prog/"* "$TMP"
 
 	[ -x "$TMP/pre-run" ] && ./pre-run # pre-run hacks
 	if [ -x "$TMP/configure" ]; then # autoconf configure

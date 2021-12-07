@@ -69,12 +69,6 @@ Each script is self-contained, you can run them individually, anytime.
 * Some scripts only apply to specific hardware configurations, and will exit even if they are run.
 * Scripts affecting `systemd` or the bootloader will be skipped in virtualized container contexts.
 * Locally installed software is installed to [`~/.local/bin`](.local/bin) when possible.
-* [`~/.comforts`](.comforts) describes the full list of non-optional package groups that will be installed.
-	* Optional package groups are marked with an *asterisk, you will be prompted to approve these at runtime.
-* [`~/.comforts-git`](.comforts-git) describes utilities compiled and installed from their upstream git sources.
-	* Sources marked with an *asterisk will be mirrored to `~/.config/${URL##*/}`
-		* Utilities installed this way can utilize existing `pre-run` and `post-run` install ~~hacks~~ scripts.
-	* Repos must have a typical `./configure` and/or `make install PREFIX=...` metaphor to build correctly.
 
 | series | function |
 | -- | -- |
@@ -83,6 +77,20 @@ Each script is self-contained, you can run them individually, anytime.
 | `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are hacks._ |
 | `c*` | System-wide changes affecting chromebook hardware only. |
 | `a*` | Android-specific hacks only. |
+
+### Essential and *optional package groups
+* [ `~/.comforts` ](.comforts) describes a list of non-optional package groups that will be installed through the package manager.
+	* _Optional package groups are marked with an *asterisk, you will be prompted to approve these at runtime._
+
+### Essential and *persistent upstream utilities
+* [`~/.comforts-git`](.comforts-git) describes the full list of utilities compiled and installed from their upstream git sources.
+	* _Repos must have a typical `./configure` and/or `make install PREFIX=...` metaphor to build correctly._
+	* _Sources marked with an *asterisk will be persistently installed to `~/.config/${URL##*/}`_
+
+Installation can be customized with user-provided executable install ~~hacks~~ scripts, named `{pre,post}-run`.
+These can be placed in [`~/.config/upstream`](.config/upstream) or at the root of a persistently installed utility's install directory as described above
+
+Rationale for doing things this way is summarized in commit [`2fe1c3745`](https://github.com/microsounds/atelier/commit/2fe1c3745).
 
 ## Window manager
 `dwm` keybinds are the [defaults](https://ratfactor.com/dwm) with several exceptions.
