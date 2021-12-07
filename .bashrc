@@ -162,9 +162,9 @@ git() (
 				find ~/Git -name '*.git' -type d | sed 's,/.git$,,' \
 					| xargs -I '{}' -P0 git -C '{}' pull -v
 				wait && return;;
-		*) command git status > /dev/null 2>&1 || alias='meta'
+		*) command git status > /dev/null 2>&1 || set -- meta "$@"
 	esac
-	command git $alias "$@"
+	command git "$@"
 )
 
 # fallback to normal color scheme
