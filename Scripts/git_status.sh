@@ -28,19 +28,25 @@ state="${data#"$info"
 # strip leading hashes
 info="${info#*#* }"
 
-# find worktree and actual git dir location
+# get root of worktree, actual git dir location, and current commit short-ref
 # covers git submodule and detached worktree edge cases
-repo="$(git rev-parse --show-toplevel --git-dir)"
-git_dir="${repo##*
-}"
-repo="${repo%%
+parse="$(git rev-parse --show-toplevel --git-dir --short HEAD)"
+IFS='
+'
+for f in repo git_dir short_ref; do
+	sel="${parse%%
 *}"
+	eval "$f=\"$sel\""
+	parse="${parse#"$sel"
+}"
+done
+unset IFS data parse
 
 # interpret branch/upstream info
 # format: 'branch...upstream [ahead 1 behind 1]'
 case "$info" in
 	HEAD*) # detached HEAD mode
-		branch="$(cut -c -7 "$git_dir/HEAD")" # unnamed commit
+		branch="$short_ref" # unnamed commit
 		tag="$(fgrep -rl "$branch" "$git_dir/refs/tags")" # is this a tag?
 		if [ -f "$git_dir/packed-refs" ]; then # aggressively packed
 			tag="$tag$(grep "$branch.*refs/tags" "$git_dir/packed-refs")"
