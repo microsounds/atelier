@@ -133,24 +133,34 @@ help() (
 
 # search and reformat POSIX.1-2017 online documentation with man pager
 posix() (
-	abort() {
-		echo 'usage: posix [ section no. ] "SEARCH TERM"' 1>&2; exit 1;
-	}
+	# docs location
 	docs="$HOME/.local/share/doc/susv4-2018"
-	[ "$#" -eq 2 ] || abort
+	abort() {
+		echo 'usage: posix [ -l ] [ section no. ] "SEARCH TERM"' 1>&2; exit 1;
+	}
+
+	[ "$1" = '-l' ] && list=1 && shift
 	case "$1" in
+		-l) list=1;; # list available pages
 		1) docs="$docs/utilities";; # XCU - posix shell
 		2) docs="$docs/functions";; # XSH - *NIX syscalls
-		3) docs="$docs/basedefs";; # XBD - C standard library
+		3) docs="$docs/basedefs";;  # XBD - C standard library
 		*) abort
 	esac
-	find "$docs" -type f | while read -r file; do
-		title="${file##*/}"
-		title="${title%.*}"
-		case "$2" in
-			"$title") { pandoc -s -f html -t man | man -l -; } < "$file"
-		esac
-	done
+	[ ! -z "$list" ] && { # list available pages in section
+		echo "Available entries in section $1:"
+		find "$docs" -type f | while read -r str; do
+			str="${str##*/}"; echo "${str%.*}"
+		done | sort | paste -s | fold -s
+		exit
+	}
+
+	[ "$#" -eq 2 ] || abort
+	match="$(find "$docs/$2.html" -type f 2> /dev/null)" || {
+		echo "'$2' not found in section $1, exiting."
+		exit 1
+	}
+	{ pandoc -s -f html -t man | man -l -; } < "$match"
 )
 
 # implicitly set git dir to ~/.config/meta if outside a git dir
