@@ -29,7 +29,9 @@ yes y | termux-setup-storage
 # prevent termux from sourcing .bashrc twice every login
 sed -ni ~/.profile -e '/## login shell/q;p'
 
+# rewrite terminal ESC with octal ver as '\e' doesn't always work
 # allow use of standard file descriptors on devices without root
+script='s,\\e,\\33,g'
 fd=0; for f in stdin stdout stderr; do
 	script="$script;s,/dev/$f,/proc/self/fd/$fd,g"
 	fd=$((fd + 1))
