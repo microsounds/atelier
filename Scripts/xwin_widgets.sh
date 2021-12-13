@@ -12,20 +12,21 @@ for f in $LIST; do COUNT=$((COUNT + 1)); done # calculate distance
 # Xinerama support hacks
 # xdotool windowmove commands cannot span across a multi-monitor Xinerama
 # desktop. windowmove commands are bound to the dimensions of the monitor that
-# window is currently on, this is considered the "active monitor". windowmove
+# window is currently on, this is considered the 'active monitor'. windowmove
 # commands beyond those dimensions will silently fail. However, xdotool has no
 # way of indicating the dimensions of the active monitor, which is required to
 # generate correct x,y offsets for the spawned widgets.
 
-# widgets will appear on the monitor that currently has the pointer, nudge
-# pointer to the right to ensure pointer and widgets are on the same monitor
+# widgets will appear on the monitor that currently has the pointer on
+# side-by-side Xinerama setups, nudge pointer to the right to ensure pointer
+# and widgets end up on the same monitor, especially at startup
 xdotool mousemove_relative --sync 1 0 click 1
 
 # pointer location, provides MOUSE_XOFF, MOUSE_YOFF
 eval "$(xdotool getmouselocation | sed -E 's/([a-z]+)/mouse_\1off/g' \
 	| tr ':' '=' | tr 'a-z' 'A-Z' | tr ' ' '\n' | head -n 2)"
 
-# detect display resolution by guessing which monitor has the pointer
+# detect display dimensions by guessing which monitor has the pointer
 # xrandr display dimension format: 'WIDTHxHEIGHT+x_off+y_off'
 for f in $(xrandr -q | grep '[^dis]connected' \
 	| egrep -o '([0-9]+x?\+?)+' | fgrep 'x'); do
