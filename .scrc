@@ -3,7 +3,15 @@
 set color
 set colorneg
 set numeric
-set craction = 1
 
-# currency
+# newline action
+# 0: no movement
+# 1: row down
+# 2: column right
+set craction = 2
+
+# default fg/bg color
+color 1 = @white;@black
+
+# display USD amounts with thousands separator
 format 5 = "$#,0.&"
