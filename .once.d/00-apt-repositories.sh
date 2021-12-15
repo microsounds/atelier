@@ -5,6 +5,8 @@
 # pulls in upgrades if needed
 
 BRANCH='bullseye' # released 2021/08
+! is-ntc-chip || BRANCH='buster' # released 2019/07
+
 CONF='/etc/apt/sources.list'
 TRUSTED='/etc/apt/trusted.gpg.d'
 APTCONF='/etc/apt/apt.conf.d/non-interactive'
@@ -47,7 +49,8 @@ sudo cp -v "$TMP/$KEY" "$TRUSTED/${KEY%.*}.asc"
 sudo tee "${CONF}.d/wine-hq.list" <<- EOF
 	deb https://dl.winehq.org/wine-builds/debian/ $BRANCH main
 EOF
-sudo dpkg --add-architecture i386
+# add 32-bit architecture on amd64
+uname -m | fgrep -q 'x86_64' && sudo dpkg --add-architecture i386
 
 # temporarily disable all prompts
 cat <<- EOF | sudo tee "$APTCONF"
