@@ -8,12 +8,17 @@
 # eg. desktops with only GPU driver in use
 # eg. laptops with NO discrete graphics
 unset xopt
+# detect desktop class machines
 for f in $(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|3d controller)'); do
 	case $f in
 		intel|nvidia) xopt="$f"; break;;
 		ati|amd|radeon) xopt='amd'; break;;
 	esac
 done
+
+# NTC PocketC.H.I.P
+! is-ntc-chip || xopt='ntc-chip'
+
 [ ! -z "$xopt" ] && xopt="-config $(id -u)-override/$xopt.conf"
 
 exec /usr/bin/startx "$@" -- $xopt

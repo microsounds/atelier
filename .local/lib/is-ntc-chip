@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# detect if running on Next Thing Co. C.H.I.P/PocketC.H.I.P
+
+# ntc chip/pocketchip detection
+# this is abandonware with incomplete mainline linux support
+# manufacturer provided kernel version is unlikely to change
+{ fgrep -q 'allwinner' | tr 'A-Z' 'a-z'; } < /proc/cpuinfo && \
+	uname -r | fgrep -q '4.4.13-ntc-mlc' && \
+	exit 0
+exit 1
