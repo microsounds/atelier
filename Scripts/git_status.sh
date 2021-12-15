@@ -30,7 +30,7 @@ info="${info#*#* }"
 
 # get root of worktree, actual git dir location, and current commit short-ref
 # covers git submodule and detached worktree edge cases
-parse="$(git rev-parse --show-toplevel --git-dir --short HEAD)"
+parse="$(git rev-parse --show-toplevel --git-dir --short HEAD)" 2> /dev/null
 IFS='
 '
 for f in repo git_dir short_ref; do
