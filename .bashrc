@@ -69,10 +69,10 @@ for f in feh mpv pcmanfm xdiskusage; do
 	alias "$f"="swallow $f"
 done && unset f
 
-# use fallback default colors on TUI applications that
-# force their own background colors
+# ncurses high contrast fallback colors for TUI applications that make heavy
+# use of background colors such as blue or red
 for f in nmtui; do
-	eval "$f() { palette campbell; command $f \"\$@\"; palette; }"
+	eval "$f() { palette ncurses; command $f \"\$@\"; palette; }"
 done && unset f
 
 # create parent directories
@@ -130,7 +130,6 @@ help() (
 	done
 )
 
-
 # search and reformat POSIX.1-2017 online documentation with man pager
 posix() (
 	# docs location
@@ -181,7 +180,7 @@ git() (
 # allows running macro scripts to mangle the .sc file at runtime
 # remove unwanted backup files appended with .sc~
 sc() (
-	palette campbell
+	palette ncurses
 	# run executable sc macro scripts in the same dir if they exist
 	# macro scripts must share the same initial name as .sc file
 	# eg. sheet1.sc -> ./sheet1.sc*
