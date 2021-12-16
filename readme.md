@@ -19,6 +19,15 @@ This is my primary computing setup, a self-contained graphical shell environment
 
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
+## Tested and supported platforms
+* Any conventional BIOS/UEFI-compliant x86-based Personal Computer
+* x86-based Chromebooks in Developer Mode (SeaBIOS), or liberated with UEFI firmware (Coreboot).
+	* _See <https://mrchromebox.tech/> for more information on unlocking your bootloader._
+* Virtualized Docker containers for use in CI/CD workflows
+* Next Thing Co. PocketC.H.I.P armhf-based portable ~~toy computer~~ linux handheld
+* Termux terminal emulator and Linux environment for Android
+	* _Currently, only a single-user minimal shell environment is supported._
+
 [![scrot]][scrot]
 > **PICTURED**<br>
 > _Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
@@ -79,6 +88,7 @@ Each script is self-contained, you can run them individually, anytime.
 | `2*` | System-wide changes that bypass the package manager, such as changes to `/etc`.<br>_These are hacks._ |
 | `c*` | System-wide changes affecting chromebook hardware only. |
 | `a*` | Android-specific hacks only. |
+| `p*` | NTC PocketCHIP-specific hacks only. |
 
 ### Essential and *optional package groups
 * [ `~/.comforts` ](.comforts) describes a list of non-optional package groups that will be installed through the package manager.
@@ -186,7 +196,6 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 
 _Optionally, you can apply another existing color scheme by naming it as an argument.
 This can be useful when dealing with TUI applications that force their own background colors._
-
 
 ### List of available macros
 * `{FG,BG}COLOR` for terminal fg/bg colors
