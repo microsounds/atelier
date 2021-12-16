@@ -19,15 +19,6 @@ This is my primary computing setup, a self-contained graphical shell environment
 
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
-## Tested and supported platforms
-* Any conventional BIOS/UEFI-compliant x86-based Personal Computer
-* x86-based Chromebooks in Developer Mode (SeaBIOS), or liberated with UEFI firmware (Coreboot).
-	* _See <https://mrchromebox.tech/> for more information on unlocking your bootloader._
-* Virtualized Docker containers for use in CI/CD workflows
-* Next Thing Co. PocketC.H.I.P armhf-based portable ~~toy computer~~ linux handheld
-* Termux terminal emulator and Linux environment for Android
-	* _Currently, only a single-user minimal shell environment is supported._
-
 [![scrot]][scrot]
 > **PICTURED**<br>
 > _Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
@@ -62,6 +53,19 @@ Basic installation instructions are provided, along with some documentation for 
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
 	* Applies android-specific hacks and termux specific dotfiles for theming and softkeys.
 3. When pulling changes from upstream, always stash changes to prevent merge conflicts.
+
+## Notes on platform support
+**Full graphical shell environment**
+* Any conventional BIOS/UEFI-compliant x86-based Personal Computer
+* x86-based Chromebooks in Developer Mode (SeaBIOS), or liberated with UEFI firmware (Coreboot).
+	* _See <https://mrchromebox.tech/> for more information on unlocking your bootloader._
+* [Next Thing Co. PocketC.H.I.P](http://chip.jfpossibilities.com/docs/pocketchip.html) armhf-based portable ~~toy computer~~ linux handheld
+	* _Final NTC-provided Debian 8 (jessie) OS images from 2016 come with out-of-tree `4.4.13-ntc-mlc` kernel pinned, upgradeable to 10 (buster)._
+
+**Single-user minimal shell environment**
+* Bootstrapping in virtualized container instances for use in CI/CD workflows
+* Termux terminal emulator and Linux environment for Android
+	* _Non-standard *NIX environment, currently only supports a subset of available features._
 
 # Usage notes
 ## Using `git meta`
