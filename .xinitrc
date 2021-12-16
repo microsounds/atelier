@@ -3,6 +3,7 @@
 
 ## keymap overrides
 ! is-chromebook || layout='chromebook'
+! is-ntc-chip || layout='ntc-chip'
 
 ## run-once
 # ~/.xrandr: invoke optional display overrides
@@ -45,7 +46,7 @@ dbus-update-activation-environment --systemd DISPLAY &
 		# ignore cpp syntax misuse
 		cpp -P < "$cfg/$f" 2> /dev/null | grep . >> "$cfg/sxhkdrc"
 	done
-} && sxhkd &
+} || : && sxhkd &
 
 # restore versioned pcmanfm config at runtime
 {	for f in ~/.config/fm/*.conf; do
