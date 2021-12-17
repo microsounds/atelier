@@ -20,8 +20,8 @@ super + Return
 {super + e,XF86Explorer}
 	pcmanfm
 # take screenshot
-super + {_,shift +} Print
-	{scrot,sleep 0.2; scrot -sf}; \
+{_,shift +} super + Print
+	{scrot,scrot -sf}; \
 	notify-send -t 1 'Screenshot saved.'
 # ssh-agent
 super + BackSpace
@@ -30,10 +30,11 @@ super + BackSpace
 	ssh-add -l | notify-send -t 2
 # task manager/syslog
 ctrl + alt + {Delete,Insert}
-	visual {htop,watch -n 0.1 'dmesg | tac'}
+	visual {htop,watch -c -n 0.1 'dmesg -e -Lalways | tac'}
 
 ## function keys
-# F1, F2: power/sleep/hibernate
+# F1: power/reboot
+# F2: suspend/hibernate+poweroff
 {_,shift +} super + F{1,2}
 	ssh-add -D && systemctl {poweroff,reboot,suspend,hibernate}
 # F3: display off/hibernate+reboot
@@ -41,8 +42,8 @@ ctrl + alt + {Delete,Insert}
 	ssh-add -D && {sleep 1; xset dpms force off, systemctl hybrid-sleep}
 # F4: calculator/networking
 {_,shift +} {super + F4,XF86Calculator}
-	{grpn,visual nmtui}
-# F5: toggle active displays
+	{grpn,visual bash -ic nmtui}
+# F5: toggle displays/configure displays
 {_,shift +} {super + F5,XF86Display}
 	{xrandr-cycle | tail -n +2 | head -n 1 | notify-send,arandr}
 # F6, F7: adjust brightness
@@ -51,7 +52,7 @@ ctrl + alt + {Delete,Insert}
 	xbacklight -get | xargs -I '*' notify-send -t 0.3 'Backlight: *%'
 {_,shift +} XF86MonBrightness{Down,Up}
 	xbacklight -{dec 10,set 1,inc 10,set 100}
-# F8, F9, F10: adjust audio
+# F8, F9, F10: adjust volume/configure audio
 shift + super + {F8,XF86AudioMute}
 	pavucontrol
 super + F{8,9,10}
