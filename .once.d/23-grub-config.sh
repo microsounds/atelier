@@ -3,11 +3,14 @@
 # grub configuration
 # append linux kernel tweaks
 
+CONF='/etc/default/grub'
+KEY='GRUB_CMDLINE_LINUX_DEFAULT'
+
 # not needed during unit testing
 ! is-container || exit 0
 
-CONF='/etc/default/grub'
-KEY='GRUB_CMDLINE_LINUX_DEFAULT'
+# probably an ARM device using u-boot
+[ -f "$CONF" ] || exit 0
 
 unset OPTION
 # ignore chatty startup text
