@@ -29,6 +29,13 @@ jobs:
            cd ~/site
            kagami
            git remote set-url origin "https://$GH_PAT@github.com/$SITE_REPO"
+
+           git list-files | xargs egrep -ohI "https?:[^ <>)'\",]*" \
+             | sort | uniq | fgrep -v '$' \
+             | xargs -P0 wget -nv --method=HEAD 2>&1 | egrep -v '(broken|200 OK)' \
+             > broken.txt
+           git add broken.txt
+
            git shove
        - name: Test nano_overlay ssh-sign file encryption
          shell: bash -le {0}
