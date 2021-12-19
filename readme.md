@@ -1,3 +1,4 @@
+<!-- header and github badges -->
 # <div align="center">_dotfiles—"atelier"_![shimeji]</div>
 <div align="center">
 	<img src="https://img.shields.io/github/commit-activity/m/microsounds/atelier?logo=github">
@@ -19,6 +20,7 @@ This is my primary computing setup, a self-contained graphical shell environment
 
 Basic installation instructions are provided, along with some documentation for the most essential components.
 
+<!-- figure 1: desktop screenshot -->
 [![scrot]][scrot]
 > **PICTURED**<br>
 > _Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
@@ -40,6 +42,7 @@ Basic installation instructions are provided, along with some documentation for 
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
+<!-- figure 2: mobile screenshot -->
 <a href="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
 	<img width="125px" align="right" src="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot2.png">
 </a>
