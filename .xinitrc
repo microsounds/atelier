@@ -41,7 +41,7 @@ dbus-update-activation-environment --systemd DISPLAY &
 # mangle sxhkd config at runtime
 {	cfg="$HOME/.config/sxhkd"
 	echo "## !! $0: DO NOT EDIT !!" > "$cfg/sxhkdrc"
-	for f in default $layout; do
+	for f in default mouse $layout; do
 		# sxhkd 0.5.x chokes on excess newlines
 		# ignore cpp syntax misuse
 		cpp -P < "$cfg/$f" 2> /dev/null | grep . >> "$cfg/sxhkdrc"
