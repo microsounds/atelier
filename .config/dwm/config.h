@@ -71,8 +71,7 @@ static char dmenumon[2] = "0";
 	{ MODKEY|CTRL|SHIFT,            KEY,      toggletag,      {.ui = 1 << TAG} },
 
 static Key keys[] = {
-/* basic */
-	{ MODKEY|SHIFT,                 XK_q,      quit,           {0} },
+/* misc */
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 /* kill window */
 	{ ALT,                          XK_F4,     killclient,     {0} },
@@ -83,6 +82,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ ALT,                          XK_Tab,    focusstack,     {.i = +1 } },
 	{ ALT|SHIFT,                    XK_Tab,    focusstack,     {.i = -1 } },
+	/* across monitors */
+	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 /* master area */
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
@@ -96,13 +98,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|SHIFT,                 XK_space,  togglefloating, {0} },
-/* change window tags */
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|SHIFT,                 XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|SHIFT,                 XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|SHIFT,                 XK_period, tagmon,         {.i = +1 } },
+/* switch current tags */
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -112,18 +108,27 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|SHIFT,                 XK_0,      tag,            {.ui = ~0 } },
+	/* across monitors */
+	{ MODKEY|SHIFT,                 XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|SHIFT,                 XK_period, tagmon,         {.i = +1 } },
 };
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
+	/* status icon/window counter */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+	/* active window title bar */
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
+	/* client windows */
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	/* tag bar */
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
