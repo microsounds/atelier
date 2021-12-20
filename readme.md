@@ -62,8 +62,10 @@ Basic installation instructions are provided, along with some documentation for 
 * Any conventional BIOS/UEFI-compliant x86-based Personal Computer
 * x86-based Chromebooks in Developer Mode (SeaBIOS), or liberated with UEFI firmware (Coreboot).
 	* _See <https://mrchromebox.tech/> for more information on unlocking your bootloader._
-* [Next Thing Co. PocketC.H.I.P](http://chip.jfpossibilities.com/docs/pocketchip.html) armhf-based portable ~~toy computer~~ linux handheld
+* [Next Thing Co. PocketC.H.I.P][ntc-chip] armhf-based portable ~~toy computer~~ linux handheld
 	* _Final NTC-provided Debian 8 (jessie) OS images from 2016 come with out-of-tree `4.4.13-ntc-mlc` kernel pinned, upgradeable to 10 (buster)._
+
+[ntc-chip]: http://chip.jfpossibilities.com/docs/pocketchip.html "Mirrored PocketCHIP documentation"
 
 **Single-user minimal shell environment**
 * Bootstrapping in virtualized container instances for use in CI/CD workflows
@@ -109,11 +111,15 @@ Each script is self-contained, you can run them individually, anytime.
 Installation can be customized with user-provided executable install ~~hacks~~ scripts, named `{pre,post}-run`.
 These can be placed in [`~/.config/upstream`](.config/upstream) or at the root of a persistently installed utility's install directory as described above
 
-Rationale for doing things this way is summarized in commit [`2fe1c3745`](https://github.com/microsounds/atelier/commit/2fe1c3745).
+Rationale for doing things this way is summarized in commit [`2fe1c3745`][rat].
+
+[rat]: https://github.com/microsounds/atelier/commit/2fe1c3745 "introduced ~/.once.d/10-git-upstream.sh"
 
 ## Window manager
-`dwm` keybinds are the [defaults](https://ratfactor.com/dwm) with several exceptions.
+`dwm` keybinds are the [defaults][dwm] with several exceptions.
 Primary modkey `Mod1` is super instead of alt.
+
+[dwm]: https://ratfactor.com/dwm "suckless dwm tutorial"
 
 | shift + | alt + | key |
 | --: | --: | :-- |
@@ -242,7 +248,9 @@ Several commands are extended to include impure functions, such as purposefully 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
 ### Managed policy overrides
-`chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during [post-install](.once.d/29-chromium-extensions.sh), which automatically installs several useful extensions on first-run, including [uBlock Origin](https://ublockorigin.com).
+`chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during [post-install](.once.d/29-chromium-extensions.sh), which automatically installs several useful extensions on first-run, including [uBlock Origin][].
+
+[uBlock Origin]: https://ublockorigin.com "uBlock Origin homepage"
 
 ## `git`
 `git` aliases are defined in [`~/.gitconfig`](.gitconfig) or implemented in interactive shell function `git()`
@@ -287,16 +295,20 @@ See *Usage Notes* for more information.
 
 ## `notify-send`
 This particular [`notify-send`](.local/lib/notify-send) implements only `-t` for expiration time in seconds,
-because it doesn't tie into any `dbus`-based notification daemon implementing the [Desktop Notifications Specification](https://www.galago-project.org/specs/notification/0.9/index.html).
+because it doesn't tie into any `dbus`-based notification daemon implementing the [Desktop Notifications spec][notify].
+
+[notify]: https://www.galago-project.org/specs/notification/0.9/index.html "freedesktop.org Desktop Notifications spec"
 
 Instead, it's just a shell script that writes to a named pipe that gets picked up by [`xwin-statusd`](Scripts/wm_status.sh) as a simple way to implement OSD text and single-line notifications.
 
 Unlike other implementations, you can pass notifications/OSD text as an argument or via stdin without using `xargs`.
 
 ## `sc` (spreadsheet calculator)
-`sc` supports macros to some degree, but it's macro documentation is largely non-existent or difficult to understand.
+`sc` is supports macros to some degree, but it's macro implementation is [difficult to understand][sc_macros] and there aren't many examples of it being used successfully anywhere that I've managed to find.
 
-Instead, the shell function `sc()` offers an easier to understand macro system for mangling `.sc` spreadsheet files at runtime.
+[sc_macros]: https://github.com/n-t-roff/sc/blob/master/SC.MACROS "I'm not even sure this was implemented as written."
+
+Instead, the shell function `sc()` offers an easier to understand macro system for statically mangling `.sc` spreadsheet files at runtime.
 * `sc` will automatically run any executable sharing the same initial name as the `.sc` file.
 	* _eg. `sheet1.sc` will run `sheet1.sc.1`, `sheet1.scx`, etc. if they exist in the same directory and are executable at runtime._
 * You can write an arbitrarily complex pre-run macro script in any language, so long as it is made aware of it's own filename at runtime.
