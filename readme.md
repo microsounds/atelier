@@ -22,8 +22,7 @@ Basic installation instructions are provided, along with some documentation for 
 
 <!-- figure 1: desktop screenshot -->
 [![scrot]][scrot]
-> **PICTURED**<br>
-> _Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
+_Pictured: Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
 
 # Quick start
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
@@ -34,7 +33,7 @@ Basic installation instructions are provided, along with some documentation for 
 	```shell
 	$ git clone --bare {GIT_REMOTE}/atelier ~/.config/meta
 	$ git --git-dir=$HOME/.config/meta --work-tree=$HOME reset --hard
-	>> Invoke the login shell to apply changes made to the environment
+	# Invoke the login shell to apply changes made to the environment
 	$ exec $SHELL -l
 	```
 4. Run `post-install` in the shell to run post-install scripts automatically.
@@ -179,21 +178,19 @@ Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that point
 ### `~/.xrandr`
 For use with multi-monitor and/or complicated display setups, you can override the default display layout with one or more commands to `xrandr` saved to _optional_ config file `~/.xrandr`
 
-```
->> e.g. two monitors, right is mounted vertically
---output HDMI-0 --auto --primary --rotate normal
---output HDMI-1 --auto --right-of HDMI-0 --rotate right
-```
+	# e.g. two monitors, right is mounted vertically
+	--output HDMI-0 --auto --primary --rotate normal
+	--output HDMI-1 --auto --right-of HDMI-0 --rotate right
 
 Commands in this file are passed to [`xrandr-cycle`](Scripts/xrandr_cycle.sh) line by line at startup if it exists.
 For example, this configuration would suit a 2 monitor layout with the right monitor mounted vertically.
 
 ### `~/.xdecor`
 You can designate one or more paths to directories containing images or videos for use as a wallpaper using _optional_ config file `~/.xdecor`
-```
-~/Pictures/some/path
-/media/sd_card/some/path
-```
+
+	# prefixing with ~/ is acceptable
+	~/Pictures/some/path
+	/media/sd_card/some/path
 
 If it exists, [`xwin-decor`](Scripts/xwin_decor.sh) will randomly pick a directory and file within it and set it as the wallpaper on startup.
 In the case of video files, a random video frame from that file will be taken and set as the wallpaper using `ffmpeg`.
