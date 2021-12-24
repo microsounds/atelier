@@ -14,7 +14,8 @@ static const char *colors[SchemeLast][2] = {
 /* ux appearance */
 static const char *fonts[] = {
 	str(font(FN_HEADER, FN_HEADER_SIZE)),         /* normal */
-	str(font(FN_HEADER_JP, FN_HEADER_SIZE))       /* fallback japanese */
+	str(font(FN_HEADER_JP, FN_HEADER_SIZE)),      /* fallback japanese */
+	str(font(FN_EMOJI, FN_EMOJI_SIZE))            /* fallback emoji glyphs */
 };
 
 /* options */
