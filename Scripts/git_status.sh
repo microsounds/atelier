@@ -17,20 +17,10 @@ reset='\e[0m'
 icon='±'
 
 # is this a git repo?
-data="$(git status -b --porcelain 2> /dev/null)" || exit 1
-# branch/upstream info
-info="${data%%
-*}"
-# index/worktree state (optional), strip leading newline
-state="${data#"$info"
-}"
-[ "$info" != "$state" ] || unset state
-# strip leading hashes
-info="${info#*#* }"
-
 # get root of worktree, actual git dir location, and current commit short-ref
 # covers git submodule and detached worktree edge cases
-parse="$(git rev-parse --show-toplevel --git-dir --short HEAD)" 2> /dev/null
+parse="$(git rev-parse \
+	--show-toplevel --git-dir --short HEAD)" 2> /dev/null || exit 1
 IFS='
 '
 for f in repo git_dir short_ref; do
@@ -41,6 +31,21 @@ for f in repo git_dir short_ref; do
 }"
 done
 unset IFS data parse
+
+# ignore untracked files in very large repos to improve latency
+[ ${#short_ref} -gt 10 ] && speedy='--untracked-files=no'
+
+# get branch, upstream, index, and worktree info
+data="$(git status -b $speedy --porcelain)" 2> /dev/null
+# branch/upstream info
+info="${data%%
+*}"
+# index/worktree state (optional), strip leading newline
+state="${data#"$info"
+}"
+[ "$info" != "$state" ] || unset state
+# strip leading hashes
+info="${info#*#* }"
 
 # interpret branch/upstream info
 # format: 'branch...upstream [ahead 1 behind 1]'
@@ -76,6 +81,7 @@ esac
 #           ^ tree
 IFS='
 '
+unset untracked unmerged index tree
 for f in $state; do # accumulate state flags
 	f="${f%${f#??}}"
 	case "$f" in
