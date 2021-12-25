@@ -207,16 +207,6 @@ This directory is appended to `$C_INCLUDE_PATH` at login.
 _Optionally, you can apply another existing color scheme by naming it as an argument.
 This can be useful when dealing with TUI applications that force their own background colors._
 
-> **NOTE**<br>
-> _HiDPI display setups are currently not supported, 96dpi is assumed everywhere.<br>
-> Besides being incredibly wasteful,
-> HiDPI has [innumerable][dpi1] [display issues][dpi2] in Xorg and adjacent components
-> that require polluting scripts and configuration to smooth out issues.<br>
-> See [`~/.local/include/theme.h`](.local/include/theme.h) for more info._
-
-[dpi1]: https://wiki.archlinux.org/title/HiDPI "A laundry list of hacks to have consistent-looking fonts everywhere under HiDPI"
-[dpi2]: https://blog.yossarian.net/2020/12/24/A-few-HiDPI-tricks-for-Linux "The real HiDPI experience on GNU/Linux"
-
 ### List of available macros
 * `{FG,BG}COLOR` for terminal fg/bg colors
 * `{FG,BG}LIGHT` for UX highlight colors
@@ -226,6 +216,20 @@ This can be useful when dealing with TUI applications that force their own backg
 * `FN_{TERM,HEADER,TEXT}_SIZE` for matching font sizes
 * `FN_EMOJI` for specifying fallback emoji glyphs
 * `FN_EMOJI_SIZE` for specifying fallback emoji glyph sizes
+
+## Issues with HiDPI scaling
+HiDPI display setups are currently **not** supported, 96dpi is assumed everywhere.
+
+HiDPI scaling brings up innumerable display issues in [every category of graphical software][dpi1]
+including [electron-based applications][dpi2] that require polluting scripts and dotfiles to smooth out toolkit scaling issues.
+Maintaining mixed-DPI multi-monitor setups in X11 is [even more painful][dpi3].
+
+Or to put it another way, crisp terminal fonts are not worth peppering my scripts with toolkit-specific global variables and conditional logic just for HiDPI scaling.
+See [`~/.local/include/theme.h`](.local/include/theme.h) for more info.
+
+[dpi1]: https://wiki.archlinux.org/title/HiDPI "A laundry list of hacks to have consistent-looking fonts everywhere under HiDPI"
+[dpi2]: https://blog.yossarian.net/2020/12/24/A-few-HiDPI-tricks-for-Linux "The real HiDPI experience on GNU/Linux"
+[dpi3]: http://wok.oblomov.eu/tecnologia/mixed-dpi-x11/#mixeddpiinx11 "Workarounds for mixed DPI multi-monitor setups in X11"
 
 # Non-standard commands
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
