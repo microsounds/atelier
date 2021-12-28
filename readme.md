@@ -42,8 +42,8 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
 <!-- figure 2: mobile screenshot -->
-<a href="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot.jpg">
-	<img width="125px" align="right" src="https://github.com/microsounds/microsounds/raw/master/dotfiles/mobile-scrot2.png">
+<a href="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot.jpg">
+	<img width="125px" align="right" src="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot2.png">
 </a>
 
 ## Quick start on Termux for Android
@@ -357,5 +357,5 @@ Instead, the shell function `sc()` offers an easier to understand macro system f
 	done >> "$file"
 	```
 
-[scrot]: https://github.com/microsounds/microsounds/raw/master/dotfiles/scrot.png
-[shimeji]: https://github.com/microsounds/microsounds/raw/master/dotfiles/shimeji.png
+[scrot]: https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/scrot.png
+[shimeji]: https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/shimeji.png
