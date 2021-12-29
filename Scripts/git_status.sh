@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# ⎇ git_status.sh v0.6
+# ⎇ git_status.sh v0.7
 # returns repo name, branch name and status in the form '±repo:branch*'
 # '-s' short form status, omit implicit information
 # '-e' double-escapes ANSI escape codes for use in shell prompts
@@ -16,11 +16,17 @@ dir='\e[1;34m'
 reset='\e[0m'
 icon='±'
 
-# is this a git repo?
 # get root of worktree, actual git dir location, and current commit short-ref
 # covers git submodule and detached worktree edge cases
 parse="$(git rev-parse \
-	--show-toplevel --git-dir --short HEAD)" 2> /dev/null || exit 1
+	--show-toplevel --git-dir --short HEAD)" 2> /dev/null
+
+# is this a git repo?
+# non-zero exit codes are ignored because '--short HEAD' can return an error
+# under newly init'ed repos
+# no captured output guarantees this isn't a git repo
+case "$parse" in ?*);; *) exit 1;; esac
+
 IFS='
 '
 for f in repo git_dir short_ref; do
@@ -30,7 +36,7 @@ for f in repo git_dir short_ref; do
 	parse="${parse#"$sel"
 }"
 done
-unset IFS data parse
+unset IFS sel parse
 
 # ignore untracked files in very large repos to improve latency
 [ ${#short_ref} -gt 10 ] && speedy='--untracked-files=no'
@@ -58,8 +64,7 @@ case "$info" in
 		fi
 		[ ! -z "$tag" ] && branch="${tag##*/}";;
 	'No commits'* | 'Initial commit'*) # no commits yet
-		[ -z "$(ls "$git_dir/refs/heads")" ] &&
-			[ ! -f "$git_dir/packed-refs" ] && branch="(init)";;
+		[ ! -f "$git_dir/index" ] && branch="(init)";;
 	*) # normal mode
 		branch="${info%...*}" # strip upstream name
 		# extract upstream tracking if it exists
