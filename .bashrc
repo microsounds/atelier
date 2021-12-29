@@ -167,13 +167,18 @@ posix() (
 
 # implicitly set git dir to ~/.config/meta if outside a git dir
 git() (
+	iteratively_run() {
+		command git meta "$@" &
+		find ~/Git -name '*.git' -type d | sed 's,/.git$,,' \
+			| xargs -I '{}' -P0 git -C '{}' "$@"
+		wait
+	}
 	case "$1" in
 		-C | init | clone | meta) ;;
 		sync) # sync dotfiles and ~/Git directory in parallel
-				command git meta pull -v &
-				find ~/Git -name '*.git' -type d | sed 's,/.git$,,' \
-					| xargs -I '{}' -P0 git -C '{}' pull -v
-				wait && return;;
+			iteratively_run pull -v && return;;
+		vacuum) # run gc on dotfiles and ~/Git directory in parallel
+			iteratively_run gc --aggressive --prune=now && return;;
 		*) command git status > /dev/null 2>&1 || set -- meta "$@"
 	esac
 	command git "$@"

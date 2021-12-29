@@ -281,6 +281,7 @@ See *Usage Notes* for more information.
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
 	| `shove` | Runs `checkin` and pushes immediately. |
 	| `sync` | Runs `git meta pull` and then recurses through `~/Git` and runs `git pull` on every existing `git` repo found. |
+	| `vacuum` | Runs `git meta gc` and then recurses through `~/Git` and runs `git gc` on every existing `git` repo found. |
 
 ## `nano`
 > **NOTE**<br>
@@ -317,7 +318,7 @@ Instead, it's just a shell script that writes to a named pipe that gets picked u
 Unlike other implementations, you can pass notifications/OSD text as an argument or via stdin without using `xargs`.
 
 ## `sc` (spreadsheet calculator)
-`sc` is supports macros to some degree, but it's macro implementation is [difficult to understand][sc_macros] and there aren't many examples of it being used successfully anywhere that I've managed to find.
+`sc` supports macros to some degree, but it's macro implementation is [difficult to understand][sc_macros] and there aren't many examples of it being used successfully anywhere that I've managed to find.
 
 [sc_macros]: https://github.com/n-t-roff/sc/blob/master/SC.MACROS "I'm not even sure this was implemented as written."
 
