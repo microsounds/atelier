@@ -54,7 +54,8 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
 	* Applies android-specific hacks and termux specific dotfiles for theming and softkeys.
-3. When pulling changes from upstream, always stash changes to prevent merge conflicts.
+3. When pulling from upstream, stash changes or `git reset --hard` to prevent merge conflicts.
+	* Use `patch -p1 < ~/.termux/termux-diff.patch` to restore changes if stash is lost.
 
 ## Notes on platform support
 **Full graphical shell environment**
