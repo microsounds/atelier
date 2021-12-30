@@ -21,10 +21,13 @@ pkg update -y
 # setup storage
 yes y | termux-setup-storage
 
+# prevent termux from sourcing .bashrc twice every login
+# note: termux sources .bashrc before .profile on all logins
+sed -ni ~/.profile -e '/## login shell/q;p'
+
 # ~/.bashrc, entry point for termux-chroot
 ! fgrep -q 'termux-chroot' < ~/.bashrc && {
 	# allow use of standard file locations like /tmp
-	# note: termux sources .bashrc before .profile on all logins
 	sed -i ~/.bashrc \
 		-e '1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec termux-chroot; }\n/'
 
@@ -36,14 +39,13 @@ yes y | termux-setup-storage
 
 	# make nano more bearable on narrow displays
 	cat <<- EOF >> ~/.nanorc
+
+		## changes for termux
 		set minibar
 		set stateflags
 		unset softwrap
 	EOF
 }
-
-# prevent termux from sourcing .bashrc twice every login
-sed -ni ~/.profile -e '/## login shell/q;p'
 
 # rewrite terminal ESC with octal ver as '\e' doesn't always work
 # allow use of standard file descriptors on devices without root
@@ -95,3 +97,7 @@ cat <<- EOF > "$CONF/termux.properties"
 		[ TAB, CTRL, ALT, LEFT, DOWN, RIGHT, PGDN, BKSP ] \
 	]
 EOF
+
+# save changes to .patch file
+# use 'patch -p1' to reapply without re-running script
+git meta diff --color=never > "$CONF/termux-diff.patch"
