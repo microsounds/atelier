@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 
+# android-termux.sh v0.9
 # collection of hackjobs to enable basic functionality on termux for android
-# these changes are incompatible with standards compliant *NIX-likes
-# and will be applied manually so as to not pollute other scripts
+# some changes are ugly or incompatible with every other platform and will be
+# applied manually so as to not pollute other scripts
 
 uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
 
@@ -20,12 +21,26 @@ pkg update -y
 # setup storage
 yes y | termux-setup-storage
 
-# termux-chroot
-# allow use of standard file locations like /tmp
-# note: termux sources .bashrc before .profile on all logins
-! fgrep -q 'termux-chroot' < ~/.bashrc && \
-	sed -i ~/.bashrc -e \
-		'1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec termux-chroot; }\n/'
+# ~/.bashrc, entry point for termux-chroot
+! fgrep -q 'termux-chroot' < ~/.bashrc && {
+	# allow use of standard file locations like /tmp
+	# note: termux sources .bashrc before .profile on all logins
+	sed -i ~/.bashrc \
+		-e '1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec termux-chroot; }\n/'
+
+	# shorten output of path-gitstatus
+	# break $PS1 into 2 lines on narrow displays
+	sed -i ~/.bashrc -E \
+		-e 's,(git_path.*)\),\1${TERMUX:+s}\),g' \
+		-e 's,(PS1.*)\\\$,\1\${TERMUX:+\\n}\\\$,g'
+
+	# make nano more bearable on narrow displays
+	cat <<- EOF >> ~/.nanorc
+		set minibar
+		set stateflags
+		unset softwrap
+	EOF
+}
 
 # prevent termux from sourcing .bashrc twice every login
 sed -ni ~/.profile -e '/## login shell/q;p'
