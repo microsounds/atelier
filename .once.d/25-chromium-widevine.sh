@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 
 # chromium_widevine.sh v0.2
-# Downloads and extracts proprietary Widevine content decryption plugin from Google Chrome
-# into your existing Chromium installation to enable use of DRM restricted streaming services.
+# Downloads and extracts proprietary Widevine content decryption plugin from
+# Google Chrome into your existing Chromium installation to enable use of DRM
+# restricted streaming services.
 
 SOURCE='https://dl.google.com/linux/direct'
 DEB='google-chrome-stable_current_amd64.deb'
