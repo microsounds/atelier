@@ -292,12 +292,12 @@ See *Usage Notes* for more information.
 
 	| opt | function |
 	| -- | -- |
-	| `-e, --ctags <tag> <#>`  | Jumps into file containing `ctags` definition matching `<tag>`.<br>Optional `<#>` selects from multiple matches, `all` will open all of them. |
-	| `-c, --ctags-dict <file1>...` | Enable project-wide autocomplete by appending condensed dictionary of all `ctags` keywords to all files.<br>Dictionary will be removed upon exiting. |
-	| `-f, --encrypt <file>` | Open AES encrypted text file with a plaintext password. <br>File will be created if it doesn't exist. |
-	| `-j, --rsa <file>` | Open AES encrypted text file with generic RSA keypair in PEM format. <br>File will be created if it doesn't exist. |
-	| `-s, --ssh-sign <file>` | Open AES encrypted text file with a nonce value signed with SSH private key. <br>File will be created if it doesn't exist. |
-	| `-i, --identity <key>` | Use an OpenSSL compatible keypair to encrypt/decrypt. <br>Can be a private key or a public key with private half stored in `ssh-agent` |
+	| `-e, --ctags <tag> <#>` | Jumps into file containing `ctags` definition matching `<tag>`. <br>_Optional `<#>` selects from multiple matches, `all` will open all of them._ |
+	| `-c, --ctags-dict <file1>...` | Enable project-wide autocomplete by appending condensed dictionary of all `ctags` keywords to all files. <br>_Dictionary will be removed upon exiting._ |
+	| `-f, --encrypt <file>` | Open AES encrypted text file with a plaintext password. <br>_File will be created if it doesn't exist._ |
+	| `-j, --rsa <file>` | Open AES encrypted text file with generic RSA keypair in PEM format. <br>_File will be created if it doesn't exist._ |
+	| `-s, --ssh-sign <file>` | Open AES encrypted text file with a nonce value signed with SSH private key. <br>_File will be created if it doesn't exist._ |
+	| `-i, --identity <key>` | Use an OpenSSL compatible keypair to encrypt/decrypt. <br>_Can be a private key or a public key with private half stored in `ssh-agent`_ |
 
 * Once inside the actual `nano`, the following keybind macros are available:
 
