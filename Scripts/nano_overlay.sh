@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 ## nano_overlay.sh v1.1 — interactive external overlay for GNU nano
-## (c) 2021 microsounds <https://github.com/microsounds>, GPLv3+
+## (c) 2022 microsounds <https://github.com/microsounds>, GPLv3+
 ## Usage: nano-overlay [OVERLAY OPTS] [--] [OPTIONS] [[+LINE[,COLUMN]] FILE]...
 ##  -h, --help      Displays this message.
 ##  -i, --identity  Use an OpenSSH compatible keypair to encrypt/decrypt.
@@ -23,10 +23,8 @@ TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 # ctags jump-to-definition, many terminals will not redraw the prompt correctly
 # upon exiting the top-most nano instance when mode_ctags is used this way
 # setting TERM=linux on subshelled nano instances fixes this
-if [ ! -z $SHLVL ]; then
-	[ ! -z $ORIG_SHLVL ] || export ORIG_SHLVL=$SHLVL
-	[ ! $((SHLVL - ORIG_SHLVL)) -eq 0 ] && export TERM=linux
-fi
+export NANO_DEPTH=$((NANO_DEPTH + 1))
+[ $NANO_DEPTH -gt 1 ] && export TERM=linux
 
 # utilities
 mesg_wipe() { printf '\r' 1>&2; }
@@ -657,5 +655,3 @@ esac; done
 wait
 [ ! -z "$CTAGS_DICT" ] && trap 'ctags_dict_purge "$@" &' 0 1 2 3 6
 $ACTUAL_EDITOR $opt "$@"
-
-#[ ! $((SHLVL - ORIG_SHLVL)) -eq 0 ] && printf '\r\33[K\33[2J'
