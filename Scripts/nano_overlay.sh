@@ -13,18 +13,13 @@
 ##                  will be interpreted as literal filenames.
 
 # constants
+# keep track of recursion level
+export NANO_DEPTH=$((NANO_DEPTH + 1))
 # interactive features will recursively call nano_overlay
 EDITOR="$0"
 # call first nano found in $PATH
 ACTUAL_EDITOR='nano'
 TEMP_DIR="${XDG_RUNTIME_DIR:-/tmp}"
-
-# mode_ctags may be called from within nano's execute mode (^R^X) to implement
-# ctags jump-to-definition, many terminals will not redraw the prompt correctly
-# upon exiting the top-most nano instance when mode_ctags is used this way
-# setting TERM=linux on subshelled nano instances fixes this
-export NANO_DEPTH=$((NANO_DEPTH + 1))
-[ $NANO_DEPTH -gt 1 ] && export TERM=linux
 
 # utilities
 mesg_wipe() { printf '\r' 1>&2; }
@@ -174,6 +169,12 @@ mode_ctags() {
 		file="${line%	*}"; pos="${line#*	}"
 		set -- "$@" "+$pos" "$file"
 	done
+
+	# mode_ctags may be called from within nano's execute mode (^R^X) to implement
+	# ctags jump-to-definition, many terminals will not redraw the prompt correctly
+	# upon exiting the top-most nano instance when mode_ctags is used this way
+	# setting TERM=linux on subshelled nano instances fixes this
+	[ $NANO_DEPTH -gt 1 ] && export TERM=linux
 
 	# same file might be opened multiple times at different positions
 	# open in read-only mode to avoid lockfile warnings on the same file
