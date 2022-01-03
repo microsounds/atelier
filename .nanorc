@@ -32,8 +32,9 @@ unbind ^S main
 
 ##   execute current line
 ##   cut current line, execute as shell command, paste output underneath
-##   allow shell commands within inline comments
-bind M-1 "echo "" | sed 's/^#*//' | sh" main
+##   allows shell commands within inline comments
+##   but not /* single-line C-style comments */
+bind M-1 "echo "" | sed -E 's,^[#*\\/; ]+? (.*),\1,g' | sh" main
 
 ##   jump to ctags definition
 ##   move cursor to right of word, mark to beginning, copy marked region,
