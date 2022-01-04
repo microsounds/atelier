@@ -64,7 +64,7 @@ case "$info" in
 		fi
 		[ ! -z "$tag" ] && branch="${tag##*/}";;
 	'No commits'* | 'Initial commit'*) # no commits yet
-		[ ! -f "$git_dir/index" ] && branch="(init)";;
+		branch="(init)";;
 	*) # normal mode
 		branch="${info%...*}" # strip upstream name
 		# extract upstream tracking if it exists
