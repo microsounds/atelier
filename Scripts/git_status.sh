@@ -58,9 +58,11 @@ info="${info#*#* }"
 case "$info" in
 	HEAD*) # detached HEAD mode
 		branch="$short_ref" # unnamed commit
-		tag="$(fgrep -rl "$branch" "$git_dir/refs/tags")" # is this a tag?
+		tag="$tag$(fgrep -rl "$branch" "$git_dir/refs/tags")" # is this a tag?
 		if [ -f "$git_dir/packed-refs" ]; then # aggressively packed
-			tag="$tag$(grep "$branch.*refs/tags" "$git_dir/packed-refs")"
+			# dig deeper for packed simple or annotated tags
+			tag="$tag$(grep "$branch.*refs/tags" "$git_dir/packed-refs")" ||
+			tag="$tag$(fgrep -B1 "^$branch" "$git_dir/packed-refs" | head -n 1)"
 		fi
 		[ ! -z "$tag" ] && branch="${tag##*/}";;
 	'No commits'* | 'Initial commit'*) # no commits yet
