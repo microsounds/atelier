@@ -39,10 +39,10 @@ bind M-1 "echo "" | sed -E 's,^[#*\\/; ]+? (.*),\1,g' | sh" main
 ##   jump to ctags definition
 ##   move cursor to right of word, mark to beginning, copy marked region,
 ##   paste cutbuffer as search token for nano-overlay --ctags mode,
-##   opens all matches in a sub-shelled nano instance
-bind M-2 "[C[D6nano-overlay -e '' all 1>&0 2>&0" main
-##   opens all matches in a new terminal window as a background nano instance
-bind M-4 "[C[D6visual nano-overlay -e '' all &" main
+##   opens matches in a sub-shelled nano instance
+bind M-2 "[C[D6nano-overlay -e '' 1>&0 2>&0" main
+##   opens matches in a new terminal window as a background nano instance
+bind M-4 "[C[D6visual nano-overlay -e '' &" main
 
 ##   execute formatter (DESTRUCTIVE!)
 ##   cut current line, execute as shell command, accept buffer as stdin,

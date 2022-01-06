@@ -27,7 +27,7 @@ m4
 man-db
 mesa-utils
 mpv youtube-dl ffmpeg mediainfo
-nano libncurses-dev autoconf automake autopoint gettext texinfo openssl exuberant-ctags
+nano libncurses-dev autoconf automake autopoint gettext texinfo openssl exuberant-ctags fzf
 openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc cmark-gfm

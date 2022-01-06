@@ -304,7 +304,7 @@ See *Usage Notes* for more information.
 	| key | function |
 	| -- | -- |
 	| `M-0` | Execute current line as shell command and pipe contents of buffer as stdin.<br>_Destructively replaces entire contents of buffer, useful for formatting._ |
-	| `M-1` | Execute current line as shell command and paste output in current buffer.<br>_Inline comments ok._ |
+	| `M-1` | Execute current line as shell command and paste output in current buffer.<br>_Commands within inline comments are accepted._ |
 	| `M-2` | Select token underneath cursor and jump into it's `ctags` definition(s) within the same shell.<br>_Requires valid `tags` file in current or a parent directory._ |
 	| `M-4` | Select token underneath cursor and jump into it's `ctags` definition(s) in a new terminal window.<br>_Requires valid `tags` file in current or a parent directory._ |
 

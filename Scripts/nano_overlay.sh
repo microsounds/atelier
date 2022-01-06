@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## nano_overlay.sh v1.1 — interactive external overlay for GNU nano
+## nano_overlay.sh v1.2 — interactive external overlay for GNU nano
 ## (c) 2022 microsounds <https://github.com/microsounds>, GPLv3+
 ## Usage: nano-overlay [OVERLAY OPTS] [--] [OPTIONS] [[+LINE[,COLUMN]] FILE]...
 ##  -h, --help      Displays this message.
@@ -46,6 +46,13 @@ mode_help() {
 	{ grep '^##' | sed 's/^## //'; } < "$0"
 }
 
+## Search and jump to source code definitions provided by POSIX ctags(1).
+##  -e <tag> <#>    If a ctags index file exists in the current or a parent
+##  or --ctags      directory, search through it for '<tag>' and open the file
+##                  containing it's definition.
+##                  If multiple matches are found, specify line number <#>
+##                  or 'all' to open all matches at once.
+
 ctags_find_root() {
 	# find root directory containing ctags index
 	# sets $PWD to this directory if found
@@ -58,12 +65,28 @@ ctags_find_root() {
 	case "$ver" in 1 | 2);; *) quit 'Index file is invalid'; esac
 }
 
-## Search and jump to source code definitions provided by POSIX ctags(1).
-##  -e <tag> <#>    If a ctags index file exists in the current or a parent
-##  or --ctags      directory, search through it for '<tag>' and open the file
-##                  containing it's definition.
-##                  If multiple matches are found, specify line number <#>
-##                  or 'all' to open all matches at once.
+ctags_menu() {
+	# spawn interactive menu if being called from a subshell
+	# re-enter ctags_mode automatically
+	# xargs is used to prevent nano from seeing stdin under any circumstances
+	if [ $NANO_DEPTH -gt 1 ]; then
+		if fzf --version > /dev/null 2>&1; then
+			msg="$(mesg_st "Matches for '$1': " 2>&1)"
+			sel="$(fzf --prompt="$msg" --reverse --no-clear \
+				| head -n 1)" < /dev/stdin || exit 1
+			sel="${sel#	*}"
+			sel="${sel%%	*}"
+			echo "$sel" | xargs -o $EDITOR -e "$1"
+		else
+			# fallback to opening all matches if fzf is not installed
+			echo 'all' | xargs -o $EDITOR -e "$1" 'all'
+		fi
+	else
+		# standard usage: print static reentrant menu to stdout
+		mesg "Specify a match or use 'all' to select all matches." 2>&1
+		cat /dev/stdin
+	fi
+}
 
 ex_parser() {
 	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
@@ -149,11 +172,11 @@ mode_ctags() {
 		fi
 		# if no argument is passed, show listing and exit
 		if [ -z "$arg_ok" ]; then
-			mesg "Specify a match or use 'all' to select all matches." 1>&2
 			i=1; echo "$matches" | while read -r line; do
-				printf ' %d\t%s\n' "$i" "$line" 1>&2
+				printf ' %d\t%s\n' "$i" "$line"
 				i=$((i + 1))
-			done && exit 1
+			done | ctags_menu "$1"
+			exit
 		fi
 	fi
 
