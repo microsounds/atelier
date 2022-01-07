@@ -243,7 +243,9 @@ ctags_dict_purge() {
 		[ ! -f "$f" ] && continue
 		# don't overwrite symlinks
 		[ -L "$f" ] && f="$(ls -la "$f")" && f="${f#*-> }"
-		{ rm -f "$f"; sed -n "/$CTAGS_DICT/q;p" > "$f"; } < "$f"
+		# keep permission bits on overwrite
+		sed -n "/$CTAGS_DICT/q;p" < "$f" > "$f.1" &&
+			dd if="$f.1" of="$f" > /dev/null 2>&1 && rm -f "$f.1"
 	done
 }
 
