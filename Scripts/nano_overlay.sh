@@ -88,6 +88,13 @@ ctags_menu() {
 	fi
 }
 
+ex_escape() {
+	# preserves backslash escapes found within ctags ex editor commands every
+	# time it goes through variable expansion and command capture, this avoids
+	# edge cases where literal '\\r' or '\\n' are interpreted by the shell
+	sed 's,\\,\\\\,g'
+}
+
 ex_parser() {
 	# format: {tag}\t{filename}\t{ex command or line no}{;" extended}
 	# follow ex editor commands and rewrite as line numbers
@@ -99,7 +106,6 @@ ex_parser() {
 		# absolute filename?
 		[ "${file%${file#?}}" = '/' ] || file="$PWD/$file"
 		printf '%s\t%s\t' "$tag" "$file"
-
 		# if addr is not numeric, parse as ex command
 		case "$addr" in [!0-9]*)
 			# start/end delimiter can be one of '/' or '?'
@@ -113,10 +119,12 @@ ex_parser() {
 			# strip optional regex anchors
 			[ "${addr%"${addr#?}"}" = '^' ] && addr="${addr#^}"
 			[ "${addr#"${addr%?}"}" = '$' ] && addr="${addr%$}"
-			# strip escapes for slash \/ => /, backslash \\ => \
-			addr="$(echo "$addr" | sed 's,\\/,/,g;s,\\\\,\\,g')"
+			# strip escapes for literal use of delimiter
+			addr="$(echo "$addr" | sed -e "s,\\\\$de,$de,g")"
+
 			# return 2 if command is outdated
-			addr="$(fgrep -n "$addr" < "$file" | $order)" || return 2;;
+			addr="$(fgrep -n "$addr" < "$file")" || return 2
+			addr="$(echo "$addr" | $order)";;
 		esac
 		echo "${addr%%[!0-9]*}"
 	done < /dev/stdin
@@ -138,7 +146,7 @@ mode_ctags() {
 		read -r prev_hash < "${backup}-hash"
 		[ "$prev_query" = "$1" ] &&
 		[ "$prev_hash" = "$(md5sum < "$PWD/tags")" ] &&
-		matches="$(cat "${backup}-cached")"
+		matches="$(cat "${backup}-cached" | ex_escape)"
 	fi
 
 	# discarding previous session
@@ -146,7 +154,7 @@ mode_ctags() {
 		# cherry-pick matching lines based on first column
 		# case insensitive substring search up to first literal tab
 		matches="$(grep -v '^!_TAG_' < "$PWD/tags" | \
-			egrep -i "^\\w*${1}\\w*	.*$")"
+			egrep -i "^\\w*${1}\\w*	.*$" | ex_escape)"
 
 		# cache results for repeat invocations
 		echo "$matches" > "${backup}-cached" &
@@ -181,10 +189,10 @@ mode_ctags() {
 	fi
 
 	# assemble final argument list
-	matches="$(echo "$matches" | ex_parser)"
+	matches="$(echo "$matches" | ex_escape | ex_parser)"
 	case $? in
-		1) quit "Index file is malformed";;
-		2) quit "Index file is outdated";;
+		1) quit 'Index file is malformed';;
+		2) quit 'Index file is outdated';;
 	esac
 	set --
 	for f in $(seq $(echo "$matches" | wc -l)); do
