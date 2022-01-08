@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+# shell script profiler
+# measures elapsed execution time in milliseconds
+# note: adds significant overhead and pprofiler becomes $0
+
+time_now() { date '+%s%N'; }
+calc_offset() {
+	curr_time=$(time_now);
+	off=$(echo "scale=6; ($curr_time - $prev_time) / 1000000" | bc)
+	prev_time=$curr_time
+	echo "+ [${off}ms] "
+}
+
+PS4='`calc_offset`'
+
+script="$1" && shift
+prev_time=$(time_now)
+set -x
+. "$script" 2>&1
+
