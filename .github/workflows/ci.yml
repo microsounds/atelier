@@ -30,6 +30,7 @@ jobs:
            kagami
            git remote set-url origin "https://$GH_PAT@github.com/$SITE_REPO"
 
+           # periodically crawl site for unreachable links
            git list-files | xargs egrep -ohI "https?:[^ <>)'\",]*" \
              | sort | uniq | fgrep -v '$' \
              | xargs -P0 wget -nv --method=HEAD 2>&1 | egrep -v '(broken|200 OK)' \
@@ -37,7 +38,7 @@ jobs:
            git add broken.txt
 
            git shove
-       - name: Test nano_overlay ssh-sign file encryption
+       - name: Test nano-overlay ssh-sign file encryption
          shell: bash -le {0}
          env:
            TERM: rxvt
@@ -53,15 +54,15 @@ jobs:
                echo "$secret" > ok
                echo "$g-$bits" | figlet -f big
                yes y | ssh-keygen -q -f "$g-$bits" -t $g -b $bits -N '' -m pem
-               echo "ENCRYPTING"
+               echo 'ENCRYPTING'
                yes y | nano-overlay -i "$g-$bits" -s ok || exit 1
                { gzip -d | tar -xO enc | file -; } < ok | fgrep 'openssl' || exit 1
-               echo "READBACK"
+               echo 'READBACK'
                nano-overlay -i "$g-$bits" -s ok | fgrep "$secret" || exit 1
                if [ -f prev_key ]; then
-                 echo "TESTING PREVIOUS ITERATION KEY"
+                 echo 'TESTING PREVIOUS ITERATION KEY'
                  nano-overlay -i prev_key -s ok && \
-                 { echo "!!!! SECURITY FAILURE !!!!" | figlet -f banner; exit 1; }
+                 { echo '!!!! SECURITY FAILURE !!!!' | figlet -f banner; exit 1; }
                fi
                mv -v "$g-$bits" prev_key
                mv -v "$g-$bits.pub" prev_key.pub
@@ -69,7 +70,7 @@ jobs:
              done
            done
            rm -rf ~/site
-       - name: Test various assertions and sanity checks
+       - name: Assert and test various components of the graphical shell
          shell: bash -le {0}
          env:
            TERM: rxvt
@@ -83,4 +84,5 @@ jobs:
            twopass ffmpeg -loglevel quiet -s 1920x1080 -t 0.2 -f rawvideo \
              -i /dev/urandom -c:v libvpx -b:v 100M -an noise.webm
            mpv --vo=null noise.webm
-           screenfetch
+           nano-overlay --version
+           pfetch

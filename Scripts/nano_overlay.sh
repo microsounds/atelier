@@ -2,15 +2,6 @@
 
 ## nano_overlay.sh v1.2 — interactive external overlay for GNU nano
 ## (c) 2022 microsounds <https://github.com/microsounds>, GPLv3+
-## Usage: nano-overlay [OVERLAY OPTS] [--] [OPTIONS] [[+LINE[,COLUMN]] FILE]...
-##  -h, --help      Displays this message.
-##  -i, --identity  Use an OpenSSH compatible keypair to encrypt/decrypt.
-##                  This may be a private key, or a public key with the private
-##                  half in the same directory or available to ssh-agent(1).
-##  --              Stop processing nano_overlay arguments, passes subsequent
-##                  arguments to nano untouched. Subsequent uses of -- also
-##                  stops processing nano arguments, all further arguments
-##                  will be interpreted as literal filenames.
 
 # constants
 # keep track of recursion level
@@ -40,10 +31,28 @@ derive_parent() {
 	echo "${path:-.}"
 }
 
-mode_help() {
-	$ACTUAL_EDITOR -h
+## Usage: nano-overlay [OVERLAY OPTS] [--] [OPTIONS] [[+LINE[,COLUMN]] FILE]...
+##
+##  -h, --help      Displays this message.
+##  -V, --version   Displays version and author information.
+##  -i, --identity  Use an OpenSSH compatible keypair to encrypt/decrypt.
+##                  This may be a private key, or a public key with the private
+##                  half in the same directory or available to ssh-agent(1).
+##  --              Stop processing nano_overlay arguments, passes subsequent
+##                  arguments to nano untouched. Subsequent uses of -- also
+##                  stops processing nano arguments, all further arguments
+##                  will be interpreted as literal filenames.
+
+mode_info() {
+	$ACTUAL_EDITOR "$@"
 	{ dd bs=80 count=1 2> /dev/null | tr '\0' '*'; printf '\n'; } < /dev/zero
-	{ grep '^##' | sed 's/^## //'; } < "$0"
+
+	# output inline docs or version info
+	concat='tail -n +3'
+	for f in "$@"; do case "$f" in
+		-V|--version) concat='head -n 2';;
+	esac; done
+	{ grep '^##' | sed -E 's/^## ?/ /' | $concat; } < "$0"
 }
 
 ## Search and jump to source code definitions provided by POSIX ctags(1).
@@ -655,7 +664,7 @@ for f in "$@"; do case "$f" in
 
 	# interactive overlay options
 	# steal certain switches used by GNU nano
-	-h|--help) mode_help 1>&2 && exit;;
+	-[Vh]|--version|--help) mode_info "$@" && exit;;
 	-e|--ctags) shift && mode_ctags "$@" && exit;;
 	-c|--ctags-dict) shift && ctags_dict_append "$@" && break;;
 	-f|--encrypt) shift && mode_encrypt "$@" && exit;;
