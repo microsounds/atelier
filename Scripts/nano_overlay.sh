@@ -88,7 +88,7 @@ ctags_menu() {
 			echo "$sel" | xargs -o $EDITOR -e "$1"
 		else
 			# fallback to opening all matches if fzf is not installed
-			echo 'all' | xargs -o $EDITOR -e "$1" 'all'
+			echo 'all' | xargs -o $EDITOR -e "$1"
 		fi
 	else
 		# standard usage: print static reentrant menu to stdout
