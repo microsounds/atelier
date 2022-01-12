@@ -25,11 +25,15 @@ yes y | termux-setup-storage
 # note: termux sources .bashrc before .profile on all logins
 sed -ni ~/.profile -e '/## login shell/q;p'
 
-# ~/.bashrc, entry point for termux-chroot
+# ~/.bashrc
+# changes to shell startup, entry point for termux-chroot
 ! fgrep -q 'termux-chroot' < ~/.bashrc && {
 	# allow use of standard file locations like /tmp
 	sed -i ~/.bashrc \
 		-e '1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec termux-chroot; }\n/'
+
+	# bash-completion is already sourced at startup
+	sed -i ~/.bashrc -e '/bash-completion/d'
 
 	# shorten output of path-gitstatus
 	# break $PS1 into 2 lines on narrow displays
@@ -100,4 +104,4 @@ EOF
 
 # save changes to .patch file
 # use 'patch -p1' to reapply without re-running script
-git meta diff --color=never > "$CONF/termux-diff.patch"
+git meta diff --color=never > "$CONF/diff.patch"
