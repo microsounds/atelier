@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 
+# install automake and other dependencies
+sudo apt build-dep nano -y
+
 # required for automake
 [ ! -d 'gnulib' ] && ./autogen.sh

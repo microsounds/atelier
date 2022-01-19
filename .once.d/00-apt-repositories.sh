@@ -26,6 +26,7 @@ mkdir -v "${CONF}.d"
 echo "Writing to '$CONF'"
 sudo tee "$CONF" <<- EOF
 	deb https://deb.debian.org/debian $BRANCH main contrib non-free
+	deb-src https://deb.debian.org/debian $BRANCH main contrib non-free
 	deb https://deb.debian.org/debian $BRANCH-updates main contrib non-free
 	deb https://security.debian.org/debian-security $BRANCH-security main contrib non-free
 EOF
