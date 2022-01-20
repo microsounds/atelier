@@ -24,18 +24,23 @@ jobs:
          env:
            GH_PAT: ${{ secrets.GH_PAT }}
            SITE_REPO: microsounds/microsounds.github.io
+           BROKEN: .misc/unreachable-urls.txt
          run: |
            git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
            cd ~/site
            kagami
            git remote set-url origin "https://$GH_PAT@github.com/$SITE_REPO"
 
-           # periodically crawl site for unreachable links
+           # periodically crawl site for unreachable links and collect list
+           # of unreachable URLs and servers not supporting HEAD method
            git list-files | xargs egrep -ohI "https?:[^ <>)'\",]*" \
              | sort | uniq | fgrep -v '$' \
-             | xargs -P0 wget -nv --method=HEAD 2>&1 | egrep -v '(broken|200 OK)' \
-             > broken.txt
-           git add broken.txt
+             | xargs -P0 wget --method=HEAD 2>&1 \
+             | egrep '(http|HTTP)' | egrep -v '^(Location|URL)' \
+             | tee /dev/stderr \
+             | tac | sed -E '/^HTTP.*(200|301|302)/,+1d' | tac \
+           > "$BROKEN"
+           git add "$BROKEN"
 
            git shove
        - name: Test nano-overlay ssh-sign file encryption
