@@ -27,9 +27,30 @@ xrdb ~/.xresources && {
 	done
 } &
 
-# GTK config
+# GTK2 settings
 cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0 &
+ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
+
+# GTK3 settings
 dconf load '/' < ~/.config/gtk/gtk3.conf &
+{	mkdir -p ~/.config/gtk-3.0
+	IFS='
+	'
+	while read -r dir; do
+		prefix='file://'
+		[ "${dir%${dir#?}}" = '/' ] || prefix="$prefix$HOME/"
+		echo "$prefix$dir ${dir##*/}"
+	done <<- EOF
+		Downloads
+		Pictures/screenshots
+		Git
+		$XDG_RUNTIME_DIR
+		/tmp
+		/media
+		.local
+		.config
+	EOF
+} > ~/.config/gtk-3.0/bookmarks &
 
 # disable bell in bash prompt
 echo 'set bell-style none' > ~/.inputrc &
