@@ -1,24 +1,23 @@
 #!/usr/bin/env sh
-## ~/.xinitrc: X Window user configuration
+## ~/.xinitrc: graphical shell startup configuration
 
 ## keymap overrides
 ! is-chromebook || layout='chromebook'
 ! is-ntc-chip || layout='ntc-chip'
 
-## run-once
-# ~/.xrandr: invoke optional display overrides
+## runs once
+# ~/.xrandr: invokes optional display overrides
 xrandr-cycle -d &
 
-# mangle xkb keyboard layout at runtime
-{	cfg="$HOME/.config/xkb"
-	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
+# mangle xkb keyboard layout at startup
+{	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
 	for f in $layout; do
-		if [ -f "$cfg/$f.xkb" ]; then
-			xkbcomp -merge "$cfg/$f.xkb" $DISPLAY 2> /dev/null
-		fi
+		[ -f ~/.config/$f.xkb ] &&
+			xkbcomp -merge ~/.config/$f.xkb $DISPLAY 2> /dev/null
 	done
 } &
 
+# ~/.xdecor: describes sources for optional background images
 # decorate root window, callback to redraw on display change
 xrdb ~/.xresources && {
 	for f in widgets decor; do
@@ -27,12 +26,12 @@ xrdb ~/.xresources && {
 	done
 } &
 
-# GTK2 settings
+# GTK2 theming
 cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0 &
-ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
 
-# GTK3 settings, generate bookmarks
+# GTK3 file picker config, generate bookmarks
 dconf load '/' < ~/.config/gtk/gtk3.conf &
+ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
 {	mkdir -p ~/.config/gtk-3.0
 	IFS='
 	'
@@ -52,7 +51,7 @@ dconf load '/' < ~/.config/gtk/gtk3.conf &
 	EOF
 } &
 
-# disable bell in bash prompt
+# disable backspace bell in bash prompt
 echo 'set bell-style none' > ~/.inputrc &
 
 # prevents dbus applications from hanging on startup
@@ -60,16 +59,15 @@ dbus-update-activation-environment --systemd DISPLAY &
 
 ## session daemons
 # mangle sxhkd config at runtime
-{	cfg="$HOME/.config/sxhkd"
-	echo "## !! $0: DO NOT EDIT !!" > "$cfg/sxhkdrc"
+{	echo "## ${0##*/}: DO NOT EDIT"
 	for f in default mouse $layout; do
 		# sxhkd 0.5.x chokes on excess newlines
-		# ignore cpp syntax misuse
-		cpp -P < "$cfg/$f" 2> /dev/null | grep . >> "$cfg/sxhkdrc"
+		# ignore misuse of cpp syntax
+		cpp -P < ~/.config/sxhkd/$f 2> /dev/null | grep .
 	done
-} || : && sxhkd &
+} > ~/.config/sxhkd/sxhkdrc || : && sxhkd &
 
-# restore versioned pcmanfm config at runtime
+# restore versioned pcmanfm config at startup
 {	for f in ~/.config/fm/*.conf; do
 		file="${f##*/}"; dir="${file%.*}"
 		mkdir -p ~/.config/$dir
