@@ -31,7 +31,7 @@ xrdb ~/.xresources && {
 cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0 &
 ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
 
-# GTK3 settings
+# GTK3 settings, generate bookmarks
 dconf load '/' < ~/.config/gtk/gtk3.conf &
 {	mkdir -p ~/.config/gtk-3.0
 	IFS='
@@ -40,7 +40,7 @@ dconf load '/' < ~/.config/gtk/gtk3.conf &
 		prefix='file://'
 		[ "${dir%${dir#?}}" = '/' ] || prefix="$prefix$HOME/"
 		echo "$prefix$dir ${dir##*/}"
-	done <<- EOF
+	done <<- EOF > ~/.config/gtk-3.0/bookmarks
 		Downloads
 		Pictures/screenshots
 		Git
@@ -50,7 +50,7 @@ dconf load '/' < ~/.config/gtk/gtk3.conf &
 		.local
 		.config
 	EOF
-} > ~/.config/gtk-3.0/bookmarks &
+} &
 
 # disable bell in bash prompt
 echo 'set bell-style none' > ~/.inputrc &
