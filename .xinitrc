@@ -17,15 +17,6 @@ xrandr-cycle -d &
 	done
 } &
 
-# ~/.xdecor: describes sources for optional background images
-# decorate root window, callback to redraw on display change
-xrdb ~/.xresources && {
-	for f in widgets decor; do
-		"xwin-$f" &
-		xeventbind resolution "xwin-$f" &
-	done
-} &
-
 # GTK2 theming
 cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0 &
 
@@ -74,6 +65,15 @@ dbus-update-activation-environment --systemd DISPLAY &
 		cp "$f" ~/.config/$dir/$file
 	done
 } && pcmanfm -d &
+
+# ~/.xdecor: describes sources for optional background images
+# decorate root window, daemonize callback on display change
+xrdb ~/.xresources && {
+	for f in widgets decor; do
+		"xwin-$f" &
+		xeventbind resolution "xwin-$f" &
+	done
+} &
 
 xwin-statusd -qpm | xargs -n 1 xsetroot -name &
 urxvtd -o &
