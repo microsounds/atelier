@@ -12,8 +12,8 @@ xrandr-cycle -d &
 # mangle xkb keyboard layout at startup
 {	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
 	for f in $layout; do
-		[ -f ~/.config/$f.xkb ] &&
-			xkbcomp -merge ~/.config/$f.xkb $DISPLAY 2> /dev/null
+		[ -f ~/.config/xkb/$f.xkb ] &&
+			xkbcomp -merge ~/.config/xkb/$f.xkb $DISPLAY 2> /dev/null
 	done
 } &
 
