@@ -53,7 +53,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 
 <!-- figure 2: mobile screenshot -->
 <a href="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot.jpg">
-	<img width="125px" align="right" src="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot2.png">
+	<img width="125px" align="right" src="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot2.png"/>
 </a>
 
 ## Quick start on Termux for Android
