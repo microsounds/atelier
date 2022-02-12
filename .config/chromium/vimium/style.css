@@ -1,0 +1,21 @@
+/* ~/.config/chromium/vimium/style.css: vimium stylesheet */
+
+/* linkhint boxes */
+div > .vimiumHintMarker {
+	background: linear-gradient(180deg, #EAFCFB, #FFFFFF);
+	border: 1px solid #646464;
+}
+
+/* linkhint text */
+div > .vimiumHintMarker span {
+	color: #0F968C;
+	font-weight: normal;
+	font-size: 15px;
+	font-family: serif;
+}
+
+/* linkhint text selection */
+div > .vimiumHintMarker > .matchingCharacter {
+	color: #00AA;
+	font-weight: bold;
+}
