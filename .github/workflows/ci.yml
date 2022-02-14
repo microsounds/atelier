@@ -35,7 +35,7 @@ jobs:
            # of unreachable URLs and servers not supporting HEAD method
            git list-files | xargs egrep -ohI "https?:[^ <>)'\",]*" \
              | sort | uniq | fgrep -v '$' \
-             | xargs -P0 wget --method=HEAD 2>&1 \
+             | xargs -P0 wget --method=HEAD --tries=2 --timeout=10 2>&1 \
              | egrep '(http|HTTP)' | egrep -v '^(Location|URL)' \
              | tee /dev/stderr \
              | tac | sed -E '/^HTTP.*(200|301|302)/,+1d' | tac \
