@@ -16,10 +16,12 @@ sudo mkdir -pv "${conf%/*}"
 	EOF
 
 	cat <<- EOF | while read -r key _; do
-		cjpalhdlnbpafiamejdnhcphjbkeiagm # ublock origin
-		mclkkofklkfljcocdinagocijmpgbhab # google input tools
-		ckkdlimhmcjmikdlpkmbgfkaikojcbjk # markdown viewer
-		jfpdlihdedhlmhlbgooailmfhahieoem # disable javascript
+		cjpalhdlnbpafiamejdnhcphjbkeiagm # uBlock Origin
+		mclkkofklkfljcocdinagocijmpgbhab # Google Input Tools
+		ckkdlimhmcjmikdlpkmbgfkaikojcbjk # Markdown Viewer
+		jfpdlihdedhlmhlbgooailmfhahieoem # Disable Javascript
+		dbepggeogbaibhgnhhndojpepiihcmeb # Vimium
+		jinjaccalgkegednnccohejagnlnfdag # Violentmonkey
 	EOF
 		printf '\t"%s;%s",\n' "$key" "$crx_url"
 	done

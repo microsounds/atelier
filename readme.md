@@ -276,6 +276,24 @@ C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` w
 
 [uBlock Origin]: https://ublockorigin.com "uBlock Origin homepage"
 
+### Configuring Vimium
+Use of Vimium is considered optional, as I haven't figured out a way to configure it automatically on first-run.
+It's configuration resides in [`~/.config/chromium/vimium`](.config/chromium/vimium)
+
+Run `configure.sh` to rebuild `vimium-options.json` for importing back into Vimium by hand.
+
+### An ongoing experiment
+`chromium` has proven difficult to configure non-interactively time and time again.
+Plaintext `chromium` configuration is an ongoing experiment of mine.
+
+| non-interactive functionality | status |
+| -- | :--: |
+| first-run config rebuild | works |
+| applying persistent chromium settings | works |
+| applying persistent chromium flags | works |
+| extension install on first-run | works _(via group policy)_ |
+| applying persistent extension settings | **no** |
+
 ## `git`
 `git` aliases are defined in [`~/.gitconfig`](.gitconfig) or implemented in interactive shell function `git()`
 
