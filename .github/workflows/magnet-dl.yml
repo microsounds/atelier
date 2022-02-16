@@ -1,35 +1,45 @@
 # gh-actions workflow to download from magnet links
 
 # Usage
-# 1. Place this file within .github/workflows in your repo and push.
-# 2. Go to Repo Settings > Actions > Secrets
-# 3. Add a new repository secret MAGNET_LINK with your 'magnet:?xt=...'
-# 4. Select this workflow from the Repo Actions tab and select Run Workflow.
+# 1. Place this file within .github/workflows in your GitHub repo and push.
+# 2. Select this workflow from the Repo Actions tab, select Run Workflow,
+#    add your Magnet URI, and wait a little while.
 #
-# This workflow produces a build artifact that consists of a list of file URLs
-# you can download non-interactively with 'wget -i download.txt -O - | tar -xv'
-# Links and artifacts expires in 24 hours.
+# This workflow produces a build artifact that contains URLs pointing to
+# sequential *.tar.gz chunks you can download non-interactively with
+# 'wget -i download.txt | tar -xzv'. Links and artifacts expire in 24 hours.
 #
 # Notes
-# catbox.moe is used to get around the runner disk space limit of ~25GiB.
+# catbox.moe is used to fully utilize runner disk space limit of ~25GiB.
 # actions/upload-artifact@v2 zips before uploading, reducing maximum effective
 # space to ~12GiB if files were to be delivered as a build artifact.
 
 name: Magnet Download by Proxy
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      MAGNET_URI:
+        type: string
+        required: true
+        description: Magnet Link/URI
 
 jobs:
   Download:
     runs-on: ubuntu-latest
     env:
-      MAGNET: ${{ secrets.MAGNET_LINK }}
+      MAGNET: ${{ github.event.inputs.MAGNET_URI }}
     steps:
+      - name: Install prerequisite(s)
+        run: sudo apt-get install -y aria2 pigz
       - name: Download file(s)
         run: |
-          mkdir dl parts
-          aria2c -d dl --seed-time=0 "$MAGNET" || exit 1
+          mkdir dl
+          aria2c -d dl --seed-time=0 "$MAGNET"
       - name: Tarball file(s) in place
-        run: tar --remove-files -c dl/ | split -db 1000M - parts/file.tar.
+        run: |
+          mkdir parts
+          tar --remove-files -c dl/ \
+            | pigz -1 | split -db 1000M - parts/file.tar.gz.
       - name: Upload tarball chunk(s) to litterbox.catbox.moe
         run: |
           for f in parts/*; do
