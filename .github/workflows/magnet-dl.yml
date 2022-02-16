@@ -1,0 +1,45 @@
+# gh-actions workflow to download from magnet links
+
+# Usage
+# 1. Place this file within .github/workflows in your repo and push.
+# 2. Go to Repo Settings > Actions > Secrets
+# 3. Add a new repository secret MAGNET_LINK with your 'magnet:?xt=...'
+# 4. Select this workflow from the Repo Actions tab and select Run Workflow.
+#
+# This workflow produces a build artifact that consists of a list of file URLs
+# you can download non-interactively with 'wget -i download.txt -O - | tar -xv'
+# Links and artifacts expires in 24 hours.
+#
+# Notes
+# catbox.moe is used to get around the runner disk space limit of ~25GiB.
+# actions/upload-artifact@v2 zips before uploading, reducing maximum effective
+# space to ~12GiB if files were to be delivered as a build artifact.
+
+name: Magnet Download by Proxy
+on: workflow_dispatch
+
+jobs:
+  Download:
+    runs-on: ubuntu-latest
+    env:
+      MAGNET: ${{ secrets.MAGNET_LINK }}
+    steps:
+      - name: Download file(s)
+        run: |
+          mkdir dl parts
+          aria2c -d dl --seed-time=0 "$MAGNET" || exit 1
+      - name: Tarball file(s) in place
+        run: tar --remove-files -c dl/ | split -db 1000M - parts/file.tar.
+      - name: Upload tarball chunk(s) to litterbox.catbox.moe
+        run: |
+          for f in parts/*; do
+            curl -F 'reqtype=fileupload' -F 'time=24h' -F "fileToUpload=@$f" \
+              'https://litterbox.catbox.moe/resources/internals/api.php'
+            printf '\n'
+          done | tee /dev/stderr > download.txt
+      - name: Upload file URL list as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: download.txt
+          retention-days: 1
