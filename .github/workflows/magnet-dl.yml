@@ -22,6 +22,11 @@ on:
         type: string
         required: true
         description: Magnet Link/URI
+      SEED_MODE:
+        type: boolean
+        required: true
+        default: true
+        description: Continue seeding after downloading?
 
 jobs:
   Download:
@@ -53,3 +58,10 @@ jobs:
           name: artifact
           path: download.txt
           retention-days: 1
+      - name: Seed after downloading (end workflow to obtain artifact)
+        if: ${{ github.event.inputs.SEED_MODE }}
+        run: |
+          for f in parts/*; do
+            cat "$f"; rm "$f"
+          done | pigz -d | tar -xv
+          aria2c -V -c -d dl "$MAGNET" || :
