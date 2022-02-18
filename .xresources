@@ -24,7 +24,8 @@ URxvt.scrollBar: false
 URxvt.urgentOnBell: true
 
 /* dump terminal logs to file */
-URxvt.print-pipe: cat > "$HOME/$(date '+%Y-%m-%d-%H%M%S')_term.log"
+URxvt.print-pipe: mkdir "$HOME/Logs"; \
+	cat > "$HOME/Logs/$(date '+%Y-%m-%d-%H%M%S')_urxvt.txt"
 
 /* disable non-standard ctrl+shift hijacking */
 URxvt.iso14755: false

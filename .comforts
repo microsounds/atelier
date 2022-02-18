@@ -11,6 +11,7 @@ cpp
 dc
 dconf-cli
 dkms
+enscript ttf2ufm gv
 feh jpegoptim optipng findimagedupes
 figlet
 file
