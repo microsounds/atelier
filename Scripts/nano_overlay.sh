@@ -58,7 +58,7 @@ mode_info() {
 ## Search and jump to source code definitions provided by POSIX ctags(1).
 ##  -e <tag> <#>    If a ctags index file exists in the current or a parent
 ##  or --ctags      directory, search through it for '<tag>' and open the file
-##                  containing it's definition.
+##                  containing its definition.
 ##                  If multiple matches are found, specify line number <#>
 ##                  or 'all' to open all matches at once.
 
@@ -231,7 +231,7 @@ mode_ctags() {
 ## Enable project-wide word fragment autocomplete provided by POSIX ctags(1).
 ##  -c <file1>...   Enables project-wide keyword autocomplete within nano.
 ##  or --ctags-dict If a ctags index file exists in the current or a parent
-##                  directory, append it's keywords to all files opened by
+##                  directory, append its keywords to all files opened by
 ##                  nano in the form of a condensed keyword dictionary at the
 ##                  end of the file.
 ##                  Condensed keyword dictionary will be removed upon exiting.

@@ -47,7 +47,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 	$ exec $SHELL -l
 	```
 4. Run `post-install` in the shell to run post-install scripts automatically.
-	* _Sets up the package manager, installs essential packages, compiles window manager, text editor, etc._
+	* _Sets up the package manager, installs and compiles essential packages, window manager, text editor, etc._
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
@@ -85,7 +85,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 # Usage notes
 ## Using `git meta`
 For local-scope changes, files in `$HOME` are versioned and mangled in place using Git.
-* `$HOME` is considered the detached working tree for a git **bare repo** located at `~/.config/meta`
+* `$HOME` is treated as the detached working tree for a git **bare repo** located at `~/.config/meta`
 * The `meta` alias prefixes all git commands with `--git-dir=$HOME/.config/meta --work-tree=$HOME`
 * `meta status` will ignore files not manually added or tracked by this git repo.
 	* _This is achieved using the `status.showUntrackedFiles` option and not via manually updating `~/.gitignore` as is commonly done._
@@ -96,7 +96,7 @@ For local-scope changes, files in `$HOME` are versioned and mangled in place usi
 All system-wide changes are performed through automated scripts located in [`~/.once.d`](.once.d), you can run them all at once with shell function `post-install`.
 Each script is self-contained, you can run them individually, anytime.
 
-* Some scripts only apply to specific hardware configurations, and will exit even if they are run.
+* Some scripts apply only to specific hardware configurations, and will exit even if they are run.
 * Scripts affecting `systemd` or the bootloader will be skipped in virtualized container contexts.
 * Locally installed software is installed to [`~/.local/bin`](.local/bin) when possible.
 
@@ -182,7 +182,7 @@ All daemons and services required to support the graphical shell are initialized
 
 At startup, `startx` will pass hardware-specific `xorg.conf` files to the X server, to enable hardware compositing on supported hardware and eliminate screen tearing.
 
-Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless they are located in one of several "blessed" directories.
+Xorg's security model forbids non-root users from passing arbitrary config files to the X server unless said configs are located in one of several "blessed" directories.
 Post-install scripts will create symlink `/etc/X11/$(id -u)-override` that points to `~/.config/xorg` to override this behavior.
 
 ## Optional X Window configuration
@@ -253,7 +253,7 @@ Several commands are extended to include impure functions, such as purposefully 
 4. `/usr/bin` system-wide executables
 
 ## `cd`
-* The contents of `$OLDPWD` is preserved between sessions.
+* The contents of `$OLDPWD` is preserved across `bash` sessions.
 * `cd` offers the following extensions:
 
 	| opt | function |
@@ -278,7 +278,7 @@ C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` w
 
 ### Configuring Vimium
 Use of Vimium is considered optional, as I haven't figured out a way to configure it automatically on first-run.
-It's configuration resides in [`~/.config/chromium/vimium`](.config/chromium/vimium)
+Its configuration resides in [`~/.config/chromium/vimium`](.config/chromium/vimium)
 
 Run `configure.sh` to rebuild `vimium-options.json` for importing back into Vimium by hand.
 
@@ -333,8 +333,8 @@ See *Usage Notes* for more information.
 	| -- | -- |
 	| `M-0` | Execute current line as shell command and pipe contents of buffer as stdin.<br/>_Destructively replaces entire contents of buffer, useful for formatting._ |
 	| `M-1` | Execute current line as shell command and paste output in current buffer.<br/>_Commands within inline comments are accepted._ |
-	| `M-2` | Select token underneath cursor and jump into it's `ctags` definition(s) within the same shell.<br/>_Requires valid `tags` file in current or a parent directory._ |
-	| `M-4` | Select token underneath cursor and jump into it's `ctags` definition(s) in a new terminal window.<br/>_Requires valid `tags` file in current or a parent directory._ |
+	| `M-2` | Select token underneath cursor and jump into its `ctags` definition(s) within the same shell.<br/>_Requires valid `tags` file in current or a parent directory._ |
+	| `M-4` | Select token underneath cursor and jump into its `ctags` definition(s) in a new terminal window.<br/>_Requires valid `tags` file in current or a parent directory._ |
 
 ## `notify-send`
 This particular [`notify-send`](.local/lib/notify-send) implements only `-t` for expiration time in seconds,
@@ -347,14 +347,14 @@ Instead, it's just a shell script that writes to a named pipe that gets picked u
 Unlike other implementations, you can pass notifications/OSD text as an argument or via stdin without using `xargs`.
 
 ## `sc` (spreadsheet calculator)
-`sc` supports macros to some degree, but it's macro implementation is [difficult to understand][sc_macros] and there aren't many examples of it being used successfully anywhere that I've managed to find.
+`sc` supports macros to some degree, but its macro implementation is [difficult to understand][sc_macros] and there aren't many examples of it being used successfully anywhere that I've managed to find.
 
 [sc_macros]: https://github.com/n-t-roff/sc/blob/master/SC.MACROS "I'm not even sure this was implemented as written."
 
 Instead, the shell function `sc()` offers an easier to understand macro system for statically mangling `.sc` spreadsheet files at runtime.
 * `sc` will automatically run any executable sharing the same initial name as the `.sc` file.
 	* _eg. `sheet1.sc` will run `sheet1.sc.1`, `sheet1.scx`, etc. if they exist in the same directory and are executable at runtime._
-* You can write an arbitrarily complex pre-run macro script in any language, so long as it is made aware of it's own filename at runtime.
+* You can write an arbitrarily complex pre-run macro script in any language, so long as it's made aware of its own filename at runtime.
 	* _Because the `sc` file format is plaintext, you can generate `sc` syntax with just a shell script._
 
 ### `sc` pre-run macro example
