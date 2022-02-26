@@ -13,10 +13,14 @@
 	list-files = ls-tree -r HEAD --name-only --full-tree
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i --root
-	# quickly commit changes and push
-	checkin = !git commit -a -m \"$(date) on $(uname -n)\"
+	# automated stage, commit and push for use in scripts
+	checkin = "!f() { \
+		! is-container && who=\"$(whoami)@$(uname -n)\" || who='CI'; \
+		change=\"$(git status --porcelain | wc -l) change\"; \
+		case "$change" in '1 '*) ;; *) change=\"${change}s\";; esac; \
+		git commit -a -m \"[$who] $change $(date '+%Y/%-m/%-d %-I:%M%P %Z')\"; \
+	}; f"
 	shove = "!f() { git checkin; git push; }; f"
-
 	# size reporting functions in kilobytes
 	size-tree = !echo $(( ($(git list-files | xargs ls -l \
 		| tr -s ' ' '\t' | cut -f5 | paste -s -d '+')) / 1024 ))
