@@ -1,5 +1,12 @@
+# CI/CD Automated Quick Start and Test Suite
+
+# a collection of unit tests (with side effects) that assert various components
+# of the graphical shell and ensure that initial bootstrap and post-install
+# scripts work as intended under the current stable distribution of Debian
+# GNU/Linux
+
 name: CI
-on: push
+on: [ push, pull_request ]
 
 jobs:
   Install:
@@ -25,12 +32,15 @@ jobs:
            GH_PAT: ${{ secrets.GH_PAT }}
            SITE_REPO: microsounds/microsounds.github.io
          run: |
-           git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
-           cd ~/site
-           kagami
-           git remote set-url origin "https://$GH_PAT@github.com/$SITE_REPO"
-           git add .
-           git shove
+           if [ "$GITHUB_EVENT_NAME" = 'push' ]; then
+             git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
+             cd ~/site
+             kagami
+             git remote set-url \
+               origin "https://$GH_PAT@${GITHUB_SERVER_URL##*/}/$SITE_REPO"
+             git add .
+             git shove
+           fi
        - name: Test nano-overlay ssh-sign file encryption
          shell: bash -le {0}
          env:
