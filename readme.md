@@ -1,8 +1,8 @@
 <!-- header and github badges -->
 <!-- github readmes only support align attributes for styling -->
-# <div align="center">_dotfiles—"atelier"_![shimeji]</div>
 <div align="center">
 
+# _dotfiles—"atelier"_![shimeji]
 ![ico-freq](https://img.shields.io/github/commit-activity/m/microsounds/atelier?logo=github)
 ![ico-size](https://img.shields.io/github/repo-size/microsounds/atelier?logo=github)
 [![ico-ci](https://github.com/microsounds/atelier/actions/workflows/ci.yml/badge.svg)][actions]
@@ -53,9 +53,12 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
 <!-- figure 2: mobile screenshot -->
+<span style="float: right;">
 <a href="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot.jpg">
-	<img width="125" align="right" src="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot2.png"/>
+<img alt="mobile scrot" width="125" align="right"
+	src="https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/mobile-scrot2.png"/>
 </a>
+</span>
 
 ## Quick start on Termux for Android
 > **NOTE**<br/>
