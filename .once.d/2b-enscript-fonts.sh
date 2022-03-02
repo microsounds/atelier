@@ -4,4 +4,4 @@
 
 cd /usr/share/enscript/afm
 sudo ttf2ufm /usr/share/fonts/fonts-go/Go-Mono.ttf go-mono
-sudo mkafmmap *
+sudo mkafmmap *.afm
