@@ -29,13 +29,90 @@ This is my primary computing setup, a self-contained graphical shell environment
 * A series of post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
 	* _A [suite of unit tests](.github/workflows/ci.yml) ensures a reproducible installation with each revision._
 
-Basic installation instructions are provided, along with some documentation for the most essential components.
+Detailed installation instructions are provided, along with some documentation for the most essential components.
 
 <!-- figure 1: desktop screenshot -->
 [![scrot]][scrot]
 _Pictured: Debian stable, a "graphical shell" environment consisting mostly of xorg, dwm, sxhkd and various urxvt clients._
 
 # Quick start
+<details style="background-color: #0000001C; padding: 3px;">
+<summary><strong>[OPTIONAL] Instructions for a Debian base install with <code>debootstrap</code> for BIOS/UEFI x86 systems.</strong></summary>
+
+## Installing Debian using `debootstrap`
+> **WARNING**<br/>
+> _This is a quick reference on using `debootstrap` to install Debian manually without using the official Debian installer.
+> Use your common sense, this does not claim to be a comprehensive tutorial to installing Debian.
+> You should have some familiarity with GNU/Linux before continuing._
+
+1. Boot into a Debian Live CD environment with any DE and partition your boot disk with `gparted`.
+
+	You should always keep a Live CD install media around for use as a rescue disk, regardless of installation method.
+	I only do it this way because I don't feel like using `fdisk`.
+
+	_To install packages in the live environment, `apt-get update` first and then `apt-get install gparted`._
+
+	Suggested boot disk layouts:
+	* Legacy BIOS systems that support MBR/`msdos` partition tables
+	```
+	# MBR disks support a maximum of 4 primary partitions
+	[ primary part. (root) ] [ extended partition                            ]
+	                         [ logical part. (swap) ] [ logical part. (home) ]
+	# example /etc/fstab
+	/dev/sda1	/       ext4	defaults	0	1
+	/dev/sda5	none    swap	defaults	0	0
+	/dev/sda6	/home   ext4	defaults	0	2
+	```
+
+	* Modern UEFI systems that support GPT/`gpt` partition tables
+	```
+	# EFI partition must be FAT32 and at least 32MiB
+	[ EFI partition ] [ root partition ] [ swap partition ] [ home partition ]
+
+	# example /etc/fstab
+	/dev/sda1	/boot/efi   vfat	defaults	0	2
+	/dev/sda2	/           ext4	defaults	0	1
+	/dev/sda3	none        swap	defaults	0	0
+	/dev/sda3	/home       ext4	defaults	0	2
+	```
+
+	> **NOTE**<br/>
+	> _If your machine uses a slow eMMC-based boot disk, I recommend `f2fs` for modestly improved performance instead of `ext4`.
+	> Support for booting from `f2fs` is not provided by default in Debian.<br/>
+	> See [this tutorial][f2fs] on adding required `f2fs` modules to `initramfs` for more info._
+
+	[f2fs]: https://howtos.davidsebek.com/debian-f2fs.html#:~:text=Booting%20From%20F2FS
+		"Install Debian 10 Buster on an F2FS Partition"
+
+2. Mount your newly created filesystem in `/mnt`, including your home partition to `/mnt/home` if you made one.
+3. Install `debootstrap` and install the Debian base system into `/mnt`.
+	* `debootstrap --arch [eg. i386, amd64] stable /mnt https://deb.debian.org/debian`
+		* _See <https://www.debian.org/ports/> for full list of platforms available._
+4. Chroot into your new system, _all actions from this point onward are within your chrooted system_.
+	```sh
+	$ sudo su -
+	$ for f in proc sys dev run; do mount --make-rslave --rbind /$f /mnt/$f; done
+	$ chroot /mnt /bin/bash
+	```
+5. Configure your `/etc/fstab` to taste.
+	* Try `lsblk -f >> /etc/fstab` to identify disks by `UUID=...` instead of device name.
+6. Customize your locale by installing and `dpkg-reconfigure`'ng `locales`, and `tzdata`.
+7. Edit `/etc/hostname` and `/etc/hosts` with your preferred hostname.
+8. Install a suitable linux kernel.
+	* Find a suitable kernel meta-package to install with `apt-cache search ^linux-image | grep 'meta'`.
+9. Install `network-manager` and the bootloader package `grub2`.
+
+	`grub2` does not install to your boot disk automatically, use the following:
+	* BIOS (installs to magic sector at start of disk)
+		* `install-grub2 --root-directory=/ /dev/sda`
+	* UEFI (installs to EFI partition mounted in `/boot/efi`)
+		* `install-grub2 --root-directory=/ --efi-directory=/boot/efi /dev/sda`
+10. Give your `root` user a password and create your normal user.
+	* eg. `useradd -m USERNAME -m /bin/bash`
+11. _Reboot and you should have a working system, skip to Step 2 in the **Quick start** installation below._
+
+</details>
+
 1. Install Debian stable, perform a base install with no DE selected and no standard utilities when prompted.
 	* _Do not perform these steps on `tty1`, `xinit` will launch without `dwm` present and you will be kicked._
 2. Install `git`, `wget`, and `sudo`, then add yourself to the `sudo` group.
@@ -71,7 +148,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 3. When pulling from upstream, stash changes or `git reset --hard` to prevent merge conflicts.
 	* Use `patch -p1 < ~/.termux/termux-diff.patch` to restore changes if stash is lost.
 
-## Notes on platform support
+## List of supported platforms
 **Full graphical shell environment**
 * Any conventional BIOS/UEFI-compliant x86-based Personal Computer
 * x86-based Chromebooks in Developer Mode (SeaBIOS), or liberated with UEFI firmware (Coreboot).
