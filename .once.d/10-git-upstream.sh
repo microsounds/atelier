@@ -67,7 +67,9 @@ for f in $(cat ~/.comforts-git); do
 	if [ -x "$TMP/configure" ]; then # autoconf configure
 		./configure --prefix="$INSTALL" --sysconfdir='/dev/null'
 	fi
-	make install PREFIX="$INSTALL" || exit 1
+	# some older programs choke if not allowed access to /etc
+	make install PREFIX="$INSTALL" ||
+		sudo make install PREFIX="$INSTALL" || exit 1
 	[ -x "$TMP/post-run" ] && ./post-run # post-run hacks
 	[ ! -z "$persist" ] || { cd .. && rm -rf "$TMP"; }
 done
