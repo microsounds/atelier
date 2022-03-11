@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+# configures one of the provided hp48* roms
+CONFIG="$HOME/.config/x48"
+ROM='gxrom-r'
+
+mkdir -p "$CONFIG"
+bzip2 -d "ROMs/$ROM.bz2"
+mv "ROMs/$ROM" "$CONFIG"
+cd "$CONFIG"
+
+ln -s "$ROM" 'rom'
+ln -s "$ROM" 'rom.dump'

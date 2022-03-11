@@ -18,7 +18,6 @@ file
 *gimp
 git make gcc
 gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
-grpn
 htop
 *kdenlive
 ledger

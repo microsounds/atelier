@@ -42,7 +42,7 @@ ctrl + alt + {Delete,Insert}
 	ssh-add -D && {sleep 1; xset dpms force off, systemctl hybrid-sleep}
 # F4: calculator/networking
 {_,shift +} {super + F4,XF86Calculator}
-	{grpn,visual bash -ic nmtui}
+	{x48,visual bash -ic nmtui}
 # F5: toggle displays/configure displays
 {_,shift +} {super + F5,XF86Display}
 	{xrandr-cycle | tail -n +2 | head -n 1 | notify-send,arandr}

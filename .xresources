@@ -69,3 +69,8 @@ XLoad.*.foreground: FGCOLOR
 XLoad.*.background: BGCOLOR
 XLoad.*.highlight: COLOR14
 XLoad.*.Label:
+
+/* x48 */
+/* must start from ~/ */
+X48.homeDirectory: .config/x48
+X48.useXShm: false

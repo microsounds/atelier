@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# install prerequisites
+sudo apt-get install libxt-dev
+
+./autogen.sh
