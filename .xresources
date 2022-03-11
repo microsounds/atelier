@@ -71,6 +71,11 @@ XLoad.*.highlight: COLOR14
 XLoad.*.Label:
 
 /* x48 */
+X48.useXShm: false
+
 /* must start from ~/ */
 X48.homeDirectory: .config/x48
-X48.useXShm: false
+
+/* used only during first run,
+ * assumes first run occurs with $PWD being $HOME */
+X48.romFileName: .config/x48/rom
