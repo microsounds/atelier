@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
 # install automake and other dependencies
-sudo apt-get build-dep nano -y
+sudo apt-get -y install \
+	libncurses-dev autoconf automake autopoint gettext texinfo
 
 # required for automake
 [ ! -d 'gnulib' ] && ./autogen.sh
