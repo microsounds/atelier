@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# xwin_decor.sh v0.8
+# xwin_decor.sh v0.9
 # decorate root window
 
 # fallback tiling background
@@ -10,8 +10,13 @@ cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 	-bg COLOR15 -fg COLOR1
 EOF
 
+# custom background
 # select N random images or video frames from any directory
 # indicated by ~/.xdecor, one for each active display
+zeropad() {
+	[ $1 -gt 9 ] && echo $1 || echo "0$1"
+}
+
 rand() {
 	{ od -N 4 -t u -A n | tr -d ' '; } < /dev/urandom
 }
@@ -23,15 +28,29 @@ shuffle() {
 }
 
 ffmpeg_cat() {
-	# low performance version
-	is-chromebook && ffmpegthumbnailer -i "$1" -s 0 -c png \
-		-t $((($(rand) % 100) + 1)) -o - && return
-
 	mediainfo "$1" --inform='Video;%FrameCount% %FrameRate%' \
 		| while read -r f_count fps; do
-		secs=$(echo "scale=2; $f_count * (1 / $fps)" | bc)
-		ffmpeg -ss $(($(rand) % ${secs%.*})) -i "$1" -vframes 1 \
-			-q:v 0 -f image2pipe -vcodec png - 2> /dev/null
+
+		# calculate length and randomly select timestamp
+		len=$(echo "scale=2; $f_count * (1 / $fps)" | bc)
+		len=${len%.*}
+		while :; do # skip OP/EDs
+			sel=$(($(rand) % len))
+			[ $sel -gt 150 ] || continue
+			[ $sel -lt $((len - 150)) ] || continue
+			break
+		done
+		hrs=$((sel / 3600))
+		min=$(((sel - (hrs * 3600)) / 60))
+		sec=$((sel % 60))
+		timest="$(zeropad $hrs):$(zeropad $min):$(zeropad $sec)"
+
+		# saved for future use
+		# ffmpeg -ss "$timest" -i "$1" -vframes 1 \
+		#	-q:v 0 -f image2pipe -vcodec png - 2> /dev/null
+
+		# low performance version
+		ffmpegthumbnailer -i "$1" -s 0 -c png -t "$timest" -o -
 	done
 }
 
