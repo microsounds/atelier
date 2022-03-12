@@ -15,6 +15,7 @@ enscript ttf2ufm gv
 feh jpegoptim optipng findimagedupes
 figlet
 file
+fonts-liberation fonts-dejima-mincho
 *gimp
 git make gcc
 gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
@@ -22,7 +23,6 @@ htop
 *kdenlive
 ledger
 *libreoffice-writer libreoffice-calc
-libx11-dev libxft-dev libxinerama-dev fonts-liberation fonts-dejima-mincho
 m4
 man-db
 mesa-utils

@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+# usage: is-installed [ package name(s) ]
+# wrapper for dpkg, returns non-zero if any package queried is not installed
+# outputs list of packages not found
+
+unset list
+for f in $@; do
+	printf '%s\r' "Checking '$f'..." 1>&2
+	dpkg -s "$f" > /dev/null 2>&1 || list="$list $f"
+	printf '\e[2K' 1>&2
+done || :
+
+if [ ! -z "$list" ]; then
+	echo "$list"
+	exit 1
+fi
+

@@ -1,10 +1,12 @@
 #!/usr/bin/env sh
 
-# inject custom syntax rules for C-like languages
 INSTALL="$HOME/.local"
 share="$INSTALL/share/nano"
-mv "$share/extra/debian.nanorc" "$share"
+
+# kagami flavored markdown takes priority
 rm -f "$share/markdown.nanorc"
+
+# inject custom syntax rules for C-like languages
 for f in c javascript; do
 	syn="$share/$f.nanorc"
 	{	rm "$syn"

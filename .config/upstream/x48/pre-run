@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-# install prerequisites
-sudo apt-get -y install libxt-dev autoconf automake
+# install build prereqs
+is-installed libxt-dev autoconf automake \
+	| xargs -r sudo apt-get -y install
 
 ./autogen.sh

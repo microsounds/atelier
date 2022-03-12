@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 
-# install automake and other dependencies
-sudo apt-get -y install \
-	libncurses-dev autoconf automake autopoint gettext texinfo
+# install build prereqs
+is-installed \
+	libncurses-dev autoconf automake autopoint gettext texinfo \
+	| xargs -r sudo apt-get -y install
 
 # required for automake
 [ ! -d 'gnulib' ] && ./autogen.sh

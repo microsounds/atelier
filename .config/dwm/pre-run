@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
-# apply dwm patches
+is-installed libx11-dev libxft-dev libxinerama-dev \
+	| xargs -r sudo apt-get -y install
+
+# apply quality of life patches
 if [ -d patches ]; then
 	for g in patches/*.diff; do
 		echo "[patch] $g..."
