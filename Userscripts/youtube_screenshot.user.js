@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name YouTube Screenshot
 // @author microsounds
-// @version 0.2
+// @version 0.2.1
 // @description Press Ctrl+F11 to save native resolution screenshots from YouTube videos.
 // @homepageURL https://microsounds.github.io/notes/dotfiles.htm
 // @downloadURL https://raw.githubusercontent.com/microsounds/atelier/master/Userscripts/youtube_screenshot.user.js
@@ -42,14 +42,18 @@ window.youtube_screenshot = function() {
 			/* resolution */
 			fname += '(' +
 				vid.videoWidth + 'x' +
-				vid.videoHeight + ')' + ' ';
+				vid.videoHeight + ', ';
 
 			/* current timestamp */
-			fname += '[' +
-				zeropad((vid.currentTime / 3600) | 0) + ':' +
-				zeropad((vid.currentTime / 60)| 0) + ':' +
-				zeropad((vid.currentTime % 60) | 0) +
-			']';
+			var hrs = vid.currentTime / 3600 | 0;
+			var min = (vid.currentTime - (hrs * 3600)) / 60 | 0;
+			var sec = vid.currentTime % 60 | 0;
+
+			if (hrs) fname += zeropad(hrs) + 'h';
+			if (min) fname += zeropad(min) + 'm';
+			if (sec) fname += zeropad(sec) + 's';
+
+			fname += ')';
 
 			/* download screenshot */
 			var dl = document.createElement("a");
