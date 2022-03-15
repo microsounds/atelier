@@ -112,12 +112,12 @@ cd() {
 				_a="${_a%?}"
 			done
 			set -- "$_e" && unset _a _e;;
-		-e) # fuzzy find and jump into sub-directory
-			shift
-			[ -z "$1" ] && echo 'Please enter a query.' && return
-			_e="$(find . -type d 2> /dev/null)"
-			set -- "$(echo "$_e" | grep -i "$1" | head -n 1)"
-			[ -z "$@" ] && echo 'Not found.' && return;;
+		-f) # interactive fuzzy find and jump into sub-directory with fzf
+			shift # usage: cd -f [optional query]
+			_e="$(find . -type d | sed 's,^./,,g' | fzf ${1:+-q "$1"} \
+				-1 -0 --no-multi --layout=reverse --height=90%)" \
+				|| echo 'Not found.'
+			set -- "$_e" && unset _e;;
 	esac
 
 	# preserve $OLDPWD between sessions

@@ -340,7 +340,7 @@ Several commands are extended to include impure functions, such as purposefully 
 	| opt | function |
 	| -- | -- |
 	| `...`, `....`, etc. | Shorthand for `../../`, `../../../` and so on. |
-	| `-e <dirname>` | Fuzzy find and jump into a sub-directory. |
+	| `-f <query>` | Interactive fuzzy find and jump into a sub-directory with `fzf` |
 
 ## `chromium`
 > **NOTE**<br/>
