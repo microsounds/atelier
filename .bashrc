@@ -104,11 +104,14 @@ ls() (
 
 cd() {
 	case "$1" in
-		...*) # shorthand aliases for referencing parent dirs
-			_e='../' # converts ... into ../../ and so on
-			for f in $(echo "${1#??}" | sed 's/./& /g'); do
-				[ "$f" = '.' ] && _e="${_e}../" || break
-			done && set -- "$_e";;
+		...*) # shorthand aliases for referring to parent dirs
+			_a="${1#??}" && shift # convert ... into ../../ and so on
+			_e='../'
+			while [ ! -z "$_a" ]; do
+				[ "${_a#${_a%?}}" = '.' ] && _e="$_e../"
+				_a="${_a%?}"
+			done
+			set -- "$_e" && unset _a _e;;
 		-e) # fuzzy find and jump into sub-directory
 			shift
 			[ -z "$1" ] && echo 'Please enter a query.' && return
