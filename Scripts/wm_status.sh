@@ -41,8 +41,10 @@ trap abort 0 1 2 3 6
 mkfifo "$FIFO" "$NFIFO"
 
 # monitor and redirect notifications from notify-send
-{	while read -r msg < "$NFIFO"; do
-		echo "MSG $msg"
+{	while :; do
+		while read -r msg < "$NFIFO"; do
+			echo "MSG $msg"
+		done
 	done
 } > "$FIFO" &
 
