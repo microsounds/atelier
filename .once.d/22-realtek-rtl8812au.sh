@@ -13,7 +13,7 @@ finish() {
 	exit
 }
 
-trap finish 0 1 2 3 6
+trap finish 0 1 2 3 6 15
 
 TMP="$(mk-tempdir)"
 mkdir -v "$TMP"

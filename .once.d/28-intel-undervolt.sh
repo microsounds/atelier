@@ -34,7 +34,7 @@ finish() {
 
 grep 'GenuineIntel' < /proc/cpuinfo > /dev/null || exit
 
-trap finish 0 1 2 3 6
+trap finish 0 1 2 3 6 15
 mkdir -v "$TMP"
 if git clone "$REPO" "$TMP" || exit 1 && cd "$TMP"; then
 	# keep existing configuration on reinstall

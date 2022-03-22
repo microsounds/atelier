@@ -364,7 +364,7 @@ mode_encrypt() {
 		fi
 
 		# attempt file unpack
-		trap 'rm -rf "$tmp"*' 0 1 2 3 6
+		trap 'rm -rf "$tmp"*' 0 1 2 3 6 15
 		if [ "$state" = 'encrypted' ]; then
 			{ $aes_crypt -pass 'env:pass' -d | $xz -d; } < "$f" > "$tmp" ||
 				quit 'Invalid password'
@@ -468,7 +468,7 @@ mode_encrypt_rsa() {
 		# no state: file is plaintext, ask to overwrite when finished
 
 		# attempt file unpack
-		trap 'rm -rf "$tmp"*' 0 1 2 3 6
+		trap 'rm -rf "$tmp"*' 0 1 2 3 6 15
 		mkdir -p "$tmp"
 		mkfifo -m 600 "$tmp/pipe"
 		if [ "$state" = 'encrypted' ]; then
@@ -589,7 +589,7 @@ mode_encrypt_ssh_sign() {
  		# no state: file is plaintext, ask to overwrite when finished
 
 		# attempt file unpack
-		trap 'rm -rf "$tmp"*' 0 1 2 3 6
+		trap 'rm -rf "$tmp"*' 0 1 2 3 6 15
 		mkdir -p "$tmp"
 		mkfifo -m 600 "$tmp/pipe"
 		if [ "$state" = 'encrypted' ]; then
@@ -696,5 +696,5 @@ esac; done
 [ ! -z "$opt" ] && opt="-$(echo "$opt" | tr -s 'a-z')"
 
 wait
-[ ! -z "$CTAGS_DICT" ] && trap 'ctags_dict_purge "$@" &' 0 1 2 3 6
+[ ! -z "$CTAGS_DICT" ] && trap 'ctags_dict_purge "$@" &' 0 1 2 3 6 15
 $ACTUAL_EDITOR $opt "$@"

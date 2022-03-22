@@ -14,7 +14,7 @@ finish() {
 	exit
 }
 
-trap finish 0 1 2 3 6
+trap finish 0 1 2 3 6 15
 
 # fetch version information
 echo 'Fetching latest version...'

@@ -20,7 +20,7 @@ finish() {
 	exit
 }
 
-trap finish 0 1 2 3 6
+trap finish 0 1 2 3 6 15
 
 mkdir -v "$TMP"
 if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then

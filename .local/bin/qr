@@ -14,7 +14,7 @@ case "$1" in
 		unset f; [ ! -f /dev/stdin ] || f='img'
 		zbar${f:-cam} --raw - < /dev/stdin > "$tmp" 2> /dev/null &
 		# exit after first successful scan
-		trap 'kill $! 2> /dev/null; rm -f "$tmp"; exit' 0 1 2 3 6
+		trap 'kill $! 2> /dev/null; rm -f "$tmp"; exit' 0 1 2 3 6 15
 		while [ ! -s "$tmp" ]; do sleep 1; done
 		cat "$tmp";;
 

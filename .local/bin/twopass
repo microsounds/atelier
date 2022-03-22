@@ -22,7 +22,7 @@ for f in "$@"; do
 done
 
 on_exit() { rm -fv $key*.log; }
-trap on_exit 0 1 2 3 6
+trap on_exit 0 1 2 3 6 15
 
 for f in 1 2; do case $f in
 	1) announce "$@" -passlogfile $key -pass $f -f null /dev/null;;

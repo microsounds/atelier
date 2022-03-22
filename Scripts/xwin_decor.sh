@@ -55,7 +55,7 @@ ffmpeg_cat() {
 }
 
 temp="$(mk-tempdir)" && mkdir -p "$temp"
-trap 'rm -rf "$temp"' 0 1 2 3 6
+trap 'rm -rf "$temp"' 0 1 2 3 6 15
 
 config="$HOME/.xdecor"
 [ -f "$config" ] || exit

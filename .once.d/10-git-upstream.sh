@@ -41,7 +41,7 @@ for f in $(cat ~/.comforts-git); do
 	# perform git clone manually
 	case $persist in
 		1) # rebuild git dir in place and/or pull
-			trap - 0 1 2 3 6
+			trap - 0 1 2 3 6 15
 			TMP="$PERSIST/$prog"
 			mkdir -p "$TMP" && cd "$TMP"
 			if ! git status > /dev/null 2>&1; then
@@ -51,7 +51,7 @@ for f in $(cat ~/.comforts-git); do
 			git fetch --tags origin master || exit 1
 			git merge FETCH_HEAD || exit 1;;
 		*) # git clone and discard afterward
-			trap finish 0 1 2 3 6
+			trap finish 0 1 2 3 6 15
 			TMP="$(mk-tempdir)"
 			git clone --tags "$f" "$TMP" || exit 1
 			cd "$TMP"
