@@ -16,7 +16,7 @@ done
 # global delimiter
 delim='・'
 
-# generate sed script for final output
+# generate sed script for final output formatting
 IFS=''
 script="s/${delim}$//" # strip trailing delimiter
 for f in $pad $quote; do # surround output with special characters
@@ -34,13 +34,15 @@ NFIFO="$HOME/.notify"
 
 abort() {
 	rm -rf "$FIFO" "$NFIFO"
-	kill -- -$$ 2> /dev/null
+	echo "[!] ${0##*/} terminated unexpectedly" | sed -e "$script"
+	kill -- -$$ > /dev/null 2>&1
 }
 
-trap abort 0 1 2 3 6
+trap abort 0 1 2 3 6 15
 mkfifo "$FIFO" "$NFIFO"
 
 # monitor and redirect notifications from notify-send
+# prevent named pipe from closing
 {	while :; do
 		while read -r msg < "$NFIFO"; do
 			echo "MSG $msg"
