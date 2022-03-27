@@ -5,8 +5,9 @@
 	email = microsounds@users.noreply.github.com
 
 [alias]
-	# recent changes
-	summary = log --oneline --decorate --graph -n 16
+	# outline recent changes
+	summary = log -n 16 --graph \
+		--pretty=format:\"%C(cyan)%h%C(auto)%d %s %C(yellow)%ar\"
 	# home directory version control
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 	# list all tracked filenames in repo, for use with xargs
