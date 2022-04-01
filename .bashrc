@@ -65,7 +65,7 @@ swallow() (
 ## external use aliases/shell functions
 
 # enable terminal swallowing for selected X applications
-for f in feh mpv pcmanfm xdiskusage; do
+for f in feh mpv xdiskusage; do
 	alias "$f"="swallow $f"
 done && unset f
 
@@ -145,8 +145,7 @@ posix() (
 	}
 
 	[ "$1" = '-l' ] && list=1 && shift
-	case "$1" in
-		-l) list=1;; # list available pages
+	case "$1" in # list available pages
 		1) docs="$docs/utilities";; # XCU - posix shell
 		2) docs="$docs/functions";; # XSH - *NIX syscalls
 		3) docs="$docs/basedefs";;  # XBD - C standard library
