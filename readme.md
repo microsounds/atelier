@@ -42,8 +42,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 ## Installing Debian using `debootstrap`
 > **WARNING**<br/>
 > _This is a quick reference on using `debootstrap` to install Debian manually without using the official Debian installer.
-> Use your common sense, this does not claim to be a comprehensive tutorial to installing Debian.
-> You should have some familiarity with GNU/Linux before continuing._
+> This is not a comprehensive tutorial on *NIX concepts, you should have some familiarity with administrating a GNU/Linux system before continuing._
 
 1. Boot into a Debian Live CD environment with any DE and partition your boot disk with `gparted`.
 
@@ -87,7 +86,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 2. Mount your newly created filesystem in `/mnt`, including your home partition to `/mnt/home` if you made one.
 3. Install `debootstrap` and install the Debian base system into `/mnt`.
 	* `debootstrap --arch [eg. i386, amd64] stable /mnt https://deb.debian.org/debian`
-		* _See <https://www.debian.org/ports/> for full list of platforms available._
+		* _See <https://www.debian.org/ports/> for a full list of platforms available._
 4. Chroot into your new system, _all actions from this point onward are within your chrooted system_.
 	```sh
 	$ sudo su -
@@ -103,13 +102,15 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 9. Install `network-manager` and the bootloader package `grub2`.
 
 	`grub2` does not install to your boot disk automatically, use the following:
-	* BIOS (installs to magic sector at start of disk)
-		* `install-grub2 --root-directory=/ /dev/sda`
-	* UEFI (installs to EFI partition mounted in `/boot/efi`)
-		* `install-grub2 --root-directory=/ --efi-directory=/boot/efi /dev/sda`
-10. Give your `root` user a password and create your normal user.
-	* eg. `useradd -m USERNAME -m /bin/bash`
-11. _Reboot and you should have a working system, skip to Step 2 in the **Quick start** installation below._
+	* Build initial grub configuration with `/sbin/update-grub`
+	* For BIOS (installs to magic sector at start of disk)
+		* `/sbin/grub-install --root-directory=/ /dev/sda`
+	* For UEFI (installs to EFI partition mounted in `/boot/efi`)
+		* `/sbin/grub-install --root-directory=/ --efi-directory=/boot/efi /dev/sda`
+10. Give your `root` user a password, create your normal user, and assign it a password also.
+	* eg. `useradd -m USERNAME -s /bin/bash; passwd USERNAME`
+11. You should now have a working system, **login as your user** and skip to Step 2 in the **Quick start** below.
+	* _You can reboot from the Live CD environment at this point to check your work but it's not required._
 
 </details>
 
@@ -124,8 +125,8 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 	# Invoke the login shell to apply changes made to the environment
 	$ exec $SHELL -l
 	```
-4. Run `post-install` in the shell to run post-install scripts automatically.
-	* _Sets up the package manager, installs and compiles essential packages, window manager, text editor, etc._
+4. Run `post-install` in the shell to run post-install scripts automatically. Do not run as root.
+	* _Sets up the package manager, installs essential packages, window manager, text editor, etc._
 5. Reboot to finish.
 	* _[`xinit`](.xinitrc) starts automatically upon login to [`tty1`](.profile)._
 
