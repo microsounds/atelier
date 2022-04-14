@@ -1,9 +1,10 @@
 #!/usr/bin/env sh
 
-# detect if running in a container context
+# detect if running in a CI/CD container context
 
 # docker
-egrep -q '(docker|lxc)' < /proc/1/cgroup && exit 0
+[ -f /proc/1/cgroup ] && \
+	egrep -q '(docker|lxc)' < /proc/1/cgroup && exit 0
 [ -f /.dockerenv ] && exit 0
 
 exit 1
