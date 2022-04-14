@@ -13,6 +13,7 @@ cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	clang binutils       # provides cpp
 	openssl-tool openssh # nano-overlay
 	busybox              # httpd
+	n-t-roff-sc          # provides sc
 	ledger
 	bash-completion
 EOF
