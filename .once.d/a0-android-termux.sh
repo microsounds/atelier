@@ -15,6 +15,7 @@ cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	busybox              # httpd
 	n-t-roff-sc          # provides sc
 	ledger
+	imagemagick
 	bash-completion
 EOF
 # update existing
