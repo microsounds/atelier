@@ -171,7 +171,7 @@ posix() (
 git() (
 	iterate_thru() {
 		command git meta "$@" &
-		find ~/Git -name '*.git' -type d | sed 's,/.git$,,' \
+		find -L ~/Git -name '*.git' -type d | sed 's,/.git$,,' \
 			| xargs -I '{}' -P0 git -C '{}' "$@"
 		wait
 	}

@@ -19,7 +19,7 @@ icon='±'
 # get root of worktree, actual git dir location, and current commit short-ref
 # covers git submodule and detached worktree edge cases
 parse="$(git rev-parse \
-	--show-toplevel --git-dir --short HEAD)" 2> /dev/null
+	--show-cdup --git-dir --short HEAD)" 2> /dev/null
 
 # is this a git repo?
 # non-zero exit codes are ignored because '--short HEAD' can return an error
@@ -37,6 +37,11 @@ for f in repo git_dir short_ref; do
 }"
 done
 unset IFS sel parse
+
+# resolve relative root of worktree
+# avoids issues within nested symlinks where '--show-toplevel'
+# doesn't match $PWD
+repo="$(cd "$repo"; echo "$PWD")"
 
 # ignore untracked files in very large repos to improve latency
 [ ${#short_ref} -gt 10 ] && speedy='--untracked-files=no'
