@@ -16,8 +16,9 @@ dir='\e[1;34m'
 reset='\e[0m'
 icon='±'
 
-# get root of worktree, actual git dir location, and current commit short-ref
-# covers git submodule and detached worktree edge cases
+# get root of worktree, git dir location, and current commit short-ref
+# covers edge cases incl. git submodules, detached worktrees and certain forms
+# of symlink abuse
 parse="$(git rev-parse \
 	--show-cdup --git-dir --short HEAD)" 2> /dev/null
 
@@ -39,8 +40,10 @@ done
 unset IFS sel parse
 
 # resolve relative root of worktree
-# avoids issues within nested symlinks where '--show-toplevel'
-# doesn't match $PWD
+# dumb hack that avoids issues with symlinks to worktrees where output of
+# '--show-toplevel' doesn't match $PWD
+# DO NOT navigate into symlinks to dirs nested within a worktree, a symlink
+# target of 'repo/sub/sub/dir' will return ../../../ and break the script.
 repo="$(cd "$repo"; echo "$PWD")"
 
 # ignore untracked files in very large repos to improve latency
