@@ -147,7 +147,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
 	* Applies android-specific hacks and termux specific dotfiles for theming and softkeys.
 3. When pulling from upstream, stash changes or `git reset --hard` to prevent merge conflicts.
-	* Use `patch -p1 < ~/.termux/termux-diff.patch` to restore changes if stash is lost.
+	* Use `patch -p1 < ~/.termux/diff.patch` to restore changes if stash is lost.
 
 ## List of supported platforms
 **Full graphical shell environment**
@@ -333,6 +333,13 @@ Several commands are extended to include impure functions, such as purposefully 
 3. Normal executables and symlinks in [`~/.local/bin`](.local/bin)
 	* Some are shell functions promoted to scripts so they'll work in `dmenu` or outside of a terminal context.
 4. `/usr/bin` system-wide executables
+
+## Interactive shell
+![path-gitstatus](https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/path-gitstatus.png)
+
+The prompt path will feature embedded `git` information provided by [`path-gitstatus`](Scripts/git_status.sh) highlighting the root of a `git` worktree and it's status.
+
+Outside of `git` worktrees, the path component will be mangled by [`path-shorthand`](.local/lib/path-shorthand) and be truncated to the last `$PATH_WIDTH` characters _(default is 50)_ for improved usability.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved across `bash` sessions.
