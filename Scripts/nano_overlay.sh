@@ -77,7 +77,6 @@ ctags_find_root() {
 ctags_menu() {
 	# spawn interactive menu if being called from a subshell
 	# re-enter ctags_mode automatically
-	# xargs is used to prevent nano from seeing stdin under any circumstances
 	if [ $NANO_DEPTH -gt 1 ]; then
 		if fzf --version > /dev/null 2>&1; then
 			msg="$(mesg_st "Matches for '$1': " 2>&1)"
@@ -85,11 +84,10 @@ ctags_menu() {
 				| head -n 1)" < /dev/stdin || exit 1
 			sel="${sel#	*}"
 			sel="${sel%%	*}"
-			echo "$sel" | xargs -o $EDITOR -e "$1"
-		else
-			# fallback to opening all matches if fzf is not installed
-			echo 'all' | xargs -o $EDITOR -e "$1"
 		fi
+		# fallback to opening all matches if fzf is not installed
+		# nano exits with errors if terminal device is not reconnected
+		$EDITOR -e "$1" "${sel:-all}" < /dev/tty
 	else
 		# standard usage: print static reentrant menu to stdout
 		mesg "Specify a match or use 'all' to select all matches." 2>&1
