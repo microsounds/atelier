@@ -20,7 +20,6 @@ set unix
 unset locking
 set positionlog
 unset historylog
-unset suspendable
 
 ##  keybinds
 bind ^Z undo main
