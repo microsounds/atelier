@@ -4,7 +4,6 @@ alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
 *brasero xorriso eject
-calendar
 chromium jq
 cpp
 *cups libnss-mdns simple-scan sane-airscan
@@ -28,6 +27,7 @@ man-db
 mesa-utils
 mpv youtube-dl ffmpeg mediainfo
 nano openssl exuberant-ctags fzf
+ncal
 openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc cmark-gfm
