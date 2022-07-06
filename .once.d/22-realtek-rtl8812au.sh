@@ -19,9 +19,10 @@ TMP="$(mk-tempdir)"
 mkdir -v "$TMP"
 
 for f in 8814 88xx; do
+	# 2022/06: regression introduced, fallback to earliest driver available
 	SOURCE="https://http.kali.org/kali/pool/contrib/r/realtek-rtl${f}au-dkms"
 	DEB="$(wget -q -O - "$SOURCE" | egrep -o '<a href=".*\.deb">' | \
-		tr '"' "\t" | cut -f2 | tail -n 1)"
+		tr '"' "\t" | cut -f2 | head -n 1)"
 
 	echo "Fetching '$DEB'..."
 	if wget "$SOURCE/$DEB" -O "$TMP/$DEB" || exit 1; then
