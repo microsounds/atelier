@@ -3,11 +3,12 @@
 # Usage
 # 1. Place this file within .github/workflows in your GitHub repo and push.
 # 2. Select this workflow from the Repo Actions tab, select Run Workflow,
-#    add your Magnet URI, and wait a little while.
+#    add your Magnet URI(s), and wait a little while.
 #
 # This workflow produces a build artifact that contains URLs pointing to
 # sequential *.tar.gz chunks you can download non-interactively with
-# 'wget -i download.txt | tar -xzv'. Links and artifacts expire in 24 hours.
+# 'wget -i download.txt -O - | tar -xzv'.
+# Catbox links and GitHub artifacts expire in 72 hours.
 #
 # Notes
 # catbox.moe is used to fully utilize runner disk space limit of ~25GiB.
@@ -21,7 +22,7 @@ on:
       MAGNET_URI:
         type: string
         required: true
-        description: Magnet Link/URI
+        description: Magnet Link/URI(s)
       SEED_MODE:
         type: boolean
         required: true
@@ -33,13 +34,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MAGNET: ${{ github.event.inputs.MAGNET_URI }}
+      ARIA2C: aria2c -d dl --disable-ipv6 --force-sequential
     steps:
       - name: Install prerequisite(s)
         run: sudo apt-get install -y aria2 pigz
       - name: Download file(s)
         run: |
           mkdir dl
-          aria2c -d dl --seed-time=0 "$MAGNET"
+          $ARIA2C --seed-time=0 $MAGNET
       - name: Tarball file(s) in place
         run: |
           mkdir parts
@@ -52,16 +54,17 @@ jobs:
               'https://litterbox.catbox.moe/resources/internals/api.php'
             printf '\n'
           done | tee /dev/stderr > download.txt
+          cat download.txt
       - name: Upload file URL list as artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifact
           path: download.txt
-          retention-days: 1
+          retention-days: 3
       - name: Seed after downloading (end workflow to obtain artifact)
-        if: ${{ github.event.inputs.SEED_MODE }}
+        if: ${{ github.event.inputs.SEED_MODE == 'true' }}
         run: |
           for f in parts/*; do
             cat "$f"; rm "$f"
           done | pigz -d | tar -xv
-          aria2c -V -c -d dl "$MAGNET" || :
+          $ARIA2C -V -c $MAGNET || :
