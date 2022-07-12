@@ -48,7 +48,7 @@ jobs:
       - name: Upload tarball chunk(s) to litterbox.catbox.moe
         run: |
           for f in parts/*; do
-            curl -F 'reqtype=fileupload' -F 'time=24h' -F "fileToUpload=@$f" \
+            curl -F 'reqtype=fileupload' -F 'time=72h' -F "fileToUpload=@$f" \
               'https://litterbox.catbox.moe/resources/internals/api.php'
             printf '\n'
           done | tee /dev/stderr > download.txt
