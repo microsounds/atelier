@@ -45,7 +45,7 @@ jobs:
       - name: Tarball file(s) in place
         run: |
           mkdir parts
-          tar --remove-files -c dl/ \
+          tar --remove-files -cv dl/ \
             | pigz -1 | split -db 1000M - parts/file.tar.gz.
       - name: Upload tarball chunk(s) to litterbox.catbox.moe
         run: |
@@ -54,6 +54,7 @@ jobs:
               'https://litterbox.catbox.moe/resources/internals/api.php'
             printf '\n'
           done | tee /dev/stderr > download.txt
+          printf '\n\e[1m%s\e[0m\n' 'Download List'
           cat download.txt
       - name: Upload file URL list as artifact
         uses: actions/upload-artifact@v2
