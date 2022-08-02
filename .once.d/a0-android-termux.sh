@@ -14,6 +14,7 @@ cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	openssl-tool openssh # nano-overlay
 	busybox              # httpd
 	n-t-roff-sc          # provides sc
+	man                  # misc comforts
 	ledger
 	imagemagick
 	bash-completion
@@ -63,7 +64,7 @@ done
 find ~/Scripts ~/.local -type f | xargs sed -e "$script" -i
 
 # remove splash screen
-rm -f /etc/motd
+rm -f /etc/motd*
 
 # reset meta upstream
 ~/.once.d/02-meta-config.sh
