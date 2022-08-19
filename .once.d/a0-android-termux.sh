@@ -98,6 +98,7 @@ echo "$colors" | cpp -P > "$CONF/colors.properties"
 
 # configure soft key layout
 cat <<- EOF > "$CONF/termux.properties"
+	enforce-char-based-input = true
 	extra-keys-style = arrows-all
 	extra-keys = [ \
 		[ ESC, '~',  '/', HOME, UP,   END,   PGUP, DEL  ], \
