@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# android-termux.sh v0.9
+# android-termux.sh v1.0
 # collection of hackjobs to enable basic functionality on termux for android
 # some changes are ugly or incompatible with every other platform and will be
 # applied manually so as to not pollute other scripts
@@ -32,8 +32,9 @@ sed -ni ~/.profile -e '/## login shell/q;p'
 # changes to shell startup, entry point for termux-chroot
 ! fgrep -q 'termux-chroot' < ~/.bashrc && {
 	# allow use of standard file locations like /tmp
+	# android 11+ kills background daemons, run ssh-agent as parent process
 	sed -i ~/.bashrc \
-		-e '1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec termux-chroot; }\n/'
+		-e '1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec ssh-agent -t 3600 termux-chroot; }\n/'
 
 	# bash-completion is already sourced at startup
 	sed -i ~/.bashrc -e '/bash-completion/d'
