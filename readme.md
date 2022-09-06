@@ -140,7 +140,6 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 
 ## Quick start on Termux for Android
 > **NOTE**<br/>
-> _Currently, only a basic shell environment in single-user mode is supported.<br/>
 > This is meant to be a lightweight port with modifications, do not initiate a full `post-install`._
 
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
@@ -149,9 +148,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 3. When pulling from upstream, stash changes or `git reset --hard` to prevent merge conflicts.
 	* Use `patch -p1 < ~/.termux/diff.patch` to restore changes if stash is lost.
 
-### Notes on Android 11 or later
-Many manufacturer distributions of Android since version 11 have become far more aggressive in pruning "phantom" processes (daemons) in the pursuit of battery life optimization.
-In order to prevent Android from prematurely pruning `ssh-agent` while multitasking, it is called as the parent process for the current shell.
+See [attached notes](#Termux_for_Android) for explanations of changes from a standard Linux environment.
 
 ## List of supported platforms
 **Full graphical shell environment**
@@ -344,6 +341,28 @@ Several commands are extended to include impure functions, such as purposefully 
 The prompt path will feature embedded `git` information provided by [`path-gitstatus`](Scripts/git_status.sh) highlighting the root of a `git` worktree and it's status.
 
 Outside of `git` worktrees, the path component will be mangled by [`path-shorthand`](.local/lib/path-shorthand) and be truncated to the last `$PATH_WIDTH` characters _(default is 50)_ for improved usability.
+
+## Termux for Android
+Single-user shell environment should work as expected on Termux without root access or changes to `$PREFIX/etc` with several caveats described below:
+
+Post-install scripts make these adjustments statically for existing scripts.
+
+### Standard file descriptors
+Shell scripts on Android systems without root access have no access to standard file descriptors `/dev/std{in,out,err}`, use `/proc/self/fd/{0,1,2}` instead.
+
+### Shell escapes in `sh`
+`\e` to insert shell escape literals works in some circumstances but not all, use `\33` when in doubt.
+
+### `$PREFIX`
+Previously, `termux-chroot` was used to ensure a FHS-compliant environment, but it introduces unacceptable performance drawbacks in my tests.
+
+Use Termux's own environment `$PREFIX` to refer to standard filesystem locations within scripts, e.g. `$PREFIX/tmp` which expands to `/data/data/com.termux/files/usr/tmp`
+
+### Background processes on Android 11 and later
+Many manufacturer distros of Android since version 11 have become far more aggressive in pruning "phantom" processes (daemons) in the pursuit of battery life optimization.
+In order to prevent Android from prematurely pruning `ssh-agent` while multitasking, it is called as the parent process for the current shell.
+
+Termux developers recommend their own non-standard startup method or running daemons in the foreground without forking and with wakelock acquired if you wish to run a long-running task.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved across `bash` sessions.

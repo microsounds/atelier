@@ -9,7 +9,7 @@ uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
 
 # install prerequisites
 cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
-	wget git proot       # req'd for bootstrap
+	wget git             # req'd for bootstrap
 	clang binutils       # provides cpp
 	openssl-tool openssh # nano-overlay
 	busybox              # httpd
@@ -29,12 +29,16 @@ yes y | termux-setup-storage
 sed -ni ~/.profile -e '/## login shell/q;p'
 
 # ~/.bashrc
-# changes to shell startup, entry point for termux-chroot
-! fgrep -q 'termux-chroot' < ~/.bashrc && {
-	# allow use of standard file locations like /tmp
+# changes to shell startup, entry point for termux
+# force a normal-ish bash login shell
+! fgrep -q '$TERMUX' < ~/.bashrc && {
+	# simulate FHS standard locations w/o termux-chroot
+	sed -i ~/.profile -E \
+		-e 's,^(export XDG_RUNTIME_DIR).*,\1="$PREFIX/tmp",'
+
 	# android 11+ kills background daemons, run ssh-agent as parent process
 	sed -i ~/.bashrc \
-		-e '1s/^/[ ! -z "$TERMUX" ] || { export TERMUX=1; exec ssh-agent -t 3600 termux-chroot; }\n/'
+		-e '1s/^/[ ! -z "$TERMUX" ] || \\\n\t{ export TERMUX=1; exec ssh-agent -t 3600 bash -l; }\n/'
 
 	# bash-completion is already sourced at startup
 	sed -i ~/.bashrc -e '/bash-completion/d'
