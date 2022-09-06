@@ -140,7 +140,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 
 ## Quick start on Termux for Android
 > **NOTE**<br/>
-> This is meant to be a lightweight port with modifications, do not initiate a full `post-install`._
+> _This is meant to be a lightweight port with modifications, do not initiate a full `post-install`._
 
 1. Install `git`, and bootstrap the system using `git reset --hard` as described above.
 2. Post-install: Run only [`~/.once.d/a0-android-termux.sh`](.once.d/a0-android-termux.sh)
@@ -148,7 +148,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 3. When pulling from upstream, stash changes or `git reset --hard` to prevent merge conflicts.
 	* Use `patch -p1 < ~/.termux/diff.patch` to restore changes if stash is lost.
 
-See [attached notes](#Termux_for_Android) for explanations of changes from a standard Linux environment.
+See [attached notes](#Termux-for-Android) for explanations of changes from a standard Linux environment.
 
 ## List of supported platforms
 **Full graphical shell environment**
@@ -343,15 +343,14 @@ The prompt path will feature embedded `git` information provided by [`path-gitst
 Outside of `git` worktrees, the path component will be mangled by [`path-shorthand`](.local/lib/path-shorthand) and be truncated to the last `$PATH_WIDTH` characters _(default is 50)_ for improved usability.
 
 ## Termux for Android
-Single-user shell environment should work as expected on Termux without root access or changes to `$PREFIX/etc` with several caveats described below:
-
-Post-install scripts make these adjustments statically for existing scripts.
+Single-user shell environment should work as expected on Termux without root access or changes to `$PREFIX/etc` with several caveats described below.
+Post-install scripts make the following adjustments statically for existing scripts.
 
 ### Standard file descriptors
 Shell scripts on Android systems without root access have no access to standard file descriptors `/dev/std{in,out,err}`, use `/proc/self/fd/{0,1,2}` instead.
 
-### Shell escapes in `sh`
-`\e` to insert shell escape literals works in some circumstances but not all, use `\33` when in doubt.
+### `ESC` sequences
+`<backslash>e` to insert escape literals in scripts works for some OSC codes, but not all, use octal `<backslash>33` when in doubt.
 
 ### `$PREFIX`
 Previously, `termux-chroot` was used to ensure a FHS-compliant environment, but it introduces unacceptable performance drawbacks in my tests.

@@ -40,6 +40,9 @@ sed -ni ~/.profile -e '/## login shell/q;p'
 	sed -i ~/.bashrc \
 		-e '1s/^/[ ! -z "$TERMUX" ] || \\\n\t{ export TERMUX=1; exec ssh-agent -t 3600 bash -l; }\n/'
 
+	# disable $OLDPWD persistence
+	sed -i ~/.bashrc -e '/LASTDIR/d'
+
 	# bash-completion is already sourced at startup
 	sed -i ~/.bashrc -e '/bash-completion/d'
 
