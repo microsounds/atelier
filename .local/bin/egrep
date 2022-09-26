@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 
-# ignoring POSIX.1-2017
-exec grep -E "$@"
+# reimplements legacy grep commands dropped from POSIX.1-2017
+# eg. egrep => grep -E
+name="${0##*/}"
+${name#?} -$(echo "${name%${name#?}}" | tr 'a-z' 'A-Z') "$@"
