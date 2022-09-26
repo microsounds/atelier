@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# ignoring POSIX.1-2017
+exec grep -F "$@"
