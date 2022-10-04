@@ -48,6 +48,7 @@ for f in $(cat ~/.comforts-git); do
 				git init
 				git remote add origin "$f"
 			fi
+			git reset --hard
 			git fetch --tags origin master || exit 1
 			git merge FETCH_HEAD || exit 1;;
 		*) # git clone and discard afterward
