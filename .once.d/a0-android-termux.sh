@@ -106,6 +106,10 @@ echo "$colors" | cpp -P > "$CONF/colors.properties"
 
 # configure soft key layout
 cat <<- EOF > "$CONF/termux.properties"
+	# make full use of display in landscape mode
+	# disable extra keys with VolUp+q
+	#fullscreen=true
+
 	enforce-char-based-input = true
 	extra-keys-style = arrows-all
 	extra-keys = [ \
