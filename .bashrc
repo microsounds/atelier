@@ -4,7 +4,10 @@
 ## internal use
 
 # bash specific
+# limit history file to ~500KiB, ignore duplicates
 HISTCONTROL=ignoredups
+HISTSIZE=20000
+HISTFILESIZE=20000
 PROMPT_COMMAND=set_prompt
 
 # bash-completion
