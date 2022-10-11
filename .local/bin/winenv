@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+# wine-stable wrapper script
+# sets $WINEPREFIX to $PWD
+# usage: cd ~/wine/generic; winenv wine ...
+
+export WINEPREFIX="$PWD"
+export PATH="/opt/wine-stable/bin:$PATH"
+
+"$@"

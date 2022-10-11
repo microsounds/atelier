@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+# encodes video with burned hardsubs to Sony PSP format with matching thumbnail
+[ -f "$1" ] || { echo "usage: ${0##*/} [INPUT FILE]"; exit 1; }
+
+file="$1"
+output="${file##*/}"
+output="${output%%.*}-h264"
+
+# sony psp format
+# H.264/MPEG-4 AVC Main Profile (CABAC) (AAC) and Baseline Profile (AAC)
+# 480x272 resolution
+# pad only applies to UHD content
+# for 4:3 content, do not use 480:-1, set to VCD resolution -1:240 and no padding
+ffmpeg -threads 0 -y -i "$file" \
+	-map 0:0 -c:v libx264 -crf 18 -profile:v main -preset slow \
+		-pix_fmt yuv420p -b-pyramid none -level 3 -refs 3 \
+	-filter_complex \
+		"[0:0]subtitles='$file':si=0[a];[a]scale=480:-1:force_original_aspect_ratio=1[a];[a]pad=480:272:(ow-iw)/2:(oh-ih)/2" \
+	-map 0:1 -c:a aac -ab 96k -ac 2 -ar 24000 \
+	"$output.mp4"
+
+# generate matching thumbnail
+ffmpeg -y -i "$file" -f image2 -ss 20 -vframes 1 -s 160x120 "$output.thm"
