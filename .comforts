@@ -25,9 +25,10 @@ ledger
 m4
 man-db
 mesa-utils
-mpv youtube-dl ffmpeg mediainfo
-nano openssl exuberant-ctags fzf
+mpv ffmpeg mediainfo
+nano openssl exuberant-ctags fzf spell
 ncal
+nodejs
 openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc cmark-gfm
