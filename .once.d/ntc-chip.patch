@@ -1,0 +1,39 @@
+--- a/.comforts-git
++++ b/.comforts-git
+@@ -8,3 +8,3 @@ https://github.com/microsounds/kagami
+ https://github.com/gwenhael-le-moine/x48
+-https://github.com/yt-dlp/yt-dlp
++#https://github.com/yt-dlp/yt-dlp
+ https://github.com/dylanaraps/pfetch
+--- a/.local/include/theme.h
++++ b/.local/include/theme.h
+@@ -28,3 +28,3 @@
+ #define str(s) _xstr(s)
+-#define font(name, px) name:pixelsize=px
++#define font(name, px) name:size=px
+ 
+--- a/.xresources
++++ b/.xresources
+@@ -6,3 +6,3 @@
+ /* xft */
+-Xft.dpi: 96
++Xft.dpi: 60
+ Xft.antialias: true
+--- a/Scripts/xwin_widgets.sh
++++ b/Scripts/xwin_widgets.sh
+@@ -44,5 +44,5 @@ for f in $(xrandr -q | grep '[^dis]connected' \
+ done
+-SIZE=130      # window size
+-GAP=15        # gap between windows
+-EDGE=20       # distance from screen border
++SIZE=60      # window size
++GAP=5        # gap between windows
++EDGE=5       # distance from screen border
+ 
+--- a/.comforts
++++ b/.comforts
+@@ -44,3 +44,3 @@ scrot
+ sudo
+-task-laptop acpi lm-sensors network-manager bluez
++task-laptop lm-sensors network-manager bluez
+ *valgrind

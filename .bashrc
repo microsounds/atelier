@@ -264,7 +264,7 @@ post-install() (
 	retries=10
 	! is-container && [ $(id -u) -eq 0 ] && \
 		{ echo 'You must not be root.'; exit 1; }
-	for f in ~/.once.d/*; do
+	for f in ~/.once.d/*.sh; do
 		unset iters
 		while announce ">>> Running '${f##*/}'" && ! $f; do
 			iters=$((iters + 1))

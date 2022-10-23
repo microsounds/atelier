@@ -5,7 +5,6 @@
 # pulls in upgrades if needed
 
 BRANCH='bullseye' # released 2021/08
-! is-ntc-chip || BRANCH='buster' # released 2019/07
 
 CONF='/etc/apt/sources.list'
 TRUSTED='/etc/apt/trusted.gpg.d'
