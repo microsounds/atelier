@@ -14,6 +14,8 @@
 	list-files = ls-tree -r HEAD --name-only --full-tree
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i --root
+	# make last second changes to previous commit
+	recommit = "!f() { git add -u; git commit --amend; }; f"
 	# automated stage, commit and push for use in scripts
 	checkin = "!f() { \
 		! is-container && who=\"$(whoami)@$(uname -n)\" || who='CI'; \
