@@ -211,7 +211,8 @@ sc() (
 #
 ## accounting/timekeeping routines based around nano-overlay
 
-# sorts a list of upcoming dates
+# calendar reminder function
+# sorts a list of upcoming dates and calculates countdowns
 upcoming() (
 	quit() { echo "$@"; exit; }
 	[ ! -z "$1" ] || quit 'usage: upcoming [file]'
@@ -223,7 +224,10 @@ upcoming() (
 	# expected format: one or more of 'YYYY/MM/DD\tMSG\n'
 	nano-overlay -s "$1" | sed 's/#.*$//g' | sort | grep . \
 		| while read -r date msg; do
+		# skip if in the past
 		epoch=$(date -d "$date" '+%s') || exit 1
+		[ $epoch -gt $((now - 1)) ] || continue
+
 		days=$(((epoch - now) / 86400))
 		case $days in # countdown
 			0) away='today';;
