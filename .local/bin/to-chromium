@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+# wrapper for chromium that converts html fragments to data URIs
+# so they can be "piped" into chromium via stdin, like a here document
+# useful for previewing markdown as a rendered html document
+# usage: markdown document.md | to-chromium
+
+{ echo '<meta charset="UTF-8" />'; cat; } \
+	| chromium "data:text/html;base64,$(base64 -w 0)" -incognito
