@@ -78,6 +78,10 @@ for f in nmtui; do
 	eval "$f() { palette ncurses; command $f \"\$@\"; palette; }"
 done && unset f
 
+# convert plaintext for rendering in a web browser
+alias markdown='cmark-gfm --smart --hardbreaks \
+	-e autolink -e table -e strikethrough'
+
 # spawn static web server in the current directory
 alias httpd='pkill busybox; busybox httpd -p 8080'
 
