@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# wrapper script for converting plaintext to styled postscript
+# suitable for piping to a printer
+# usage: [prog] | ascii2ps [enscript args] | lpr
+
+FONT='GoMono7'
+enscript -f $FONT -F $FONT -c -M letter -p - "$@"
