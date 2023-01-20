@@ -353,15 +353,19 @@ Shell scripts on Android systems without root access have no access to standard 
 `<backslash>e` to insert escape literals in scripts works for some OSC codes, but not all, use octal `<backslash>33` when in doubt.
 
 ### `$PREFIX`
-Previously, `termux-chroot` was used to ensure a FHS-compliant environment, but it introduces unacceptable performance drawbacks in my tests.
+Previously, `termux-chroot` was used to ensure FHS-compliance, but it introduced unacceptable performance speed.
 
-Use Termux's own environment `$PREFIX` to refer to standard filesystem locations within scripts, e.g. `$PREFIX/tmp` which expands to `/data/data/com.termux/files/usr/tmp`
+Use Termux's own provided envvar `$PREFIX` to refer to standard filesystem locations within scripts or interactively, e.g. `$PREFIX/tmp` which expands to `/data/data/com.termux/files/usr/tmp`.
+In practice, shell script shebangs don't need to be rewritten, Termux already rewrites these with some hidden voodoo I don't care to understand.
 
-### Background processes on Android 11 and later
-Many manufacturer distros of Android since version 11 have become far more aggressive in pruning "phantom" processes (daemons) in the pursuit of battery life optimization.
+### Background processes since Android 11
+The customized Android images that ship from [Chinese and Korean manufacturers](https://dontkillmyapp.com/) since version 11 have become far more aggressive in pruning "phantom" processes (daemons) in the pursuit of better battery life.
+Backgrounding processes in the shell with the `&` operator will no longer work, launching daemons will be killed immediately if not in foreground mode.
+
 In order to prevent Android from prematurely pruning `ssh-agent` while multitasking, it is called as the parent process for the current shell.
 
-Termux developers recommend their own non-standard startup method or running daemons in the foreground without forking and with wakelock acquired if you wish to run a long-running task.
+Termux developers recommend their very own [termux-services](https://wiki.termux.com/wiki/Termux-services) for running common daemons.
+Launch daemons in foreground mode without forking and preferably with wakelock acquired from the notification bar if you wish to run a long-running task without being throttled by the operating system.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved across `bash` sessions.
