@@ -6,7 +6,11 @@
 # GNU/Linux
 
 name: CI
-on: [ push, pull_request ]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0/5 * * * *"
 
 jobs:
   Install:
@@ -31,16 +35,15 @@ jobs:
          env:
            GH_PAT: ${{ secrets.GH_PAT }}
            SITE_REPO: microsounds/microsounds.github.io
+         if: ${{ github.event_name  == 'push' }}
          run: |
-           if [ "$GITHUB_EVENT_NAME" = 'push' ]; then
-             git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
-             cd ~/site
-             kagami
-             git remote set-url \
-               origin "https://$GH_PAT@${GITHUB_SERVER_URL##*/}/$SITE_REPO"
-             git add .
-             git shove
-           fi
+           git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
+           cd ~/site
+           kagami
+           git remote set-url \
+             origin "https://$GH_PAT@${GITHUB_SERVER_URL##*/}/$SITE_REPO"
+           git add .
+           git shove
        - name: Test nano-overlay ssh-sign file encryption
          shell: bash -le {0}
          env:
