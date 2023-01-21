@@ -34,10 +34,12 @@ ffmpeg_cat() {
 		# calculate length and randomly select timestamp
 		len=$(echo "scale=2; $f_count * (1 / $fps)" | bc)
 		len=${len%.*}
-		while :; do # skip OP/EDs
+		skip_len=150
+		while :; do # reroll for random frame that skips over OPs/EDs
 			sel=$(($(rand) % len))
-			[ $sel -gt 150 ] || continue
-			[ $sel -lt $((len - 150)) ] || continue
+			[ $len -le $skip_len ] && break # short video?
+			[ $sel -gt $skip_len ] || continue
+			[ $sel -lt $((len - skip_len)) ] || continue
 			break
 		done
 		hrs=$((sel / 3600))

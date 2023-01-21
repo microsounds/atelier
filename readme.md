@@ -422,6 +422,7 @@ See *Usage Notes* for more information.
 	| `summary` | Outlines the last 20 commits with a commit graph. |
 	| `list-files` | List all tracked filenames in repo, ideally for use with `xargs`. |
 	| `flatten` | Automatically melds `--fixup/squash` commits out of existence starting from the root commit. |
+	| `recommit` | Stages changes to worktree and `commit --amend`s them as part of the last commit. |
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |
 	| `shove` | Runs `checkin` and pushes immediately. |
 	| `sync` | Runs `git meta pull` and then recurses through `~/Git` and runs `git pull` on every existing `git` repo found. |
