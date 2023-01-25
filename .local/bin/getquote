@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+
+## getquote v0.1
+## (c) 2023 microsounds <https://github.com/microsounds>, GPLv3+
+# scrapes Yahoo! Finance API for stock, crypto and ETF price quotes
+# outputs as ledger-cli commodity price history format in US Dollars
+# format: 'P YYYY/MM/DD HH:MM:SS SYMBOL $USD_PRICE'
+
+## usage: getquote [SYMBOL(s)...]
+## typical usage: ledger -f ledger.dat commodities | xargs getquote >> price.db
+
+QUOTE_API='https://query1.finance.yahoo.com/v7/finance/quote?lang=en-US&region=US&corsDomain=finance.yahoo.com&symbols='
+
+[ ! -z "$1" ] || {
+	cat "$0" | grep '^##' | sed 's/^## //g' 1>&2
+	exit 1
+}
+
+# assemble as one API call, don't identify as wget
+symbol_list="$(echo "$@" | tr ' ,	' ',')"
+wget -nv -U '' -O - "$QUOTE_API$symbol_list" \
+	| jq -r '.quoteResponse.result[] | [.symbol,.regularMarketPrice] | join(" ")' \
+	| while read -r SYM PRICE; do
+	[ ! -z "$PRICE" ] || {
+		echo "Symbol '$SYM' not supported, skipping." 1>&2
+		continue
+	}
+	# quotes are time delayed by 15 minutes
+	printf 'P %s %s %s\n' \
+		"$(date -d '15 minutes ago' '+%Y/%-m/%-d %H:%M:%S')" \
+		"$SYM" \
+		"\$$PRICE"
+done
+
