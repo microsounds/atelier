@@ -251,14 +251,34 @@ upcoming() (
 )
 
 
-# similar to gzcat for nano-overlay | ledger -f -
+# reentrant encrypted wrapper for ledger-cli
+# similar to gzcat for nano-overlay | ledger -f - except that passing
+# no add'l options enables REPL mode in ledger-cli
 ledger-enc() (
 	quit() { echo "$@"; exit; }
-	[ ! -z "$1" ] || quit 'usage: ledger-enc [file]'
-	[ -f "$1" ] || quit 'File not found.'
+	[ ! -z "$1" ] || quit 'usage: ledger-enc [file]' 1>&2
+	[ -f "$1" ] || quit 'File not found.' 1>&2
 	file="$1" && shift
 	export EXTERN_EDITOR='ledger -f'
 	export EXTERN_ARGS="$@"
+	export LEDGER_ENC_DEPTH="$((LEDGER_ENC_DEPTH + 1))"
+
+	# update price history for commodities if 'price.db' exists in the same dir
+	# and date of last fetch was over 3 hours ago
+	parent_dir="${file%/*}"
+	[ "$parent_dir" = "$file" ] && parent_dir='.'
+	LEDGER_PRICE_DB="$parent_dir/price.db"
+	[ -f "$LEDGER_PRICE_DB" ] && [ $LEDGER_ENC_DEPTH -lt 2 ] && {
+		echo "Using '$LEDGER_PRICE_DB'" 1>&2
+		export LEDGER_PRICE_DB
+		now="$(date '+%s')"
+		last_fetch="$(cat "$LEDGER_PRICE_DB" | tail -1 \
+			| tr ' ' '\t' | cut -f2,3 | xargs -I '{}' date '+%s' -d '{}')"
+		[ $((now - last_fetch)) -gt $((60 * 60 * 3)) ] && {
+			ledger-enc "$file" commodities \
+				| xargs getquote >> "$LEDGER_PRICE_DB"
+		}
+	}
 	nano-overlay -s "$file"
 )
 
