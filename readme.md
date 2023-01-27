@@ -360,12 +360,14 @@ In practice, shell script shebangs don't need to be rewritten, Termux already re
 
 ### Background processes since Android 11
 The customized Android images that ship from [Chinese and Korean manufacturers](https://dontkillmyapp.com/) since version 11 have become far more aggressive in pruning "phantom" processes (daemons) in the pursuit of better battery life.
-Backgrounding processes in the shell with the `&` operator will no longer work, launching daemons will be killed immediately if not in foreground mode.
+
+You may experience issues with processes backgrounded with the `&` operator being throttled or killed when multitasking outside of Termux. _Daemons that fork without becoming a child process or `exec`'ing the same process that called it may be killed immediately or shortly after leaving Termux if not called in foreground mode._
 
 In order to prevent Android from prematurely pruning `ssh-agent` while multitasking, it is called as the parent process for the current shell.
 
 Termux developers recommend their very own [termux-services](https://wiki.termux.com/wiki/Termux-services) for running common daemons.
-Launch daemons in foreground mode without forking and preferably with wakelock acquired from the notification bar if you wish to run a long-running task without being throttled by the operating system.
+_Launch daemons in foreground mode in another terminal instance without forking and preferably with wakelock acquired from the notification bar if you wish to run a long-running task without being throttled by the operating system._
+
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved across `bash` sessions.
