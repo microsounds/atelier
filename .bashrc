@@ -35,12 +35,19 @@ set_prompt() {
 		r='\[\e[0m\]'  # reset
 	fi
 
+	# speed-hack that disables path-gitstatus on extremely slow filesystems
+	TIME_NOW=${EPOCHREALTIME%.*}${EPOCHREALTIME#*.}
+	if [ ! -z $PROMPT_LATENCY ] && [ $PROMPT_LATENCY -gt 30000 ]; then
+		alias path-gitstatus='! :'
+	fi
+
 	# set window title with OSC '\e]0;<title>\a' and prompt
 	git_path="$(path-gitstatus -pe${COLOR:-n})" \
 		|| path="$(path-shorthand)" \
 		|| path="('${PWD##*/}' no longer exists)" # no such file or directory
 	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}${path}${r}}\$ "
 	unset u p r path git_path
+	export PROMPT_LATENCY=$((${EPOCHREALTIME%.*}${EPOCHREALTIME#*.} - TIME_NOW))
 
 	# command history persistence across sessions
 	history -a; history -c; history -r
