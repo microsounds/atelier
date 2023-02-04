@@ -36,8 +36,8 @@ set_prompt() {
 	fi
 
 	# speed-hack that disables path-gitstatus on extremely slow filesystems
-	TIME_NOW=${EPOCHREALTIME%.*}${EPOCHREALTIME#*.}
-	if [ ! -z $PROMPT_LATENCY ] && [ $PROMPT_LATENCY -gt 30000 ]; then
+	TIME_NOW=${EPOCHREALTIME%.*}${EPOCHREALTIME#*.} # disable at 500ms
+	if [ ! -z $PROMPT_LATENCY ] && [ $PROMPT_LATENCY -gt 500000 ]; then
 		alias path-gitstatus='! :'
 	fi
 
