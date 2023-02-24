@@ -1,16 +1,16 @@
 # CI/CD Automated Quick Start and Test Suite
 
-# a collection of unit tests (with side effects) that assert various components
-# of the graphical shell and ensure that initial bootstrap and post-install
-# scripts work as intended under the current stable distribution of Debian
-# GNU/Linux
+# a collection of unit tests (with many side effects) that assert various
+# components of the graphical shell and ensure that initial bootstrap and
+# post-install scripts work as intended under the current stable distribution
+# of Debian GNU/Linux
 
 name: CI
 on:
   push:
   pull_request:
   schedule:
-    - cron: "0/5 * * * *"
+    - cron: "*/10 * * * *"
 
 jobs:
   Install:
@@ -30,20 +30,33 @@ jobs:
          env:
            TERM: rxvt
          run: yes n | post-install
-       - name: Push updates to website using kagami
+       - name: Update website and run cron job tasks with kagami
          shell: bash -le {0}
          env:
            GH_PAT: ${{ secrets.GH_PAT }}
            SITE_REPO: microsounds/microsounds.github.io
-         if: ${{ github.event_name  == 'push' }}
+         if: ${{ github.event_name  != 'pull_request' }}
          run: |
            git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
            cd ~/site
            kagami
            git remote set-url \
              origin "https://$GH_PAT@${GITHUB_SERVER_URL##*/}/$SITE_REPO"
-           git add .
-           git shove
+
+           # assign bot commits to the gh-actions account
+           git config user.name 'github-actions[bot]'
+           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+           # pull in changes since cloning
+           # if last commit was a [CI] commit, amend last commit and push -f
+           git pull --rebase --autostash
+           case "$(git log -1 --pretty="%B")" in
+             "[CI]"*)
+               git reset --soft HEAD~1
+               git checkin
+               git push -f;;
+             *) git shove
+           esac
        - name: Test nano-overlay ssh-sign file encryption
          shell: bash -le {0}
          env:

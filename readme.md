@@ -458,7 +458,8 @@ See *Usage Notes* for more information.
 This particular [`notify-send`](.local/lib/notify-send) implements only `-t` for expiration time in seconds,
 because it doesn't tie into any `dbus`-based notification daemon implementing the [Desktop Notifications spec][notify].
 
-[notify]: https://www.galago-project.org/specs/notification/0.9/index.html "freedesktop.org Desktop Notifications spec"
+[notify]: https://specifications.freedesktop.org/notification-spec/latest/
+	"freedesktop.org Desktop Notifications spec"
 
 Instead, it's just a shell script that writes to a named pipe that gets picked up by [`xwin-statusd`](Scripts/wm_status.sh) as a simple way to implement OSD text and single-line notifications.
 
