@@ -35,7 +35,7 @@ jobs:
          env:
            GH_PAT: ${{ secrets.GH_PAT }}
            SITE_REPO: microsounds/microsounds.github.io
-         if: ${{ github.event_name  != 'pull_request' }}
+         if: ${{ github.event_name == 'push' }}
          run: |
            git clone "$GITHUB_SERVER_URL/$SITE_REPO" ~/site
            cd ~/site

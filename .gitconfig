@@ -5,17 +5,36 @@
 	email = microsounds@users.noreply.github.com
 
 [alias]
-	# outline recent changes
-	summary = log -n 16 --graph \
-		--pretty=format:\"%C(cyan)%h%C(auto)%d %s %C(yellow)%ar\"
+	# outline commits made before HEAD
+	past = log --graph -n 16 \
+		--pretty=format:'%C(cyan)%h%C(auto)%d %s %C(yellow)%ar'
+	# outline commits made after HEAD
+	future = "!f() { \
+		{ git log --graph --color=always \
+			--pretty=format:'%C(cyan)%h%C(auto)%d %s %C(yellow)%ar' \
+			HEAD~1..master; printf '\n'; } | tail -n 17; \
+	}; f"
+
+	# step back and forth in repo
+	# ff moves toward master by default, specify commit-ref to follow that instead
+	rw = checkout HEAD~1
+	ff = "!f() { \
+		towards="${1:-master}"; \
+		git checkout $(git rev-list --date-order HEAD..$towards | tail -n 1); \
+	}; f"
+
 	# home directory version control
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
+
 	# list all tracked filenames in repo, for use with xargs
 	list-files = ls-tree -r HEAD --name-only --full-tree
+
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i --root
+
 	# make last second changes to previous commit
 	recommit = "!f() { git add -u; git commit --amend; }; f"
+
 	# automated stage, commit and push for use in scripts
 	checkin = "!f() { \
 		! is-container && who=\"$(whoami)@$(uname -n)\" || who='CI'; \
@@ -24,12 +43,15 @@
 		git commit -a -m \"[$who] $change $(date '+%Y/%-m/%-d %-I:%M%P %Z')\"; \
 	}; f"
 	shove = "!f() { git checkin; git push; }; f"
+
 	# size reporting functions in kilobytes
+	# find size of worktree in HEAD
 	size-tree = !echo $(( ($(git list-files | xargs ls -l \
 		| tr -s ' ' '\t' | cut -f5 | paste -s -d '+')) / 1024 ))
+	# find size of compressed git repo
 	size-pack = !git count-objects -v \
 		| fgrep 'size-pack' | tr -s ' :' '\t' | cut -f2
-	  
+
 [init]
 	defaultBranch = master
 
