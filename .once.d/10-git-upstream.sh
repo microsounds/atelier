@@ -59,7 +59,7 @@ for f in $(cat ~/.comforts-git); do
 	esac
 
 	# checkout latest and install
-	git reset --hard && git checkout master || exit 1
+	git reset --hard && git checkout HEAD || exit 1
 
 	# copy existing installation scripts if available
 	[ -d "$SCRIPTS/$prog" ] && cp -v "$SCRIPTS/$prog/"* "$TMP"
