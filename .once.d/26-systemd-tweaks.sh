@@ -10,9 +10,11 @@ done
 # limit size of journald logs
 conf-append 'SystemMaxUse=20M' '/etc/systemd/journald.conf'
 
-# convert hybrid-sleep to act as hibernate+reboot
-conf-append 'HybridSleepMode=reboot' '/etc/systemd/sleep.conf'
-conf-append 'HibernateDelaySec=0s' '/etc/systemd/sleep.conf'
+# replace hybrid-sleep with hibernate+reboot for quick dualboots
+user-confirm 'Replace systemd hybrid-sleep mode with hibernate+reboot?' && {
+	conf-append 'HybridSleepMode=reboot' '/etc/systemd/sleep.conf'
+	conf-append 'HibernateDelaySec=0s' '/etc/systemd/sleep.conf'
+}
 
 # allow unprivileged users to view kernel syslog
 conf-append 'kernel.dmesg_restrict = 0' '/etc/sysctl.conf'
