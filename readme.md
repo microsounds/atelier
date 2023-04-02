@@ -426,6 +426,7 @@ See *Usage Notes* for more information.
 	| `rw` | `checkout` 1 commit backward, alias for `checkout HEAD~1` |
 	| `ff` | `checkout` 1 commit forward toward `master` |
 	| `list-files` | List all tracked filenames in repo, ideally for use with `xargs`. |
+	| `edit-tree` | Interactive tracked plaintext file tree, opens file with `nano` in new window. |
 	| `flatten` | Automatically melds `--fixup/squash` commits out of existence starting from the root commit. |
 	| `recommit` | Stages changes to worktree and `commit --amend`s them as part of the last commit. |
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |

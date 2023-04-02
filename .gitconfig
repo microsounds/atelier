@@ -29,6 +29,20 @@
 	# list all tracked filenames in repo, for use with xargs
 	list-files = ls-tree -r HEAD --name-only --full-tree
 
+	# interactive tracked plaintext file tree, opens with nano in new window
+	edit-tree = "!f() { \
+		while :; do \
+			unset prefix file; \
+			prefix="$(git rev-parse --show-toplevel)"; \
+			[ ! -z "$prefix" ] && cd "$prefix" || exit; \
+			file="$(git list-files | xargs -L1 -P32 file -iLF '\t' \
+				| grep 'text/.*' | cut -f1 | sort \
+				| fzf -1 -0 --no-multi --layout=reverse \
+					--prompt="\\[$(path-gitstatus -p)\\]\\ " )"; \
+			[ ! -z "$file" ] && urxvtc -e nano "$prefix/$file" || exit; \
+		done; \
+	}; f"
+
 	# squash fixups
 	flatten = !GIT_SEQUENCE_EDITOR=true git rebase -i --root
 
