@@ -9,7 +9,6 @@ for f in $(echo "${@#-}" | sed 's/./& /g'); do
 	case $f in
 		i) invert=1;; # for reverse video moon phase
 		y) year=1;; # include year in output
-		h) html=1;; # for use in kagami, force display glyphs as text
 	esac
 done
 for f in "$@"; do case "$f" in
@@ -29,7 +28,6 @@ phases='🌑 🌒 🌓 🌔 🌕\n🌕 🌖 🌗 🌘 🌑'
 map=$(((${cycle#0} / 10) + 1))
 moon=$(echo "$phases" | sort ${invert:+-r} | tr ' ' '\n' \
 	| tail -n +$map | head -n 1)
-moon="${moon}${html:+\&#xFE0E;}" # append U+FE0E to force display as text
 
 # current date
 format="+%-e %a, %b µ${year:+, %Y}"
