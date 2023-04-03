@@ -421,12 +421,12 @@ See *Usage Notes* for more information.
 	| alias | function |
 	| -- | -- |
 	| `meta` | Appends `--git-dir=$HOME/.config/meta --work-tree=$HOME` to a `git` command.<br/>_(Added implicitly when outside a git directory.)_ |
-	| `past` | Outlines the last 17 commits made before `HEAD` with a commit graph. |
+	| `past`, `summary` | Outlines the last 17 commits made before `HEAD` with a commit graph. |
 	| `future` | Outlines the next 17 commits made after `HEAD` with a commit graph. |
 	| `rw` | `checkout` 1 commit backward, alias for `checkout HEAD~1` |
 	| `ff` | `checkout` 1 commit forward toward `master` |
 	| `list-files` | List all tracked filenames in repo, ideally for use with `xargs`. |
-	| `edit-tree` | Interactive tracked plaintext file tree, opens file with `nano` in new window. |
+	| `edit-tree [query]` | Interactive tracked plaintext file tree, opens file with `$EDITOR` in new window if `X` is running. |
 	| `flatten` | Automatically melds `--fixup/squash` commits out of existence starting from the root commit. |
 	| `recommit` | Stages changes to worktree and `commit --amend`s them as part of the last commit. |
 	| `checkin` | Commit all changes immediately with a generic timestamp and hostname commit message. |

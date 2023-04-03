@@ -1,13 +1,14 @@
 #!/usr/bin/env sh
 
 # Usage: visual [command]
-# X window wrapper for terminal applications
-# opens a new terminal if not open already
+# X window shim for terminal applications
+# force-run in a new terminal window if X is running
 
 unset shim
 if [ ! -z "$DISPLAY" ]; then
 	case "$(tty)" in
-		'not a tty') shim='urxvtc -e';;
+		# previously triggered on 'not a tty'
+		*) shim='urxvtc -e';;
 	esac
 fi
 
