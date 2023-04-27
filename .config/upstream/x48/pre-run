@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# 2023/4: upstream dev started modernizing build process and stripped out
+# automake in favor of plain make, reverting to last known good commit for now
+git checkout legacy
+
 # install build prereqs
 is-installed libxt-dev autoconf automake \
 	| xargs -r sudo apt-get -y install
