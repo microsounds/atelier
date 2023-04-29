@@ -11,7 +11,7 @@ dc
 dconf-cli
 dkms
 enscript ttf2ufm gv
-fcitx5 fcitx5-mozc
+fcitx5 fcitx5-mozc dbus-x11
 feh jpegoptim optipng findimagedupes
 figlet
 file
