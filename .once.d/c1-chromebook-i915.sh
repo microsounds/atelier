@@ -8,7 +8,7 @@
 # hardware acceleration
 # eg. jumpy pointer, keyboard repeated inputs, system hanging and freezing
 
-# 02/2022: problems seem to be resolved with only intel_cpufreq fallback
+# 2022/02: problems seem to be resolved with only intel_cpufreq fallback
 
 ! is-chromebook && exit 0
 

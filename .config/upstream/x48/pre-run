@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# 2023/4: upstream dev started modernizing build process and stripped out
+# 2023/04: upstream dev started modernizing build process and stripped out
 # automake in favor of plain make, reverting to last known good commit for now
 git checkout legacy
 

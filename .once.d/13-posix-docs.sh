@@ -3,6 +3,7 @@
 # download POSIX/SUSv4-2018 standards docs
 
 # 2021/08: Downloads inaccessible from the original site, using wayback machine
+# 2023/01: Downloads restored on original site, keeping archive link in case
 #ARCHIVE='https://web.archive.org/web/20180412190321'
 
 SOURCE='https://pubs.opengroup.org/onlinepubs/9699919799/download'
