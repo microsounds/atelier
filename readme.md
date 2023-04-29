@@ -209,8 +209,10 @@ Rationale for doing things this way is summarized in commit [`2fe1c3745`][rat].
 [rat]: https://github.com/microsounds/atelier/commit/2fe1c3745 "introduced ~/.once.d/10-git-upstream.sh"
 
 ## Window manager
-`dwm` keybinds are the [defaults][dwm] with several exceptions.
-Primary modkey `Mod1` is super instead of alt.
+Keybinds are grabbed by `dwm`, `sxkhd` or `fcitx5` to avoid keybind stomping.
+
+`dwm` keybinds are the [defaults][dwm] with several exceptions, the modkey `Mod1` is **super** instead of **alt** because many **alt** combinations are already taken by other applications I use.
+
 
 [dwm]: https://ratfactor.com/dwm "suckless dwm tutorial"
 
@@ -218,7 +220,9 @@ Primary modkey `Mod1` is super instead of alt.
 | --: | --: | :-- |
 | | kill window | F4 |
 | counter-clockwise | switch focused window | tab |
-| **shift +** | **super +** | **key** |
+
+| shift + | super + | key |
+| --: | --: | :-- |
 | float window<sup>[toggle]</sup> | monocle window<sup>[toggle]</sup> | space |
 | set as master window<sup>[toggle]</sup> | terminal | return |
 | | launcher | p |
@@ -239,9 +243,12 @@ Primary modkey `Mod1` is super instead of alt.
 | | raise volume 5% | F10 |
 | | randomize wallpaper | F11 |
 | | _reserved_ | F12 |
-| | **ctrl + alt +** | **key**<sup>[special]</sup> |
-| | task manager | delete |
-| | syslog | insert |
+
+| alt + | ctrl + | key<sup>[special]</sup> |
+| --: | --: | :-- |
+| | switch input method<sup>[toggle]</sup> | space |
+| task manager | | delete |
+| syslog | | insert |
 
 ### Reduced layout for Chromebooks
 Search/Everything/Caps lock key serves as the super key. Same as above, with the following changes:
@@ -318,7 +325,8 @@ HiDPI scaling brings up innumerable display issues in [every category of graphic
 including [electron-based applications][dpi2] that require polluting scripts and dotfiles to smooth out toolkit scaling issues.
 Maintaining mixed-DPI multi-monitor setups in X11 is [even more painful][dpi3].
 
-Or to put it another way, crisp terminal fonts are not worth peppering my scripts with toolkit-specific global variables and conditional logic just for HiDPI scaling.
+As of posting, I don't have a >1080p monitor to motivate such changes,
+I'm not about to pepper my scripts with toolkit-specific environment variables and conditional logic to support HiDPI scaling.
 See [`~/.local/include/theme.h`](.local/include/theme.h) for more info.
 
 [dpi1]: https://wiki.archlinux.org/title/HiDPI "A laundry list of hacks to have consistent-looking fonts everywhere under HiDPI"

@@ -45,11 +45,18 @@ ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
 # disable backspace bell in bash prompt
 echo 'set bell-style none' > ~/.inputrc &
 
-# prevents dbus applications from hanging on startup
+## session daemons
+# dbus: prevents dbus-specific applications from hanging at startup
+eval $(dbus-launch --sh-syntax --exit-with-session)
 dbus-update-activation-environment --systemd DISPLAY &
 
-## session daemons
-# mangle sxhkd config at runtime
+# fcitx5: IME integration for kana input
+export GTK_IM_MODULE='fcitx'
+export QT_IM_MODULE='fcitx'
+export XMODIFIERS='@im=fcitx'
+fcitx5 &
+
+# sxhkd: mangle config at runtime
 {	echo "## ${0##*/}: DO NOT EDIT"
 	for f in default mouse $layout; do
 		# sxhkd 0.5.x chokes on excess newlines
@@ -58,7 +65,7 @@ dbus-update-activation-environment --systemd DISPLAY &
 	done
 } > ~/.config/sxhkd/sxhkdrc || : && sxhkd &
 
-# restore versioned pcmanfm config at startup
+# pcmanfm: restore versioned config at startup
 {	for f in ~/.config/fm/*.conf; do
 		file="${f##*/}"; dir="${file%.*}"
 		mkdir -p ~/.config/$dir
