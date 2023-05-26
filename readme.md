@@ -390,11 +390,16 @@ _Launch daemons in foreground mode in another terminal instance without forking 
 > **NOTE**<br/>
 >_On first-run, `chromium` will momentarily exit and restart to rebuild configuration and enable use of externally customized color options._
 
-`chromium` was extended to mangle the user-hostile per-profile `Preferences` and global `Local State` JSON files with a series of chained `jq` filters stored in the following files, applying persistent settings in order.
+`chromium` is not meant to be user-serviceable or configurable through plaintext without using system-wide group policy features, `chromium` is a shell script extended to mangle user-hostile internal state files to match the persistent plaintext configs described below:
 * [`~/.config/chromium/preferences.conf`](.config/chromium/preferences.conf)
+	* _Main browser preferences stored as JSON in `Default/Preferences`._
 * [`~/.config/chromium/local_state.conf`](.config/chromium/local_state.conf)
+	* _Chromium experiment flags stored as JSON in `Local State`._
 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
+
+* [`~/.config/chromium/omnibox.sql`](.config/chromium/omnibox.sql)
+	* _Omnibox settings and Tab-to-search keyword shortcuts stored as SQLite in `Default/Web Data`._
 
 ### Managed policy overrides
 `chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during [post-install](.once.d/29-chromium-extensions.sh), which automatically installs several useful extensions on first-run, including [uBlock Origin][].
@@ -416,6 +421,7 @@ Plaintext `chromium` configuration is an ongoing experiment of mine.
 | first-run config rebuild | works |
 | applying persistent chromium settings | works |
 | applying persistent chromium flags | works |
+| applying persistent omnibox settings | works |
 | extension install on first-run | works _(via group policy)_ |
 | applying persistent extension settings | **no** |
 

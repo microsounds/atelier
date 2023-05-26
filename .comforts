@@ -4,7 +4,7 @@ alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
 *brasero xorriso eject
-chromium jq
+chromium jq sqlite3
 cpp
 *cups libnss-mdns simple-scan sane-airscan
 dc

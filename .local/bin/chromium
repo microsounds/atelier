@@ -32,7 +32,13 @@ if ! ps -e | fgrep -q 'chromium'; then
 		kill "$!"
 	fi
 
-	# inject persistent settings into chromium's JSON config
+	# inject persistent SQL omnibox settings
+	[ -f "$CONF/omnibox.sql" ] && {
+		sqlite3 -cmd '.timeout 1000' \
+			"$CONF/Default/Web Data" < "$CONF/omnibox.sql"
+	}
+
+	# inject persistent JSON preferences and chromium flags
 	for f in 'Default/Preferences' 'Local State'; do
 		mine="$(echo "${f#*/}" | tr ' A-Z' '_a-z').conf"
 		[ -f "$CONF/$f" ] || continue
