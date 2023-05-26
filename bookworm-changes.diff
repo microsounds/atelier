@@ -1,0 +1,84 @@
+upgrade notes:
+* grub-pc no longer runs os-prober by default
+
+diff --git a/.comforts b/.comforts
+index 59a79dd..02ea0aa 100644
+--- a/.comforts
++++ b/.comforts
+@@ -18,7 +18,7 @@ file
+ fonts-liberation fonts-dejima-mincho
+ *gimp
+ git make gcc
+-gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
++gparted udevil ntfs-3g exfatprogs dosfstools sshfs
+ htop
+ *kdenlive
+ ledger
+@@ -49,7 +49,6 @@ task-laptop acpi lm-sensors network-manager bluez
+ vrms
+ wget curl aria2
+ *wine-stable cabextract
+-xdiskusage
+ xorg xdotool xsel xbacklight sxhkd arandr
+ xxd
+ zip unzip gzip bzip2 xz-utils p7zip pigz pbzip2
+diff --git a/.once.d/00-apt-repositories.sh b/.once.d/00-apt-repositories.sh
+index b220a31..e79c379 100755
+--- a/.once.d/00-apt-repositories.sh
++++ b/.once.d/00-apt-repositories.sh
+@@ -4,7 +4,7 @@
+ # adds supplementary repos
+ # pulls in upgrades if needed
+ 
+-BRANCH='bullseye' # released 2021/08
++BRANCH='bookworm' # released 2023/06
+ 
+ CONF='/etc/apt/sources.list'
+ TRUSTED='/etc/apt/trusted.gpg.d'
+@@ -24,10 +24,10 @@ mkdir -v "$TMP"
+ mkdir -v "${CONF}.d"
+ echo "Writing to '$CONF'"
+ sudo tee "$CONF" <<- EOF
+-	deb https://deb.debian.org/debian $BRANCH main contrib non-free
+-	deb-src https://deb.debian.org/debian $BRANCH main contrib non-free
+-	deb https://deb.debian.org/debian $BRANCH-updates main contrib non-free
+-	deb https://security.debian.org/debian-security $BRANCH-security main contrib non-free
++	deb https://deb.debian.org/debian $BRANCH main contrib non-free non-free-firmware
++	deb-src https://deb.debian.org/debian $BRANCH main contrib non-free non-free-firmware
++	deb https://deb.debian.org/debian $BRANCH-updates main contrib non-free non-free-firmware
++	deb https://security.debian.org/debian-security $BRANCH-security main contrib non-free non-free-firmware
+ EOF
+ 
+ # deb-multimedia
+diff --git a/.xresources b/.xresources
+index 5211b37..88e5bb0 100644
+--- a/.xresources
++++ b/.xresources
+@@ -10,12 +10,12 @@ Xft.hinting: true
+ Xft.autohint: true
+ Xft.hintstyle: hintslight
+ Xft.lcdfilter: lcddefault
+-Xft.rgba: rgb
++Xft.rgba: none
+ 
+ /* rxvt-unicode */
+ /*          normal                           fallback japanese */
+ URxvt.font: xft:font(FN_TERM, FN_TERM_SIZE), xft:font(FN_TERM_JP, FN_TERM_SIZE)
+-URxvt.letterSpace: -2
++URxvt.letterSpace: -1
+ URxvt.lineSpace: -1
+ URxvt.geometry: 96x24
+ URxvt.internalBorder: 3
+diff --git a/readme.md b/readme.md
+index efa61a6..b6cda03 100644
+--- a/readme.md
++++ b/readme.md
+@@ -7,7 +7,7 @@
+ ![ico-size](https://img.shields.io/github/repo-size/microsounds/atelier?logo=github)
+ [![ico-ci](https://github.com/microsounds/atelier/actions/workflows/ci.yml/badge.svg)][actions]
+ <br/>
+-[![ico-os](https://img.shields.io/badge/Debian-bullseye-%23c70036.svg?logo=debian)][debian]
++[![ico-os](https://img.shields.io/badge/Debian-bookworm-%23c70036.svg?logo=debian)][debian]
+ [![ico-wm](https://img.shields.io/badge/suckless-dwm-%23224488?logo=suckless)][dwm]
+ [![ico-editor](https://shields.io/badge/Editor-GNU%20nano-%23440077?logo=windows-terminal)][nano]
+ [![ico-theme](https://img.shields.io/badge/theme-night%20drive-%2363B0B0?logo=github-sponsors)][song]
