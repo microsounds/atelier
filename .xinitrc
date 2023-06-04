@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 ## ~/.xinitrc: graphical shell startup configuration
 
+# persist cursor size on multi-monitor setups
+export XCURSOR_SIZE=16
+
 ## keymap overrides
 ! is-chromebook || layout='chromebook'
 ! is-ntc-chip || layout='ntc-chip'
