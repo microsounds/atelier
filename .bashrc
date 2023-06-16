@@ -10,8 +10,8 @@ HISTSIZE=20000
 HISTFILESIZE=20000
 PROMPT_COMMAND=set_prompt
 
-# bash-completion
-. '/usr/share/bash-completion/bash_completion'
+# bash-completion, ignore if not installed
+. '/usr/share/bash-completion/bash_completion' || :
 
 # color support
 export COLOR=1; case $TERM in

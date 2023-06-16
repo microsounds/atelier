@@ -15,7 +15,7 @@ on:
 jobs:
   Install:
      runs-on: ubuntu-latest
-     container: debian:stable
+     container: debian:bullseye
      steps:
        - name: Install prerequisite software
          run: apt-get update && apt-get install -y git wget sudo

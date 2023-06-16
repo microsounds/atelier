@@ -83,4 +83,4 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 	done
 done
 
-find "$temp" -type f | xargs feh --no-fehbg --bg-fill -g +0+0
+find "$temp" -type f | xargs feh --no-fehbg --bg-fill
