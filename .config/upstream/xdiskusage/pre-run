@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+BINDIR="$HOME/.local/bin"
+MANDIR="$HOME/.local/share/man"
+
+# force rewrite makefile to use ~/.local file hierarchy
+sed -i "s,\$(bindir),$BINDIR,g" Makefile
+sed -i "s,\$(mandir),$MANDIR,g" Makefile
+
+# install build prereqs
+is-installed automake libfltk1.3-dev | xargs -r sudo apt-get -y install

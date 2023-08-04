@@ -33,7 +33,10 @@ for f in $(cat ~/.comforts-git); do
 		\*) f="${f#?}"; persist=1;; # persistent install
 	esac
 
-	prog="${f##*/}"; prog="${prog%.*}" # derive dir name
+	# user provided clone urls are meant for git clone and can have intended
+	# dir names trailing after the url
+	prog="${f##*[/ ]}"; prog="${prog%.*}" # derive prog name from clone url
+	f="${f%% *}"; # strip prog name from clone url
 	printf '\e[1m%s\e[0m\n' "[upstream] Installing '$prog' from '$f'"
 
 	# git clone and cd
