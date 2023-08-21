@@ -64,8 +64,9 @@ config="$HOME/.xdecor"
 
 # iterate through all active displays
 xrandr -q | fgrep '*' | while read -r dpy; do
-	# randomly select directory
-	{ grep . | shuffle; } < "$config" | while read -r dir; do
+	# randomly select directory from ~/.xdecor
+	{ sed -e 's/#.*//' -e '/^$/d' | shuffle; } < "$config" \
+		| while read -r dir; do
 		[ "${dir%${dir#?}}" = '~' ] && dir="$HOME/${dir#??}" # absolute path
 		[ ! -z "$dir" ] || exit
 

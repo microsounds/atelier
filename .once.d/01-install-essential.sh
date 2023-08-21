@@ -9,7 +9,7 @@ env='DEBIAN_FRONTEND=noninteractive'
 IFS='
 '
 unset pkgs
-for f in $(cat ~/.comforts | sed 's/#.*$//g'); do
+for f in $(sed -e 's/#.*//' -e '/^$/d' < ~/.comforts); do
 	case "${f%${f#?}}" in
 		\*) # package groups with an asterisk are optional, prompt user
 			f="${f#?}"

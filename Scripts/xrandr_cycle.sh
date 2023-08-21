@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# xrandr_cycle.sh v0.2
+# xrandr_cycle.sh v0.3
 # re-entrantly cycle between connected displays
 
 announce() { echo "$@"; "$@"; }
@@ -8,12 +8,10 @@ announce() { echo "$@"; "$@"; }
 # option flags
 for f in "$@"; do case "$f" in
 	-d) # apply custom display layout from ~/.xrandr
-		[ -f ~/.xrandr ] && while read -r line; do
-			[ ! -z "$line" ] && case "$line" in
-				\#*) continue;;
-				*) announce xrandr $line
-			esac
-		done < ~/.xrandr
+		[ -f ~/.xrandr ] && sed -e 's/#.*//' -e '/^$/d' < ~/.xrandr \
+			| while read -r line; do
+			announce xrandr $line
+		done
 		exit;;
 esac; done
 

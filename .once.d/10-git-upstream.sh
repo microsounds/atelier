@@ -26,10 +26,9 @@ finish() {
 
 IFS='
 '
-for f in $(cat ~/.comforts-git); do
+for f in $(sed -e 's/#.*//' -e '/^$/d' < ~/.comforts-git); do
 	unset persist
 	case "${f%${f#?}}" in
-		\#*) continue;; # comments
 		\*) f="${f#?}"; persist=1;; # persistent install
 	esac
 
