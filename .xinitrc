@@ -12,11 +12,10 @@ export XCURSOR_SIZE=16
 # ~/.xrandr: invokes optional display overrides
 xrandr-cycle -d &
 
-# mangle xkb keyboard layout at startup
+# mangle xkb keyboard layout shortly after startup
 {	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
-	for f in $layout; do
-		[ -f ~/.config/xkb/$f.xkb ] &&
-			xkbcomp -merge ~/.config/xkb/$f.xkb $DISPLAY 2> /dev/null
+	for f in ~/.config/xkb/$layout.xkb; do
+		[ -f "$f" ] && sleep 1 && xkbcomp -merge "$f" $DISPLAY 2> /dev/null
 	done
 } &
 
