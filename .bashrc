@@ -5,7 +5,7 @@
 
 # bash specific
 # limit history file to ~500KiB, ignore duplicates
-HISTCONTROL=ignoredups
+HISTCONTROL=ignoreboth
 HISTSIZE=20000
 HISTFILESIZE=20000
 PROMPT_COMMAND=set_prompt

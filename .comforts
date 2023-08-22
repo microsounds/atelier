@@ -30,6 +30,7 @@ mpv ffmpeg mediainfo
 nano openssl exuberant-ctags fzf spell
 ncal
 nodejs
+oathtool
 openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc cmark-gfm
