@@ -8,7 +8,7 @@
 uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
 
 # install prerequisites
-cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
+cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
 	wget git             # req'd for bootstrap
 	clang binutils       # provides cpp
 	openssl-tool openssh # nano-overlay
@@ -19,8 +19,12 @@ cat <<- EOF | sed 's/#.*$//g' | xargs pkg install -y
 	imagemagick
 	bash-completion
 EOF
+
 # update existing
-pkg update -y
+for f in update upgrade autoremove autoclean clean; do
+	yes y | apt $f
+done
+
 # setup storage
 yes y | termux-setup-storage
 
