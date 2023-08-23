@@ -59,6 +59,7 @@ launch() {
 	done > "$FIFO" &
 }
 
+# individual threads
 ssh_agent() (
 	# list number of active keys stored in agent
 	num=$(ssh-add -l) && \
@@ -75,6 +76,14 @@ fan_speed() (
 		fi
 		echo "FAN ${rpm}↻"
 	done
+)
+
+weather() (
+	# get current weather using current IP (very slow)
+	fmt='%c%f'
+	wttr="$(wget --timeout=2 -q -O - "http://wttr.in/?u&format=$fmt" | tr -d '+ ')"
+	case "$wttr" in Unknown*) unset wttr;; esac # wttr.in API is down
+	echo "WTTR ${wttr:-none}"
 )
 
 temps() (
@@ -104,18 +113,10 @@ cpu_speed() (
 	echo "CPU ${clk}Hz"
 )
 
-weather() (
-	# get current weather based on current IP (very slow)
-	fmt='%f, %C'
-	wttr="$(wget -q -O - "http://wttr.in/?format=$fmt" | tr -d '+')"
-	case "$wttr" in Unknown*) unset wttr;; esac # wttr.in API is down
-	echo "WTTR ${wttr:-none}"
-)
-
 public_ip() (
 	# get public IP address (very slow)
 	ip="$(dig @resolver1.opendns.com myip.opendns.com +short 2> /dev/null)"
-	echo "IP ${ip:-none}"
+	echo "IP ☍${ip:-none}"
 )
 
 network() (
@@ -184,8 +185,8 @@ current_time() (
 launch ssh_agent 5
 launch fan_speed 10
 launch temps 15
+launch weather 60
 #launch cpu_speed 1
-#launch weather 60
 #launch public_ip 30
 launch network 15
 launch power 15
@@ -209,7 +210,7 @@ while read -r module data; do
 	esac
 
 	# compose all available modules
-	bar="${SSH}${FAN:-$TEMP}${WTTR}${CPU}${NET}${IP}${BAT}${VOL}${DATE}${TIME}"
+	bar="${SSH}${FAN:-$TEMP}${CPU}${NET}${IP}${BAT}${VOL}${WTTR}${DATE}${TIME}"
 
 	# output final formatted status line
 	echo "$bar" | sed -e "$script"
