@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-## getquote v0.2
+## getquote v0.3
 ## (c) 2023 microsounds <https://github.com/microsounds>, GPLv3+
 # scrapes Yahoo! Finance API for stock, crypto and ETF price quotes
 # outputs as ledger-cli commodity price history format in US Dollars
@@ -15,18 +15,29 @@
 }
 
 # 06/2023: yahoo discontinued batch quote json endpoint, one query per symbol
+TIME_NOW="$(date '+%s')"
 UA_STR='Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
 QUOTE_API='https://query1.finance.yahoo.com/v7/finance/options'
+JQ_SCRIPT=".optionChain.result[].quote \
+	| [.regularMarketPrice,.regularMarketTime,.postMarketPrice,.postMarketTime] \
+	| join(\" \")"
 
 for SYM in "$@"; do
 	wget -q -U "$UA_STR" -O - "${QUOTE_API}/${SYM}" \
-		| jq -r '.optionChain.result[].quote | [.regularMarketPrice,.regularMarketTime] | join(" ")' \
-		| while read -r PRICE DATE; do
-			printf "%s\r" "Fetching $SYM..." 1>&2
+		| jq -r "$JQ_SCRIPT" \
+		| while read -r reg_price reg_time post_price post_time; do
+			# use after-market data if newer
+			[ ! -z "$post_time" ] && [ "$post_time" -gt "$reg_time" ] \
+				&& reg_price="$post_price" && reg_time="$post_time"
+
 			# quotes are probably time delayed by 15 minutes
+			# use current time if market data is stale, eg. closed over 15 min
+			[ $((TIME_NOW - reg_time)) -gt $((60 * 15)) ] && reg_time="$TIME_NOW"
+
+			printf "%s\r" "Fetching $SYM..." 1>&2
 			printf 'P %s %s %s\n' \
-				"$(date -d "1970-01-01 UTC $DATE seconds" '+%Y/%-m/%-d %H:%M:%S')" \
+				"$(date -d "1970-01-01 UTC $reg_time seconds" '+%Y/%-m/%-d %H:%M:%S')" \
 				"$(echo $SYM | tr 'a-z' 'A-Z')" \
-				"\$$PRICE"
+				"\$$reg_price"
 	done
 done
