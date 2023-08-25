@@ -128,7 +128,7 @@ network() (
 		net="$(echo "${net%${net#?}}" | tr 'a-z' 'A-Z')${net#?}"
 	fi
 	ico='📶' # connected but no internet
-	ping -c 1 '8.8.8.8' > /dev/null 2>&1 || ico='⛔'
+	ping -c 1 'google.com' > /dev/null 2>&1 || ico='⛔'
 	echo "NET $ico $net"
 )
 
