@@ -79,9 +79,16 @@ fan_speed() (
 )
 
 weather() (
-	# get current weather using current IP (very slow)
+	# get geolocated current weather with wttr.in (very slow)
+	# bypass their caching which returns stale data when using en.wttr.in
 	fmt='%c%f'
-	wttr="$(wget --timeout=2 -q -O - "http://wttr.in/?u&format=$fmt" | tr -d '+ ')"
+	locales="am ar af be bn ca da de el et fr fa gl hi hu ia id it lt mg \
+	nb nl oc pl pt-br ro ru ta tr th uk vi zh-cn zh-tw az bg bs cy cs eo \
+	es eu fi ga hi hr hy is ja jv ka kk ko ky lv mk ml mr nl fy nn pt pt-br \
+	sk sl sr sr-lat sv sw te uz zh zu he"
+	sel="$(echo "$locales" | tr -s '\t\n ' '\n' | shuf | head -n 1)"
+
+	wttr="$(wget --timeout=2 -q -O - "http://$sel.wttr.in/?u&format=$fmt" | tr -d '+ ')"
 	case "$wttr" in Unknown*) unset wttr;; esac # wttr.in API is down
 	echo "WTTR ${wttr:-none}"
 )
