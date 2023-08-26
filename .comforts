@@ -19,7 +19,7 @@ file
 fonts-liberation fonts-dejima-mincho
 *gimp
 git make gcc
-gparted udevil ntfs-3g exfat-utils dosfstools sshfs curlftpfs
+gparted udevil ntfs-3g exfatprogs dosfstools sshfs
 htop
 *kdenlive
 ledger
@@ -51,7 +51,6 @@ task-laptop acpi lm-sensors network-manager bluez
 vrms
 wget curl aria2
 *wine-stable cabextract
-xdiskusage
 xorg xdotool xsel xbacklight sxhkd arandr
 xxd
 zip unzip gzip bzip2 xz-utils p7zip pigz pbzip2
