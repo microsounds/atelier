@@ -50,7 +50,6 @@ echo 'set bell-style none' > ~/.inputrc &
 ## session daemons
 # dbus: prevents dbus-specific applications from hanging at startup
 eval $(dbus-launch --sh-syntax --exit-with-session)
-dbus-update-activation-environment --systemd DISPLAY &
 
 # fcitx5: IME integration for kana input
 export GTK_IM_MODULE='fcitx'
