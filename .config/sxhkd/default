@@ -21,7 +21,7 @@ super + Return
 	pcmanfm
 # take screenshot
 {_,shift +} super + Print
-	{scrot,scrot -sf}; \
+	{scrot,scrot -fs}; \
 	notify-send -t 1 'Screenshot saved.'
 # ssh-agent
 super + BackSpace
