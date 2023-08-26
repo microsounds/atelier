@@ -4,7 +4,7 @@
 # adds supplementary repos
 # pulls in upgrades if needed
 
-BRANCH='bullseye' # released 2021/08
+BRANCH='bookworm' # released 2023/06
 
 CONF='/etc/apt/sources.list'
 TRUSTED='/etc/apt/trusted.gpg.d'
@@ -24,10 +24,10 @@ mkdir -v "$TMP"
 mkdir -v "${CONF}.d"
 echo "Writing to '$CONF'"
 sudo tee "$CONF" <<- EOF
-	deb https://deb.debian.org/debian $BRANCH main contrib non-free
-	deb-src https://deb.debian.org/debian $BRANCH main contrib non-free
-	deb https://deb.debian.org/debian $BRANCH-updates main contrib non-free
-	deb https://security.debian.org/debian-security $BRANCH-security main contrib non-free
+	deb https://deb.debian.org/debian $BRANCH main contrib non-free non-free-firmware
+	deb-src https://deb.debian.org/debian $BRANCH main contrib non-free non-free-firmware
+	deb https://deb.debian.org/debian $BRANCH-updates main contrib non-free non-free-firmware
+	deb https://security.debian.org/debian-security $BRANCH-security main contrib non-free non-free-firmware
 EOF
 
 # deb-multimedia

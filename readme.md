@@ -7,7 +7,7 @@
 ![ico-size](https://img.shields.io/github/repo-size/microsounds/atelier?logo=github)
 [![ico-ci](https://github.com/microsounds/atelier/actions/workflows/ci.yml/badge.svg)][actions]
 <br/>
-[![ico-os](https://img.shields.io/badge/Debian-bullseye-%23c70036.svg?logo=debian)][debian]
+[![ico-os](https://img.shields.io/badge/Debian-bookworm-%23c70036.svg?logo=debian)][debian]
 [![ico-wm](https://img.shields.io/badge/suckless-dwm-%23224488?logo=suckless)][dwm]
 [![ico-editor](https://shields.io/badge/Editor-GNU%20nano-%23440077?logo=windows-terminal)][nano]
 [![ico-theme](https://img.shields.io/badge/theme-night%20drive-%2363B0B0?logo=github-sponsors)][song]
