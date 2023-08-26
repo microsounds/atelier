@@ -10,12 +10,12 @@ Xft.hinting: true
 Xft.autohint: true
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
-Xft.rgba: rgb
+Xft.rgba: none
 
 /* rxvt-unicode */
 /*          normal                           fallback japanese */
 URxvt.font: xft:font(FN_TERM, FN_TERM_SIZE), xft:font(FN_TERM_JP, FN_TERM_SIZE)
-URxvt.letterSpace: -2
+URxvt.letterSpace: -1
 URxvt.lineSpace: -1
 URxvt.geometry: 96x24
 URxvt.internalBorder: 3
