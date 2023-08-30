@@ -3,6 +3,7 @@
 alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 *audacity
 bash bash-completion shellcheck
+beep sox
 bind9-dnsutils
 *brasero xorriso eject
 chromium jq sqlite3

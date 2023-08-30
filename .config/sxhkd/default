@@ -6,62 +6,76 @@
 ## essential
 # terminate X session
 ctrl + shift + q
-	sfx-play othr03 & \
+	sfx-synth prompt & \
 	printf '✓\n✘' | dmenu -f \
 		-p 'Terminate X session?' -sb str(COLOR6) -sf str(COLOR0) \
 		| fgrep -q '✓' && pkill -t "tty$XDG_VTNR" X &
 # launcher
 super + p
+	sfx-synth btn & \
 	dmenu_path | dmenu -f | sh &
 # terminal
 super + Return
 	urxvtc || urxvt
 # file manager
 {super + e,XF86Explorer}
+	sfx-synth btn & \
 	pcmanfm
 # take screenshot
 {_,shift +} super + Print
+	sfx-synth btn & \
 	{scrot,scrot -fs}; \
 	notify-send -t 1 'Screenshot saved.'
 # ssh-agent
 super + BackSpace
-	sfx-play btn16 & \
+	sfx-synth attn & \
 	! ssh-add -l && ssh-add || ssh-add -D; \
 	ssh-add -l | notify-send -t 2
 # task manager/syslog
 ctrl + alt + {Delete,Insert}
+	sfx-synth btn & \
 	visual {htop,watch -c -n 0.1 'dmesg -e -Lalways | tac'}
 
 ## function keys
 # F1: power/reboot
 # F2: suspend/hibernate+poweroff
 {_,shift +} super + F{1,2}
+	sfx-synth btn & \
 	ssh-add -D && systemctl {poweroff,reboot,suspend,hibernate}
 # F3: display off/hibernate+reboot
 {_,shift +} super + F3
+	sfx-synth btn & \
 	ssh-add -D && {sleep 1; xset dpms force off, systemctl hybrid-sleep}
 # F4: calculator/networking
 {_,shift +} {super + F4,XF86Calculator}
+	sfx-synth btn & \
 	{x48,visual bash -ic nmtui}
 # F5: toggle displays/configure displays
 {_,shift +} {super + F5,XF86Display}
+	sfx-synth btn & \
 	{xrandr-cycle | tail -n +2 | head -n 1 | notify-send,arandr}
 # F6, F7: adjust brightness
 {_,shift +} super + F{6,7}
+	sfx-synth btn & \
 	xbacklight -{dec 10,set 1,inc 10,set 100}; \
 	xbacklight -get | xargs -I '*' notify-send -t 0.3 'Backlight: *%'
 {_,shift +} XF86MonBrightness{Down,Up}
+	sfx-synth btn & \
 	xbacklight -{dec 10,set 1,inc 10,set 100}
 # F8, F9, F10: adjust volume/configure audio
 shift + super + {F8,XF86AudioMute}
+	sfx-synth btn & \
 	pavucontrol
 super + F{8,9,10}
+	sfx-synth btn & \
 	amixer sset Master {toggle,5%-,5%+} | egrep -e '[0-9]+%' \
 		| egrep -o '\[.+\]' | head -n 1 | xargs -I '*' notify-send -t 0.4 '🔉 *' &
 XF86Audio{Mute,LowerVolume,RaiseVolume}
+	sfx-synth btn & \
 	amixer -q sset Master {toggle,5%-,5%+}
 # F11: randomize wallpaper
 super + F11
+	sfx-synth btn & \
 	xwin-decor
 
 ## optional keyboard hotkeys
