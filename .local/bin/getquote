@@ -1,18 +1,23 @@
 #!/usr/bin/env sh
 
-## getquote v0.3
+## getquote v0.4
 ## (c) 2023 microsounds <https://github.com/microsounds>, GPLv3+
 # scrapes Yahoo! Finance API for stock, crypto and ETF price quotes
 # outputs as ledger-cli commodity price history format in US Dollars
 # format: 'P YYYY/MM/DD HH:MM:SS SYMBOL $USD_PRICE'
 
-## usage: getquote [SYMBOL(s)...]
+## usage: getquote [-s] [SYMBOL(s)...]
 ## typical usage: ledger -f ledger.dat commodities | xargs getquote >> price.db
 
 [ ! -z "$1" ] || {
 	cat "$0" | grep '^##' | sed 's/^## //g' 1>&2
 	exit 1
 }
+
+# options
+case "$1" in
+	-s) SHORT=1; shift # condensed output for use with spreadsheets
+esac
 
 # 06/2023: yahoo discontinued batch quote json endpoint, one query per symbol
 TIME_NOW="$(date '+%s')"
@@ -34,6 +39,7 @@ for SYM in "$@"; do
 			# use current time if market data is stale, eg. closed over 15 min
 			[ $((TIME_NOW - reg_time)) -gt $((60 * 15)) ] && reg_time="$TIME_NOW"
 
+			[ ! -z "$SHORT" ] && echo "$reg_price" && continue
 			printf "%s\r" "Fetching $SYM..." 1>&2
 			printf 'P %s %s %s\n' \
 				"$(date -d "1970-01-01 UTC $reg_time seconds" '+%Y/%-m/%-d %H:%M:%S')" \

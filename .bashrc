@@ -215,7 +215,7 @@ sc() (
 		done
 	done
 	command sc "$@"
-	for f in "$@"; do rm -rf "${f}~"; done
+	for f in "$@"; do rm -rf -- "${f}~"; done
 	palette
 )
 
