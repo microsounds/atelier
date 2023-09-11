@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+# install build prereqs
+is-installed cmake | xargs -r sudo apt-get -y install
+
+# cmark-gfm has to be special and require this step before running make install
+# because it tries to dump dynamic libs in /usr/local by default
+make INSTALL_PREFIX="$HOME/.local"
+

@@ -7,6 +7,7 @@ export EDITOR='nano -R'
 # append shell libraries, normal executables
 export PATH="$HOME/.local/lib:$HOME/.local/bin:$PATH"
 export C_INCLUDE_PATH="$HOME/.local/include"
+export LD_LIBRARY_PATH="$HOME/.local/lib"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 

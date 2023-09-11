@@ -35,7 +35,7 @@ nodejs
 oathtool
 openssh-client ssh-askpass-gnome
 *openssh-server
-pandoc cmark-gfm
+pandoc
 parallel
 pcmanfm xarchiver lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
 pv progress
