@@ -21,6 +21,7 @@ sudo mkdir -pv "${conf%/*}"
 		jfpdlihdedhlmhlbgooailmfhahieoem # Disable Javascript
 		dbepggeogbaibhgnhhndojpepiihcmeb # Vimium
 		jinjaccalgkegednnccohejagnlnfdag # Violentmonkey
+		hhinaapppaileiechjoiifaancjggfjm # Web Scrobbler
 	EOF
 		printf '\t"%s;%s",\n' "$key" "$crx_url"
 	done
