@@ -1,0 +1,34 @@
+--- a/Makefile.in.vpath
++++ b/Makefile.in.vpath
+@@ -25,7 +25,7 @@ NAME=SC
+ # packaging this with an O/S, for example, you'll probably want to change
+ # this to /usr.  Otherwise, /usr/local is probably more appropriate, unless
+ # you're replacing the vendor-supplied version.
+-prefix=/usr/local
++prefix=${HOME}/.local
+ 
+ # This is where the install step puts it.
+ EXDIR=${prefix}/bin
+--- a/configure
++++ b/configure
+@@ -31,9 +31,7 @@ cat /dev/null > compat.h
+ while [ $# -gt 0 ]; do
+ 	case $1 in
+ 	-s) SFLAG=1;;
+-	*)
+-		echo "$0: $1: Unknown option" >&2
+-		usage 1;;
++	*);;
+ 	esac
+ 	shift
+ done
+--- a/interp.c
++++ b/interp.c
+@@ -1219,6 +1219,7 @@ dosval(char *colstr, double rowdoub)
+     size_t l;
+ 
+     llabel = (ep = getent(colstr, rowdoub)) ? (ep -> label) : "";
++    if (llabel == 0) llabel = "";
+     l = strlen(llabel) + 1;
+     buf = scxmalloc(l);
+     strlcpy(buf, llabel, l);
