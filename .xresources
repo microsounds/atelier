@@ -71,7 +71,7 @@ XLoad.*.highlight: COLOR14
 XLoad.*.Label:
 
 /* x48 */
-X48.useXShm: true
+X48.useXShm: false
 
 /* must start from ~/ */
 X48.homeDirectory: .config/x48
