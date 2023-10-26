@@ -211,7 +211,10 @@ sc() (
 	# eg. sheet1.sc -> ./sheet1.sc*
 	for f in "$@"; do
 		for g in "$f"*; do
-			[ -x "$g" ] && ./"$g"
+			[ -x "$g" ] && {
+				# allow for absolute filenames
+				[ "${g%${g#?}}" = '/' ] && "$g" || ./"$g"
+			}
 		done
 	done
 	command sc "$@"
