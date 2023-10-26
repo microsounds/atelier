@@ -1,12 +1,15 @@
 #!/usr/bin/env sh
 
-# install build prereqs
-is-installed bison libncurses-dev | xargs -r sudo apt-get -y install
+INSTALL="$HOME/.local"
 
 # n-t-roff/sc uses minimal drop-in replacement for autoconf
-# patches configure to ignore options
 # patches Makefile.in.vpath to use $HOME/.local
-patch -p1 < fake-autoconf.diff
+sed -Ei "s,^prefix.*,prefix=$INSTALL,g" Makefile.in.vpath
+# patches configure to ignore arguments
+sed -i 's/usage 1//g' configure
+
+# install build prereqs
+is-installed bison libncurses-dev | xargs -r sudo apt-get -y install
 
 # let ~/.once.d/10-git-upstream.sh harmlessly run these again
 # generated Makefile chokes if you run 'make install' in one go
