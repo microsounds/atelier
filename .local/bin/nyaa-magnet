@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+## nyaa-magnet v0.1
+## fetches magnet links from NyaaTorrents
+## preferably for feeding into aria2c
+## usage: nyaa-magnet [query] | aria2c -i -
+
+# TODO: add support for queries over 75 results, requires pagination and a
+#       while loop going past the last page will return the last page over and
+#       over
+
+[ ! -z "$1" ] || { grep '^##' < "$0" | sed -E 's/^.{3}//' && exit 1; }
+API="https://nyaa.si/?q="
+query="$(echo "$@" | sed 's/ /+/g')"
+
+IFS='
+'
+wget -O - "$API$query" | egrep -o '<a href="magnet[^>]*">' | tr '"' '\t' \
+	| cut -f2 | sed 's/&amp;/\&/g' | while read -r line; do
+	# print magnet title to stderr
+	{	echo "$line" | egrep -o 'dn=.*&tr' \
+			| sed -E -e 's/^dn=//g' -e 's/\&tr.*//g' | xargs busybox httpd -d
+		printf '\n'
+	} 1>&2
+	echo "$line"
+done
+
