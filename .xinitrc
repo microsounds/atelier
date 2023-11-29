@@ -5,7 +5,6 @@
 export XCURSOR_SIZE=16
 
 ## keymap overrides
-! is-chromebook || layout='chromebook'
 ! is-ntc-chip || layout='ntc-chip'
 
 ## runs once

@@ -209,10 +209,11 @@ Rationale for doing things this way is summarized in commit [`2fe1c3745`][rat].
 [rat]: https://github.com/microsounds/atelier/commit/2fe1c3745 "introduced ~/.once.d/10-git-upstream.sh"
 
 ## Window manager
-Keybinds are grabbed by `dwm`, `sxkhd` or `fcitx5` to avoid keybind stomping.
+Keyboard layouts and secondary layers are handled by `keyd` globally for better quality of life on non-standard keyboards.
+At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd` and `fcitx5` in such a way to avoid keybind stomping.
 
+`Caps Lock` is remapped to `Super_L` on all platforms.
 `dwm` keybinds are the [defaults][dwm] with several exceptions, the modkey `Mod1` is **super** instead of **alt** because many **alt** combinations are already taken by other applications I use.
-
 
 [dwm]: https://ratfactor.com/dwm "suckless dwm tutorial"
 
@@ -220,6 +221,7 @@ Keybinds are grabbed by `dwm`, `sxkhd` or `fcitx5` to avoid keybind stomping.
 | --: | --: | :-- |
 | | kill window | F4 |
 | counter-clockwise | switch focused window | tab |
+
 
 | shift + | super + | key |
 | --: | --: | :-- |
@@ -242,7 +244,8 @@ Keybinds are grabbed by `dwm`, `sxkhd` or `fcitx5` to avoid keybind stomping.
 | | lower volume 5% | F9 |
 | | raise volume 5% | F10 |
 | | randomize wallpaper | F11 |
-| | _reserved_ | F12 |
+| | _reserved_ | F12~F24 |
+
 
 | alt + | ctrl + | key<sup>[special]</sup> |
 | --: | --: | :-- |
@@ -250,17 +253,28 @@ Keybinds are grabbed by `dwm`, `sxkhd` or `fcitx5` to avoid keybind stomping.
 | task manager | | delete |
 | syslog | | insert |
 
-### Reduced layout for Chromebooks
-Search/Everything/Caps lock key serves as the super key. Same as above, with the following changes:
+### Generic 74-key Chromebook layout
+Search key is `Super_L`, most missing keys are hidden behind `Right Alt` layer, including chromebook shortcut keys which are now standard function keys.
+Power key has been remapped to `delete` for better usability.
 
-| alt gr + | key | remarks |
+| right alt + | key | remarks |
 | --: | :-- | :-- |
 | prior | up | |
 | next | down | |
 | home | left | |
 | end | right | |
-| delete | backspace | |
+| XF86Back | F1 |
+| XF86Forward | F2 | |
+| XF86Reload |  F3 | |
+| F11 | F4 | fullscreen mode in most browsers |
+| XF86LaunchA | F5 |
+| lower brightness 10%  | F6 | |
+| raise brightness 10%  | F7 | |
+| mute<sup>[toggle]</sup> | F8 | |
+| | lower volume 5% | F9 |
+| | raise volume 5% | F10 |
 | F11 | delete | same as power key, keystroke repeat not available |
+| delete | backspace | keystroke repeat works fine |
 
 # Some environment notes
 ## X server invocation

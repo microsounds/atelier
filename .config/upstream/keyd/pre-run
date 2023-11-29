@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# keyd is meant to be used globally
+# short-circuit ~/.once.d/10-git-upstream.sh by installing globally and disarm
+# Makefile so it won't try to install to $HOME/.local
+
+# makefile chokes if make install is run first
+make
+sudo make install
+
+# storing configuration locally despite this being a long-running daemon
+# started by systemd like I did with Xorg and XKB
+sudo rm -rf /etc/keyd
+sudo ln -sfv "$HOME/.config/keyd" /etc
+
+sudo systemctl enable keyd.service
+sudo systemctl start keyd.service
+
+cat <<- EOF > Makefile
+	install:
+		:
+EOF
