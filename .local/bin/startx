@@ -9,7 +9,7 @@
 # eg. laptops with NO discrete graphics
 unset xopt
 # detect desktop class machines
-for f in $(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|3d controller)'); do
+for f in $(lspci | tr 'A-Z' 'a-z' | egrep '(vga compatible|(display|3d) controller)'); do
 	case $f in
 		intel|nvidia) xopt="$f"; break;;
 		ati|amd|radeon) xopt='amd'; break;;
