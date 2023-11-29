@@ -254,25 +254,26 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | syslog | | insert |
 
 ### Generic 74-key Chromebook layout
-Search key is `Super_L`, most missing keys are hidden behind `Right Alt` layer, including chromebook shortcut keys which are now standard function keys.
+Search key is `Super_L`, most missing keys are hidden behind `Right Alt` layer.
 Power key has been remapped to `delete` for better usability.
 
+Function `F1-F10` are in the usual places, F11 is lesser used and hidden behind `Right Alt`.
 | right alt + | key | remarks |
 | --: | :-- | :-- |
 | prior | up | |
 | next | down | |
 | home | left | |
 | end | right | |
-| XF86Back | F1 |
+| XF86Back | F1 | _Right Alt + F* may not work on pre-EC chromebooks_ |
 | XF86Forward | F2 | |
 | XF86Reload |  F3 | |
-| F11 | F4 | fullscreen mode in most browsers |
+| F11 | F4 | opens fullscreen mode in most browsers |
 | XF86LaunchA | F5 |
 | lower brightness 10%  | F6 | |
 | raise brightness 10%  | F7 | |
 | mute<sup>[toggle]</sup> | F8 | |
-| | lower volume 5% | F9 |
-| | raise volume 5% | F10 |
+| lower volume 5% | F9 | |
+| raise volume 5% | F10 | |
 | F11 | delete | same as power key, keystroke repeat not available |
 | delete | backspace | keystroke repeat works fine |
 
