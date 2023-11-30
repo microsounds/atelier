@@ -42,37 +42,54 @@ ctrl + alt + {Delete,Insert}
 {_,shift +} super + F{1,2}
 	sfx-synth btn & \
 	ssh-add -D && systemctl {poweroff,reboot,suspend,hibernate}
+
 # F3: display off/hibernate+reboot
 {_,shift +} super + F3
 	sfx-synth btn & \
 	ssh-add -D && {sleep 1; xset dpms force off, systemctl hybrid-sleep}
+
 # F4: calculator/networking
 {_,shift +} {super + F4,XF86Calculator}
 	sfx-synth btn & \
 	{x48,visual bash -ic nmtui}
+
 # F5: toggle displays/configure displays
 {_,shift +} {super + F5,XF86Display}
 	sfx-synth btn & \
 	{xrandr-cycle | tail -n +2 | head -n 1 | notify-send,arandr}
-# F6, F7: adjust brightness
-{_,shift +} super + F{6,7}
+
+# F6, F7: adjust brightness (shift + to jump to both extremes)
+#define BRIGHTNESS_CMD 	\
 	sfx-synth btn & \
 	xbacklight -{dec 10,set 1,inc 10,set 100}; \
 	xbacklight -get | xargs -I '*' notify-send -t 0.3 'Backlight: *%'
+
+{_,shift +} super + F{6,7}
+	BRIGHTNESS_CMD
 {_,shift +} XF86MonBrightness{Down,Up}
+	BRIGHTNESS_CMD
+
+# F8: mute, configure audio
+{super + F8,XF86AudioMute}
 	sfx-synth btn & \
-	xbacklight -{dec 10,set 1,inc 10,set 100}
-# F8, F9, F10: adjust volume/configure audio
-shift + super + {F8,XF86AudioMute}
+	pactl set-sink-mute '@DEFAULT_SINK@' toggle
+
+shift + {super + F8,XF86AudioMute}
 	sfx-synth btn & \
 	pavucontrol
-super + F{8,9,10}
+
+# F9, F10: adjust volume, (shift + was purposefully excluded here)
+#define VOLUME_CMD \
 	sfx-synth btn & \
-	amixer sset Master {toggle,5%-,5%+} | egrep -e '[0-9]+%' \
+	pactl set-sink-volume '@DEFAULT_SINK@' {-5%,+5%}; \
+	amixer sget Master | egrep -e '[0-9]+%' \
 		| egrep -o '\[.+\]' | head -n 1 | xargs -I '*' notify-send -t 0.4 '🔉 *' &
-XF86Audio{Mute,LowerVolume,RaiseVolume}
-	sfx-synth btn & \
-	amixer -q sset Master {toggle,5%-,5%+}
+
+super + F{9,10}
+	VOLUME_CMD
+XF86Audio{LowerVolume,RaiseVolume}
+	VOLUME_CMD
+
 # F11: randomize wallpaper
 super + F11
 	sfx-synth btn & \
@@ -85,7 +102,9 @@ XF86Eject
 	eject
 
 ## reserved for future use
-# F12
+# F12~F24
+# Insert
+# SysRq
 # Scroll_Lock
 # Pause
 # XF86Tools (probably a music player)
