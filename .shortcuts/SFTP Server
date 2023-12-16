@@ -20,7 +20,8 @@ fi
 # splash screen
 cat <<- EOF
 	$(printf '\33[1m%s\33[0m' "${0##*/}")
-	usage: ssh -C -p $port $user@$ip
+	usage: ssh -C -p $port $user@${ip:-localhost (no WLAN connection)}
+
 	internal: $int_path
 	external: $ext_path
 
