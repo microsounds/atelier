@@ -22,6 +22,7 @@ fonts-liberation fonts-dejima-mincho
 git make gcc
 gparted udevil ntfs-3g exfatprogs dosfstools sshfs
 htop
+imagemagick
 *kdenlive
 ledger
 *libreoffice-writer libreoffice-calc
