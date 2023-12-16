@@ -19,7 +19,7 @@ fi
 
 # splash screen
 cat <<- EOF
-	$(printf '\33[5m%s\33[0m' "${0##*/}")
+	$(printf '\33[1m%s\33[0m' "${0##*/}")
 	usage: ssh -C -p $port $user@$ip
 	internal: $int_path
 	external: $ext_path
@@ -27,4 +27,5 @@ cat <<- EOF
 	^C to exit.
 EOF
 
+# run in foreground, android hates forking daemons
 sshd -p $port -D

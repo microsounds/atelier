@@ -148,7 +148,7 @@ _Pictured: Debian stable, a "graphical shell" environment consisting mostly of x
 3. When pulling from upstream, stash changes or `git reset --hard` to prevent merge conflicts.
 	* Use `patch -p1 < ~/.termux/diff.patch` to restore changes if stash is lost.
 
-See [attached notes](#Termux-for-Android) for explanations of changes from a standard Linux environment.
+See [attached notes](#Termux-for-Android) for overview of changes from a standard Linux environment.
 
 ## List of supported platforms
 **Full graphical shell environment**
@@ -283,7 +283,7 @@ No display manager is used, login to `tty1` to start the graphical shell.
 
 All daemons and services required to support the graphical shell are initialized along with the X server and are terminated when the user terminates the session.
 
-`systemd` unit services, cronjobs and similar mechanisms are avoided.
+`systemd` unit services, cronjobs and similar mechanisms are avoided whenever possible.
 
 At startup, `startx` will pass hardware-specific `xorg.conf` files to the X server, to enable hardware compositing on supported hardware and eliminate screen tearing.
 
@@ -367,7 +367,16 @@ Outside of `git` worktrees, the path component will be mangled by [`path-shortha
 
 ## Termux for Android
 Single-user shell environment should work as expected on Termux without root access or changes to `$PREFIX/etc` with several caveats described below.
+
 Post-install scripts make the following adjustments statically for existing scripts.
+These adjustments will also be saved as a diff patch in `~/.termux/diff.patch` in case these changes are overwritten with `git`.
+
+### `Termux:Widget`
+Scripts in [`~/.shortcuts`](.shortcuts) are meant for use with `Termux:Widget` which can be found wherever you got Termux.
+This is an optional add-on to Termux that lets you launch foreground or background scripts from an Android homescreen widget.
+See the [project page](https://github.com/termux/termux-widget) for documentation and environment notes, it's important to note that scripts launched this way do not source `~/.profile` or `~/.bashrc` like they would running from a Termux instance.
+
+You must give Termux permission to display over other apps via `Settings > Apps > Display over other apps` for this add-on to work properly.
 
 ### Standard file descriptors
 Shell scripts on Android systems without root access have no access to standard file descriptors `/dev/std{in,out,err}`, use `/proc/self/fd/{0,1,2}` instead.
@@ -389,7 +398,9 @@ You may experience issues with processes backgrounded with the `&` operator bein
 In order to prevent Android from prematurely pruning `ssh-agent` while multitasking, it is called as the parent process for the current shell.
 
 Termux developers recommend their very own [termux-services](https://wiki.termux.com/wiki/Termux-services) for running common daemons.
-_Launch daemons in foreground mode in another terminal instance without forking and preferably with wakelock acquired from the notification bar if you wish to run a long-running task without being throttled by the operating system._
+_Launch daemons in foreground mode without forking and preferably with wakelock acquired from the `Notification Bar` or with `termux-wake-lock` if you wish to run a long-running task without being throttled by the operating system._
+
+If you don't mind the limitations of `Termux:Widget`, you can also run long-running scripts as a headless background tasks by putting it in `~/.shortcuts/tasks`.
 
 
 ## `cd`
