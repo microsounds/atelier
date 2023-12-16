@@ -217,11 +217,14 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 
 [dwm]: https://ratfactor.com/dwm "suckless dwm tutorial"
 
+**Alt**-based keybinds are kept to a minimum because these are commonly taken by applications.
+
 | shift + | alt + | key |
 | --: | --: | :-- |
 | | kill window | F4 |
 | counter-clockwise | switch focused window | tab |
 
+**Super**-based keybinds meant for system and window manager functions.
 
 | shift + | super + | key |
 | --: | --: | :-- |
@@ -246,6 +249,7 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | | randomize wallpaper | F11 |
 | | _reserved_ | F12~F24 |
 
+**Special** keybinds that don't fit in other categories.
 
 | alt + | ctrl + | key<sup>[special]</sup> |
 | --: | --: | :-- |
