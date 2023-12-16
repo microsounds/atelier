@@ -9,12 +9,12 @@ uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
 
 # install prerequisites
 cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
-	wget git             # req'd for bootstrap
-	clang binutils       # provides cpp
-	openssl-tool openssh # nano-overlay
-	busybox              # httpd
-	n-t-roff-sc          # provides sc
-	man                  # misc comforts
+	wget git                      # req'd for bootstrap
+	clang binutils                # provides cpp
+	openssl-tool openssh iproute2 # nano-overlay, ssh server
+	busybox                       # httpd
+	n-t-roff-sc                   # provides sc
+	man                           # misc comforts
 	ledger
 	imagemagick
 	bash-completion

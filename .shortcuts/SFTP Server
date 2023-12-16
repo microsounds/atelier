@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# launches SSH server for use in SFTP transfers
+# generates usage instructions to make connecting easier
+
+port=8022
+user=$(whoami)
+ip=$(ip -o addr | grep -F 'wlan' | grep -Eo '([0-9]{1,3}\.?){4}' | head -n 1)
+
+# get path to external sdcard if it exists
+# paths take the form /storage/XXXX-XXXX
+int_path="$(readlink ~/storage/shared)"
+ext_path="$(readlink ~/storage/external* | head -n 1)"
+if [ ! -z "$ext_path" ]; then
+	while [ "$(echo "$ext_path" | tr -cd '/' | wc -c)" -gt 2 ]; do
+		ext_path="${ext_path%/*}"
+	done
+fi
+
+# splash screen
+cat <<- EOF
+	$(printf '\33[5m%s\33[0m' "${0##*/}")
+	usage: ssh -C -p $port $user@$ip
+	internal: $int_path
+	external: $ext_path
+
+	^C to exit.
+EOF
+
+sshd -p $port -D
