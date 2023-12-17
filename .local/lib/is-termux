@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# detects if running on Termux for Android
-uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' \
-	&& [ ! -z "$TERMUX_VERSION" ] && exit 0
+# detect if running on Termux for Android
+# blindly trusting envvars and skipping uname -o offers 2.25x speed improvement
+[ ! -z "$TERMUX_VERSION" ] && exit 0
 
 exit 1
