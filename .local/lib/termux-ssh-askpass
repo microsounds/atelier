@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+# termux-ssh-askpass v0.1
+# simple drop-in replacement for ssh-askpass that acts as a wrapper script over
+# android's hardware-backed keystore functionality and the fingerprint lock to
+# unlock passphrase-protected OpenSSH keys, often used by ssh-agent
+
+# USAGE NOTES
+
+# 0. this ABSOLUTELY prioritizes convenience over security, replacing passwords
+#    with biometrics, your single point of failure becomes the fingerprint lock
+#    on your smartphone, you have been warned.
+# 1. termux-api package and the companion Termux:API app are required
+# 2. this script also assumes you have already created an android keystore
+#    RSA key with alias 'default'
+#    eg. termux-keystore generate 'default' -a RSA -s 4096 -u 30
+# 3. your SSH key should be have a passphrase generated from this script before
+#    using with ssh-agent
+#    eg. ssh-keygen -p -f ~/.ssh/id_rsa -N "$(termux-ssh-askpass)" -F 'old passphrase'
+
+! is-termux && exit 1
+
+termux-fingerprint -s 'Unlock hardware keystore?' -c 'Abort' \
+	| jq -r '.auth_result' | fgrep -q 'AUTH_RESULT_SUCCESS' || exit 1
+[ -f ~/.ssh/id_rsa.pub ] && \
+	termux-keystore sign 'default' SHA256withRSA < ~/.ssh/id_rsa.pub | tr -cd 'A-Za-z0-9'

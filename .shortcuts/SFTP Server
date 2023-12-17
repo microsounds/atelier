@@ -3,6 +3,8 @@
 # launches SSH server for use in SFTP transfers
 # generates usage instructions to make connecting easier
 
+! is-termux && exit 1
+
 port=8022
 user=$(whoami)
 ip=$(ip -o addr | grep -F 'wlan' | grep -Eo '([0-9]{1,3}\.?){4}' | head -n 1)

@@ -1,17 +1,21 @@
 #!/usr/bin/env sh
 
-# android-termux.sh v1.0
-# collection of hackjobs to enable basic functionality on termux for android
+# android-termux.sh v1.1
+
+# collection of hackjobs to enable basic functionality on Termux for Android
+# and paper over inconsistencies between standard Linux environments and the
+# ones provided by unrooted Android devices
 # some changes are ugly or incompatible with every other platform and will be
 # applied manually so as to not pollute other scripts
 
-uname -o | tr 'A-Z' 'a-z' | fgrep -q 'android' || exit 0
+! is-termux && exit 0
 
 # install prerequisites
 cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
 	wget git                      # req'd for bootstrap
 	clang binutils                # provides cpp
 	openssl-tool openssh iproute2 # nano-overlay, ssh server
+	termux-api jq                 # provides fingerprint auth
 	busybox                       # httpd
 	n-t-roff-sc                   # provides sc
 	man                           # misc comforts
@@ -25,7 +29,12 @@ for f in update upgrade autoremove autoclean clean; do
 	yes y | apt $f
 done
 
-# setup storage
+# setup hardware keystore with 'default' key for use with termux-ssh-askpass
+# assumes you've already installed Termux:API add-on app
+termux-keystore list | jq -r '.[].alias' | fgrep -q 'default' || \
+	termux-keystore generate 'default' -a RSA -s 4096 -u 10
+
+# setup internal and external storage symlinks
 yes y | termux-setup-storage
 
 # prevent termux from sourcing .bashrc twice every login
@@ -40,9 +49,17 @@ sed -ni ~/.profile -e '/## login shell/q;p'
 	sed -i ~/.profile -E \
 		-e 's,^(export XDG_RUNTIME_DIR).*,\1="$PREFIX/tmp",'
 
+	# ssh-agent tweaks
 	# android 11+ kills background daemons, run ssh-agent as parent process
 	sed -i ~/.bashrc \
 		-e '1s/^/[ ! -z "$TERMUX" ] || \\\n\t{ export TERMUX=1; exec ssh-agent -t 3600 bash -l; }\n/'
+
+	# use fingerprint lock and android keystore instead of passphrase
+	cat <<- EOF >> ~/.profile
+		# $0: use fingerprint lock and android keystore with ssh-agent
+		export SSH_ASKPASS='termux-ssh-askpass'
+		export SSH_ASKPASS_REQUIRE='force'
+	EOF
 
 	# disable $OLDPWD persistence
 	sed -i ~/.bashrc -e '/LASTDIR/d'
@@ -114,7 +131,7 @@ cat <<- EOF > "$CONF/termux.properties"
 	# disable extra keys with VolUp+q
 	#fullscreen=true
 
-	enforce-char-based-input = true
+	enforce-char-based-input = false
 	extra-keys-style = arrows-all
 	extra-keys = [ \
 		[ ESC, '~',  '/', HOME, UP,   END,   PGUP, DEL  ], \
