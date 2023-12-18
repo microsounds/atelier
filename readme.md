@@ -422,16 +422,22 @@ to produce a passphrase from the signed nonce value emitted by the security chip
 
 Simply put, _this allows for fingerprint-based SSH authentication_, a massive quality of life improvement over entering case-sensitive passphrases on a smartphone.
 
-Some important things to note:
+#### Important considerations
 1. `termux-api` package and the companion add-on app `Termux:API` available fro the same place you got Termux are required for this functionalty to work.
 2. There is no chance of vendor or device lock-in, as you are not using key material from the security chip as your OpenSSH key.
-	a. The nonce value is not important, it's just convenient seed data used to produce a reproducible passphrase that requires your fingerprint to unlock.
-	b. The key material locked in the hardware-backed keystore is also not important, you are simply using it to generate passphrases for your existing portable OpenSSH keys.
-3. Even though someone with physical access to your Android device can edit modify the hardware keystore without authentication and replace keys with identically named keys that have an unlimited validity period, it will not be the same key material used to sign and your portable OpenSSH keys will still be safe.
+	* The nonce value is not important, it's just convenient seed data used to produce a reproducible passphrase that requires your fingerprint to unlock.
+	* The key material locked in the hardware-backed keystore is also not important, you are simply using it to generate passphrases for your existing portable OpenSSH keys.
+
+3. Even though someone with physical access to your Android device _could_ modify the hardware keystore without authentication and _could_ replace keys with identically named keys that have an unlimited validity period, they will not be the same key material used to sign and your portable OpenSSH keys will still be safe.
 4. You understand that by replacing passphrases with biometrics, your fingerprint reader becomes your single point of failure, you have been warned.
 
-To setup your existing OpenSSH keys for fingerprint-based SSH authentication, use the output of `termux-ssh-askpass /path/to/private.key` as your new passphrase in `ssh-keygen`,
-eg. `ssh-keygen -p -f ~/.ssh/id_rsa -N "$(termux-ssh-askpass ~/.ssh/id_rsa)" -F 'old passphrase'`.
+#### Initial setup
+To setup your existing OpenSSH keys for fingerprint-based SSH authentication, use the output of `termux-ssh-askpass` as your new passphrase in `ssh-keygen`.
+
+```
+new_pass="$(termux-ssh-askpass ~/.ssh/id_rsa)"
+ssh-keygen -p -f ~/.ssh/id_rsa -N "$new_pass" -F 'old passphrase'
+```
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved across `bash` sessions.
