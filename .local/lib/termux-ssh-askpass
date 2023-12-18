@@ -1,26 +1,50 @@
 #!/usr/bin/env sh
 
-# termux-ssh-askpass v0.1
+# termux-ssh-askpass v0.2
+# usage:
+#    termux-ssh-askpass [ prompt text (optional) ] [ /path/to/private.key ]
 # simple drop-in replacement for ssh-askpass that acts as a wrapper script over
 # android's hardware-backed keystore functionality and the fingerprint lock to
-# unlock passphrase-protected OpenSSH keys, often used by ssh-agent
+# unlock passphrase-protected OpenSSH keys, often used by ssh-agent and friends
+
+# specifically, a hardware-backed inaccessible private key is stored in the
+# security chip on the device which is only available during a validity period
+# after successful fingerprint unlocks and this is used to sign the matching
+# pubkey file for the portable OpenSSH private key being unlocked by ssh-agent
+# to produce a passphrase from the signed nonce value produced by the security
+# chip
 
 # USAGE NOTES
-
-# 0. this ABSOLUTELY prioritizes convenience over security, replacing passwords
-#    with biometrics, your single point of failure becomes the fingerprint lock
-#    on your smartphone, you have been warned.
 # 1. termux-api package and the companion Termux:API app are required
-# 2. this script also assumes you have already created an android keystore
+# 2. this script assumes you have already created an android keystore
 #    RSA key with alias 'default'
-#    eg. termux-keystore generate 'default' -a RSA -s 4096 -u 30
+#    eg. termux-keystore generate 'default' -a RSA -s 4096 -u 10
 # 3. your SSH key should be have a passphrase generated from this script before
 #    using with ssh-agent
-#    eg. ssh-keygen -p -f ~/.ssh/id_rsa -N "$(termux-ssh-askpass)" -F 'old passphrase'
+#    eg. ssh-keygen -p -f ~/.ssh/id_rsa \
+#            -N "$(termux-ssh-askpass ~/.ssh/id_rsa)" -F 'old passphrase'
+
+abort() { echo "[ERROR] $@" 1>&2; exit 1; }
 
 ! is-termux && exit 1
 
-termux-fingerprint -s 'Unlock hardware keystore?' -c 'Abort' \
+# OpenSSH provides absolute path to key being unlocked via first arg:
+# eg. $SSH_ASKPASS 'Enter passphrase for /path/to/.ssh/id_rsa: '
+# pubkey is also required for nonce signing so don't allow running standalone
+[ ! -z "$1" ] || abort "Must be run by OpenSSH with arguments."
+SIGNING_KEY='default'
+PROMPT="${1%: }"
+PRIVKEY="/${PROMPT#*/}"
+PUBKEY="$PRIVKEY.pub"
+[ -f "$PUBKEY" ] || abort "Expected pubkey located in '$PUBKEY'."
+
+termux-keystore list | jq -r '.[].alias' | fgrep -q "$SIGNING_KEY" || \
+	abort "No key named '$SIGNING_KEY' found in keystore."
+
+# hardware-backed signing keys with a validity duration set are only made
+# available by the security chip after successful fingerprint unlock attempt
+termux-fingerprint \
+	-t "${0##*/}" -s 'Authenticate to unlock hardware keystore.' \
+	-d "Generating signed passphrase for ${PRIVKEY}" -c 'Abort' \
 	| jq -r '.auth_result' | fgrep -q 'AUTH_RESULT_SUCCESS' || exit 1
-[ -f ~/.ssh/id_rsa.pub ] && \
-	termux-keystore sign 'default' SHA256withRSA < ~/.ssh/id_rsa.pub | tr -cd 'A-Za-z0-9'
+termux-keystore sign "$SIGNING_KEY" SHA256withRSA < "$PUBKEY" | tr -cd 'A-Za-z0-9'
