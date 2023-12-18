@@ -38,13 +38,10 @@ PRIVKEY="/${PROMPT#*/}"
 PUBKEY="$PRIVKEY.pub"
 [ -f "$PUBKEY" ] || abort "Expected pubkey located in '$PUBKEY'."
 
-termux-keystore list | jq -r '.[].alias' | fgrep -q "$SIGNING_KEY" || \
-	abort "No key named '$SIGNING_KEY' found in keystore."
-
 # hardware-backed signing keys with a validity duration set are only made
 # available by the security chip after successful fingerprint unlock attempt
 termux-fingerprint \
-	-t "${0##*/}" -s 'Authenticate to unlock hardware keystore.' \
+	-t "${0##*/}" -s 'Authenticate to unlock hardware keystore' \
 	-d "Generating signed passphrase for ${PRIVKEY}" -c 'Abort' \
 	| jq -r '.auth_result' | fgrep -q 'AUTH_RESULT_SUCCESS' || exit 1
 termux-keystore sign "$SIGNING_KEY" SHA256withRSA < "$PUBKEY" | tr -cd 'A-Za-z0-9'

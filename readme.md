@@ -423,7 +423,7 @@ to produce a passphrase from the signed nonce value emitted by the security chip
 Simply put, _this allows for fingerprint-based SSH authentication_, a massive quality of life improvement over entering case-sensitive passphrases on a smartphone.
 
 #### Important considerations
-1. `termux-api` package and the companion add-on app `Termux:API` available fro the same place you got Termux are required for this functionalty to work.
+1. Both the `termux-api` package and the companion add-on app `Termux:API` available from the same place you got Termux are required for this functionality to work.
 2. There is no chance of vendor or device lock-in, as you are not using key material from the security chip as your OpenSSH key.
 	* The nonce value is not important, it's just convenient seed data used to produce a reproducible passphrase that requires your fingerprint to unlock.
 	* The key material locked in the hardware-backed keystore is also not important, you are simply using it to generate passphrases for your existing portable OpenSSH keys.
