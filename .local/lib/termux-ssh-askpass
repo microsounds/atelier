@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# termux-ssh-askpass v0.2
+# termux-ssh-askpass v0.3
 # usage:
 #    termux-ssh-askpass [ prompt text (optional) ] [ /path/to/private.key ]
 # simple drop-in replacement for ssh-askpass that acts as a wrapper script over
@@ -24,24 +24,31 @@
 #    eg. ssh-keygen -p -f ~/.ssh/id_rsa \
 #            -N "$(termux-ssh-askpass ~/.ssh/id_rsa)" -F 'old passphrase'
 
-abort() { echo "[ERROR] $@" 1>&2; exit 1; }
+NAME="${0##*/}"
+abort() { echo "[$NAME] $@" 1>&2; exit 1; }
 
 ! is-termux && exit 1
 
-# OpenSSH provides absolute path to key being unlocked via first arg:
-# eg. $SSH_ASKPASS 'Enter passphrase for /path/to/.ssh/id_rsa: '
-# pubkey is also required for nonce signing so don't allow running standalone
+# OpenSSH only provides path to private key via first arg only:
+# eg. $SSH_ASKPASS "Enter passphrase for '/path/to/.ssh/id_rsa' (blah blah): "
+# paths provided by OpenSSH with spaces may or may not have quotes
+# therefore, DO NOT use spaces in private key paths
 [ ! -z "$1" ] || abort "Must be run by OpenSSH with arguments."
-SIGNING_KEY='default'
-PROMPT="${1%: }"
-PRIVKEY="/${PROMPT#*/}"
+f="${1%: }" # strip garbage
+f="${f% (*)}" # strip garbage emitted by ssh-add -c
+f="${f##* }" # strip preceding prompt
+f="${f%\'}"; f="${f#\'}" # strip quotes (as seen with git)
+f="${f%\"}"; PRIVKEY="${f#\"}" # strip quotes (just in case)
+
+# pubkey also required for nonce signing so don't allow running standalone
 PUBKEY="$PRIVKEY.pub"
 [ -f "$PUBKEY" ] || abort "Expected pubkey located in '$PUBKEY'."
 
 # hardware-backed signing keys with a validity duration set are only made
 # available by the security chip after successful fingerprint unlock attempt
+SIGNING_KEY='default'
 termux-fingerprint \
-	-t "${0##*/}" -s 'Authenticate to unlock hardware keystore' \
+	-t "$NAME" -s 'Authenticate to unlock hardware keystore' \
 	-d "Generating signed passphrase for ${PRIVKEY}" -c 'Abort' \
 	| jq -r '.auth_result' | fgrep -q 'AUTH_RESULT_SUCCESS' || exit 1
 termux-keystore sign "$SIGNING_KEY" SHA256withRSA < "$PUBKEY" | tr -cd 'A-Za-z0-9'
