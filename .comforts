@@ -24,7 +24,7 @@ gparted udevil ntfs-3g exfatprogs dosfstools sshfs
 htop
 imagemagick
 *kdenlive
-ledger
+ledger gnuplot
 *libreoffice-writer libreoffice-calc
 m4
 man-db

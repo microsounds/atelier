@@ -285,6 +285,21 @@ ledger-enc() (
 	nano-overlay -s "$file"
 )
 
+# generic reporting wrapper for gnuplot and ledger-cli
+ledger-report() (
+	# fall back to terminal output if not on X
+	term="dumb $COLUMNS $LINES feed"
+	[ ! -z "$DISPLAY" ] && term='x11 persist'
+
+	{ cat <<- EOF; ledger-enc "$@" --sort date; } | gnuplot
+		set terminal $term
+		set xdata time
+		set timefmt "%Y-%m-%d"
+		set style fill solid
+		plot "-" using 1:2 with lines linewidth 2
+	EOF
+)
+
 # rename files to a generic filename
 mv-generic() (
 	for f in "$1"; do
