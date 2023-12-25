@@ -155,7 +155,7 @@ See [attached notes](#Termux-for-Android) for overview of changes from a standar
 **Full graphical shell environment**
 * Any conventional BIOS/UEFI-compliant x86-based Personal Computer
 * x86-based Chromebooks in Developer Mode (SeaBIOS), or liberated with UEFI firmware (Coreboot).
-	* _See <https://mrchromebox.tech/> for more information on unlocking your bootloader._
+	* _See <https://chrultrabook.github.io/docs/> for more information on unlocking your bootloader._
 * [Next Thing Co. PocketC.H.I.P][ntc-chip] armhf-based portable ~~toy computer~~ linux handheld
 	* _Final NTC-provided Debian 8 (jessie) OS images from 2016 come with out-of-tree `4.4.13-ntc-mlc` kernel pinned, upgradeable to 10 (buster)._
 
