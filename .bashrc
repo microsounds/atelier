@@ -11,7 +11,7 @@ HISTFILESIZE=20000
 PROMPT_COMMAND=set_prompt
 
 # bash-completion, ignore if not installed
-. '/usr/share/bash-completion/bash_completion' || :
+. '/usr/share/bash-completion/bash_completion' 2> /dev/null || :
 
 # color support
 export COLOR=1; case $TERM in
@@ -289,13 +289,15 @@ ledger-enc() (
 ledger-report() (
 	# fall back to terminal output if not on X
 	term="dumb $COLUMNS $LINES feed"
-	[ ! -z "$DISPLAY" ] && term='x11 persist'
+	[ ! -z "$DISPLAY" ] && term="x11 persist title '$@'"
 
 	{ cat <<- EOF; ledger-enc "$@" --sort date; } | gnuplot
 		set terminal $term
 		set xdata time
 		set timefmt "%Y-%m-%d"
+		${DISPLAY:+set grid}
 		set style fill solid
+		unset key
 		plot "-" using 1:2 with lines linewidth 2
 	EOF
 )
