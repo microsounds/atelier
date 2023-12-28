@@ -41,7 +41,7 @@ ctrl + alt + {Delete,Insert}
 # F2: suspend/hibernate+poweroff
 {_,shift +} super + F{1,2}
 	sfx-synth btn & \
-	ssh-add -D && systemctl {poweroff,reboot,suspend,hibernate}
+	systemctl {poweroff,reboot,suspend,hibernate}
 
 # F3: display off/hibernate+reboot
 {_,shift +} super + F3

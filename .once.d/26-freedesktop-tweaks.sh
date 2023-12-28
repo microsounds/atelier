@@ -19,6 +19,11 @@ user-confirm 'Replace systemd hybrid-sleep mode with hibernate+reboot?' && {
 # allow unprivileged users to view kernel syslog
 conf-append 'kernel.dmesg_restrict = 0' '/etc/sysctl.conf'
 
-# gnome-keyring-daemon causes startup hangs related to libpam in some GTK3-based apps
+# gnome-keyring-daemon causes startup hangs related to libpam in some
+# GTK3-based apps
 is-installed gnome-keyring \
 	&& yes y | sudo apt-get autoremove --purge gnome-keyring*
+
+# install symlink to locally maintained system-sleep hooks
+sudo ln -sfv \
+	"$(realpath ~/.local/lib/systemd-sleep)" '/lib/systemd/system-sleep'

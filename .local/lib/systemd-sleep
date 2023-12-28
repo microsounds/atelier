@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+# ~/.local/lib/systemd-sleep
+# systemd system-sleep hook
+# purge all visible ssh-agents on suspend
+
+case "$1" in
+	pre*)
+	# really stupid hack
+	# system-sleep doesn't run this script with your user
+	# assume control of every logged in user by groping their X session envvars
+	for user in $(who | egrep '\w+ tty' | tr ' ' '\t' | cut -f1 | uniq); do
+		x11_pid=$(pgrep -u $user xinit | head -n 1) # X session??
+		export $(tr '\0' '\n' < /proc/$x11_pid/environ | fgrep 'SSH_AUTH_SOCK')
+		ssh-add -D
+	done;;
+esac
