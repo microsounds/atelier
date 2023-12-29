@@ -7,6 +7,10 @@
 [ $# -eq 1 ] || { egrep '^##' < "$0" | sed -E 's/^## +//g' ; exit 1; }
 
 case "$1" in
+	bell|bel)
+		laptop-detect \
+			&& play -qn synth 1 sine 760 fade log 0 0.5 0.495 trim 0 0.05 \
+			|| beep -f 760 -l 90;;
 	attention|attn)
 		laptop-detect \
 			&& play -qn synth 1 sine 760 fade log 0 0.5 0.495 trim 0 0.2 repeat 1 \

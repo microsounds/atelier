@@ -23,6 +23,9 @@ URxvt.saveLines: 2048
 URxvt.scrollBar: false
 URxvt.urgentOnBell: true
 
+/* bell synth */
+URxvt.bell-command: sfx-synth bell &
+
 /* dump terminal logs to file */
 URxvt.print-pipe: mkdir "$HOME/Logs"; \
 	cat > "$HOME/Logs/$(date '+%Y-%m-%d-%H%M%S')_urxvt.txt"
