@@ -61,7 +61,7 @@
 
 	# size reporting functions in kilobytes
 	# find size of worktree in HEAD
-	size-tree = !echo $(( ($(git list-files | xargs ls -l \
+	size-tree = !echo $(( ($(git list-files | xargs -I '{}' ls -l '{}' \
 		| tr -s ' ' '\t' | cut -f5 | paste -s -d '+')) / 1024 ))
 	# find size of compressed git repo
 	size-pack = !git count-objects -v \
