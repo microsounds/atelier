@@ -49,9 +49,9 @@ echo 'set bell-style none' > ~/.inputrc &
 ## session daemons
 # dbus: prevents dbus-specific applications from hanging at startup
 # stupid hack: find existing dbus-daemon session handled by systemd
-sh_pid=$(pgrep -u "$(whoami)" sh | head -n 2 | tail -n 1) # login shell??
+dbus_pid=$(pgrep -u "$(whoami)" dbus-daemon | head -n 1)
 export $(tr '\0' '\n' \
-	< /proc/$sh_pid/environ | fgrep 'DBUS_SESSION_BUS_ADDRESS')
+	< /proc/$dbus_pid/environ | fgrep 'DBUS_SESSION_BUS_ADDRESS')
 
 # fcitx5: IME integration for kana input
 export GTK_IM_MODULE='fcitx'
