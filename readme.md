@@ -255,6 +255,7 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | alt + | ctrl + | key<sup>[special]</sup> |
 | --: | --: | :-- |
 | | switch input method<sup>[toggle]</sup> | space |
+| | clipboard manager | ; |
 | task manager | | delete |
 | syslog | | insert |
 
