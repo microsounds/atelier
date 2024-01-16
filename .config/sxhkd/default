@@ -62,7 +62,8 @@ ctrl + alt + {Delete,Insert}
 #define BRIGHTNESS_CMD 	\
 	sfx-synth btn & \
 	xbacklight -{dec 10,set 1,inc 10,set 100}; \
-	xbacklight -get | xargs -I '*' notify-send -t 0.3 'Backlight: *%'
+	xbacklight -get | sed -E -e 's/0+$//' -e 's/\.$//' | \
+		xargs -I '*' notify-send -t 0.3 'Backlight: *%'
 
 {_,shift +} super + F{6,7}
 	BRIGHTNESS_CMD
