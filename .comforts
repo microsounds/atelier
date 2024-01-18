@@ -13,6 +13,7 @@ dc
 dconf-cli
 dkms
 enscript ttf2ufm gv
+faketime
 fcitx5 fcitx5-mozc dbus-x11
 feh jpegoptim optipng findimagedupes
 figlet
