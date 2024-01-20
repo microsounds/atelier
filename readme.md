@@ -557,8 +557,8 @@ Instead, the shell function `sc()` offers an easier to understand macro system f
 * You can write an arbitrarily complex pre-run macro script in any language, so long as it's made aware of its own filename at runtime.
 	* _Because the `sc` file format is plaintext, you can generate `sc` syntax with just a shell script._
 
-### `sc` pre-run macro example
-* This is an example of a conditional macro script for an inventory spreadsheet that color-codes cells when specific strings are found.
+### `sc` pre-run macro example scripts
+1. A macro script for an inventory spreadsheet that color-codes cells when specific strings are found.
 
 	```shell
 	#!/usr/bin/env sh
@@ -585,6 +585,53 @@ Instead, the shell function `sc()` offers an easier to understand macro system f
 			esac;;
 		esac
 	done >> "$file"
+	```
+
+2. A macro script that extracts specific fields from a spreadsheet and mangles them into arbitrary JSON data, I use this to update my [figure collection page ](https://microsounds.github.io/notes/figures.htm) on my personal site.
+	 * `sc` is very old and predates most notions of CSV or tab delimited data,
+the easiest way to extract fields with spaces is use `expect` to output a colon separated table using the `T` command _"interactively"_,
+write it to the default filename ending in `.cln`, and then delete it when finshed.
+
+
+	```shell
+	#!/usr/bin/env sh
+
+	# generate simplified JSON data for website
+	file="${0%.*}"
+
+	expect <<- EOF > /dev/null
+		spawn sc "$file"
+		expect "sc 7.16" {
+			send -- "T\\\\n"
+		}
+		expect "i> tbl" {
+			send -- "\\\\n Q\\\\n"
+			expect eof
+		}
+	EOF
+
+	# replace empty colon delimited fields with '(null)' for consistency
+	# yes this is very ugly
+	cat "${file%.*}.cln" \
+		| sed -e '/^::/d' -e 's/^:/(null):/g' -e 's/::/:(null):/g' \
+			-e 's/::/:(null):/g' -e 's/:$/:(null)/g' \
+		| tr ':' '\\\\t' | cut -f1-5 | tail -n +5 | while read -r status id key desc; do
+			case "$desc" in
+				knockoff*|counterfeit*|fake*) id="x$id";;
+				*)	case "$status" in
+						unopened|displayed|storage);;
+						wishlist) id="w$id";;
+						*) id="p$id";;
+					esac;;
+			esac
+			year="${desc#*	}"
+			desc="${desc%	$year}"
+			desc="$(echo "$desc" | sed "s/'/\\\\\\\\\\\\\\\\'/g")" # escape quotes
+			printf "\\\\t[ '%s', '%s', '%s (%s)' ],\\\\n" \
+				"$id" "$key" "$desc" "$year"
+	done > "${file%.*}.json"
+
+	rm -f "${file%.*}.cln"
 	```
 
 [scrot]: https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/scrot.png
