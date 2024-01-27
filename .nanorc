@@ -14,7 +14,6 @@ set matchbrackets "(<[{)>]}"
 set trimblanks
 set afterends
 set atblanks
-set mouse
 set unix
 
 ## convenience
