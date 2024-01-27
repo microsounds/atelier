@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-## getquote v0.4
-## (c) 2023 microsounds <https://github.com/microsounds>, GPLv3+
+## getquote v0.5
+## (c) 2024 microsounds <https://github.com/microsounds>, GPLv3+
 # scrapes Yahoo! Finance API for stock, crypto and ETF price quotes
 # outputs as ledger-cli commodity price history format in US Dollars
 # format: 'P YYYY/MM/DD HH:MM:SS SYMBOL $USD_PRICE'
@@ -20,21 +20,18 @@ case "$1" in
 esac
 
 # 06/2023: yahoo discontinued batch quote json endpoint, one query per symbol
+# 01/2024: yahoo discontinued options quote endpoint, lost postmarket data
+
 TIME_NOW="$(date '+%s')"
 UA_STR='Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
-QUOTE_API='https://query1.finance.yahoo.com/v7/finance/options'
-JQ_SCRIPT=".optionChain.result[].quote \
-	| [.regularMarketPrice,.regularMarketTime,.postMarketPrice,.postMarketTime] \
-	| join(\" \")"
+QUOTE_API="https://query1.finance.yahoo.com/v8/finance/chart"
+JQ_SCRIPT=".chart.result[].meta \
+	| [.regularMarketPrice,.regularMarketTime] | join(\" \")"
 
 for SYM in "$@"; do
 	wget -q -U "$UA_STR" -O - "${QUOTE_API}/${SYM}" \
 		| jq -r "$JQ_SCRIPT" \
-		| while read -r reg_price reg_time post_price post_time; do
-			# use after-market data if newer
-			[ ! -z "$post_time" ] && [ "$post_time" -gt "$reg_time" ] \
-				&& reg_price="$post_price" && reg_time="$post_time"
-
+		| while read -r reg_price reg_time; do
 			# quotes are probably time delayed by 15 minutes
 			# use current time if market data is stale, eg. closed over 15 min
 			[ $((TIME_NOW - reg_time)) -gt $((60 * 15)) ] && reg_time="$TIME_NOW"
