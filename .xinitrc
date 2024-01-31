@@ -74,7 +74,7 @@ fcitx5 &
 		mkdir -p ~/.config/$dir
 		cp "$f" ~/.config/$dir/$file
 	done
-} && pcmanfm -d &
+} && pcmanfm -d --desktop &
 
 # ~/.xdecor: describes sources for optional background images
 # decorate root window, daemonize callback on display change

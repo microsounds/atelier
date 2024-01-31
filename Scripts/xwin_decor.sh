@@ -84,4 +84,6 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 	done
 done
 
-find "$temp" -type f | xargs feh --no-fehbg --bg-fill
+#find "$temp" -type f | xargs feh --no-fehbg --bg-fill
+find "$temp" -type f \
+	| xargs pcmanfm --wallpaper-mode=crop -w
