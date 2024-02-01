@@ -30,5 +30,6 @@ EOF
 
 # run in foreground, android hates forking daemons
 # return 0 on SIGINT
+stty -echo
 trap : 2
 sshd -p $port -D
