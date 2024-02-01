@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# xwin_decor.sh v0.9
+# xwin_decor.sh v1.0
 # decorate root window
 
 # fallback tiling background
@@ -84,6 +84,13 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 	done
 done
 
-#find "$temp" -type f | xargs feh --no-fehbg --bg-fill
-find "$temp" -type f \
-	| xargs pcmanfm --wallpaper-mode=crop -w
+# pcmanfm desktop: set wallpaper by mangling config files and resetting
+# use plain x window fallback via feh if pcmanfm not found
+which pcmanfm > /dev/null && {
+	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
+		sed -E "s,^wallpaper=.*,wallpaper=$file,g" \
+			-i ~/.config/pcmanfm/default/desktop-items-$mon.conf
+	done
+	pcmanfm --desktop-off && pcmanfm --desktop &
+	sleep 1 # wait a while before cleaning up
+} || find "$temp" -type f | xargs feh --no-fehbg --bg-fill

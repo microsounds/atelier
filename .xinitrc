@@ -69,10 +69,14 @@ fcitx5 &
 } > ~/.config/sxhkd/sxhkdrc || : && sxhkd &
 
 # pcmanfm: restore versioned config at startup
-{	for f in ~/.config/fm/*.conf; do
-		file="${f##*/}"; dir="${file%.*}"
-		mkdir -p ~/.config/$dir
-		cp "$f" ~/.config/$dir/$file
+{	for f in libfm pcmanfm; do
+		mkdir -p ~/.config/$f
+		cp ~/.config/fm/$f.conf ~/.config/$f/$f.conf
+	done
+	# restore desktop config to every active screen
+	for f in $(seq 0 $(($(xrandr -q | fgrep -c '*') - 1))); do
+		cpp -P -D HOME="$HOME" < ~/.config/fm/desktop.conf \
+			> ~/.config/pcmanfm/default/desktop-items-$f.conf
 	done
 } && pcmanfm -d --desktop &
 
