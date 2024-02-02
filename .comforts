@@ -5,6 +5,7 @@ alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
 bash bash-completion shellcheck
 beep sox laptop-detect
 bind9-dnsutils
+*blender
 *brasero xorriso eject
 chromium jq sqlite3
 cpp
@@ -25,6 +26,7 @@ gparted udevil ntfs-3g exfatprogs dosfstools sshfs
 htop
 imagemagick
 *kdenlive
+*krita
 ledger gnuplot
 *libreoffice-writer libreoffice-calc
 m4
