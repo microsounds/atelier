@@ -48,7 +48,7 @@ static const Rule rules[] = {
 	{ "XClock",        NULL,       NULL,       1,            1,          1,          -1 },
 	/* always float */
 	{ "Xmessage",      NULL,       NULL,       0,            1,          0,          -1 },
-	{ "Grpn",          NULL,       NULL,       0,            1,          0,          -1 },
+	{ "xppentablet",   NULL,       NULL,       0,            1,          0,          -1 },
 };
 
 /* disable spawn/dmenu invocation, handled by sxhkd */
