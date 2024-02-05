@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# wm_status.sh v0.4
+# wm_status.sh v0.5
 # non-blocking status line daemon
 # prints formatted status information to stdout
 
@@ -135,12 +135,13 @@ network() (
 		net="$(echo "${net%${net#?}}" | tr 'a-z' 'A-Z')${net#?}"
 	fi
 	ico='📶' # connected but no internet
-	ping -c 1 'google.com' > /dev/null 2>&1 || ico='⛔'
+	ping -c 1 'google.com' > /dev/null 2>&1 || ico='❌'
 	echo "NET $ico $net"
 )
 
 power() (
 	# extract battery life / AC adapter status if supported
+	ico='↯' # normal discharging icon
 	acpi="$(acpi -b | tr -d ',' | head -n 1)" 2> /dev/null
 	[ ! -z "$acpi" ] || return # not supported
 	for f in $acpi; do case $f in
@@ -149,6 +150,12 @@ power() (
 		*:*:*) btime="$f";;
 	esac; done
 
+	# extract net energy-rate in W if supported
+	# reported as combined (-) battery draw and (+) AC power draw
+	watts="$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 \
+		| grep 'energy-rate' | egrep -o '([0-9]+.?)+' | xargs printf '%.2fw')"
+	load="$(tr ' ' '\t' < /proc/loadavg | cut -f1)/$(grep -c '^proc' < /proc/cpuinfo)"
+
 	# rewrite approx. time remaining if available
 	if [ ! -z "$btime" ]; then
 		i=0; for f in h m; do
@@ -156,12 +163,22 @@ power() (
 			val="$(echo "$btime" | cut -d ':' -f$i | sed 's/^0//')"
 			[ ! $val -eq 0 ] && btime_v="$btime_v$val$f"
 		done
-		for f in $acpi; do case $f in
-			charged) btime_v="$btime_v 'til charged";;
-			remaining) btime_v="$btime_v left";;
-		esac; done
+
+		# randomly switch between net energy draw and charge time
+		if [ $(($(dd if=/dev/urandom count=1 bs=1 2> /dev/null \
+			| od -An -tu) % 2)) -eq 0 ]; then
+			for f in $acpi; do case $f in
+				charged) ico='🔌'; btime_v="$btime_v 'til charged";;
+				remaining) btime_v="$btime_v left";;
+			esac; done
+		else
+			for f in $acpi; do case $f in
+				charged) ico='🔌'; btime_v="$load${watts:+, +$watts}";;
+				remaining) btime_v="$load${watts:+, –$watts}";;
+			esac; done
+		fi
 	fi
-	echo "BAT ↯$pct${btime_v:+, $btime_v}"
+	echo "BAT $ico$pct${btime_v:+, $btime_v}"
 )
 
 sound() (

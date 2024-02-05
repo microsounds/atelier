@@ -209,7 +209,30 @@ Rationale for doing things this way is summarized in commit [`2fe1c3745`][rat].
 
 [rat]: https://github.com/microsounds/atelier/commit/2fe1c3745 "introduced ~/.once.d/10-git-upstream.sh"
 
-## Window manager
+## Window manager status bar
+Status bar daemon [`xwin-statusd`](Scripts/wm_status.sh) is forked
+and piped to `xsetroot` at startup to provide a concise `dwm` status bar conditionally listing the following status information when available, including:
+
+* ⚿ `ssh-agent` status
+	* _Lists the number of active keys added to the agent, if any._
+* ∿ Avg. CPU temperature in ˚F / ↻ Fan speed in RPM
+	* _On laptops with active cooling, CPU temps are replaced with fan speed when fans spin up._
+* 📶 Network status
+	* _Lists name of first active network device reported by `network-manager`._
+* ↯ `acpi` status and battery life / 🔌 Power draw
+	* _Reports `acpi` battery life information, including net energy-rate in watts as reported by UPower._
+* 🔉 PulseAudio sink status
+	* _Reports volume and status of the currently active audio sink, detects headphone use._
+* 🌦 Geolocated current weather _(via wttr.in)_
+	* _Their API caching is very aggressive, emitting stale data often, downtime is common, only displayed when available._
+* 🌔 Moonphase and current date
+	* _Expresses the ordinal date and the current phase of the moon._
+* ⌛ Current time
+	* _Expresses the current time in AM/PM._
+
+Status bar output is suppressed to display notification text from `notify-send` when available, see [attached notes](#notify-send) for more info.
+
+## Window manager keybinds
 Keyboard layouts and secondary layers are handled by `keyd` globally for better quality of life on non-standard keyboards.
 At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd` and `fcitx5` in such a way to avoid keybind stomping.
 
