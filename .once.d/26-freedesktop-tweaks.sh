@@ -19,10 +19,10 @@ user-confirm 'Replace systemd hybrid-sleep mode with hibernate+reboot?' && {
 # allow unprivileged users to view kernel syslog
 conf-append 'kernel.dmesg_restrict = 0' '/etc/sysctl.conf'
 
-# gnome-keyring-daemon causes startup hangs related to libpam in some
-# GTK3-based apps
-is-installed gnome-keyring \
-	&& yes y | sudo apt-get autoremove --purge gnome-keyring*
+# purge GNOME desktop trash that cause 25sec startup hangs in some GTK3 apps
+# gnome-keyring-daemon hangs chromium looking for libpam
+# xdg-desktop-portal-gtk hangs pavucontrol, obs, and other apps
+yes y | sudo apt-get autoremove --purge gnome-keyring* xdg-desktop-portal*
 
 # install symlink to locally maintained system-sleep hooks
 sudo ln -sfv \
