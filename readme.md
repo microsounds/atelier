@@ -25,8 +25,9 @@
 <!-- start of document -->
 
 This is my primary computing setup, a self-contained graphical shell environment for Debian GNU/Linux.
-* Git is used to maintain an identical and reproducible setup across multiple machines.
-* A series of post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
+* Git is used to maintain an identical and reproducible setup across any number of machines.
+* A series of [procedural](#On-declarative-OSes) post-install scripts in [`~/.once.d`](.once.d) document and reproduce system-wide deviations from a fresh install.
+	* _Git hooks ensure a [consistent running environment](#Applying-changes-automatically-after-state-change) even when the underlying state changes._
 	* _A [suite of unit tests](.github/workflows/ci.yml) ensures a reproducible installation with each revision._
 
 Detailed installation instructions are provided, along with some documentation for the most essential components.
@@ -166,6 +167,11 @@ See [attached notes](#Termux-for-Android) for overview of changes from a standar
 * Termux terminal emulator and Linux environment for Android
 	* _Non-standard *NIX environment, currently only supports a subset of available features._
 
+## On declarative OSes
+While it might be easy to draw parallels to my setup and _NixOS_, my system completely avoids the horrors of _"containerization"_ and the innumerable drawbacks to adopting declarative functional OSes like _NixOS_ and _GNU Guix_.
+
+They're in my shortlist of [timesink software ecosystems](https://news.ycombinator.com/item?id=36262356) that I don't want anything to do with, along with the Rust programming language, equally cult-like in their usage and online communities, all of of which require significant changes to your toolchain and computing lifestyle, requiring you to adapt to their limitations when it really should be the other way around.
+
 # Usage notes
 ## Using `git meta`
 For local-scope changes, files in `$HOME` are versioned and mangled in place using Git.
@@ -209,11 +215,10 @@ Rationale for doing things this way is summarized in commit [`2fe1c3745`][rat].
 
 [rat]: https://github.com/microsounds/atelier/commit/2fe1c3745 "introduced ~/.once.d/10-git-upstream.sh"
 
-### Applying changes automatically after pulling from remote
-When pulling from remote, any post-install scripts that have changed since the last pull
-will be re-run automatically using a git `post-merge` hook symlinked to [`~/.local/lib/apply-changes`](.local/lib/apply-changes).
+### Applying changes automatically after state change
+For git operations that change the underlying state of the `git meta` working tree in `$HOME`, such as merges, pulling from remote, or checking out an older commit, post-install scripts that have changed will be re-run automatically git `post-merge` hook symlinked to [`~/.local/lib/apply-changes`](.local/lib/apply-changes) to ensure a consistent environment.
 
-The script will alert the user if the X session or user login should be restarted to finish applying changes.
+For changes that affect currently running programs, `apply-changes` will alert the user if the X session or user login should be restarted to finish applying changes.
 
 ## Window manager status bar
 Status bar daemon [`xwin-statusd`](Scripts/wm_status.sh) is forked
