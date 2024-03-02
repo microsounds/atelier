@@ -209,6 +209,12 @@ Rationale for doing things this way is summarized in commit [`2fe1c3745`][rat].
 
 [rat]: https://github.com/microsounds/atelier/commit/2fe1c3745 "introduced ~/.once.d/10-git-upstream.sh"
 
+### Applying changes automatically after pulling from remote
+When pulling from remote, any post-install scripts that have changed since the last pull
+will be re-run automatically using a git `post-merge` hook symlinked to [`~/.local/lib/apply-changes`](.local/lib/apply-changes).
+
+The script will alert the user if the X session or user login should be restarted to finish applying changes.
+
 ## Window manager status bar
 Status bar daemon [`xwin-statusd`](Scripts/wm_status.sh) is forked
 and piped to `xsetroot` at startup to provide a concise `dwm` status bar conditionally listing the following status information when available, including:

@@ -14,3 +14,6 @@ git meta branch -u origin/master
 
 # set to ignore all untracked files in $HOME when calling git status
 git meta config status.showUntrackedFiles no
+
+# set post-merge hook to apply changes on merge
+ln -sfv ../../../.local/lib/apply-changes ~/.config/meta/hooks/post-merge

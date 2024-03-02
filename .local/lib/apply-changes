@@ -1,0 +1,35 @@
+# apply-changes v0.1
+# git post-merge hook to apply changes to the running environment after merging
+# from remote, attempts to re-run post-install scripts that have changed
+
+restart_x() {
+	printf '\e[1m%s\e[0m\n' 'Restart X session to apply changes to graphical shell'
+}
+relogin() {
+	printf '\e[1m%s\e[0m\n' 'Login again to apply changes to shell environment.'
+}
+
+IFS='
+'
+git meta diff-tree -r --name-only ORIG_HEAD HEAD | while read -r file; do
+	case "$file" in
+		# changes to graphical shell
+		.local/include/*|.config/dwm/*) ~/.once.d/10-git-upstream.sh; restart_x;;
+		.config/*|.xinitrc|.xresources|Scripts/*) restart_x;;
+
+		# changes to shell environment
+		.profile) relogin;;
+
+		# changes to installed packages
+		.comforts) yes n | ~/.once.d/01-install-essential.sh;;
+		.comforts-git|.config/upstream/*) ~/.once.d/10-git-upstream.sh;;
+
+		# changes to keyd
+		.config/keyd/*) sudo systemctl restart keyd.service;;
+
+		# changes to post-install scripts
+		.once.d/*) "$file";;
+	esac
+done
+
+git meta diff --stat ORIG_HEAD..HEAD
