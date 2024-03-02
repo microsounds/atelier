@@ -412,7 +412,7 @@ You must give Termux permission to display over other apps via `Settings > Apps 
 Shell scripts on Android systems without root access have no access to standard file descriptors `/dev/std{in,out,err}`, use `/proc/self/fd/{0,1,2}` instead.
 
 ### `ESC` sequences
-`<backslash>e` to insert escape literals in scripts works for some OSC codes, but not all, use octal `<backslash>33` when in doubt.
+Using `\\\\e` to insert escape literals in scripts works for some OSC codes, but not all, use octal `\\\\33` when in doubt.
 
 ### `$PREFIX`
 Previously, `termux-chroot` was used to ensure FHS-compliance, but it introduced unacceptable performance speed.

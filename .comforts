@@ -7,7 +7,7 @@ beep sox laptop-detect
 bind9-dnsutils
 *blender
 *brasero xorriso eject
-chromium jq sqlite3
+chromium jq gron sqlite3
 cpp
 *cups libnss-mdns simple-scan sane-airscan
 dc
