@@ -11,7 +11,8 @@ relogin() {
 
 IFS='
 '
-git meta diff-tree -r --name-only ORIG_HEAD HEAD | while read -r file; do
+! is-termux && git meta diff-tree -r --name-only ORIG_HEAD HEAD \
+	| while read -r file; do
 	case "$file" in
 		# changes to graphical shell
 		.local/include/*|.config/dwm/*) ~/.once.d/10-git-upstream.sh; restart_x;;
