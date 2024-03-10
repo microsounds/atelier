@@ -4,21 +4,21 @@
 # install and/or launch Genshin Impact under Wine 5.3 or later
 # use '-l' flag to run the official launcher (for updates, etc.)
 # some warnings:
-# - requires over 30GiB of available free space in ~/.local/opt
+# - requires over 170GiB of available free space in ~/.local/opt
 # - do NOT launch the game using the official launcher
 # - linux patches violate miHoYo terms of service, you might get banned
 
-PATCH_VER='200'
+PATCH_VER='440'
 INSTALL_DIR="$HOME/.local/opt/genshin-impact"
 LAUNCHER='drive_c/Program Files/Genshin Impact/launcher.exe'
-GAME_FILES="${LAUNCHER%/*}/Genshin Impact game"
+GAME_FILES="${LAUNCHER%/*}/Genshin Impact Game"
 DPY_RES="$(xrandr -q | grep '[^dis]connected' \
 	| egrep -o '([0-9]+x?)+' | fgrep 'x' | head -n 1)"
 
 # external downloads
 WINETRICKS='https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
 INSTALLER='https://ys-api-os.mihoyo.com/event/download_porter/link/ys_global/genshinimpactpc/default'
-LINUX_PATCH='https://notabug.org/Krock/GI-on-Linux'
+LINUX_PATCH='https://notabug.org/Krock/dawn'
 
 # require wine-stable from wine-hq repos
 # require at least wine 5.3
@@ -38,6 +38,7 @@ done
 
 # first-run, download required files interactively
 if [ ! -f "$INSTALL_DIR/$GAME_FILES/launcher.bat" ]; then
+	user-confirm 'Install Genshin Impact (170GB free space required)' || exit 1
 	for f in "$WINETRICKS" "$INSTALLER"; do
 		if [ ! -f "$INSTALL_DIR/${f##*/}" ]; then
 			wget -P "$INSTALL_DIR" "$f" || exit 1
@@ -56,17 +57,22 @@ if [ ! -f "$INSTALL_DIR/$GAME_FILES/launcher.bat" ]; then
 	xmessage -default okay \
 		'Download and install the official launcher when prompted.
 IMPORTANT: Exit without launching the official launcher. Do NOT select "RUN NOW".'
+	sleep 2
 	$WINE "$INSTALL_DIR/${INSTALLER##*/}"
 
 	xmessage -default okay \
 		'Download and install the official game files to the default location when prompted.
 IMPORTANT: Exit without launching the game. Do NOT use the official launcher to run the game.'
+	sleep 2
 	$WINE "$INSTALL_DIR/$LAUNCHER"
 fi
 
 # download and apply linux patches
 [ -d "$INSTALL_DIR/patch" ] || git clone "$LINUX_PATCH" "$INSTALL_DIR/patch"
 git -C "$INSTALL_DIR/patch" pull
+
+# copy over launcher script
+cp -fv "$INSTALL_DIR/patch/$PATCH_VER/patch_files/launcher.bat" "$INSTALL_DIR/$GAME_FILES"
 
 cd "$INSTALL_DIR/$GAME_FILES"
 for f in patch patch_anti_logincrash; do
@@ -75,5 +81,5 @@ done
 
 case "$1" in
 	'-l' ) $WINE "$INSTALL_DIR/$LAUNCHER";;
-	*) $WINE explorer /desktop="genshin,$DPY_RES" cmd /c "$INSTALL_DIR/$GAME_FILES/launcher.bat"
+	*) $WINE explorer /desktop="${0##*/},$DPY_RES" cmd /c "$INSTALL_DIR/$GAME_FILES/launcher.bat"
 esac
