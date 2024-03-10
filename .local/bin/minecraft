@@ -5,10 +5,11 @@
 # prerequisite OpenJDK Java runtime environment will also be installed
 
 APP='UltimMC'
-DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
-INSTALL="$XDG_DATA_HOME"
 PREREQS='default-jre'
+DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
+INSTALL="$HOME/.local/opt"
 
+mkdir -p "$INSTALL"
 [ ! -d "$INSTALL/$APP" ] && {
 	TEMP="$XDG_RUNTIME_DIR/$APP.zip"
 	user-confirm "Download and install $APP?" || exit 1

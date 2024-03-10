@@ -668,5 +668,54 @@ write it to the default filename ending in `.cln`, and then delete it when finsh
 	rm -f "${file%.*}.cln"
 	```
 
+## Games
+A few Linux-compatible games I like that also can be fetched easily via the internet exist in this repo as scripts that auto-install the game on first run.
+Because these scripts install proprietary software they are not included during the post-install, some implementation notes are included.
+
+Proprietary games will be installed to `~/.local/opt`, configuration beyond the initial installation is outside the scope of this repo.
+
+### `minecraft`
+[`minecraft`](.local/bin/minecraft) launches or installs [UltimMC offline launcher](https://github.com/UltimMC/Launcher), and a Java runtime environment if not already installed.
+
+UltimMC is a fork of MultiMC which allows you to play any version of **Minecraft Java Edition** offline _with or without_ a paid Minecraft account, it can manage your mods, resource packs and saved worlds as "instances" you can import or export freely.
+
+While you can play online multiplayer normally with a legitimate paid account, you can also login with just a username on 3rd-party servers that specifically allow unauthenticated ("pirate" or "cracked") clients.
+
+Regardless of which Minecraft version you prefer, using vanilla optimization mods such as
+[Sodium](https://modrinth.com/mod/sodium),
+[Lithium](https://modrinth.com/mod/lithium),
+and [FerriteCore](https://modrinth.com/mod/ferrite-core) can improve framerate, performance lag, and GPU utilization by 2.5x or more.
+
+Minimum requirements for acceptable performance:
+* integrated graphics introduced since ~2008 or so
+* 2GB of disk space
+* 1GB of RAM
+
+### `genshin-impact`
+_As of this post, Genshin Impact 4.4.0 requires at least 170GB of disk space for intitial installation, this is on top of of the install size of 32-bit + 64bit Wine._
+
+[`genshin-impact`](.local/bin/genshin-impact) launches or installs **Genshin Impact** using an unofficial and potentially ToS violating set of Linux patches that disables the Linux-hostile anticheat software, they request you do not name or link to them directly, just look in the script for the project repo.
+
+Newer versions of the patch still disable analytics but longer touch the actual game files, so it's possible playing on Linux is no longer a bannable offense.
+Nobody has ever been banned [playing on a Steam Deck](https://www.google.com/search?q=genshin+impact+steam+deck) running SteamOS.
+
+#### Usage
+Wine 5.4 or later is required, various prerequsite tools are installed along with the game.
+Since this is a Windows game running over Wine using various hacks, this installation script and the steps required are awful and anything but automatic.
+
+This is legitimately the worst script in the repo, ***read the script to understand what is being done before installing.***
+
+During the installation, a Wine prefix will be set up, some winetricks, prerequisite MSVC frameworks, along with the official installer will be downloaded and installed, install everything as it pops up.
+Follow the `xmessage` prompts as they pop up.
+
+Run `genshin-impact` to run the game. Use the `-l` flag to open the official launcher to install updates but ***DO NOT*** launch the game this way.
+
+Minimum requirements for acceptable performance:
+* GT 1030 or similar
+* 170GB of disk space
+* 8GB of ram
+* an always-on internet connection (this is a live-service gacha!)
+
+
 [scrot]: https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/scrot.png
 [shimeji]: https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/shimeji.png
