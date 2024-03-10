@@ -7,7 +7,7 @@
 APP='UltimMC'
 DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
 INSTALL="$XDG_DATA_HOME"
-PREREQS='default-jre2'
+PREREQS='default-jre'
 
 [ ! -d "$INSTALL/$APP" ] && {
 	TEMP="$XDG_RUNTIME_DIR/$APP.zip"
