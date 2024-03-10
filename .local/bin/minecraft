@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# launch or install UltimMC offline minecraft launcher if not installed
+# launcher will download minecraft from mojang directly
+
+APP='UltimMC'
+DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
+INSTALL="$XDG_DATA_HOME"
+
+[ ! -d "$INSTALL/$APP" ] && {
+	TEMP="$XDG_RUNTIME_DIR/$APP.zip"
+	user-confirm "Download and install $APP?" || exit 1
+	wget -O- "$DL_URL" > "$TEMP"
+	unzip "$TEMP" -d "$XDG_DATA_HOME"
+	rm -rf "$TEMP"
+	chmod 755 "$XDG_DATA_HOME/$APP/$APP"
+}
+
+"$INSTALL/$APP/$APP"
