@@ -2,10 +2,12 @@
 
 # launch or install UltimMC offline minecraft launcher if not installed
 # launcher will download minecraft from mojang directly
+# prerequisite OpenJDK Java runtime environment will also be installed
 
 APP='UltimMC'
 DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
 INSTALL="$XDG_DATA_HOME"
+PREREQS='default-jre2'
 
 [ ! -d "$INSTALL/$APP" ] && {
 	TEMP="$XDG_RUNTIME_DIR/$APP.zip"
@@ -15,5 +17,7 @@ INSTALL="$XDG_DATA_HOME"
 	rm -rf "$TEMP"
 	chmod 755 "$XDG_DATA_HOME/$APP/$APP"
 }
+
+is-installed $PREREQS || sudo apt-get install $PREREQS || exit 1
 
 "$INSTALL/$APP/$APP"
