@@ -687,12 +687,15 @@ Regardless of which Minecraft version you prefer, using vanilla optimization mod
 and [FerriteCore](https://modrinth.com/mod/ferrite-core) can improve framerate, performance lag, and GPU utilization by 2.5x or more.
 
 Minimum requirements for acceptable performance:
-* integrated graphics introduced since ~2008 or so
+* any integrated gfx introduced since ~2008 or so
 * 2GB of disk space
 * 1GB of RAM
 
 ### `genshin-impact`
-_As of this post, Genshin Impact 4.4.0 requires at least 170GB of disk space for intitial installation, this is on top of of the install size of 32-bit + 64bit Wine._
+
+> **WARNING**<br/>
+> _Genshin Impact 4.4.0 requires at least 170GB of disk space for intitial installation,
+> this is on top of of the install size of 32-bit + 64bit Wine which is 1.3GB._
 
 [`genshin-impact`](.local/bin/genshin-impact) launches or installs **Genshin Impact** using an unofficial and potentially ToS violating set of Linux patches that disables the Linux-hostile anticheat software, they request you do not name or link to them directly, just look in the script for the project repo.
 
@@ -700,7 +703,7 @@ Newer versions of the patch still disable analytics but longer touch the actual 
 Nobody has ever been banned [playing on a Steam Deck](https://www.google.com/search?q=genshin+impact+steam+deck) running SteamOS.
 
 #### Usage
-Wine 5.4 or later is required, various prerequsite tools are installed along with the game.
+Wine 5.3 or later is required, various prerequsite tools are installed along with the game.
 Since this is a Windows game running over Wine using various hacks, this installation script and the steps required are awful and anything but automatic.
 
 This is legitimately the worst script in the repo, ***read the script to understand what is being done before installing.***
@@ -711,10 +714,11 @@ Follow the `xmessage` prompts as they pop up.
 Run `genshin-impact` to run the game. Use the `-l` flag to open the official launcher to install updates but ***DO NOT*** launch the game this way.
 
 Minimum requirements for acceptable performance:
-* GT 1030 or similar
+* 2c4t CPU introduced since ~2008 or so _(eg. i5-530, Athlon II X2, etc.)_
+* 2GB VRAM _(RX 550, GT 1030 or similar.)_
 * 170GB of disk space
-* 8GB of ram
-* an always-on internet connection (this is a live-service gacha!)
+* 8GB of RAM
+* an always-on internet connection _(this is a live-service F2P gacha!)_
 
 
 [scrot]: https://raw.githubusercontent.com/microsounds/microsounds/master/dotfiles/scrot.png

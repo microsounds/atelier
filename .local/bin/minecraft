@@ -19,6 +19,6 @@ mkdir -p "$INSTALL"
 	chmod 755 "$XDG_DATA_HOME/$APP/$APP"
 }
 
-is-installed $PREREQS || sudo apt-get install $PREREQS || exit 1
+is-installed $PREREQS | xargs -r sudo apt-get -y install || exit 1
 
 "$INSTALL/$APP/$APP"
