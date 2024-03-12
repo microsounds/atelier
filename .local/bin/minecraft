@@ -7,18 +7,18 @@
 APP='UltimMC'
 PREREQS='default-jre'
 DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
-INSTALL="$HOME/.local/opt"
+INSTALL_DIR="$HOME/.local/opt"
 
-mkdir -p "$INSTALL"
-[ ! -d "$INSTALL/$APP" ] && {
+mkdir -p "$INSTALL_DIR"
+[ ! -d "$INSTALL_DIR/$APP" ] && {
 	TEMP="$XDG_RUNTIME_DIR/$APP.zip"
 	user-confirm "Download and install $APP?" || exit 1
 	wget -O- "$DL_URL" > "$TEMP"
-	unzip "$TEMP" -d "$XDG_DATA_HOME"
+	unzip "$TEMP" -d "$INSTALL_DIR"
 	rm -rf "$TEMP"
-	chmod 755 "$XDG_DATA_HOME/$APP/$APP"
+	chmod 755 "$INSTALL_DIR/$APP/$APP"
 }
 
 is-installed $PREREQS | xargs -r sudo apt-get -y install || exit 1
 
-"$INSTALL/$APP/$APP"
+"$INSTALL_DIR/$APP/$APP"
