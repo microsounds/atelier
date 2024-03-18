@@ -694,27 +694,42 @@ Minimum requirements for acceptable performance:
 ### `genshin-impact`
 
 > **WARNING**<br/>
-> _Genshin Impact 4.4.0 requires at least 170GB of disk space for intitial installation,
+> _Genshin Impact 4.0.0+ requires at least 170GB of disk space to unzip the game,
 > this is on top of of the install size of 32-bit + 64bit Wine which is 1.3GB._
 
-[`genshin-impact`](.local/bin/genshin-impact) launches or installs **Genshin Impact** using an unofficial and potentially ToS violating set of Linux patches that disables the Linux-hostile anticheat software, they request you do not name or link to them directly, just look in the script for the project repo.
+[`genshin-impact`](.local/bin/genshin-impact) launches or installs the Windows version of **Genshin Impact** from official sources.
 
-Newer versions of the patch still disable analytics but longer touch the actual game files, so it's possible playing on Linux is no longer a bannable offense.
-Nobody has ever been banned [playing on a Steam Deck](https://www.google.com/search?q=genshin+impact+steam+deck) running SteamOS.
+Before version 3.8.0, this script used a certain Linux patch that [disabled the Linux-hostile anticheat software](https://notabug.org/Krock/dawn).
+Because it patched game files, it violated MiHoYo's terms of service and you risked banning your account if used.
+
+While newer versions don't officially support Linux, the game now runs on Wine with some tweaks, patching game files is no longer required.
+To date, nobody has reported being banned for [playing on a Steam Deck](https://www.google.com/search?q=genshin+impact+steam+deck) running Linux-based SteamOS.
+
+Refer to troubleshooting guides for
+[Windows](https://docs.google.com/spreadsheets/d/1I3aaXaNbHm-igAsFwvlCEHr5xyQKO4Wot8TuywsOhxw/pubhtml)
+or [Linux-specific](https://notabug.org/Krock/dawn/src/master/TROUBLESHOOTING.md) problems
+if you have issues running the game or logging in.
+
+#### Manual installation with limited disk space
+After installing the launcher, if you have barely enough space _(170GB / 2)_ for the game but not for unzipping, the Windows troubleshooting guide includes direct download links to the required .zip files.
+
+You can unzip in-memory with half the disk space required using `wget -O - [url] | busybox unzip` directly into `~/opt/genshin-impact/drive_c/Program Files/Genshin Impact/Genshin Impact Game`.
 
 #### Usage
 Wine 5.3 or later is required, various prerequsite tools are installed along with the game.
-Since this is a Windows game running over Wine using various hacks, this installation script and the steps required are awful and anything but automatic.
-
-This is legitimately the worst script in the repo, ***read the script to understand what is being done before installing.***
+Since this is a Windows game running over Wine using various hacks, this installation script and the steps required are awful and anything but automatic, ***read the script to understand what is being done before installing.***
 
 During the installation, a Wine prefix will be set up, some winetricks, prerequisite MSVC frameworks, along with the official installer will be downloaded and installed, install everything as it pops up.
 Follow the `xmessage` prompts as they pop up.
 
-Run `genshin-impact` to run the game. Use the `-l` flag to open the official launcher to install updates but ***DO NOT*** launch the game this way.
+Run `genshin-impact` to launch the game directly, use `-l` flag to open the official launcher to install updates when needed, `-m` to use `mangohud` profiler and `--` to stop accepting flags, all other flags will be passed to the game executable.
+
+If you have barely enough space for the game, but not to unpack
+`~/.local/opt/genshin-impact/drive_c/Program Files/Genshin Impact/Genshin Impact Game`
 
 Minimum requirements for acceptable performance:
 * 2c4t CPU introduced since ~2008 or so _(eg. i5-530, Athlon II X2, etc.)_
+* GPU with Vulkan-compatible GPU _(Linux only.)_
 * 2GB VRAM _(RX 550, GT 1030 or similar.)_
 * 170GB of disk space
 * 8GB of RAM
