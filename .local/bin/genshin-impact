@@ -25,7 +25,7 @@ WINE_VER='5.3'
 
 # first-run, download required files interactively
 if [ ! -f "$INSTALL_DIR/$GAME_FILES/$EXEC" ]; then
-	user-confirm 'Install Genshin Impact (170GB free space required)' || exit 1
+	user-confirm 'Install Genshin Impact? (170GB free space required)' || exit 1
 	$WINE --version > /dev/null || { echo "Install wine-stable."; exit 1; }
 	$WINE --version | tr '-' '\t' | cut -f2 | while read -r ver; do
 		[ $(echo "${ver%.*} >= $WINE_VER" | bc) -eq 1 ] && break
@@ -52,15 +52,13 @@ if [ ! -f "$INSTALL_DIR/$GAME_FILES/$EXEC" ]; then
 
 	if [ ! -f "$INSTALL_DIR/$LAUNCHER" ]; then
 		# follow prompts and install game when prompted, do not launch the game
-		xmessage -default okay \
-		'Download and install the official launcher when prompted.
+		x-user-confirm -d 'Install the official launcher when prompted.
 IMPORTANT: Exit without running the launcher.'
 		sleep 2
 		$WINE "$INSTALL_DIR/${INSTALLER##*/}"
 	fi
 
-	xmessage -default okay \
-		'Download and install the official game files to the default location when prompted.
+	x-user-confirm -d 'Download and install the official game files to the default location when prompted.
 IMPORTANT: Exit without launching the game.'
 	sleep 2
 	$WINE "$INSTALL_DIR/$LAUNCHER"

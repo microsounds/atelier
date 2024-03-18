@@ -713,7 +713,7 @@ if you have issues running the game or logging in.
 #### Manual installation with limited disk space
 After installing the launcher, if you have barely enough space _(170GB / 2)_ for the game but not for unzipping, the Windows troubleshooting guide includes direct download links to the required .zip files.
 
-You can unzip in-memory with half the disk space required using `wget -O - [url] | busybox unzip` directly into `~/opt/genshin-impact/drive_c/Program Files/Genshin Impact/Genshin Impact Game`.
+You can unzip in-memory with half the disk space required using `wget -O - [url] | busybox unzip` directly into `~/.local/opt/genshin-impact/drive_c/Program Files/Genshin Impact/Genshin Impact Game`.
 
 #### Usage
 Wine 5.3 or later is required, various prerequsite tools are installed along with the game.
@@ -723,9 +723,6 @@ During the installation, a Wine prefix will be set up, some winetricks, prerequi
 Follow the `xmessage` prompts as they pop up.
 
 Run `genshin-impact` to launch the game directly, use `-l` flag to open the official launcher to install updates when needed, `-m` to use `mangohud` profiler and `--` to stop accepting flags, all other flags will be passed to the game executable.
-
-If you have barely enough space for the game, but not to unpack
-`~/.local/opt/genshin-impact/drive_c/Program Files/Genshin Impact/Genshin Impact Game`
 
 Minimum requirements for acceptable performance:
 * 2c4t CPU introduced since ~2008 or so _(eg. i5-530, Athlon II X2, etc.)_
