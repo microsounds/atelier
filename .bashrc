@@ -103,6 +103,9 @@ alias mv='mv -i'
 # keep ANSI colors while paging
 alias less='less -R'
 
+# default to git diff
+alias diff='git diff --no-index'
+
 # use external overlay for GNU nano
 alias nano='nano-overlay'
 
