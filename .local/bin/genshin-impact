@@ -64,6 +64,9 @@ IMPORTANT: Exit without launching the game.'
 	$WINE "$INSTALL_DIR/$LAUNCHER"
 fi
 
+# prevent DXVK from dumping cached shaders in $HOME
+cd "$INSTALL_DIR/$GAME_FILES"
+
 for f in "$@"; do
 	case "$f" in
 		-m) shift; WINE="mangohud $WINE";;
