@@ -710,10 +710,21 @@ Refer to troubleshooting guides for
 or [Linux-specific](https://notabug.org/Krock/dawn/src/master/TROUBLESHOOTING.md) problems
 if you have issues running the game or logging in.
 
-#### Manual installation with limited disk space
-After installing the launcher, if you have barely enough space _(170GB / 2)_ for the game but not for unzipping, the Windows troubleshooting guide includes direct download links to the required .zip files.
+#### Camera movement issues
+A common problem is mouse camera movement being extremely sensitive or unresponsive after switching workspaces, to fix:
+1. Go to `Settings` and set display resolution to any _windowed mode_.
+2. Click anywhere on the virtual Wine desktop to focus on it.
+3. Click on the Genshin Impact titlebar to focus it, _make sure it turns blue_.
+4. Go to `Settings` and switch back to fullscreen, mouse movement should now work correctly.
+
+As a workaround, try to get into the habit of switching to a windowed resolution before focusing away from the game.
+
+#### Manual installation
+After installing the launcher, if you have barely enough disk space _(at least 90GB)_ for the game but not for unzipping, the Windows troubleshooting guide includes direct download links to the required .zip files.
 
 You can unzip in-memory with half the disk space required using `wget -O - [url] | busybox unzip` directly into `~/.local/opt/genshin-impact/drive_c/Program Files/Genshin Impact/Genshin Impact Game`.
+
+Even if you used the official installer, if you want to download language packs other than English, I would suggest this method, because downloading it in-game _(15-18GB)_ is very slow and cannot be done in the background.
 
 #### Usage
 Wine 5.3 or later is required, various prerequsite tools are installed along with the game.
