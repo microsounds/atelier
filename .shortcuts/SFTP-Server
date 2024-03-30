@@ -25,11 +25,19 @@ cat <<- EOF
 	internal: $int_path
 	external: $ext_path
 
-	^C to exit.
+	$(printf '\33[1m%s\33[0m' '^C to exit.')
+
 EOF
 
+# release wakelock and return 0 on SIGINT
+quit() {
+	termux-wake-unlock &
+	:
+}
+
+# acquire wakelock
 # run in foreground, android hates forking daemons
-# return 0 on SIGINT
 stty -echo
-trap : 2
-sshd -p $port -D
+trap quit 2
+termux-wake-lock &
+sshd -p $port -D -e 2>&1 | ts '[%a %b %_d %_H:%M:%S]'

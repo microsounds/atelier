@@ -18,7 +18,7 @@ cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
 	termux-api jq                 # provides fingerprint auth
 	busybox                       # httpd
 	n-t-roff-sc                   # provides sc
-	man                           # misc comforts
+	man moreutils                 # misc comforts
 	ledger gnuplot
 	imagemagick
 	bash-completion
