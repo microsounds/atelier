@@ -288,8 +288,9 @@ ledger-enc() (
 	nano-overlay -s "$file"
 )
 
-# generic reporting wrapper for gnuplot and ledger-cli
-ledger-report() (
+# generic plotting wrapper for gnuplot and ledger-cli
+# usage: ledger-plot [file] [-j | -J] r [account]
+ledger-plot() (
 	# fall back to terminal output if not on X
 	term="dumb $COLUMNS $LINES feed"
 	[ ! -z "$DISPLAY" ] && term="x11 persist title '$@'"
@@ -300,6 +301,8 @@ ledger-report() (
 		set timefmt "%Y-%m-%d"
 		${DISPLAY:+set grid}
 		set style fill solid
+		set format x "%m/%d"
+		set tics font "Helvetica,16"
 		unset key
 		plot "-" using 1:2 with lines linewidth 2
 	EOF
