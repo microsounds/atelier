@@ -10,7 +10,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "* */6 * * *"
+    - cron: "*/39 * * * *"
 
 jobs:
   Install:
