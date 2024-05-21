@@ -1,10 +1,28 @@
 #!/usr/bin/env sh
 
-# wine-stable wrapper script
-# sets $WINEPREFIX to $PWD
-# usage: cd ~/wine/generic; winenv wine ...
+## wine-stable wrapper script
+## lets you avoid having to set WINEPREFIX or add wine to your PATH
+## walks up directory tree and finds first dir that looks like a wine prefix
 
-export WINEPREFIX="$PWD"
+## usage: cd ~/deep/into/wine/prefix; winenv wine program.exe
+##        cd somewhere/; winenv wine wineboot -u
+
+[ -z "$1" ] && { grep '^##' < "$0" | sed 's/## //'; exit 1; }
+
+WINEPREFIX="$PWD"
+while [ ! -z "$WINEPREFIX" ] \
+	&& [ ! -d "$WINEPREFIX/dosdevices" ] && [ ! -d "$WINEPREFIX/drive_c" ]; do
+	WINEPREFIX="${WINEPREFIX%/*}"
+done
+if [ ! -z "$WINEPREFIX" ]; then
+	export WINEPREFIX
+else
+	echo '[!] Wine prefix not found in this or any parent dir up to /.' 1>&2
+	user-confirm 'Run with WINEPREFIX set to current dir?' \
+		&& export WINEPREFIX="$PWD" \
+		|| exit 1
+fi
+
 export PATH="/opt/wine-stable/bin:$PATH"
-
+echo "WINEPREFIX='$WINEPREFIX' $@"
 "$@"
