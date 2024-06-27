@@ -63,7 +63,7 @@ if [ "$sel" = 'ALL' ]; then
 	done
 else
 	cmd="$cmd --output $sel --auto"
-	for f in $(echo "$dpys" | sed -e "s/$sel//"); do
+	for f in $(echo "$dpys" | sed -e "s/\b$sel\b//"); do
 		cmd="$cmd --output $f --off"
 	done
 fi
