@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# wm_status.sh v0.5
+# wm_status.sh v0.6
 # non-blocking status line daemon
 # prints formatted status information to stdout
 
@@ -94,16 +94,29 @@ weather() (
 )
 
 temps() (
-	# express average CPU temperature in ˚F if supported
+	# randomly switch between expressing avg CPU and dGPU temps in ˚F if supported
 	data="$(sensors -u coretemp-isa-0000)" || return # not supported
+	ico='∿'
 	unset sum n
 	for f in $(echo "$data" | egrep 'temp[0-9]+_input' |
 		tr -d ' ' | tr -s ':' '\t' | cut -f2); do
 		n=$((n + 1))
 		sum=$((sum + ${f%.*}))
 	done
+
+	# GPU temps appear 1/3 of the time
+	# TODO: add AMD support with rocm-smi
+	if [ $(($(dd if=/dev/urandom count=1 bs=1 2> /dev/null \
+		| od -An -tu) % 3)) -eq 0 ]; then
+		if nvidia-smi > /dev/null; then # nvidia
+			sum="$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader)"
+			n=1
+			ico='◺' # cus GPUs are triangle accelerators
+		fi
+	fi
+
 	temp="$(echo "scale=1; (($sum / $n) * 1.8) + 32" | bc)"
-	echo "TEMP ∿${temp%*.0}°F"
+	echo "TEMP $ico${temp%*.0}°F"
 )
 
 cpu_speed() (
