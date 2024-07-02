@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# sets x48 netbook mode on small devices
+# sxhkd doesn't allow defining variables
+
+DPY_Y="$(xrandr | fgrep '*' | egrep -o '([1-9][0-9]+x?){2}' | tr 'x' '\t' | cut -f2)"
+[ $DPY_Y -lt 800 ] && DPY_Y='+netbook' || unset DPY_Y
+x48 $DPY_Y "$@"

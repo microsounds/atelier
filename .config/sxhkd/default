@@ -49,9 +49,10 @@ ctrl + alt + {Delete,Insert}
 	ssh-add -D && {sleep 1; xset dpms force off, systemctl hybrid-sleep}
 
 # F4: calculator/networking
+# use x48 netbook view on small displays
 {_,shift +} {super + F4,XF86Calculator}
 	sfx-synth btn & \
-	{x48,visual bash -ic nmtui}
+	{x48-resize,visual bash -ic nmtui}
 
 # F5: toggle displays/configure displays
 {_,shift +} {super + F5,XF86Display}
