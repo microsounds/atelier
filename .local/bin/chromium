@@ -3,7 +3,7 @@
 # useragent string
 # fake being MS edge on windows to avoid cloudflare serving webp/avif images
 UA_STRING="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
-(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.2365.66"
+(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.2592.102"
 
 # chromium plaintext configuration overlay script
 CONF="$HOME/.config/chromium"
@@ -75,6 +75,8 @@ if ! ps -e | fgrep -q 'chromium'; then
 	done
 fi
 
+# 08/2024: disable UA spoofing because it triggers cloudflare filters on many sites
 # redirect cache writes to ramdisk
 /usr/bin/chromium --disk-cache-dir="$XDG_CACHE_HOME/${0##*/}" \
-	--user-agent="$UA_STRING" "$@"
+	"$@"
+#	--user-agent="$UA_STRING" "$@"
