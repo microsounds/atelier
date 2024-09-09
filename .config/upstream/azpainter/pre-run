@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# install build prereqs
+is-installed libx11-dev libxext-dev libxcursor-dev libxi-dev libpng-dev \
+	zlib1g-dev libtiff-dev libjpeg-dev libwebp-dev libfreetype-dev \
+	libfontconfig-dev ninja-build | xargs -r sudo apt-get -y install

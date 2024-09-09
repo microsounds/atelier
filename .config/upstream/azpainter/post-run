@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+# install optional brushes
+CONFIG="$XDG_CONFIG_HOME/azpainter"
+mkdir -p "$CONFIG"
+
+if [ ! -d "$CONFIG" ]; then
+	git clone \
+		'https://gitlab.com/pistachio-gitlab/AzPainter-Resources' "$CONFIG"
+
+	cd "$CONFIG"
+	mv -fv brush-2.dat brush.dat
+
+fi
+
+
