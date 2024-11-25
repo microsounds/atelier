@@ -495,8 +495,11 @@ ssh-keygen -p -f ~/.ssh/id_rsa -N "$new_pass" -F 'old passphrase'
 
 C preprocessor syntax is also accepted, hex color values in the form `#RRGGBB` will be converted to a signed integer representing `0xBBGGRRAA` in two's complement hexadecimal with `AA` (alpha channel) always set to `0xFF`
 
+The default browser profile path is derived from the overlay script's name, `~/.local/bin/chromium` will initialize and/or read from `~/.config/chromium`, this allows multiple browser profiles to co-exist by simply renaming or creating a symlink to this script.
+
 * [`~/.config/chromium/omnibox.sql`](.config/chromium/omnibox.sql)
 	* _Omnibox settings and Tab-to-search keyword shortcuts stored as SQLite in `Default/Web Data`._
+
 
 ### Managed policy overrides
 `chromium` is managed by `/etc/chromium/policies/managed/extensions.json`, set up during [post-install](.once.d/29-chromium-extensions.sh), which automatically installs several useful extensions on first-run, including [uBlock Origin][].

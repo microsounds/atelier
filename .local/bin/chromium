@@ -1,19 +1,32 @@
 #!/usr/bin/env sh
 
+# ~/.local/bin/chromium
+# chromium plaintext configuration overlay script
+# mangles configuration during pre-run
+
 # useragent string
 # fake being MS edge on windows to avoid cloudflare serving webp/avif images
 UA_STRING="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.2592.102"
 
-# chromium plaintext configuration overlay script
-CONF="$HOME/.config/chromium"
+# allow multiple chromium profiles to co-exist by deriving profile name from
+# script name, eg. this script being renamed or symlinked as 'chrome-temp' will
+# use profile located at '~/.config/chrome-temp'
+CONF="$HOME/.config/${0##*/}"
+
+# redirect cache writes to ramdisk defined by pam_systemd
+CACHE="$XDG_CACHE_HOME/${0##*/}"
 
 # DO NOT mangle config if chromium is already running
 if ! ps -e | fgrep -q 'chromium'; then
 	# on first-run, regenerate chromium config
 	if [ ! -d "$CONF/Default" ]; then
-		# checkout persistent settings if deleted
-		git meta checkout "$CONF"
+
+		# dumb hack to checkout persistent settings if not found
+		mkdir -p "$CONF"
+		git meta list-files | fgrep '.config/chromium' \
+			| xargs -I'{}' git meta --work-tree="$CONF" checkout "{}"
+		cd "$CONF/.config/chromium" && mv * ../.. && rm -rf '.config/chromium'
 
 		# warn user of first run
 		# allow first run to generate default preferences
@@ -76,7 +89,7 @@ if ! ps -e | fgrep -q 'chromium'; then
 fi
 
 # 08/2024: disable UA spoofing because it triggers cloudflare filters on many sites
-# redirect cache writes to ramdisk
-/usr/bin/chromium --disk-cache-dir="$XDG_CACHE_HOME/${0##*/}" \
+/usr/bin/chromium \
+	--user-data-dir="$CONF" --disk-cache-dir="$CACHE" \
 	"$@"
 #	--user-agent="$UA_STRING" "$@"
