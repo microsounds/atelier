@@ -19,7 +19,6 @@ sudo mkdir -pv "${conf%/*}"
 		cjpalhdlnbpafiamejdnhcphjbkeiagm # uBlock Origin
 		mnjggcdmjocbbbhaepdhchncahnbgone # SponsorBlock for YouTube
 		ckkdlimhmcjmikdlpkmbgfkaikojcbjk # Markdown Viewer
-		jfpdlihdedhlmhlbgooailmfhahieoem # Disable Javascript
 		dbepggeogbaibhgnhhndojpepiihcmeb # Vimium
 		jinjaccalgkegednnccohejagnlnfdag # Violentmonkey
 		hhinaapppaileiechjoiifaancjggfjm # Web Scrobbler
