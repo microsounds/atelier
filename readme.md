@@ -265,6 +265,8 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | --: | --: | :-- |
 | float window<sup>[toggle]</sup> | monocle window<sup>[toggle]</sup> | space |
 | set as master window<sup>[toggle]</sup> | terminal | return |
+| move window to previous monitor | focus previous monitor  | , |
+| move window to next monitor | focus next monitor | . |
 | | launcher | p |
 | | file manager | e |
 | | ssh-add<sup>[toggle]</sup> | backspace |
@@ -292,6 +294,15 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | | clipboard manager | ; |
 | task manager | | delete |
 | syslog | | insert |
+
+**Special** mouse keybinds with extended button layouts.
+* _This is for generic mice with more than 3 keys, usually with left/right switches on the scroll wheel._
+
+| action | key |
+| --: | :-- |
+| monocle window<sup>[toggle]</sup> | middle click |
+| move window to previous monitor | middle click left |
+| move window to next monitor | middle click right |
 
 ### Generic 74-key Chromebook layout
 Search key is `Super_L`, most missing keys are hidden behind `Right Alt` layer.

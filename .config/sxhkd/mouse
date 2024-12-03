@@ -1,6 +1,6 @@
 ## ~/.config/sxhkd/mouse: extended mouse keybinds
 
-# generic office mouse w/ 3+ buttons
+# generic logitech mouse w/ 3+ buttons
 # 	left   scroll  right
 #	        [4]
 #	         ^
@@ -11,10 +11,14 @@
 # [8] <- left side keys
 # [9]
 
+# dwm: enable monacle mode on focused client
+button2
+	xdotool key Super_L+space
+
 # dwm: switch focused client to another monitor
-button{6,7}
+button{9,8}
 	xdotool key Shift_L+Super_L+{comma,period}
 
 # chromium: switch tabs
-button{8,9}
-	xdotool key {_,Shift_L+}Control_L+Tab
+#button{9,8}
+#	xdotool key {_,Shift_L+}Control_L+Tab
