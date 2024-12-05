@@ -300,7 +300,6 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 
 | action | key |
 | --: | :-- |
-| monocle window<sup>[toggle]</sup> | middle click |
 | move window to previous monitor | middle click left |
 | move window to next monitor | middle click right |
 

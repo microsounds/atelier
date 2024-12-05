@@ -12,8 +12,8 @@
 # [9]
 
 # dwm: enable monacle mode on focused client
-button2
-	xdotool key Super_L+space
+#button2
+#	xdotool key Super_L+space
 
 # dwm: switch focused client to another monitor
 button{9,8}
