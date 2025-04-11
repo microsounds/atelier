@@ -32,7 +32,7 @@ EOF
 
 # deb-multimedia
 SRC='https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring'
-KEY='deb-multimedia-keyring_2016.8.1_all.deb'
+KEY='deb-multimedia-keyring_2024.9.1_all.deb'
 
 wget "$SRC/$KEY" -O "$TMP/$KEY" || exit 1
 sudo dpkg -i "$TMP/$KEY"
