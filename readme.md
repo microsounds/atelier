@@ -358,8 +358,9 @@ You can designate one or more paths to directories containing images or videos f
 	~/Pictures/some/path
 	/media/sd_card/some/path
 
-If it exists, [`xwin-decor`](Scripts/xwin_decor.sh) will randomly pick a directory and file within it and set it as the wallpaper on startup.
+If it exists, [`xwin-decor`](Scripts/xwin_decor.sh) will randomly pick a directory and file within it and set it as the wallpaper for each active monitor on startup.
 In the case of video files, a random video frame from that file will be taken and set as the wallpaper using `ffmpeg`.
+If this is on a desktop, it'll also de-noise the images and upscale them through [waifu2x](https://github.com/nagadomi/waifu2x), this is GPU-bound so be patient.
 
 ## X resources and theming
 For consistency, `xinit`, `dwm` and other scripts make use of the C preprocessor to mangle config files and configure color schemes.

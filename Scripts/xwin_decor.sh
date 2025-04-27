@@ -85,6 +85,7 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 				*mkv|*mp4|*webm) ffmpeg_cat "$sel";; # video file
 				*) cat "$sel"
 			esac
+		notify-send -t 0.5 "[${0##*/}]: Selecting from ${sel##*/}" &
 		done > "$temp/$(rand)"
 	done
 done
@@ -93,8 +94,18 @@ done
 # use plain x window fallback via feh if pcmanfm not found
 which pcmanfm > /dev/null && {
 	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
-		sed -E "s,^wallpaper=.*,wallpaper=$file,g" \
+		sed -E "s,^wallpaper=.*,wallpaper=$file.png,g" \
 			-i ~/.config/pcmanfm/default/desktop-items-$mon.conf
+
+		# waifu2x: upscale and denoise image on desktop
+		if ! is-chromebook; then
+			{	printf '%s' "[waifu2x]: "
+				waifu2x-ncnn-vulkan -i "$file" -o "$file.png" \
+			       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
+			} | notify-send -t 0.5
+		else
+			mv "$file" "$file.png"
+		fi
 	done
 	pcmanfm --desktop-off && pcmanfm --desktop &
-} || find "$temp" -type f | xargs feh --no-fehbg --bg-fill
+} || find "$temp" -type f | xargs feh --no-fehbg --bg-center
