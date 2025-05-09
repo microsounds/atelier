@@ -18,6 +18,7 @@ sudo mkdir -pv "${conf%/*}"
 	cat <<- EOF | while read -r key _; do
 		ddkjiahejlhfcafbddmgiahcphecmpfh # uBlock Origin Lite
 		mnjggcdmjocbbbhaepdhchncahnbgone # SponsorBlock for YouTube
+		gebbhagfogifgggkldgodflihgfeippi # Return YouTube Dislike
 		ckkdlimhmcjmikdlpkmbgfkaikojcbjk # Markdown Viewer
 		dbepggeogbaibhgnhhndojpepiihcmeb # Vimium
 		jinjaccalgkegednnccohejagnlnfdag # Violentmonkey
