@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# launches SSH server for use in SFTP transfers
+# launches SSH daemon for sharing resources from android
 # generates usage instructions to make connecting easier
 
 port=8022
