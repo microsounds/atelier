@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+# usage: adb-ssh-socks5 [-d]
+# stupid mobile data tethering over USB
+# uses adb to forward ssh ports from USB-connected android smartphone running
+# sshd so as to share it's mobile data connection via socks5 proxy without
+# being detected as hotspot/tethering usage by mobile carriers
+
+# expected ports and addresses
+SSHD_PORT='8022'
+PROXY_ADDR='localhost'
+PROXY_PORT='1080'
+
+# undo changes made by by this stupid hack
+if [ "$1" = '-d' ]; then
+	patch -p1 -R -r - < "$0.patch"
+	adb forward --remove-all
+	adb kill-server
+	pkill autossh
+	printf '%s\n' 'Changes undone.'
+	exit 0
+fi
+
+# forward ports from phone and open SSH session
+adb start-server
+printf '%s\r' 'Waiting for ADB connection over USB...'
+while ! [ $(adb devices -l | wc -l) -gt 2 ]; do sleep 1; done
+{	printf '%s %s\r' 'Forwarding port' "$(adb forward tcp:$SSHD_PORT tcp:$SSHD_PORT)"
+}
+printf '%s\r' "Ensure sshd is running on port $SSHD_PORT"
+autossh -D $PROXY_PORT -p $SSHD_PORT -fnN $PROXY_ADDR
+
+# TODO: make this more re-entrant without using flags
+# don't feel like understanding iptables and tunnel devices
+# just patch every config file to use socks5 proxy
+cd ~
+sleep 1 && patch -p1 -r - < "$0.patch"

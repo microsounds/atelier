@@ -1,6 +1,7 @@
 ## ~/.comforts: essential and *optional package groups
 
 alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
+android-tools-adb autossh netcat-openbsd
 *audacity
 bash bash-completion shellcheck
 beep sox laptop-detect

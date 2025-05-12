@@ -1,0 +1,30 @@
+diff --git a/.gitconfig b/.gitconfig
+index 7b5a5a0..476aa25 100644
+--- a/.gitconfig
++++ b/.gitconfig
+@@ -79,3 +79,6 @@
+ [rebase]
+ 	autoStash = true
+ 	autoSquash = true
++
++[http]
++	proxy = socks5h://localhost:1080
+diff --git a/.local/bin/chromium b/.local/bin/chromium
+index bd94cb2..f13764e 100755
+--- a/.local/bin/chromium
++++ b/.local/bin/chromium
+@@ -91,5 +91,6 @@ fi
+ # 08/2024: disable UA spoofing because it triggers cloudflare filters on many sites
+ /usr/bin/chromium \
+ 	--user-data-dir="$CONF" --disk-cache-dir="$CACHE" \
++	--proxy-server='socks5://localhost:1080' \
+ 	"$@"
+ #	--user-agent="$UA_STRING" "$@"
+diff --git a/.ssh/config b/.ssh/config
+new file mode 100644
+index 0000000..0985493
+--- /dev/null
++++ b/.ssh/config
+@@ -0,0 +1,2 @@
++Host *
++	ProxyCommand nc -x localhost:1080 -X 5 %h %p
