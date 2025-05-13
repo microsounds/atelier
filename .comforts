@@ -57,6 +57,6 @@ task-laptop acpi lm-sensors network-manager bluez
 vrms
 wget curl aria2
 *wine-stable cabextract
-xorg xdotool xsel xbacklight sxhkd arandr
+xorg xdotool xsel xbacklight sxhkd arandr slop
 xxd
 zip unzip gzip bzip2 xz-utils p7zip pigz pbzip2
