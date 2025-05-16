@@ -18,19 +18,19 @@ wav='triangle'
 case "$1" in
 	bell|bel)
 		laptop-detect \
-			&& play -qn synth 1 $wav 760 fade log 0 0.5 0.495 trim 0 0.05 \
+			&& play -qn synth 1 $wav 900 fade log 0 0.5 0.495 trim 0 0.05 vol 0.5 \
 			|| beep -f 720 -l 90;;
 	attention|attn)
 		laptop-detect \
-			&& play -qn synth 1 $wav 760 fade log 0 0.5 0.495 trim 0 0.2 repeat 1 \
+			&& play -qn synth 1 $wav 760 fade log 0 0.5 0.495 trim 0 0.2 repeat 1 vol 0.7 \
 			|| beep -f 720 -r 2 -d 20 -l 90;;
 	question|prompt)
 		laptop-detect \
-			&& play -qn synth 0.2 $wav 1047 fade log 0 0.2 0.1 : synth 1 $wav 262 fade log 0 0.5 0.495 trim 0 0.2 \
+			&& play -qn synth 0.2 $wav 1047 fade log 0 0.2 0.1 vol 0.5 : synth 1 $wav 262 fade log 0 0.5 0.495 trim 0 0.2 vol 0.5 \
 			|| beep -f 1047 -l 200 -n -f 262 -l 100;;
 	keypress|btn)
 		laptop-detect \
-			&& play -qn synth 1 $wav 262 fade 0 0.05 0.04 \
+			&& play -qn synth 0.5 $wav 1862 fade q 0 0.05 0.04 vol 0.4 \
 			|| beep -f 262 -l 20;;
 esac
 
