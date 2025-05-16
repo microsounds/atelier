@@ -4,6 +4,9 @@
 ## produce system noises via PC speaker or soundcard fallback
 ## requires beep and sox for fallback synth noises
 ## usage: sfx-synth [named-sound]
+
+wav='triangle'
+
 [ $# -eq 1 ] || {
 	egrep '^##' < "$0" | sed -E 's/^## +//g'
 	printf 'available sounds:'
@@ -15,19 +18,19 @@
 case "$1" in
 	bell|bel)
 		laptop-detect \
-			&& play -qn synth 1 sine 760 fade log 0 0.5 0.495 trim 0 0.05 \
+			&& play -qn synth 1 $wav 760 fade log 0 0.5 0.495 trim 0 0.05 \
 			|| beep -f 720 -l 90;;
 	attention|attn)
 		laptop-detect \
-			&& play -qn synth 1 sine 760 fade log 0 0.5 0.495 trim 0 0.2 repeat 1 \
+			&& play -qn synth 1 $wav 760 fade log 0 0.5 0.495 trim 0 0.2 repeat 1 \
 			|| beep -f 720 -r 2 -d 20 -l 90;;
 	question|prompt)
 		laptop-detect \
-			&& play -qn synth 0.2 sine 1047 fade log 0 0.2 0.1 : synth 1 sine 262 fade log 0 0.5 0.495 trim 0 0.2 \
+			&& play -qn synth 0.2 $wav 1047 fade log 0 0.2 0.1 : synth 1 $wav 262 fade log 0 0.5 0.495 trim 0 0.2 \
 			|| beep -f 1047 -l 200 -n -f 262 -l 100;;
 	keypress|btn)
 		laptop-detect \
-			&& play -qn synth 1 sine 262 fade 0 0.05 0.04 \
+			&& play -qn synth 1 $wav 262 fade 0 0.05 0.04 \
 			|| beep -f 262 -l 20;;
 esac
 
