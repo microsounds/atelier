@@ -27,8 +27,18 @@
 	# home directory version control
 	meta = !git --git-dir=$HOME/.config/meta --work-tree=$HOME
 
-	# list all tracked filenames in repo, for use with xargs
-	list-files = ls-tree -r HEAD --name-only --full-tree
+	# list tracked filenames in repo, for use with edit-tree
+	list-files-rel = ls-tree -r HEAD --name-only --full-tree
+
+	# list tracked absolute filenames in repo, for use with xargs
+	list-files = "!f() { \
+		prefix="$(git rev-parse --show-toplevel)"; \
+		IFS=' \
+		'; \
+		git ls-tree -r HEAD --name-only --full-tree | while read -r line; do \
+			echo "$prefix/$line"; \
+		done; \
+	}; f"
 
 	# interactive file tree for tracked files, opens with $EDITOR in new window
 	# accepts optional query argument, excludes binary files from tree listing
@@ -37,7 +47,7 @@
 			unset prefix file; \
 			prefix="$(git rev-parse --show-toplevel)"; \
 			[ ! -z "$prefix" ] && cd "$prefix" || exit; \
-			file="$(git list-files | xargs grep -Il '' \
+			file="$(git list-files-rel | xargs grep -Il '' \
 				| fzf -1 -0 --no-multi --layout=reverse ${1:+-q "$1"} \
 					--prompt="\\[$(path-gitstatus -p)\\]:\\ " )"; \
 			[ ! -z "$file" ] && visual ${EDITOR%-R} "$prefix/$file" || exit; \
