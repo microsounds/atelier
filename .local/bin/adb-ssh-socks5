@@ -11,6 +11,8 @@ SSHD_PORT='8022'
 PROXY_ADDR='localhost'
 PROXY_PORT='1080'
 
+cd $HOME
+
 # undo changes made by by this stupid hack
 if [ "$1" = '-d' ]; then
 	patch -p1 -R -r - < "$0.patch"
