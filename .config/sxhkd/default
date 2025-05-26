@@ -13,7 +13,7 @@ ctrl + shift + q
 # launcher
 super + p
 	sfx-synth btn & \
-	dmenu_path | dmenu -f | sh &
+	dmenu_path | dmenu -f | x-sh &
 # terminal
 super + Return
 	urxvtc || urxvt
