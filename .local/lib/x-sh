@@ -19,6 +19,5 @@ SPINNER_PID=$!
 trap 'kill -9 $SPINNER_PID' 0 1 2 3 6 15
 
 echo "$stdin" | sh &
-LAUNCHED_PID=$!
 
 xwin-window-wait

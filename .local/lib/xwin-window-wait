@@ -2,7 +2,7 @@
 
 ## usage: xwin-window-wait [TITLE]
 ## watches for new windows and returns 0 when new X windows are found
-## returns 1 after 10 seconds if no new X clients are found
+## returns 1 after 5 seconds if no new X clients are found
 ## use optional argument TITLE to act only if specific window title is found
 
 windows_found() {
@@ -10,7 +10,7 @@ windows_found() {
 }
 
 init_win_count="$(windows_found)"
-for f in $(seq 100); do
+for f in $(seq 50); do
 	[ "$(windows_found)" -gt "$init_win_count" ] && exit 0
 	sleep 0.1
 done

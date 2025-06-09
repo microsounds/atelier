@@ -11,13 +11,15 @@
 # [8] <- left side keys
 # [9]
 
+
 # dwm: enable monacle mode on focused client
 #button2
 #	xdotool key Super_L+space
 
-# dwm: switch focused client to another monitor
+# dwm: cycle focused client to another monitor
+#      change master client in tiling mode
 button{9,8}
-	xdotool key Shift_L+Super_L+{comma,period}
+	xdotool key Shift_L+Super_L+{Return,period}
 
 # chromium: switch tabs
 #button{9,8}

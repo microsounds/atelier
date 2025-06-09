@@ -12,6 +12,7 @@ export XCURSOR_SIZE=16
 xrandr-cycle -d &
 
 # mangle xkb keyboard layout shortly after startup
+# keyd doesn't rebind modifiers reliably
 {	setxkbmap -model 'pc105' -layout 'us' -option 'caps:super'
 	for f in ~/.config/xkb/$layout.xkb; do
 		[ -f "$f" ] && sleep 1 && xkbcomp -merge "$f" $DISPLAY 2> /dev/null
@@ -83,7 +84,7 @@ fcitx5 &
 # ~/.xdecor: describes sources for optional background images
 # decorate root window, daemonize callback on display change
 xrdb ~/.xresources && {
-	for f in widgets decor; do
+	for f in decor widgets; do
 		"xwin-$f" &
 		xeventbind resolution "xwin-$f" &
 	done
