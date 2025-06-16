@@ -17,11 +17,13 @@ set atblanks
 set unix
 
 ## convenience
-unset locking
+##   NOTE: file locking may interfere with nano-overlay --ctags jump to
+##   definition when def is located in the same file as the word fragment
+set locking
 set positionlog
 unset historylog
 
-##  keybinds
+## keybinds
 bind ^Z undo main
 ##   disable Ctrl+S to save
 unbind ^S main

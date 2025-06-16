@@ -3,6 +3,7 @@
 [user]
 	name = microsounds
 	email = microsounds@users.noreply.github.com
+	signingkey = ~/.ssh/id_rsa.pub
 
 [alias]
 	# outline commits made before HEAD
@@ -79,13 +80,18 @@
 
 [init]
 	defaultBranch = master
-
 [pull]
 	ff = only
-
 [advice]
 	detachedHead = false
-
 [rebase]
 	autoStash = true
 	autoSquash = true
+[help]
+	autocorrect = immediate
+[gpg]
+	format = ssh
+[merge]
+	conflictstyle = zdiff3
+[diff]
+	algorithm = histogram
