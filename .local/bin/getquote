@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-## getquote v0.5
-## (c) 2024 microsounds <https://github.com/microsounds>, GPLv3+
+## getquote v0.6
+## (c) 2025 microsounds <https://github.com/microsounds>, GPLv3+
 # scrapes Yahoo! Finance API for stock, crypto and ETF price quotes
 # outputs as ledger-cli commodity price history format in US Dollars
 # format: 'P YYYY/MM/DD HH:MM:SS SYMBOL $USD_PRICE'
@@ -21,15 +21,19 @@ esac
 
 # 06/2023: yahoo discontinued batch quote json endpoint, one query per symbol
 # 01/2024: yahoo discontinued options quote endpoint, lost postmarket data
+# 06/2025: yahoo now blocks you if you don't fake HTTP headers
 
 TIME_NOW="$(date '+%s')"
-UA_STR='Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
+UA_STR='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
 QUOTE_API="https://query1.finance.yahoo.com/v8/finance/chart"
 JQ_SCRIPT=".chart.result[].meta \
 	| [.regularMarketPrice,.regularMarketTime] | join(\" \")"
 
 for SYM in "$@"; do
-	wget -q -U "$UA_STR" -O - "${QUOTE_API}/${SYM}" \
+	wget -q -O - "${QUOTE_API}/${SYM}" \
+		--header="User-Agent: $UA_STR" \
+		--header='Accept: application/json' \
+		--header='Connection: keep-alive' \
 		| jq -r "$JQ_SCRIPT" \
 		| while read -r reg_price reg_time; do
 			# quotes are probably time delayed by 15 minutes
