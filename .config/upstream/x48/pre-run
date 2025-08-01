@@ -8,4 +8,15 @@ git checkout legacy
 is-installed libxt-dev autoconf automake \
 	| xargs -r sudo apt-get -y install
 
+# 2025/08: src/serial.c is pretty unimportant and has implicit function
+# declarations that have turned into compile-time errors in debian 13 (trixie)
+mv -v src/serial.c src/tmp.c
+cat <<- EOF > src/serial.c
+	void grantpt() { ; }
+	void unlockpt() { ; }
+	int ptsname_r(int, char *, int) { ; }
+EOF
+cat src/tmp.c >> src/serial.c
+rm src/tmp.c
+
 ./autogen.sh
