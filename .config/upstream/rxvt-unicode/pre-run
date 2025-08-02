@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+# install build prereqs
+is-installed libperl-dev libptytty-dev libfontconfig-dev libfreetype-dev libxft-dev \
+	libx11-dev | xargs -r sudo apt-get -y install
+
+# rxvt-unicode expects vendored libev
+wget https://dist.schmorp.de/libev/libev-4.33.tar.gz
+tar -xzvf libev-4.33.tar.gz
+mv -f libev-4.33 libev
+
+# rxvt-unicode 9.31 introduces issues drawing the prompt halfway down the screen
+git checkout 'rxvt-unicode-9.30'
+
+# short-circuits ~/.once.d/10-git-upstream.sh behavior
+./configure --prefix="$HOME/.local" --enable-everything --enable-256-color
+rm configure
+

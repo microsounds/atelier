@@ -20,6 +20,7 @@ fcitx5 fcitx5-mozc dbus-x11
 feh jpegoptim optipng findimagedupes
 figlet
 file
+fonts-go fonts-noto-mono fonts-noto-color-emoji fonts-vlgothic
 fonts-liberation fonts-dejima-mincho
 *gimp
 git make gcc
@@ -46,7 +47,6 @@ parallel
 pcmanfm xarchiver lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
 pv progress
 qrencode zbar-tools
-rxvt-unicode fonts-go fonts-noto-mono fonts-noto-color-emoji fonts-vlgothic
 screen
 screenfetch
 scrot
