@@ -1,0 +1,44 @@
+diff --git a/src/desktop.c b/src/desktop.c
+index 6164f9f..0200ac3 100644
+--- a/src/desktop.c
++++ b/src/desktop.c
+@@ -43,6 +43,11 @@
+ 
+ #include "gseal-gtk-compat.h"
+ 
++/* desktop icon offset hack for use with tiling wms
++ * ensures desktop icons don't end up underneath dwm status bar
++ */
++#include <theme.h>
++
+ /* compatibility with LibFM < 1.0.2 */
+ #if !FM_CHECK_VERSION(1, 0, 2)
+ # define FM_FOLDER_MODEL_COL_INFO COL_FILE_INFO
+@@ -1710,6 +1715,7 @@ static gboolean is_pos_occupied(FmDesktop* desktop, FmDesktopItem* item)
+     return FALSE;
+ }
+ 
++
+ static void layout_items(FmDesktop* self)
+ {
+     FmDesktopItem* item;
+@@ -1719,7 +1725,8 @@ static void layout_items(FmDesktop* self)
+     int x, y, bottom;
+     GtkTextDirection direction = gtk_widget_get_direction(GTK_WIDGET(self));
+ 
+-    y = self->ymargin;
++    /* PATCH: vertical offset for first column of desktop icons */
++    y = self->ymargin + (FN_HEADER_SIZE * 1.5);
+     bottom = self->working_area.height - self->ymargin;
+ 
+     if(!model || !gtk_tree_model_get_iter_first(model, &it))
+@@ -1747,7 +1754,8 @@ _next_position:
+                 if (item->area.y + item->area.height > bottom && y > self->ymargin)
+                 {
+                     x += self->cell_w;
+-                    y = self->ymargin;
++                    /* PATCH: vertical offset for all subsequent columns of desktop icons */
++                    y = self->ymargin + (FN_HEADER_SIZE * 1.5);
+                     goto _next_position;
+                 }
+                 /* prepare position for next item */

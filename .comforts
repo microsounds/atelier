@@ -20,7 +20,9 @@ fcitx5 fcitx5-mozc dbus-x11
 feh jpegoptim optipng findimagedupes
 figlet
 file
+# terminal fonts
 fonts-go fonts-noto-mono fonts-noto-color-emoji fonts-vlgothic
+# wm fonts
 fonts-liberation fonts-dejima-mincho
 *gimp
 git make gcc
@@ -31,6 +33,8 @@ imagemagick
 *krita
 ledger gnuplot
 *libreoffice-writer libreoffice-calc
+# wm components
+lxpolkit xarchiver ffmpegthumbnailer arc-theme gtk2-engines breeze-icon-theme
 m4
 man-db
 mangohud
@@ -44,7 +48,6 @@ openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc
 parallel
-pcmanfm xarchiver lxpolkit ffmpegthumbnailer arc-theme gtk2-engines breeze-icon-theme
 pv progress
 qrencode zbar-tools
 screen
