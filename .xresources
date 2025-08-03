@@ -23,6 +23,11 @@ URxvt.saveLines: 2048
 URxvt.scrollBar: false
 URxvt.urgentOnBell: true
 
+/* fcitx5 and perl extensions */
+URxvt.preeditType: OnTheSpot
+URxvt.perl-ext-common: default,matcher,resize-font,xim-onthespot,clipboard-osc,\
+confirm-paste,option-popup,searchable-scrollback,selection,selection-popup
+
 /* bell synth */
 URxvt.bell-command: sfx-synth bell &
 
