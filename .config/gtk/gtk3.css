@@ -1,0 +1,30 @@
+/* ~/.config/gtk/gtk3.css: GTK3 theme override */
+
+#include <theme.h>
+#include <colors/nightdrive.h>
+
+/* color matched to dwm status bar */
+/* menu bar */
+menubar, sidebar {
+	background-color: BGCOLOR;
+	color: FGCOLOR;
+}
+menubar separator {
+	background-color: #DDDDDD;
+}
+/* menu bar highlights */
+menuitem:hover, *:selected {
+	background-color: FGLIGHT;
+	color: FGCOLOR;
+}
+
+/* background elements reminicent of ThinIce ;_; */
+paned, window, toolbar, frame {
+	background-color: #E5E5F7;
+	color: BGLIGHT;
+}
+
+/* buttons, hover and selection */
+*:active {
+	background-color: COLOR6;
+}

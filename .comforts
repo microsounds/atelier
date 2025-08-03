@@ -44,7 +44,7 @@ openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc
 parallel
-pcmanfm xarchiver lxpolkit ffmpegthumbnailer gtk2-engines breeze-icon-theme
+pcmanfm xarchiver lxpolkit ffmpegthumbnailer arc-theme gtk2-engines breeze-icon-theme
 pv progress
 qrencode zbar-tools
 screen
