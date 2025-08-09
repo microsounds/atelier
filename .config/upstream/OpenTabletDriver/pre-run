@@ -1,8 +1,12 @@
 #!/usr/bin/env sh
 
 # requires dotnet-sdk-8.0 to build
-wget 'https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb'
-sudo dpkg -i 'packages-microsoft-prod.deb'
+eval "$(cat /etc/os-release)"
+SOURCE='https://packages.microsoft.com/config/debian'
+DEB='packages-microsoft-prod.deb'
+
+wget "$SOURCE/$VERSION_ID/$DEB"
+sudo dpkg -i "$DEB"
 sudo apt-get update
 
 # install build prereqs
