@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# xwin_decor.sh v1.0
+# xwin_decor.sh v1.1
 # decorate root window
 
 # fallback tiling background
@@ -31,28 +31,41 @@ ffmpeg_cat() {
 	mediainfo "$1" --inform='Video;%FrameCount% %FrameRate%' \
 		| while read -r f_count fps; do
 
-		# calculate length and randomly select timestamp
+		# calculate length of input file
 		len=$(echo "scale=2; $f_count * (1 / $fps)" | bc)
 		len=${len%.*}
-		skip_len=150
-		while :; do # reroll for random frame that skips over OPs/EDs
+		while :; do
+			# keep rerolling for random frames that skip over OP/EDs
+			skip_len=150
 			sel=$(($(rand) % len))
-			[ $len -le $skip_len ] && break # short video?
+			[ $len -le $skip_len ] # short video?
 			[ $sel -gt $skip_len ] || continue
 			[ $sel -lt $((len - skip_len)) ] || continue
-			break
+
+			# convert to timestamp
+			hrs=$((sel / 3600))
+			min=$(((sel - (hrs * 3600)) / 60))
+			sec=$((sel % 60))
+			timest="$(zeropad $hrs):$(zeropad $min):$(zeropad $sec)"
+
+			# extract and cat frame
+			# keep rerolling if frame chosen is dark, all black/white or not
+			# interesting, boring frames usually have a standard deviation of
+			# 0.16 or less
+			frame="$temp/$(rand)"
+			ffmpegthumbnailer -i "$1" -s 0 -c png -t "$timest" -o "$frame"
+			std_dev="$(convert "$frame" -colorspace Gray -format "%[fx:standard_deviation]" info:)"
+			std_dev="$(echo "$std_dev * 100" | bc | sed 's/\..*$//')"
+			if [ $std_dev -lt 17 ]; then
+				rm -f "$frame" && continue
+			else
+				cat "$frame" && rm -f "$frame" && break
+			fi
 		done
-		hrs=$((sel / 3600))
-		min=$(((sel - (hrs * 3600)) / 60))
-		sec=$((sel % 60))
-		timest="$(zeropad $hrs):$(zeropad $min):$(zeropad $sec)"
 
 		# saved for future use
 		# ffmpeg -ss "$timest" -i "$1" -vframes 1 \
 		#	-q:v 0 -f image2pipe -vcodec png - 2> /dev/null
-
-		# low performance version
-		ffmpegthumbnailer -i "$1" -s 0 -c png -t "$timest" -o -
 	done
 }
 
@@ -86,26 +99,25 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 				*) cat "$sel"
 			esac
 		notify-send -t 0.5 "[${0##*/}]: Selecting from ${sel##*/}" &
-		done > "$temp/$(rand)"
+		done > "$temp/$(rand).png"
 	done
 done
 
-# pcmanfm desktop: set wallpaper by mangling config files and resetting
+# pcmanfm --desktop: set wallpaper by mangling config files and resetting
 # use plain x window fallback via feh if pcmanfm not found
 which pcmanfm > /dev/null && {
 	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
-		sed -E "s,^wallpaper=.*,wallpaper=$file.png,g" \
+		sed -E "s,^wallpaper=.*,wallpaper=$file,g" \
 			-i ~/.config/pcmanfm/default/desktop-items-$mon.conf
+	done && pcmanfm --desktop-off && pcmanfm --desktop &
 
-		# waifu2x: upscale and denoise image on desktop
-		if ! is-chromebook; then
-			{	printf '%s' "[waifu2x]: "
-				waifu2x-ncnn-vulkan -i "$file" -o "$file.png" \
-			       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
-			} | notify-send -t 0.5
-		else
-			mv "$file" "$file.png"
-		fi
-	done
-	pcmanfm --desktop-off && pcmanfm --desktop &
-} || find "$temp" -type f | xargs feh --no-fehbg --bg-center
+	# waifu2x: upscale and denoise images on desktop, extremely slow
+	find "$temp" -type f | while read -r file; do
+		is-chromebook && exit 0
+		{	printf '%s' "[waifu2x]: "
+			waifu2x-ncnn-vulkan -i "$file" -o "$file.tmp.png" \
+		       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
+		    mv "$file.tmp.png" "$file"
+		} | notify-send -t 0.5
+	done && pcmanfm --desktop-off && pcmanfm --desktop &
+} || find "$temp" -type f | xargs feh --no-fehbg --bg-fill
