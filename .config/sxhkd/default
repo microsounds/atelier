@@ -3,22 +3,32 @@
 #include <theme.h>
 #include <colors/nightdrive.h>
 
+## implements randomly pitch-shifted sfx
+#define PITCHED_SFX(name) \
+	sfx-play -c name | sox - -t wav - pitch \
+		-$((( $(tr -cd '0-9' < /dev/urandom | dd bs=1 count=1 2>/dev/null) % 10) * 100)) \
+		 | aplay -q & \
+
 ## essential
 # terminate X session
 ctrl + shift + q
-	sfx-synth prompt & \
+	PITCHED_SFX(btn13) \
+	sfx-synth attn & \
 	printf '✓\n✘' | dmenu -f \
 		-p 'Terminate X session?' -sb str(COLOR6) -sf str(COLOR0) \
 		| fgrep -q '✓' && pkill -t "tty$XDG_VTNR" X &
 # launcher
 super + p
+	PITCHED_SFX(cncl07) \
 	sfx-synth btn & \
 	dmenu_path | dmenu -f | x-sh &
 # terminal
 super + Return
+	PITCHED_SFX(cncl01) \
 	urxvtc || urxvt
 # file manager
 {super + e,XF86Explorer}
+	PITCHED_SFX(cncl01) \
 	sfx-synth btn & \
 	pcmanfm
 # take screenshot
@@ -28,6 +38,7 @@ super + Return
 	notify-send -t 1 'Screenshot saved.'
 # ssh-agent
 super + BackSpace
+	PITCHED_SFX(cncl06) \
 	sfx-synth attn & \
 	! ssh-add -l && ssh-add || ssh-add -D; \
 	ssh-add -l | notify-send -t 2
