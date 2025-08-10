@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+# xwin-sfxd v0.1
+# plays sfx when certain system events occur
+
+# prevents chatty udev output from spamming sfx
+debounce() {
+	[ $(ps -aux | grep -c 'sfx-play') -gt 1 ]
+}
+
+# randomly pitched startup sound
+# likely to play at xinit startup
+rand=$(( ($(tr -cd '0-9' < /dev/random | dd bs=1 count=1 2>/dev/null) % 10) * 100))
+sfx-play -c btn14 | sox - -t wav - pitch -$rand | aplay -q &
+#sfx-play -c othr07 | sox - -t wav - pitch -$rand | aplay -q &
+
+udevadm monitor --udev --subsystem-match=usb \
+	--subsystem-match=power_supply | while read -r line; do
+	debounce && continue
+	case "$line" in
+		*"add"*"usb"*)
+			echo "$line" | notify-send -t 1.2
+			sfx-play othr01;;
+		*"remove"*"usb"*)
+			echo "$line" | notify-send -t 1.2
+			sfx-play othr02;;
+		*"change"*"power_supply/AC"*)
+			if grep -q '1' /sys/class/power_supply/AC/online; then
+				notify-send -t 1.2 '↯ Battery discharging.'
+				sfx-play btn11
+			else
+				notify-send -t 1.2 '🔌 Connected to power supply.'
+				sfx-play btn12
+			fi;;
+	esac
+done

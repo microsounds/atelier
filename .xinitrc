@@ -94,6 +94,7 @@ xrdb ~/.xresources && {
 } &
 
 xwin-statusd -qpm | xargs -n 1 xsetroot -name &
+xwin-sfxd &
 urxvtd -o &
 otd-daemon &
 lxpolkit &

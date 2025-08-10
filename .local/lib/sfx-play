@@ -1,8 +1,31 @@
 #!/usr/bin/env sh
 
-# play a specific WAVE file
+## sfx-play v0.2
+## plays specific WAVE files in ~/.local/share/sfx
+## usage: sfx-play [-c] [named-sound]
 
-[ -z "$1" ] && exit 1
-find "$HOME/.local/share/sfx" | fgrep "$1" | head -n 1 | while read -r f; do
-	aplay "$f" > /dev/null 2>&1
-done
+PLAY='aplay -q'
+SFX="$HOME/.local/share/sfx"
+
+case "$1" in
+## 	-c	cats WAVE file instead
+	-c) shift; PLAY='cat';;
+esac
+
+#echo "$@ -- $PLAY"
+#exit 1
+
+[ $# -eq 1 ] || {
+	egrep '^##' < "$0" | sed -E 's/^## +//g'
+	{	printf 'available sounds: '
+		find "$SFX" -type f | egrep -o '[a-z0-9]+.wav$' \
+		| sed 's/.wav//'| sort | tr '\n' ',' | sed -e 's/,$//' -e 's/,/& /g'
+		printf '\n'
+	} | fold -s
+	exit 1
+}
+
+
+find "$SFX" | fgrep "$1" | head -n 1 | while read -r f; do
+	$PLAY "$f"
+done &
