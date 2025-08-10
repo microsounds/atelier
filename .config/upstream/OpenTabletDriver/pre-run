@@ -20,6 +20,7 @@ sudo dpkg -i dist/*.deb
 
 # dotnet-sdk is very bloated and isn't used again, delete
 sudo apt-get -y autoremove --purge dotnet-sdk-8.0
+rm -rf "$XDG_DATA_HOME/NuGet" ~/.nuget # WTF!!!
 
 # bypass ~/.once.d/10-git-upstream.sh
 cat <<- EOF > Makefile

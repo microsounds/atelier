@@ -25,7 +25,7 @@ URxvt.urgentOnBell: true
 
 /* fcitx5 and perl extensions */
 URxvt.preeditType: OnTheSpot
-URxvt.perl-ext-common: default,matcher,resize-font,xim-onthespot,clipboard-osc,\
+URxvt.perl-ext-common: default,matcher,xim-onthespot,clipboard-osc,\
 confirm-paste,option-popup,searchable-scrollback,selection,selection-popup
 
 /* bell synth */
