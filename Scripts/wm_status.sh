@@ -67,6 +67,20 @@ ssh_agent() (
 	echo "SSH ⚿×${num:-none}"
 )
 
+# simulated HDD lamp
+# specialized impure function
+disk_poll() {
+	tr -s ' ' '\t' < /proc/diskstats | cut -f5,7
+}
+disk_prev="$(disk_poll)"
+disk_io() {
+	unset ico
+	disk_now="$(disk_poll)"
+	[ "$disk_now" != "$disk_prev" ] && ico='⛃'
+	disk_prev="$disk_now"
+	echo "DISK ${ico:-⛁}"
+}
+
 fan_speed() (
 	# express fan speed in RPM if supported
 	sensors -u | egrep 'fan[0-9]+_input' | head -n 1 | while read -r _ rpm; do
@@ -220,6 +234,7 @@ current_time() (
 
 # update every n seconds
 launch ssh_agent 5
+#launch disk_io 0.15
 launch fan_speed 10
 launch temps 15
 launch weather 60
@@ -247,7 +262,7 @@ while read -r module data; do
 	esac
 
 	# compose all available modules
-	bar="${SSH}${FAN:-$TEMP}${CPU}${NET}${IP}${BAT}${VOL}${WTTR}${DATE}${TIME}"
+	bar="${SSH}${DISK}${FAN:-$TEMP}${CPU}${NET}${IP}${BAT}${VOL}${WTTR}${DATE}${TIME}"
 
 	# output final formatted status line
 	echo "$bar" | sed -e "$script"
