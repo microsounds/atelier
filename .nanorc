@@ -50,6 +50,10 @@ bind M-4 "[C[D6visual nano-overlay -e '' &" main
 ##   return to top of buffer, paste original line
 bind M-0 "|\" main
 
+##   cut all lines to next paragraph
+##   move cursor to start of line, mark to next paragraph, move to cutbuffer
+bind M-K "[H[1;5B" main
+
 ## ui
 set emptyline
 set nohelp
