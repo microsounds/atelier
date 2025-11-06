@@ -296,12 +296,12 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | syslog | | insert |
 
 **Special** mouse keybinds with extended button layouts.
-* _This is for generic mice with more than 3 keys, usually with left/right switches on the scroll wheel._
+* _This is meant for 3 button mice with at least 2 side keys._
 
 | action | key |
 | --: | :-- |
-| move window to previous monitor | middle click left |
-| move window to next monitor | middle click right |
+| cycle focused window to next monitor | button 8 |
+| set focused window as master window  | button 9 |
 
 ### Generic 74-key Chromebook layout
 Search key is `Super_L`, most missing keys are hidden behind `Right Alt` layer.

@@ -88,7 +88,7 @@ fan_speed() (
 		if [ ${#rpm} -gt 3 ]; then
 			rpm="$(echo "scale=1; $rpm / 1000" | bc)k"
 		fi
-		echo "FAN ${rpm}↻"
+		echo "FAN ↻${rpm}"
 	done
 )
 

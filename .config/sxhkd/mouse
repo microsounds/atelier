@@ -16,8 +16,8 @@
 #button2
 #	xdotool key Super_L+space
 
-# dwm: cycle focused client to another monitor
-#      change master client in tiling mode
+# dwm: cycle focused window to next monitor
+#      set focused window as master window
 button{9,8}
 	xdotool key Shift_L+Super_L+{Return,period}
 
