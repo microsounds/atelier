@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=nano %F
+Exec=urxvtc -e nano %F
 Terminal=true
 Type=Application
 MimeType=text/plain
