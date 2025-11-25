@@ -93,7 +93,7 @@ done
 find ~/Scripts ~/.local -type f | xargs sed -e "$script" -i
 
 # remove splash screen
-rm -f /etc/motd*
+rm -f $PREFIX/etc/motd*
 
 # reset meta upstream
 ~/.once.d/02-meta-config.sh
