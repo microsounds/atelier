@@ -303,6 +303,16 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | cycle focused window to next monitor | button 8 |
 | set focused window as master window  | button 9 |
 
+**Special** default pen tablet keybinds handled by `otd-daemon`.
+* _Assumes the most generic screenless drawing tablet with a 2 button stylus._
+
+| action | key | remarks
+| --: | :-- | :-- |
+| left mousedown  | pen tip down | |
+| right mousedown | pen button 1 | |
+| middle mousedown | pen button 2 | _used for panning and scrolling in `krita` and `chromium`_ |
+
+
 ### Generic 74-key Chromebook layout
 Search key is `Super_L`, most missing keys are hidden behind `Right Alt` layer.
 Power key has been remapped to `delete` for better usability.
@@ -522,6 +532,12 @@ Use of Vimium is considered optional, as I haven't figured out a way to configur
 Its configuration resides in [`~/.config/chromium/vimium`](.config/chromium/vimium)
 
 Run `configure.sh` to rebuild `vimium-options.json` for importing back into Vimium by hand.
+
+### Configuring ScrollAnywhere
+Use of ScrollAnywhere is also optional, it's configuration resides in [`~/.config/chromium/scrollanywhere`](.config/chromium/scrollanywhere).
+Go to `Settings > Backup > Import settings` to restore default configuration manually.
+
+This enables use of middle-click scrolling, dragging up and down with the `middle button` on a mouse or `Button 2` on a pen tablet stylus will emulate the scrollbar.
 
 ### An ongoing experiment
 `chromium` has proven difficult to configure non-interactively time and time again.

@@ -20,6 +20,7 @@ sudo mkdir -pv "${conf%/*}"
 		mnjggcdmjocbbbhaepdhchncahnbgone # SponsorBlock for YouTube
 		gebbhagfogifgggkldgodflihgfeippi # Return YouTube Dislike
 		ckkdlimhmcjmikdlpkmbgfkaikojcbjk # Markdown Viewer
+		jehmdpemhgfgjblpkilmeoafmkhbckhi # ScrollAnywhere
 		dbepggeogbaibhgnhhndojpepiihcmeb # Vimium
 		jinjaccalgkegednnccohejagnlnfdag # Violentmonkey
 		hhinaapppaileiechjoiifaancjggfjm # Web Scrobbler
