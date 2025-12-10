@@ -226,7 +226,23 @@ sc() (
 )
 
 #
-## accounting/timekeeping routines based around nano-overlay
+## encrypted accounting, security and timekeeping routunes based on nano-overlay -s
+
+# TOTP authenticator function
+# takes a list of 'otpauth://totp' URIs and outputs TOTP passwords
+totp() (
+	quit() { echo "$@"; exit; }
+	[ ! -z "$1" ] || quit 'usage: totp [file]'
+	[ -f "$1" ] || quit 'File not found.'
+	export EXTERN_EDITOR='cat'
+
+	nano-overlay -s "$1" | while read -r line; do
+		echo "$line" | tr '?' '\n' | head -n 1 | xargs busybox httpd -d
+		printf ' -> '
+		echo "$line" | egrep -o '&secret=[A-Z0-9]+&' \
+			| sed -e 's/&secret=//' -e 's/&$//' | xargs oathtool --totp -b
+	done
+)
 
 # calendar reminder function
 # sorts a list of upcoming dates and calculates countdowns
