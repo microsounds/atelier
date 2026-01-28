@@ -33,6 +33,11 @@ cat <<- EOF
 
 EOF
 
+# quick start QR code
+if [ ! -z "$ip" ]; then
+	qrencode -m 2 -t ANSIUTF8 "sshfs -p $port -o reconnect -C $user@$ip:$int_path /media/sftp_tunnel"
+fi
+
 # release wakelock and return 0 on SIGINT
 quit() {
 	termux-wake-unlock &

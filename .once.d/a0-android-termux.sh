@@ -22,6 +22,7 @@ cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
 	ledger gnuplot
 	imagemagick
 	bash-completion
+	libqrencode
 EOF
 
 # update existing
