@@ -24,7 +24,7 @@ fi
 # splash screen
 cat <<- EOF
 	$(printf '\33[1m%s\33[0m' "${0##*/}")
-	usage: ssh -C -p $port $user@${ip:-localhost (no WLAN connection)}
+	usage: ssh -p $port $user@${ip:-localhost (no WLAN connection)}
 
 	internal: $int_path
 	external: $ext_path
@@ -35,7 +35,8 @@ EOF
 
 # quick start QR code
 if [ ! -z "$ip" ]; then
-	qrencode -m 2 -t ANSIUTF8 "sshfs -p $port -o reconnect -C $user@$ip:$int_path /media/sftp_tunnel"
+	qrencode -m 2 -t ANSIUTF8 "sshfs -p $port -o reconnect $user@$ip:$int_path /media/sftp_tunnel"
+	printf '%s\n\n' 'usage (on PC): qr -d | sh'
 fi
 
 # release wakelock and return 0 on SIGINT
