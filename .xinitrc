@@ -19,9 +19,9 @@ xrandr-cycle -d &
 	done
 } &
 
-## GTK2/3 config
+## toolkit config and theming
 # GTK3 file picker config, generate bookmarks
-dconf load '/' < ~/.config/gtk/gtk3-dconf.conf &
+dconf load '/' < ~/.config/toolkit/gtk3-dconf.conf &
 ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
 {	mkdir -p ~/.config/gtk-3.0
 	IFS='
@@ -41,10 +41,12 @@ ln -sf .config/gtk-3.0/bookmarks ~/.gtk-bookmarks &
 		.config
 	EOF
 
-	# mangle GTK2/3 theming
-	cpp -P < ~/.config/gtk/gtk2.conf > ~/.gtkrc-2.0
-	cpp -P < ~/.config/gtk/gtk3.conf > ~/.config/gtk-3.0/settings.ini
-	cpp -P < ~/.config/gtk/gtk3.css > ~/.config/gtk-3.0/gtk.css
+	# mangle configs for various toolkits
+	cpp -P < ~/.config/toolkit/gtk2.conf > ~/.gtkrc-2.0
+	cpp -P < ~/.config/toolkit/gtk3.conf > ~/.config/gtk-3.0/settings.ini
+	cpp -P < ~/.config/toolkit/gtk3.css > ~/.config/gtk-3.0/gtk.css
+	cpp -P < ~/.config/toolkit/mlk-style.conf \
+		| sed 's/\#//' > ~/.config/az-mlk-style.conf
 } &
 
 # disable backspace bell in bash prompt
