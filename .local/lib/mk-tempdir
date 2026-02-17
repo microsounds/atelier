@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
 
-# return a non-colliding temporary dir name
+# returns a non-colliding temporary directory name
+# fallback to /tmp if $XDG_RUNTIME_DIR has less than 1GB of space
+free_space="$(df -Pk "$XDG_RUNTIME_DIR" | tr -s ' ' '\t' | cut -f4 | tail -n 1)"
+[ $free_space -lt 1000000 ] && XDG_RUNTIME_DIR="/tmp"
+
 while :; do
 	prefix="${XDG_RUNTIME_DIR:-/tmp}"
 	key=$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1) 2> /dev/null
