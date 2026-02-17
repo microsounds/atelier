@@ -1,0 +1,3 @@
+[Desktop Entry]
+Exec=mpv --loop %F
+Type=Application

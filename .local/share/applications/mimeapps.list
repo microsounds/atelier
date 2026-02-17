@@ -4,7 +4,7 @@ text/x-c=nano.desktop
 
 image/jpeg=feh.desktop
 image/png=feh.desktop
-image/gif=feh.desktop
+image/gif=mpv-loop.desktop
 
 video/webm=mpv.desktop
 video/H264=mpv.desktop
