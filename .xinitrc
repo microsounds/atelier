@@ -101,4 +101,13 @@ urxvtd -o &
 otd-daemon &
 lxpolkit &
 
+## profiling and housekeeping
+read st < "$XDG_RUNTIME_DIR/.$XDG_SESSION_TYPE$XDG_VTNR"
+ed=$(date '+%s%N')
+{
+	rm -rf ~/wget-log*
+	sleep 1
+	echo "~/${0##*/} finished in $(((ed - st) / 1000000))ms." | notify-send -t 0.5
+} &
+
 exec dwm

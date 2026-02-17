@@ -21,4 +21,6 @@ done
 
 [ ! -z "$xopt" ] && xopt="-config $(id -u)-override/$xopt.conf"
 
+# record time at startup
+date '+%s%N' > "$XDG_RUNTIME_DIR/.$XDG_SESSION_TYPE$XDG_VTNR"
 exec /usr/bin/startx "$@" -- $xopt
