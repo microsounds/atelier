@@ -4,7 +4,7 @@ is-installed libx11-dev libxft-dev libxinerama-dev \
 	| xargs -r sudo apt-get -y install
 
 # last known good ver
-git checkout '6.6'
+git checkout '6.8'
 
 # apply quality of life patches
 if [ -d patches ]; then

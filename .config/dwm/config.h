@@ -26,6 +26,7 @@ static const float mfact = 0.55;        /* master area size */
 static const int nmaster = 1;           /* windows in master area */
 static const int resizehints = 0;       /* ignore sizing hints */
 static const int lockfullscreen = 1;    /* force fullscreen focus */
+static const int refreshrate = 60;     /* refresh rate for window movement */
 static const char *tags[] = {
 	"あ", "か", "さ", "た", "な",
 /* 	"は", "ま", "や", "ら", "わ" */
@@ -48,7 +49,6 @@ static const Rule rules[] = {
 	{ "XClock",        NULL,       NULL,       1,            1,          1,          -1 },
 	/* always float */
 	{ "Xmessage",      NULL,       NULL,       0,            1,          0,          -1 },
-	{ "xppentablet",   NULL,       NULL,       0,            1,          0,          -1 },
 };
 
 /* disable spawn/dmenu invocation, handled by sxhkd */
