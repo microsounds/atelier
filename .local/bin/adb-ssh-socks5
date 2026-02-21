@@ -23,6 +23,13 @@ if [ "$1" = '-d' ]; then
 	exit 0
 fi
 
+
+# makes this script somewhat re-entrant
+patch -p1 --dry-run --forward < "$0.patch" > /dev/null 2>&1 || {
+	printf '%s\n' 'Already in use, resetting environment...'
+	"$0" -d
+}
+
 # forward ports from phone and open SSH session
 adb start-server
 printf '%s\r' 'Waiting for ADB connection over USB...'
@@ -35,5 +42,4 @@ autossh -D $PROXY_PORT -p $SSHD_PORT -fnN $PROXY_ADDR
 # TODO: make this more re-entrant without using flags
 # don't feel like understanding iptables and tunnel devices
 # just patch every config file to use socks5 proxy
-cd ~
 sleep 1 && patch -p1 -r - < "$0.patch"
