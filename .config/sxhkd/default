@@ -46,6 +46,11 @@ super + BackSpace
 ctrl + alt + {Delete,Insert}
 	sfx-synth btn & \
 	visual {htop,watch -c -n 0.1 'dmesg -e -Lalways | tac'}
+# rotate display orientation
+shift + super + {Up,Down,Left,Right}
+	sfx-synth btn & \
+	xrandr --output "$(xrandr | grep '[^dis]connected' | tr -s ' ' '\t' | cut -f1)" \
+		   --rotate "{inverted,normal,right,left}"
 
 ## function keys
 # F1: power/reboot

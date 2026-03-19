@@ -270,6 +270,7 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | | launcher | p |
 | | file manager | e |
 | | ssh-add<sup>[toggle]</sup> | backspace |
+| rotate display orientation | | up,down,left,right |
 | partial screenshot | screenshot | print |
 | | _reserved_ | scroll lock |
 | | _reserved_ | pause |
