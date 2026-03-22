@@ -44,9 +44,10 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class           instance    title       tags mask     isfloating  ispermanent monitor */
-	/* permanent */
+	/* always float, cannot close with dwm */
 	{ "XLoad",         NULL,       NULL,       1,            1,          1,	         -1 },
 	{ "XClock",        NULL,       NULL,       1,            1,          1,          -1 },
+	{ "Onboard",       NULL,       NULL,       0,            1,          1,          -1 },
 	/* always float */
 	{ "Xmessage",      NULL,       NULL,       0,            1,          0,          -1 },
 };
