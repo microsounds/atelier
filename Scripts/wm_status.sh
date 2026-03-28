@@ -82,9 +82,10 @@ disk_io() {
 }
 
 fan_speed() (
-	# express fan speed in RPM if supported
+	# express fan speed in RPM if supported, ignore low values
 	sensors -u | egrep 'fan[0-9]+_input' | head -n 1 | while read -r _ rpm; do
 		rpm="${rpm%.*}"
+		[ $rpm -eq 0 ] && return
 		if [ ${#rpm} -gt 3 ]; then
 			rpm="$(echo "scale=1; $rpm / 1000" | bc)k"
 		fi

@@ -113,7 +113,8 @@ which pcmanfm > /dev/null && {
 
 	# waifu2x: upscale and denoise images on desktop, extremely slow
 	find "$temp" -type f | while read -r file; do
-		is-chromebook && exit 0
+		# do not attempt on integrated gfx
+		! nvidia-smi || ! rocm-smi && exit 0
 		{	printf '%s' "[waifu2x]: "
 			waifu2x-ncnn-vulkan -i "$file" -o "$file.tmp.png" \
 		       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1

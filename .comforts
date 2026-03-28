@@ -44,7 +44,6 @@ nano openssl exuberant-ctags fzf spell
 ncal
 nodejs
 oathtool
-onboard
 openssh-client ssh-askpass-gnome
 *openssh-server
 pandoc
@@ -62,5 +61,6 @@ vrms
 wget curl aria2
 *wine-stable cabextract
 xorg xdotool xsel xbacklight sxhkd arandr slop
+xinput onboard
 xxd
 zip unzip gzip bzip2 xz-utils p7zip pigz pbzip2

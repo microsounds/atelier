@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+# xwin-tabletd v0.1
+# rotates display and digitizer input based on accelerometer
+
+# detect primary display
+dpy="$(xrandr | grep '[^dis]connected' | tr -s ' ' '\t' | cut -f1)"
+
+# detect digitizer devices
+dpy_digitizer="$(xinput list --name-only | grep -i wacom)"
+
+monitor-sensor | while read -r line; do
+	state="${line##* }"
+	unset rot mat
+	case "$state" in
+		normal)    rot='normal';   mat='1 0 0 0 1 0 0 0 1';;
+		right-up)  rot='right';    mat='0 1 0 -1 0 1 0 0 1';;
+		left-up)   rot='left';     mat='0 -1 1 1 0 0 0 0 1';;
+		bottom-up) rot='inverted'; mat='-1 0 1 0 -1 1 0 0 1';;
+	esac
+	if [ ! -z "$rot" ] && [ ! -z "$mat" ]; then
+		xrandr --output "$dpy" --rotate "$rot"
+		echo "$dpy_digitizer" | while read -r f; do
+			xinput set-prop "$f" 'Coordinate Transformation Matrix' $mat
+		done
+	fi
+done
