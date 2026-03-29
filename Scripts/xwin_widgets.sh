@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# xwin_widgets.sh v0.4
+# xwin_widgets.sh v0.5
 # launch xload and xclock in a corner somewhere
 # dwm ignores EMWH resize hints in tiling mode
 # start in floating mode or override widgets to always float
@@ -42,9 +42,13 @@ for f in $(xrandr -q | grep '[^dis]connected' \
 	[ $MOUSE_YOFF -lt $((HEIGHT + y_off)) ] && \
 		[ $MOUSE_YOFF -gt $HEIGHT ] && break
 done
-SIZE=130      # window size
-GAP=15        # gap between windows
-EDGE=20       # distance from screen border
+
+# window size defined as Xft.dpi * 1.25
+DPI="$(xrdb -q | fgrep 'Xft.dpi' | egrep -o '[0-9]+')"
+SIZE="$(echo "$DPI * 1.25" | bc)"
+SIZE=${SIZE%.*}   # window size
+GAP=15            # gap between windows
+EDGE=20           # distance from screen border
 
 # dumb parser
 # calculates starting positions

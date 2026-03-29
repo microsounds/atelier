@@ -395,15 +395,22 @@ This can be useful when dealing with TUI applications that force their own backg
 * `FN_EMOJI` for specifying fallback emoji glyphs
 * `FN_EMOJI_SIZE` for specifying fallback emoji glyph sizes
 
-## Issues with HiDPI scaling
-HiDPI display setups are currently **not** supported, 96dpi is assumed everywhere.
+## HiDPI scaling
+By default, `fontconfig` font sizes are defined by static `pixelsize` regardless of DPI settings.
+Readability has been optimized for low density displays under 96dpi, eg, 1080p @ 18in or greater.
 
+For improved readability on high density displays, such as 4K displays smaller than 24in or 1080p smaller than 14in,
+define C preprocessor macro `HIDPI_MODE` in [`~/.local/include/theme.h`](.local/include/theme.h)
+to enable relative font scaling controlled via `Xft.dpi` in [~/.xresources](.xresources)
+_Please note that you are trading font size reproducibility for readability._
+
+You must restart X and recompile `dwm` and `dmenu` for this change to take effect.
+
+### Issues with HiDPI scaling
 HiDPI scaling brings up innumerable display issues in [every category of graphical software][dpi1]
 including [electron-based applications][dpi2] that require polluting scripts and dotfiles to smooth out toolkit scaling issues.
 Maintaining mixed-DPI multi-monitor setups in X11 is [even more painful][dpi3].
 
-As of posting, I don't have a >1080p monitor to motivate such changes,
-I'm not about to pepper my scripts with toolkit-specific environment variables and conditional logic to support HiDPI scaling.
 See [`~/.local/include/theme.h`](.local/include/theme.h) for more info.
 
 [dpi1]: https://wiki.archlinux.org/title/HiDPI "A laundry list of hacks to have consistent-looking fonts everywhere under HiDPI"

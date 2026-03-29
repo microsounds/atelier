@@ -59,12 +59,12 @@
  * xwin-widgets will have to apply multiplers based on reported DPI
  *
  * Major problems with HiDPI
- * HiDPI is global, you cannot mix displays with widely different DPI densities
+ * HiDPI is global, you cannot set DPI per monitor, only per X screen.
+ * 	- Multi-monitor setups with widely different DPI densities are an exercise in pain.
  * Xft.dpi value in ~/.xresources is respected mostly everywhere
- *  - x pointer has an absolute pixelsize and is unusable without overrides
- *  - certain emoji glyphs in dwm are absolutely tiny and unusable
- *  - border widths in dwm are defined in pixel widths and also practically invisible
- *  - HiDPI support is lacking in many unexpected places, not going to bother.
+ *  - X pointer has an absolute pixelsize and is unusable without overrides
+ *  - certain emoji glyphs in dwm title bar become tiny and unusable at high DPIs
+ *  - dwm border widths are defined in pixels and are nearly invisible at 200+ DPI
  */
 
 #endif /* THEME_H */

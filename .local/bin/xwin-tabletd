@@ -19,6 +19,7 @@ monitor-sensor | while read -r line; do
 		bottom-up) rot='inverted'; mat='-1 0 1 0 -1 1 0 0 1';;
 	esac
 	if [ ! -z "$rot" ] && [ ! -z "$mat" ]; then
+		echo "[${0##*/}]: Rotating display: $rot" | notify-send -t 2
 		xrandr --output "$dpy" --rotate "$rot"
 		echo "$dpy_digitizer" | while read -r f; do
 			xinput set-prop "$f" 'Coordinate Transformation Matrix' $mat
