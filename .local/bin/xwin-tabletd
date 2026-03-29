@@ -8,6 +8,14 @@ dpy="$(xrandr | grep '[^dis]connected' | tr -s ' ' '\t' | cut -f1)"
 
 # detect digitizer devices
 dpy_digitizer="$(xinput list --name-only | grep -i wacom)"
+[ ! -z "$dpy_digitizer" ] || exit 0
+
+# workaround: repeatedly poke at iio-sensor-proxy on a timer to avoid
+# aggressive battery optimization
+while :; do
+	cat /sys/bus/iio/devices/iio:device0/in_accel_x_raw > /dev/null
+	sleep 5
+done &
 
 monitor-sensor | while read -r line; do
 	state="${line##* }"

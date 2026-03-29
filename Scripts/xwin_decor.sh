@@ -109,7 +109,7 @@ which pcmanfm > /dev/null && {
 	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
 		sed -E "s,^wallpaper=.*,wallpaper=$file,g" \
 			-i ~/.config/pcmanfm/default/desktop-items-$mon.conf
-	done && pcmanfm --desktop-off && pcmanfm --desktop &
+	done && pcmanfm --desktop-off && pcmanfm --desktop
 
 	# waifu2x: upscale and denoise images on desktop, extremely slow
 	find "$temp" -type f | while read -r file; do
@@ -120,5 +120,5 @@ which pcmanfm > /dev/null && {
 		       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
 		    mv "$file.tmp.png" "$file"
 		} | notify-send -t 0.5
-	done && pcmanfm --desktop-off && pcmanfm --desktop
+	done && pcmanfm --desktop-off && pcmanfm --desktop &
 } || find "$temp" -type f | xargs feh --no-fehbg --bg-fill
