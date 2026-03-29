@@ -120,5 +120,5 @@ which pcmanfm > /dev/null && {
 		       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
 		    mv "$file.tmp.png" "$file"
 		} | notify-send -t 0.5
-	done && pcmanfm --desktop-off && pcmanfm --desktop &
+	done && pcmanfm --desktop-off && pcmanfm --desktop
 } || find "$temp" -type f | xargs feh --no-fehbg --bg-fill

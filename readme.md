@@ -399,12 +399,14 @@ This can be useful when dealing with TUI applications that force their own backg
 By default, `fontconfig` font sizes are defined by static `pixelsize` regardless of DPI settings.
 Readability has been optimized for low density displays under 96dpi, eg, 1080p @ 18in or greater.
 
-For improved readability on high density displays, such as 4K displays smaller than 24in or 1080p smaller than 14in,
-define C preprocessor macro `HIDPI_MODE` in [`~/.local/include/theme.h`](.local/include/theme.h)
+For improved quality of life on high density monitors, such as 4K displays under 24in or 1080p displays under 14in,
+you can `#define` optional `cpp` macro `HIDPI_MODE` in [`~/.local/include/theme.h`](.local/include/theme.h)
 to enable relative font scaling controlled via `Xft.dpi` in [~/.xresources](.xresources)
-_Please note that you are trading font size reproducibility for readability._
 
-You must restart X and recompile `dwm` and `dmenu` for this change to take effect.
+_Please note that you are trading pixel-perfect font reproducibility for readability._
+
+You must restart X and recompile the graphical shell environment via
+[`~/.once.d/10-git-upstream.sh`](.once.d/10-git-upstream.sh) for this change to take effect.
 
 ### Issues with HiDPI scaling
 HiDPI scaling brings up innumerable display issues in [every category of graphical software][dpi1]
