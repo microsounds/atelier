@@ -34,7 +34,10 @@ ffmpeg_cat() {
 		# calculate length of input file
 		len=$(echo "scale=2; $f_count * (1 / $fps)" | bc)
 		len=${len%.*}
-		while :; do
+
+		# hard cap on execution time to prevent thermal runaway
+		while [ "$(ps -p "$$" -o 'etimes=')" -lt 5 ]; do
+
 			# keep rerolling for random frames that skip over OP/EDs
 			skip_len=150
 			sel=$(($(rand) % len))
