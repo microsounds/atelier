@@ -7,13 +7,13 @@
  * fontconfig font sizes are defined in 'pixelsize' by default
  * Readability optimized for low density displays up to 1080p @ 18" or greater
  *
- * OPTIONAL: define HIDPI_MODE on systems with high density displays,
- *           eg. 4K displays below 24", 1080p @ 13" or smaller.
+ * OPTIONAL: Enable HIDPI_MODE on systems with high density displays,
+ *           eg. 4K displays below 24", 1080p @ 14" or smaller.
  * Control display density setting via 'Xft.dpi' in ~/.xresources
  * You must recompile dwm/dmenu for changes to take effect.
  * Restart X to apply to all other applications respecting ~/.xresources
  */
-#undef HIDPI_MODE
+#define HIDPI_MODE	0
 
 /* utilities and fontconfig boilerplate */
 #define _xstr(s) #s
@@ -35,7 +35,7 @@
 #define FN_EMOJI       DejaVu Sans
 #define FN_EMOJI_SIZE  16
 
-#ifdef HIDPI_MODE
+#if HIDPI_MODE
 /* 	font size in relative size */
 	#define font(name, px) name:size=px
 	#define FN_TERM_SIZE	10

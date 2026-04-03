@@ -395,18 +395,20 @@ This can be useful when dealing with TUI applications that force their own backg
 * `FN_EMOJI` for specifying fallback emoji glyphs
 * `FN_EMOJI_SIZE` for specifying fallback emoji glyph sizes
 
-## HiDPI scaling
+## `HIDPI_MODE` relative scaling mode
 By default, `fontconfig` font sizes are defined by static `pixelsize` regardless of DPI settings.
-Readability has been optimized for low density displays under 96dpi, eg, 1080p @ 18in or greater.
+Readability has been optimized for low density displays under 96dpi, eg. 1080p @ 18" or greater.
 
-For improved quality of life on high density monitors, such as 4K displays under 24in or 1080p displays under 14in,
-you can `#define` optional `cpp` macro `HIDPI_MODE` in [`~/.local/include/theme.h`](.local/include/theme.h)
-to enable relative font scaling controlled via `Xft.dpi` in [~/.xresources](.xresources)
+On systems with high density displays,
+enable the `HIDPI_MODE` flag in [`~/.local/include/theme.h`](.local/include/theme.h)
+to enable relative font scaling controlled via `Xft.dpi` in [`~/.xresources`](.xresources).
 
-_Please note that you are trading pixel-perfect font reproducibility for readability._
+This trades pixel-perfect font reproducibility for quality of life on small
+form factor high resolution displays, eg. 4K displays under 24" or 1080p
+displays under 14".
 
-You must restart X and recompile the graphical shell environment via
-[`~/.once.d/10-git-upstream.sh`](.once.d/10-git-upstream.sh) for this change to take effect.
+_You must restart X and recompile the graphical shell environment via
+[`~/.once.d/10-git-upstream.sh`](.once.d/10-git-upstream.sh) for this change to take effect._
 
 ### Issues with HiDPI scaling
 HiDPI scaling brings up innumerable display issues in [every category of graphical software][dpi1]
@@ -418,6 +420,12 @@ See [`~/.local/include/theme.h`](.local/include/theme.h) for more info.
 [dpi1]: https://wiki.archlinux.org/title/HiDPI "A laundry list of hacks to have consistent-looking fonts everywhere under HiDPI"
 [dpi2]: https://blog.yossarian.net/2020/12/24/A-few-HiDPI-tricks-for-Linux "The real HiDPI experience on GNU/Linux"
 [dpi3]: http://wok.oblomov.eu/tecnologia/mixed-dpi-x11/#mixeddpiinx11 "Workarounds for mixed DPI multi-monitor setups in X11"
+
+## 2-in-1 convertibles and Tablet PCs
+On systems with an accelerometer exposed by `iio-sensor-proxy`,
+[`xwin-tabletd`](.local/bin/xwin-tabletd) will automatically rotate the display and digitizer input based on device orientation.
+
+_Quality of life features for pen input tablet PCs and 2-in-1 convertible laptops are still a work in progress._
 
 # Non-standard commands
 Several commands are extended to include impure functions, such as purposefully mangling config files, and have the following precedence when multiple versions exist:
