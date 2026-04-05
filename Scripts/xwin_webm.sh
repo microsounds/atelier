@@ -16,7 +16,7 @@ SIZE=2.8M
 CONSTQ=31
 BITRATE=3M # 4M
 SCALE=-1:-1 # 800:-1
-FPS=25 # 25
+FPS=6 # 25
 
 # system
 NAME="${0##*/}" # derive script name
@@ -84,4 +84,4 @@ info $INFO "$(cat $0 | grep '^##' | sed 's/## //g')"
 iter=0;
 ffmpeg -loglevel panic -threads $CORES -framerate $FPS -video_size $RES \
 	-f x11grab -i :0.0+$OFFSET -c:v libx264 -qp 0 -preset ultrafast \
-	-vf mpdecimate -vsync vfr "$TEMP"
+	-pix_fmt yuv444p -vf mpdecimate -vsync vfr "$TEMP"
