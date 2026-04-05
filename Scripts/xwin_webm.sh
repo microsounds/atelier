@@ -39,11 +39,17 @@ if [ "$1" = '-s' ]; then
 	RES="$(echo "$RES" | tr '+' '\n' | head -n 1)"
 fi
 
+# no conversion, leave raw file
+trap to_webm 2
+[ "$1" = '-r' ] && shift 1 && trap to_mp4 2
+
 # filenames
 TEMP="$PWD/${KEY}.mp4"
 FINAL="$PWD/$(date '+%Y-%m-%d-%H%M%S')_${RES}_${NAME%.*}.webm"
 
 to_webm() {
+	kill -9 "$filesize_pid"
+
 	iter=$((iter + 1))
 	if [ $iter -lt 2 ]; then
 		# rewrite ffmpeg command to use 2-pass encoding
@@ -58,7 +64,24 @@ to_webm() {
 	fi
 }
 
+to_mp4() {
+	kill -9 "$filesize_pid"
+
+	FINAL="${FINAL%.*}.mp4"
+	mv "$TEMP" "$FINAL"
+	info $OK "File saved at: $FINAL"
+}
+
+# file size watchdog
+while sleep 5; do
+	printf "%s\r" "$(dd if=/dev/zero bs=1 count=$(tput cols) 2> /dev/null | tr '\0' ' ')"
+	printf 'Written: %s | Available:%s\r' \
+		"$(du -sh "$TEMP")" "$(df -h --output='avail' "$PWD" | tail -n 1)"
+done &
+filesize_pid="$!"
+
 info $INFO "$(cat $0 | grep '^##' | sed 's/## //g')"
-iter=0; trap to_webm 2
+iter=0;
 ffmpeg -loglevel panic -threads $CORES -framerate $FPS -video_size $RES \
-	-f x11grab -i :0.0+$OFFSET -c:v libx264 -qp 0 -preset ultrafast "$TEMP"
+	-f x11grab -i :0.0+$OFFSET -c:v libx264 -qp 0 -preset ultrafast \
+	-vf mpdecimate -vsync vfr "$TEMP"
