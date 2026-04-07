@@ -55,6 +55,7 @@ screenfetch
 scrot
 sudo
 task-laptop acpi lm-sensors network-manager bluez
+unifont
 *valgrind
 *virt-manager
 vrms
