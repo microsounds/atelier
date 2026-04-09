@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+share="$XDG_DATA_HOME/azpainter3"
+mkdir -pv "$share"
+cd "$share"
+
+# install additional brush/texture packs
+git clone https://gitlab.com/pistachio-gitlab/AzPainter-Resources tmp
+cp -rfv tmp/brush .
+cp -rfv tmp/texture .
+rm -rf tmp
