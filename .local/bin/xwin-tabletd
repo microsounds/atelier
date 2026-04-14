@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# xwin-tabletd v0.2
+# xwin-tabletd v0.3
 # rotates display and digitizer input based on accelerometer
 
 # detect primary display
@@ -15,14 +15,19 @@ ptr_devices="$(xinput list --name-only | egrep -i '(touchpad|trackpoint)')"
 
 trap 'kill $!' 0 1 2 3 6 15
 
-# workaround: repeatedly poke at iio-sensor-proxy on a timer to avoid
-# aggressive battery optimization
+# workarounds for iio-sensor-proxy
+# repeatedly poke accelerometer on a timer to avoid aggressive battery optimization
 while :; do
 	cat /sys/bus/iio/devices/iio:device0/in_accel_x_raw > /dev/null
 	sleep 2
 done &
 
-monitor-sensor | while read -r line; do
+# sxhkd: allows manual override if and when accelerometer stops responding
+RFIFO="$HOME/.rotate"
+[ ! -p "$RFIFO" ] && mkfifo "$RFIFO"
+monitor-sensor >> "$RFIFO" &
+
+while read -r line; do
 	state="${line##* }"
 	unset rot mat
 	case "$state" in
@@ -48,4 +53,4 @@ monitor-sensor | while read -r line; do
 				[ "$rot" = "normal" ] && xinput enable "$f" || xinput disable "$f"
 		done &
 	fi
-done
+done < "$RFIFO"

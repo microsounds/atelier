@@ -49,8 +49,7 @@ ctrl + alt + {Delete,Insert}
 # rotate display orientation
 shift + super + {Up,Down,Left,Right}
 	sfx-synth btn & \
-	xrandr --output "$(xrandr | grep '[^dis]connected' | tr -s ' ' '\t' | cut -f1)" \
-		   --rotate "{inverted,normal,right,left}"
+	echo '{bottom-up,normal,right-up,left-up}' >> ~/.rotate
 
 ## function keys
 # F1: power/reboot
