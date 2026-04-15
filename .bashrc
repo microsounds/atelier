@@ -10,13 +10,16 @@ HISTSIZE=20000
 HISTFILESIZE=20000
 PROMPT_COMMAND=set_prompt
 
-# bash-completion, ignore if not installed
-. '/usr/share/bash-completion/bash_completion' 2> /dev/null || :
+# load bash-completion on first use
+_init_bc() {
+	. /usr/share/bash-completion/bash_completion
+}
+complete -D -F _init_bc
 
-# color support
-export COLOR=1; case $TERM in
-	*color | linux) ;; # known color terminals
-	*) [ $(tput colors) -lt 8 ] && unset COLOR
+# detect color support
+case $TERM in
+	*color | linux) export COLOR=1;;
+	*)
 esac
 
 # persist $OLDPWD between shells on same login session
