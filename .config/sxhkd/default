@@ -48,8 +48,10 @@ ctrl + alt + {Delete,Insert}
 	visual {htop,watch -c -n 0.1 'dmesg -e -Lalways | tac'}
 # rotate display orientation
 shift + super + {Up,Down,Left,Right}
+	PITCHED_SFX(cncl03) \
 	sfx-synth btn & \
-	echo '{bottom-up,normal,right-up,left-up}' >> ~/.rotate
+	echo '{bottom-up,normal,right-up,left-up}' \
+		> "$XDG_RUNTIME_DIR/.rotate.$XDG_SESSION_ID"
 
 ## function keys
 # F1: power/reboot

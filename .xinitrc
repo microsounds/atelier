@@ -102,11 +102,12 @@ urxvtd -o &
 otd-daemon &
 lxpolkit &
 
-## profiling and housekeeping
-read st < "$XDG_RUNTIME_DIR/.$XDG_SESSION_TYPE$XDG_VTNR"
+## startup profiling and housekeeping
+timest="$XDG_RUNTIME_DIR/.xinit-st.$XDG_SESSION_ID"
+read st < "$timest"
 ed=$(date '+%s%N')
 {
-	rm -rf ~/wget-log*
+	rm -rf "$timest" wget-log*
 	sleep 1
 	echo "~/${0##*/} finished in $(((ed - st) / 1000000))ms." | notify-send -t 0.5
 } &

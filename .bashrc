@@ -19,8 +19,8 @@ export COLOR=1; case $TERM in
 	*) [ $(tput colors) -lt 8 ] && unset COLOR
 esac
 
-# persist $OLDPWD between sessions
-export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd"
+# persist $OLDPWD between shells on same login session
+export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd.$XDG_SESSION_ID"
 [ -f "$LASTDIR" ] && read -r OLDPWD < "$LASTDIR"
 
 # truncate long prompt pathnames over N characters

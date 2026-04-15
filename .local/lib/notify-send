@@ -4,9 +4,9 @@
 # send notifications and OSD messages through xwin-statusd
 # accepts message arguments or first line passed through stdin
 
-NFIFO="$HOME/.notify"
-[ -p "$NFIFO" ] ||
-	{ echo "${0##*/}: Cannot write to '$NFIFO', exiting." 1>&2; exit 1; }
+N_FIFO="$XDG_RUNTIME_DIR/.notify.$XDG_SESSION_ID"
+[ -p "$N_FIFO" ] ||
+	{ echo "${0##*/}: Cannot write to '$N_FIFO', exiting." 1>&2; exit 1; }
 
 unset SECS
 case "$1" in
@@ -15,5 +15,5 @@ case "$1" in
 esac
 SECS="${SECS:-5}" # default is 5 seconds
 
-echo "$SECS ${@:-$(cat /dev/stdin)}" >> "$HOME/.notify"
+echo "$SECS ${@:-$(cat /dev/stdin)}" >> "$N_FIFO"
 

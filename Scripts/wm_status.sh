@@ -24,31 +24,30 @@ for f in $pad $quote; do # surround output with special characters
 done
 unset IFS
 
-# FIFO locations
+# status bar FIFO path not exposed to other scripts for stability
 prog="${0##*/}"
-key="$(tr -cd 'a-z0-9' < /dev/urandom | dd bs=7 count=1 2> /dev/null)"
-FIFO="${XDG_RUNTIME_DIR:-/tmp}/.${prog%.*}.$key"
+S_FIFO="${XDG_RUNTIME_DIR:-/tmp}/.${prog%.*}.$$"
 
 # notification FIFO written to by notify-send
-NFIFO="$HOME/.notify"
+N_FIFO="$XDG_RUNTIME_DIR/.notify.$XDG_SESSION_ID"
 
 abort() {
-	rm -rf "$FIFO" "$NFIFO"
+	rm -rf "$S_FIFO" "$N_FIFO"
 	echo "[!] ${0##*/} terminated unexpectedly" | sed -e "$script"
 	kill -- -$$ > /dev/null 2>&1
 }
 
 trap abort 0 1 2 3 6 15
-mkfifo "$FIFO" "$NFIFO"
+mkfifo "$S_FIFO" "$N_FIFO"
 
 # monitor and redirect notifications from notify-send
 # prevent named pipe from closing
 {	while :; do
-		while read -r msg < "$NFIFO"; do
+		while read -r msg < "$N_FIFO"; do
 			echo "MSG $msg"
 		done
 	done
-} > "$FIFO" &
+} > "$S_FIFO" &
 
 # thread loop
 launch() {
@@ -56,7 +55,7 @@ launch() {
 		sleep "$2" &
 		"$1"
 		wait
-	done > "$FIFO" &
+	done > "$S_FIFO" &
 }
 
 # individual threads
@@ -268,4 +267,4 @@ while read -r module data; do
 	# output final formatted status line
 	echo "$bar" | sed -e "$script"
 
-done < "$FIFO"
+done < "$S_FIFO"

@@ -13,8 +13,10 @@ export XDG_CONFIG_HOME="$HOME/.config"
 
 # force cache writes to ramdisk
 # fallback to /tmp if pam_systemd doesn't provide ramdisk
+# fallback unique session ID on non-systemd systems
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 export XDG_CACHE_HOME="$XDG_RUNTIME_DIR"
+export XDG_SESSION_ID="${XDG_SESSION_ID:-$$}"
 
 # persist for current session only, return 0 on logout
 trap 'ssh-agent -k > /dev/null || :' 0 1 3 6 15

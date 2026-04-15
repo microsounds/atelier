@@ -74,7 +74,7 @@ ffmpeg_cat() {
 
 # remove trash from previous iterations
 rm -rf "$XDG_RUNTIME_DIR/${0##*/}"*
-temp="$XDG_RUNTIME_DIR/${0##*/}-$$" && mkdir -p "$temp"
+temp="$XDG_RUNTIME_DIR/${0##*/}.$$" && mkdir -p "$temp"
 
 # pcmanfm will randomly re-read wallpaper files after they're deleted, leading
 # to black screens, just leave temp dir trash to be cleaned up on next run

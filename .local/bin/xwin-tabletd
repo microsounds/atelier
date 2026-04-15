@@ -13,19 +13,23 @@ dpy_digitizer="$(xinput list --name-only | grep -i wacom)"
 # detect laptop mouse pointer devices
 ptr_devices="$(xinput list --name-only | egrep -i '(touchpad|trackpoint)')"
 
-trap 'kill $!' 0 1 2 3 6 15
+abort() {
+	kill $!
+	rm -rf "$R_FIFO"
+}
+trap abort 0 1 2 3 6 15
 
 # workarounds for iio-sensor-proxy
-# repeatedly poke accelerometer on a timer to avoid aggressive battery optimization
+# repeatedly poke sensor on a timer to avoid aggressive battery optimization
 while :; do
 	cat /sys/bus/iio/devices/iio:device0/in_accel_x_raw > /dev/null
 	sleep 2
 done &
 
-# sxhkd: allows manual override if and when accelerometer stops responding
-RFIFO="$HOME/.rotate"
-[ ! -p "$RFIFO" ] && mkfifo "$RFIFO"
-monitor-sensor >> "$RFIFO" &
+# rotation FIFO for external control via sxhkd
+R_FIFO="$XDG_RUNTIME_DIR/.rotate.$XDG_SESSION_ID"
+[ ! -p "$R_FIFO" ] && mkfifo "$R_FIFO"
+monitor-sensor >> "$R_FIFO" &
 
 while read -r line; do
 	state="${line##* }"
@@ -53,4 +57,4 @@ while read -r line; do
 				[ "$rot" = "normal" ] && xinput enable "$f" || xinput disable "$f"
 		done &
 	fi
-done < "$RFIFO"
+done < "$R_FIFO"
