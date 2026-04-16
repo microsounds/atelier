@@ -29,6 +29,9 @@ export PATH_WIDTH=50
 # set window title and terminal prompt
 # embed git status information if available
 set_prompt() {
+	# emit BEL on non-zero exit codes, ignore SIGINT
+	_exit=$?; [ $_exit -gt 0 ] && [ $_exit -ne 130 ] && printf '\a'
+
 	if [ ! -z $COLOR ]; then
 		u='\[\e[1;32m\]' # user/hostname color
 		p='\[\e[1;34m\]' # path color
@@ -46,8 +49,9 @@ set_prompt() {
 		|| path="$(path-shorthand)" \
 		|| path="('${PWD##*/}' no longer exists)" # no such file or directory
 	PS1="\[\e]0;\u@\h: \w\a\]${u}\u@\h${r}:${git_path:-${p}${path}${r}}\$ "
-	unset u p r path git_path
+	unset _exit u p r path git_path
 	export PROMPT_LATENCY=$((${EPOCHREALTIME%.*}${EPOCHREALTIME#*.} - TIME_NOW))
+
 
 	# command history persistence across sessions
 	history -a; history -c; history -r
