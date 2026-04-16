@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 ## nano_overlay.sh v1.2 — interactive external overlay for GNU nano
-## (c) 2022 microsounds <https://github.com/microsounds>, GPLv3+
+## (c) 2026 microsounds <https://github.com/microsounds>, GPLv3+
 
 # constants
 # keep track of recursion level
@@ -679,14 +679,16 @@ for f in "$@"; do case "$f" in
 		[ -d "$f" ] && quit "'$f' is a directory"
 		# force line numbers on large files
 		[ -r "$f" ] && [ $(wc -l < "$f") -gt 500 ] && opt="${opt}l"
+
 		# refuse to open if a valid lockfile exists
+		# send bell to existing nano instance holding the lockfile
+		# delete stale lockfile if no matching nano instance found
 		lock="$(derive_parent "$f")/.${f##*/}.swp"
 		if [ -f "$lock" ]; then
-			# remove stale lockfile if pid at bytes 24-27 doesn't exist
-			pid=$(dd bs=3 skip=8 count=1 < "$lock" 2> /dev/null | \
-				od -t d -A n | tr -d ' ')
-			if [ "$pid" -eq "$pid" ] 2> /dev/null; then # valid pid
-				! ps -p "$pid" > /dev/null || quit "'$f' already in use"
+			pid="$(pgrep -f "^$ACTUAL_EDITOR.*${f##*/}.*")"
+			if ps -p "$pid" > /dev/null 2>&1; then
+				printf '\a' > /proc/$pid/fd/0
+				quit "'$f' already in use, held by PID $pid"
 			fi
 			rm -f "$lock"
 		fi
