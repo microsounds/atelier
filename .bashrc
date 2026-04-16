@@ -10,11 +10,8 @@ HISTSIZE=20000
 HISTFILESIZE=20000
 PROMPT_COMMAND=set_prompt
 
-# load bash-completion on first use
-_init_bc() {
-	. /usr/share/bash-completion/bash_completion
-}
-complete -D -F _init_bc
+# bash-completion, ignore if not installed
+. '/usr/share/bash-completion/bash_completion' > /dev/null 2>&1 || :
 
 # detect color support
 case $TERM in
