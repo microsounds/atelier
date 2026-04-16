@@ -146,6 +146,30 @@ cd() {
 	echo "$PWD" > "$LASTDIR"
 }
 
+complete -F __cd_tab_expansion cd
+__cd_tab_expansion() {
+	# expands ... shorthand to canonical form when hitting tab using the same
+	# logic as cd() but stomping on bash-completion globals instead
+	case "${COMP_WORDS[COMP_CWORD]}" in
+		...*)
+			_a="${COMP_WORDS[COMP_CWORD]#??}"
+			_e='../'
+			while [ ! -z "$_a" ]; do
+				[ "${_a#${_a%?}}" = '.' ] && _e="$_e../"
+				_a="${_a%?}"
+			done
+
+			# attempt normal cd completion
+			COMPREPLY=( $(compgen -d -- "$_e") )
+
+			# expand path if nothing found
+			[ ${#COMPREPLY[@]} -eq 0 ] && COMPREPLY=("$_e")
+			return;;
+		esac
+	# continue with normal cd autocomplete
+	_cd
+}
+
 # reformat bash online documentation with man pager
 help() (
 	[ -z "$1" ] && command help

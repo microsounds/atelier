@@ -520,7 +520,7 @@ ssh-keygen -p -f ~/.ssh/id_rsa -N "$new_pass" -F 'old passphrase'
 
 	| opt | function |
 	| -- | -- |
-	| `...`, `....`, etc. | Shorthand for `../../`, `../../../` and so on. |
+	| `...`, `....`, etc. | Shorthand for `../../`, `../../../` and so on.<br/>Pressing `tab` will expand the shorthand to it's canonical form. |
 	| `-f <query>` | Interactive fuzzy find and jump into a sub-directory with `fzf` |
 
 ## `chromium`
