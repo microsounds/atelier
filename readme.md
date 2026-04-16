@@ -248,7 +248,7 @@ Keyboard layouts and secondary layers are handled by `keyd` globally for better 
 At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd` and `fcitx5` in such a way to avoid keybind stomping.
 
 `Caps Lock` is remapped to `Super_L` on all platforms.
-`dwm` keybinds are the [defaults][dwm] with several exceptions, the modkey `Mod1` is **super** instead of **alt** because many **alt** combinations are already taken by other applications I use.
+`dwm` keybinds are the [defaults][dwm] with several exceptions, the modkey `Mod1` is **super** instead of **alt**, this really needs to be set by default.
 
 [dwm]: https://ratfactor.com/dwm "suckless dwm tutorial"
 
@@ -267,6 +267,7 @@ At the X server level, keybinds are handled by a mix of ~~`xkb`~~, `dwm`, `sxhkd
 | set as master window<sup>[toggle]</sup> | terminal | return |
 | move window to previous monitor | focus previous monitor  | , |
 | move window to next monitor | focus next monitor | . |
+| | focus on next urgent window | u |
 | | launcher | p |
 | | file manager | e |
 | | ssh-add<sup>[toggle]</sup> | backspace |
@@ -616,6 +617,13 @@ See *Usage Notes* for more information.
 	| `M-1` | Execute current line as shell command and paste output in current buffer.<br/>_Commands within inline comments are accepted._ |
 	| `M-2` | Select token underneath cursor and jump into its `ctags` definition(s) within the same shell.<br/>_Requires valid `tags` file in current or a parent directory._ |
 	| `M-4` | Select token underneath cursor and jump into its `ctags` definition(s) in a new terminal window.<br/>_Requires valid `tags` file in current or a parent directory._ |
+
+### Lockfiles and existing `nano` instances
+If lockfiles are enabled, standard `nano` prompts the user if they want to open a file held by a different `nano` instance, `nano-overlay` enforces lockfiles more strictly by sending
+a terminal `BEL` to the existing `nano` PID holding the lockfile before exiting. If the lockfile is stale, it is silently removed.
+
+> **TIP**<br/>
+> Under normal usage, `urxvt` will mark the existing `nano` instance with `_NET_WM_STATE_DEMANDS_ATTENTION` hints on terminal bell, you can jump to this instance automatically in `dwm` with `Super + u`.
 
 ## `notify-send`
 This particular [`notify-send`](.local/lib/notify-send) implements only `-t` for expiration time in seconds,

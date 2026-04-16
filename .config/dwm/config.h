@@ -84,6 +84,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ ALT,                          XK_Tab,    focusstack,     {.i = +1 } },
 	{ ALT|SHIFT,                    XK_Tab,    focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_u,      focusurgent,    {0} },
 	/* across monitors */
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },

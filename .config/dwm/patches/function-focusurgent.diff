@@ -1,0 +1,61 @@
+# appends function focusurgent
+# automatically focuses to next client with urgent WM hint with keybind
+# for dwm 6.8
+# based on: https://dwm.suckless.org/patches/focusurgent
+
+diff --git a/config.def.h b/config.def.h
+index 81c3fc0..f77e6a4 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -80,6 +80,7 @@ static const Key keys[] = {
+ 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+ 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+ 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
++	{ MODKEY,                       XK_u,      focusurgent,    {0} },
+ 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+ 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+ 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+diff --git a/dwm.c b/dwm.c
+index 53b393e..37475dc 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -168,6 +168,7 @@ static void focus(Client *c);
+ static void focusin(XEvent *e);
+ static void focusmon(const Arg *arg);
+ static void focusstack(const Arg *arg);
++static void focusurgent(const Arg *arg);
+ static Atom getatomprop(Client *c, Atom prop);
+ static int getrootptr(int *x, int *y);
+ static long getstate(Window w);
+@@ -860,6 +861,31 @@ focusstack(const Arg *arg)
+ 	}
+ }
+ 
++static void
++focusurgent(const Arg *arg)
++{
++	Monitor *m;
++	Client *c;
++	int i;
++	for (m = mons; m; m = m->next) {
++		for (c = m->clients; c && !c->isurgent; c = c->next);
++		if (!c)
++			return;
++
++		unfocus(selmon->sel, 0);
++		selmon = m;
++		for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
++
++		if (i >= LENGTH(tags))
++			return;
++
++		const Arg a = {.ui = 1 << i};
++		view(&a);
++		focus(c);
++		restack(selmon);
++	}
++}
++
+ Atom
+ getatomprop(Client *c, Atom prop)
+ {
