@@ -101,8 +101,9 @@ shift + {super + F8,XF86AudioMute}
 #define VOLUME_CMD \
 	sfx-synth btn & \
 	pactl set-sink-volume '@DEFAULT_SINK@' {-5%,+5%}; \
-	amixer sget Master | egrep -e '[0-9]+%' \
-		| egrep -o '\[.+\]' | head -n 1 | xargs -I '*' notify-send -t 0.4 '🔉 *' &
+	pactl get-sink-volume '@DEFAULT_SINK@' \
+		| egrep -o '[0-9]+%' | head -n 1 \
+		| xargs -I '*' notify-send -t 0.4 '🔉 [*]' &
 
 super + F{9,10}
 	VOLUME_CMD

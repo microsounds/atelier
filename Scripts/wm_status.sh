@@ -209,11 +209,13 @@ power() (
 )
 
 sound() (
-	# sound mixer status
-	alsa="$(amixer get 'Master')"
-	lvl="$(echo "$alsa" | egrep -o '[0-9]+\%' | head -n 1)"
+	# default pulseaudio sink status
+	for f in volume mute; do
+		eval $f="\$(pactl get-sink-$f '@DEFAULT_SINK@' | head -n 1)"
+	done
+	lvl="$(echo "$volume" | egrep -o '[0-9]+\%')"
 	ico='🔉' # normal/muted icon
-	echo "$alsa" | fgrep -q 'off' && ico='🔇'
+	case "$mute" in *yes) ico='🔇';; esac
 
 	# headphone status
 	for f in $(pactl list sinks | tr 'A-Z' 'a-z' | fgrep 'active port') ; do
