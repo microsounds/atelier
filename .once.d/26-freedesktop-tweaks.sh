@@ -21,8 +21,13 @@ conf-append 'kernel.dmesg_restrict = 0' '/etc/sysctl.conf'
 
 # purge GNOME desktop trash that cause 25sec startup hangs in some GTK3 apps
 # gnome-keyring-daemon hangs chromium looking for libpam
-# xdg-desktop-portal-gtk hangs pavucontrol, obs, and other apps
+# xdg-desktop-portal-gtk hangs pavucontrol, OBS, and other apps
 yes y | sudo apt-get autoremove --purge gnome-keyring* xdg-desktop-portal*
+
+# ensure pulseaudio isn't installed on machine
+systemctl --user enable pipewire pipewire-pulse
+systemctl --user disable pulseaudio.service pulseaudio.socket
+yes y | sudo apt-get autoremove --purge pulseaudio
 
 # install symlink to locally maintained system-sleep hooks
 sudo ln -sfv \

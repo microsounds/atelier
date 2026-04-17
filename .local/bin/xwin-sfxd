@@ -11,8 +11,8 @@ debounce() {
 # randomly pitched startup sound
 # likely to play at xinit startup
 rand=$(( ($(tr -cd '0-9' < /dev/random | dd bs=1 count=1 2>/dev/null) % 10) * 100))
-sfx-play -c btn14 | sox - -t wav - pitch -$rand | aplay -q &
-#sfx-play -c othr07 | sox - -t wav - pitch -$rand | aplay -q &
+sfx-play -c btn14 | sox - -t wav - pitch -$rand | paplay -p &
+#sfx-play -c othr07 | sox - -t wav - pitch -$rand | paplay -p &
 
 udevadm monitor --udev --subsystem-match=usb \
 	--subsystem-match=power_supply --subsystem-match=cpuid | while read -r line; do
@@ -20,8 +20,8 @@ udevadm monitor --udev --subsystem-match=usb \
 	case "$line" in
 		# suspend/resume
 		*"remove"*"cpuid"*)
-			sfx-play -c btn11 | sox - -t wav - pitch -400 | aplay -q &
-			sfx-play -c btn06 | sox - -t wav - pitch -1000 | aplay -q &
+			sfx-play -c btn11 | sox - -t wav - pitch -400 | paplay -p &
+			sfx-play -c btn06 | sox - -t wav - pitch -1000 | paplay -p &
 			;;
 		# hardware connect/disconnect
 		*"add"*"usb"*)

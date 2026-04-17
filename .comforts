@@ -1,6 +1,6 @@
 ## ~/.comforts: essential and *optional package groups
 
-alsa-utils pulseaudio pulseaudio-module-bluetooth pavucontrol
+alsa-utils pipewire pipewire-pulse pulseaudio-utils pavucontrol
 android-tools-adb autossh netcat-openbsd
 *audacity
 bash bash-completion shellcheck
@@ -54,7 +54,7 @@ screen
 screenfetch
 scrot
 sudo
-task-laptop acpi lm-sensors network-manager bluez
+task-laptop acpi lm-sensors network-manager bluez libspa-0.2-bluetooth
 unifont
 *valgrind
 *virt-manager

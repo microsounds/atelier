@@ -4,16 +4,13 @@
 ## plays specific WAVE files in ~/.local/share/sfx
 ## usage: sfx-play [-c] [named-sound]
 
-PLAY='aplay -q'
+PLAY='paplay -p'
 SFX="$HOME/.local/share/sfx"
 
 case "$1" in
 ## 	-c	cats WAVE file instead
 	-c) shift; PLAY='cat';;
 esac
-
-#echo "$@ -- $PLAY"
-#exit 1
 
 [ $# -eq 1 ] || {
 	egrep '^##' < "$0" | sed -E 's/^## +//g'
