@@ -19,8 +19,8 @@ case $TERM in
 	*)
 esac
 
-# persist $OLDPWD between shells on same login session
-export LASTDIR="${XDG_RUNTIME_DIR:-/tmp}/.oldpwd.$XDG_SESSION_ID"
+# persist $OLDPWD across logins, open shells and reboots
+export LASTDIR="$HOME/.oldpwd"
 [ -f "$LASTDIR" ] && read -r OLDPWD < "$LASTDIR"
 
 # truncate long prompt pathnames over N characters
