@@ -3,6 +3,10 @@
 # install build prereqs
 is-installed cmake | xargs -r sudo apt-get -y install
 
+# don't use empty attribute syntax in HTML renderer
+# for XHTML5 validation
+patch -p1 < xhtml5-no-empty-attributes.patch
+
 # cmark-gfm has to be special and require this step before running make install
 # because it tries to dump dynamic libs in /usr/local by default
 make INSTALL_PREFIX="$HOME/.local"
