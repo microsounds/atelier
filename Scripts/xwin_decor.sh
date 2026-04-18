@@ -1,18 +1,24 @@
 #!/usr/bin/env sh
 
-# xwin_decor.sh v1.1
-# decorate root window
+# xwin_decor.sh v1.2
+# decorate X root window
 
-# fallback tiling background
+# custom background generator
+# select N random images or video frames from any directory
+# listed in ~/.xdecor, one for each active monitor
+config="$HOME/.xdecor"
+pcmanfm_config="$XDG_CONFIG_HOME/pcmanfm/default"
 bitmaps="$XDG_DATA_HOME/X11/bitmaps"
+
+# decorate X root window, tiling bitmap fallback
 cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
-	#include <colors/nightdrive.h>
-	-bg COLOR15 -fg COLOR1
+		#include <colors/nightdrive.h>
+		-fg COLOR1 -bg COLOR15
 EOF
 
-# custom background
-# select N random images or video frames from any directory
-# indicated by ~/.xdecor, one for each active display
+is_small() {
+	return "$(convert "$1" -format "%[fx:(w<600 || h<600)?0:1]" info:)"
+}
 zeropad() {
 	[ $1 -gt 9 ] && echo $1 || echo "0$1"
 }
@@ -80,11 +86,19 @@ temp="$XDG_RUNTIME_DIR/${0##*/}.$$" && mkdir -p "$temp"
 # to black screens, just leave temp dir trash to be cleaned up on next run
 # trap 'rm -rf "$temp"' 0 1 2 3 6 15
 
-config="$HOME/.xdecor"
-[ -f "$config" ] || exit
-
 # iterate through all active displays
 xrandr -q | fgrep '*' | while read -r dpy; do
+
+	# generate tiling fallback bitmap as a PNG
+	if [ ! -f "$config" ]; then
+		cpp -P <<- EOF | xargs convert "$bitmaps/diag.xbm" && continue
+			#include <colors/nightdrive.h>
+			-fill COLOR1 -opaque black
+			-fill COLOR15 -opaque white
+			png:-
+		EOF
+	fi
+
 	# randomly select directory from ~/.xdecor
 	{ sed -e 's/#.*//' -e '/^$/d' | shuffle; } < "$config" \
 		| while read -r dir; do
@@ -101,17 +115,24 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 				*mkv|*mp4|*webm) ffmpeg_cat "$sel";; # video file
 				*) cat "$sel"
 			esac
-		notify-send -t 0.5 "[${0##*/}]: Selecting from ${sel##*/}" &
-		done > "$temp/$(rand).png"
+			notify-send -t 0.5 "[${0##*/}]: Selecting from ${sel##*/}" &
+		done
 	done
-done
+done > "$temp/$(rand).png"
 
 # pcmanfm --desktop: set wallpaper by mangling config files and resetting
-# use plain x window fallback via feh if pcmanfm not found
+# decorate X root window via feh if pcmanfm not found
 which pcmanfm > /dev/null && {
 	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
-		sed -E "s,^wallpaper=.*,wallpaper=$file,g" \
-			-i ~/.config/pcmanfm/default/desktop-items-$mon.conf
+		sed -E \
+			-e "s,^wallpaper=.*,wallpaper=$file,g" \
+			-e "s,^wallpaper_mode=.*,wallpaper_mode=crop,g" \
+			-i "$pcmanfm_config/desktop-items-$mon.conf"
+
+		# enable tiling if if image is extremely small
+		! is_small "$file" \
+			|| sed -E "s,^wallpaper_mode=.*,wallpaper_mode=tile,g" \
+				-i "$pcmanfm_config/desktop-items-$mon.conf"
 	done && pcmanfm --desktop-off && pcmanfm --desktop
 
 	# waifu2x: upscale and denoise images on desktop, extremely slow
@@ -124,4 +145,11 @@ which pcmanfm > /dev/null && {
 		    mv "$file.tmp.png" "$file"
 		} | notify-send -t 0.5
 	done && pcmanfm --desktop-off && pcmanfm --desktop &
-} || find "$temp" -type f | xargs feh --no-fehbg --bg-fill
+} || find "$temp" -type f | {
+	input="$(cat /dev/stdin)"
+	# enable tiling if if image is extremely small
+	for f in "$input"; do
+		is_small "$f" && tile='--bg-tile'
+	done
+	echo "$input" | xargs feh --no-fehbg ${tile:---bg-fill}
+}
