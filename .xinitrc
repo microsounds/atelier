@@ -79,10 +79,24 @@ fcitx5 &
 		mkdir -p ~/.config/$f
 		cp ~/.config/fm/$f.conf ~/.config/$f/$f.conf
 	done
+
+	# restore fallback wallpaper at startup
+	cpp -P <<- EOF | xargs convert "$XDG_DATA_HOME/X11/bitmaps/diag.xbm" \
+		> "$XDG_RUNTIME_DIR/bg.png"
+		#include <colors/nightdrive.h>
+		-fill COLOR1 -opaque black
+		-fill COLOR15 -opaque white
+		png:-
+	EOF
+
 	# restore desktop config to every active screen
 	for f in $(seq 0 $(($(xrandr -q | fgrep -c '*') - 1))); do
 		cpp -P -D HOME="$HOME" < ~/.config/fm/desktop.conf \
 			> ~/.config/pcmanfm/default/desktop-items-$f.conf
+		sed -E \
+			-e "s,^wallpaper=.*,wallpaper=$XDG_RUNTIME_DIR/bg.png,g" \
+			-e "s,^wallpaper_mode=.*,wallpaper_mode=tile,g" \
+			-i ~/.config/pcmanfm/default/desktop-items-$f.conf
 	done
 } && pcmanfm -d --desktop &
 
