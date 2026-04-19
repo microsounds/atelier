@@ -148,7 +148,7 @@ which pcmanfm > /dev/null && {
 } || find "$temp" -type f | {
 	input="$(cat /dev/stdin)"
 	# enable tiling if if image is extremely small
-	for f in "$input"; do
+	for f in $input; do
 		is_small "$f" && tile='--bg-tile'
 	done
 	echo "$input" | xargs feh --no-fehbg ${tile:---bg-fill}
