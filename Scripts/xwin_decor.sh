@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 
-# xwin_decor.sh v1.3
+# xwin_decor.sh v1.4
 # attempt to decorate X root window several ways
 
 config="$HOME/.xdecor"
 bitmaps="$XDG_DATA_HOME/X11/bitmaps"
+pcmanfm_config="$XDG_CONFIG_HOME/pcmanfm/default"
 
 # purest form of fallback
 # decorate bare X root window with classic tiling bitmap
@@ -13,9 +14,6 @@ cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 		-fg COLOR1 -bg COLOR15
 EOF
 
-is_small() {
-	return "$(convert "$1" -format "%[fx:(w<600 || h<600)?0:1]" info:)"
-}
 zeropad() {
 	[ $1 -gt 9 ] && echo $1 || echo "0$1"
 }
@@ -93,7 +91,8 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 	# second purest form of fallback
 	# generate tiling bitmap as a portable PNG
 	if [ ! -f "$config" ]; then
-		cpp -P <<- EOF | xargs convert "$bitmaps/diag.xbm" && continue
+		cpp -P <<- EOF | xargs convert "$bitmaps/diag.xbm" \
+			> "$temp/$(rand).png" && continue
 			#include <colors/nightdrive.h>
 			-fill COLOR1 -opaque black
 			-fill COLOR15 -opaque white
@@ -118,30 +117,51 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 				*) cat "$sel"
 			esac
 			notify-send -t 0.5 "[${0##*/}]: Selecting from ${sel##*/}" &
-		done
+		done > "$temp/$(rand).png"
 	done
-done > "$temp/$(rand).png"
+done
+
+# multi-monitor mode, adds 50% more jank
+# pcmanfm doesn't support setting multiple wallpapers via cli
+# set wallpaper by mangling config and force restarting pcmanfm
+unset MULTI
+[ "$(find "$temp" -type f | wc -l)" -gt 1 ] && MULTI=1
+pcmanfm_mangle() {
+	case "$1" in
+		1) sed -E \
+			-e "s,^wallpaper=.*,wallpaper=$2,g" \
+			-e "s,^wallpaper_mode=.*,wallpaper_mode=$3,g" \
+			-i "$pcmanfm_config/desktop-items-$4.conf";;
+		*) pcmanfm -w "$2" --wallpaper-mode="$3"
+	esac
+}
+is_small() {
+	return "$(convert "$1" -format "%[fx:(w<600 || h<600)?0:1]" info:)"
+}
 
 # set pcmanfm --desktop wallpaper
 # decorate bare X root window via feh if pcmanfm not found
 which pcmanfm > /dev/null && {
 	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
-
-		# enable tiling if if image is extremely small
 		! is_small "$file" && wp_mode='crop' || wp_mode='tile'
-		pcmanfm -w "$file" --display=":0.$mon" --wallpaper-mode="$wp_mode"
+		pcmanfm_mangle "$MULTI" "$file" "$wp_mode" "$mon"
+	done
+	[ ! -z "$MULTI" ] && pcmanfm --desktop-off && pcmanfm --desktop &
 
-		# waifu2x: upscale and denoise images on machines with dGPUs, extremely slow
-		# do NOT attempt on integrated gfx
-		if nvidia-smi 2> /dev/null || rocm-smi 2> /dev/null; then
+	# waifu2x: upscale and denoise images on machines with dGPUs, extremely slow
+	# do NOT attempt on integrated gfx
+	if nvidia-smi > /dev/null 2>&1 || rocm-smi > /dev/null 2>&1; then
+		find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
 			{	printf '%s' '[waifu2x]: '
 				waifu2x-ncnn-vulkan -i "$file" -o "$file.tmp.png" \
 			       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
 			    mv "$file.tmp.png" "$file"
 			} | notify-send -t 0.5
-			pcmanfm -w "$file" --display=":0.$mon" --wallpaper-mode="$wp_mode"
-		fi
-	done
+			! is_small "$file" && wp_mode='crop' || wp_mode='tile'
+			pcmanfm_mangle "$MULTI" "$file" "$wp_mode" "$mon"
+		done
+		[ ! -z "$MULTI" ] && pcmanfm --desktop-off && pcmanfm --desktop &
+	fi
 } || find "$temp" -type f | {
 	input="$(cat /dev/stdin)"
 	# enable tiling if if image is extremely small
