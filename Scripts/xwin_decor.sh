@@ -1,16 +1,13 @@
 #!/usr/bin/env sh
 
-# xwin_decor.sh v1.2
-# decorate X root window
+# xwin_decor.sh v1.3
+# attempt to decorate X root window several ways
 
-# custom background generator
-# select N random images or video frames from any directory
-# listed in ~/.xdecor, one for each active monitor
 config="$HOME/.xdecor"
-pcmanfm_config="$XDG_CONFIG_HOME/pcmanfm/default"
 bitmaps="$XDG_DATA_HOME/X11/bitmaps"
 
-# decorate X root window, tiling bitmap fallback
+# purest form of fallback
+# decorate bare X root window with classic tiling bitmap
 cpp -P <<- EOF | xargs xsetroot -bitmap "$bitmaps/diag.xbm"
 		#include <colors/nightdrive.h>
 		-fg COLOR1 -bg COLOR15
@@ -86,10 +83,15 @@ temp="$XDG_RUNTIME_DIR/${0##*/}.$$" && mkdir -p "$temp"
 # to black screens, just leave temp dir trash to be cleaned up on next run
 # trap 'rm -rf "$temp"' 0 1 2 3 6 15
 
+# custom background generator
+# select N random images or video frames from any directory
+# listed in ~/.xdecor, one for each active monitor
+
 # iterate through all active displays
 xrandr -q | fgrep '*' | while read -r dpy; do
 
-	# generate tiling fallback bitmap as a PNG
+	# second purest form of fallback
+	# generate tiling bitmap as a portable PNG
 	if [ ! -f "$config" ]; then
 		cpp -P <<- EOF | xargs convert "$bitmaps/diag.xbm" && continue
 			#include <colors/nightdrive.h>
@@ -120,36 +122,31 @@ xrandr -q | fgrep '*' | while read -r dpy; do
 	done
 done > "$temp/$(rand).png"
 
-# pcmanfm --desktop: set wallpaper by mangling config files and resetting
-# decorate X root window via feh if pcmanfm not found
+# set pcmanfm --desktop wallpaper
+# decorate bare X root window via feh if pcmanfm not found
 which pcmanfm > /dev/null && {
 	find "$temp" -type f | nl -v 0 -n ln | while read -r mon file; do
-		sed -E \
-			-e "s,^wallpaper=.*,wallpaper=$file,g" \
-			-e "s,^wallpaper_mode=.*,wallpaper_mode=crop,g" \
-			-i "$pcmanfm_config/desktop-items-$mon.conf"
 
 		# enable tiling if if image is extremely small
-		! is_small "$file" \
-			|| sed -E "s,^wallpaper_mode=.*,wallpaper_mode=tile,g" \
-				-i "$pcmanfm_config/desktop-items-$mon.conf"
-	done && pcmanfm --desktop-off && pcmanfm --desktop
+		! is_small "$file" && wp_mode='crop' || wp_mode='tile'
+		pcmanfm -w "$file" --display=":0.$mon" --wallpaper-mode="$wp_mode"
 
-	# waifu2x: upscale and denoise images on desktop, extremely slow
-	find "$temp" -type f | while read -r file; do
-		# do not attempt on integrated gfx
-		! nvidia-smi || ! rocm-smi && exit 0
-		{	printf '%s' "[waifu2x]: "
-			waifu2x-ncnn-vulkan -i "$file" -o "$file.tmp.png" \
-		       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
-		    mv "$file.tmp.png" "$file"
-		} | notify-send -t 0.5
-	done && pcmanfm --desktop-off && pcmanfm --desktop &
+		# waifu2x: upscale and denoise images on machines with dGPUs, extremely slow
+		# do NOT attempt on integrated gfx
+		if nvidia-smi 2> /dev/null || rocm-smi 2> /dev/null; then
+			{	printf '%s' '[waifu2x]: '
+				waifu2x-ncnn-vulkan -i "$file" -o "$file.tmp.png" \
+			       -f png -s 2 -n 3 -m $XDG_DATA_HOME/waifu2x/models-cunet 2>&1
+			    mv "$file.tmp.png" "$file"
+			} | notify-send -t 0.5
+			pcmanfm -w "$file" --display=":0.$mon" --wallpaper-mode="$wp_mode"
+		fi
+	done
 } || find "$temp" -type f | {
 	input="$(cat /dev/stdin)"
 	# enable tiling if if image is extremely small
 	for f in $input; do
-		is_small "$f" && tile='--bg-tile'
+		! is_small "$f" && wp_mode='fill' || wp_mode='tile'
 	done
-	echo "$input" | xargs feh --no-fehbg ${tile:---bg-fill}
+	echo "$input" | xargs feh --no-fehbg --bg-$wp_mode
 }
