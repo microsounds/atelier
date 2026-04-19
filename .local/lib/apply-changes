@@ -1,12 +1,20 @@
-# apply-changes v0.1
-# git post-merge hook to apply changes to the running environment after merging
-# from remote, attempts to re-run post-install scripts that have changed
+#!/usr/bin/env sh
 
+# apply-changes v0.2
+# git post-merge hook to denote changes to the running environment after
+# merging from remote, not attempting to run scripts in here because git gets
+# confused when it's called in pre-run scripts
+
+str='\a\e[5;1;101m %s \e[0m\n'
+
+script_change() {
+	printf "$str" "Re-run ~/$1"
+}
 restart_x() {
-	printf '\e[1m%s\e[0m\n' 'Restart X session to apply changes to graphical shell'
+	printf "$str" 'Restart X session to apply changes to graphical shell'
 }
 relogin() {
-	printf '\e[1m%s\e[0m\n' 'Login again to apply changes to shell environment.'
+	printf "$str" 'Login again to apply changes to shell environment.'
 }
 
 IFS='
@@ -15,22 +23,20 @@ IFS='
 	| while read -r file; do
 	case "$file" in
 		# changes to graphical shell
-		.local/include/*|.config/dwm/*) ~/.once.d/10-git-upstream.sh; restart_x;;
+		.local/include/*|.config/dwm/*) restart_x;;
 		.config/*|.xinitrc|.xresources|Scripts/*) restart_x;;
 
 		# changes to shell environment
 		.profile) relogin;;
 
 		# changes to installed packages
-		.comforts) yes n | ~/.once.d/01-install-essential.sh;;
-		.comforts-git|.config/upstream/*) ~/.once.d/10-git-upstream.sh;;
+		.comforts) script_change .once.d/01-install-essential.sh;;
+		.comforts-git|.config/upstream/*) script_change .once.d/10-git-upstream.sh;;
 
 		# changes to keyd
 		.config/keyd/*) sudo systemctl restart keyd.service;;
 
 		# changes to post-install scripts
-		.once.d/*) "$file";;
+		.once.d/*) script_change "$file";;
 	esac
-done
-
-git meta diff --stat ORIG_HEAD..HEAD
+done | sort | uniq | nl
