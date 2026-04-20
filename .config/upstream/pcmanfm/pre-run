@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # install build prereqs
-is-installed libpango1.0-dev libfm-dev libgtk2.0-dev libfm-gtk-dev \
+is-installed libpango1.0-dev libfm-dev libgtk2.0-dev libfm-gtk-dev intltool \
 	| xargs -r sudo apt-get -y install
 
 # last known good ver
@@ -10,19 +10,10 @@ git checkout '1.4.0'
 # HACK: offset icons in --desktop mode for use with tiling wms
 patch -p1 < desktop-icon-offset.patch
 
-# autogen.sh generates a ./configure script that breaks the build process if
-# this one line isn't deleted
+# pcmanfm likes to drop default settings in /etc which aren't needed
+# not running make twice errors out the build process for some reason
 ./autogen.sh
-sed -i '/IT_PROG_INTLTOOL/d' configure
-./configure --prefix="$HOME/.local"
-
-# then the generated Makefile regenerates and calls autogen.sh and configure AGAIN
-# this is an attempt to prevent this behavior
-touch autogen.sh configure
-
-# first make invocation always errors out
-make
-# second make invocation always works, what the fuck is this build process
+./configure --prefix="$HOME/.local" --sysconfdir=/dev/null
 make
 make install
 
