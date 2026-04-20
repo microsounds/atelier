@@ -1,0 +1,3 @@
+[Thumbnailer Entry]
+Exec=sh -c "unzip -p %i mergedimage.png | convert - -thumbnail %s %o"
+MimeType=application/x-krita;

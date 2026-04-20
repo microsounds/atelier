@@ -1,0 +1,3 @@
+[Thumbnailer Entry]
+Exec=convert %i -thumbnail %s %o
+MimeType=application/x-xcf;
