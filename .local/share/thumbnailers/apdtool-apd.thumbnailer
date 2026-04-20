@@ -1,0 +1,3 @@
+[Thumbnailer Entry]
+Exec=sh -c "apdtool -s "$XDG_DATA_HOME/azpainter3/texture" %i -o /dev/stdout | convert - -thumbnail %s %o"
+MimeType=application/x-azpainter-apd;
