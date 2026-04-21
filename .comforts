@@ -23,7 +23,7 @@ file
 # terminal fonts
 fonts-go fonts-noto-mono fonts-noto-color-emoji fonts-vlgothic
 # wm fonts
-fonts-liberation fonts-dejima-mincho
+fonts-liberation fonts-dejima-mincho unifont
 *gimp
 git make gcc
 gparted udevil ntfs-3g exfatprogs dosfstools sshfs
@@ -34,11 +34,12 @@ imagemagick
 ledger gnuplot
 *libreoffice-writer libreoffice-calc
 # wm components
-lxpolkit xarchiver ffmpegthumbnailer arc-theme gtk2-engines breeze-icon-theme
+lxpolkit xarchiver arc-theme gtk2-engines breeze-icon-theme
+# gtk/file manager thumbnailers
+ffmpegthumbnailer webp-pixbuf-loader heif-gdk-pixbuf
 m4
 man-db
-mangohud
-mesa-utils
+mesa-utils mangohud
 mpv ffmpeg mediainfo
 nano openssl exuberant-ctags fzf spell
 ncal
@@ -55,7 +56,6 @@ screenfetch
 scrot
 sudo
 task-laptop acpi lm-sensors network-manager bluez libspa-0.2-bluetooth
-unifont
 *valgrind
 *virt-manager
 vrms
