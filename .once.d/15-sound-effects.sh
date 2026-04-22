@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
-# install certain royalty free sound effects from MusMus
+# install certain royalty free sound effects from MusMus (watson)
 # convert to WAVE files
 
 SOURCE='https://musmus.main.jp/se'
 INSTALL="$HOME/.local/share/sfx"
 
-for f in btn cancel other; do
+for f in btn cancel image other; do
 	fname="musmus_${f}_set.zip"
 	mkdir -p "$INSTALL/$f"
 	wget -O - "$SOURCE/$fname" > "$INSTALL/$fname" || exit 1

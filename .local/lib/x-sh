@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-# wrapper for /bin/sh that adds visual feedback when launching large and
-# bloated applications from dmenu on slow machines by spamming notify-send
-# calls to xwin-statusd to draw an animated spinner
+# wrapper for /bin/sh that adds audible and visual feedback when launching
+# large and bloated applications from dmenu on slow machines by spamming
+# notify-send calls to xwin-statusd to draw an animated spinner
 
 [ ! -z "$@" ] && stdin="$@" || read -r stdin
 [ -z "$stdin" ] && exit 1
@@ -10,7 +10,8 @@
 {
 	while :; do
 		for f in '⠋' '⠙' '⠸' '⠴' '⠦' '⠇'; do
-			echo "launching '$stdin' $f" | { notify-send -t 0.15; sleep 0.15; }
+			sfx-play -c btn01 | sox - -t wav - pitch -100 speed 4 vol .2 | paplay -p &
+			echo "launching '$stdin' $f" | { notify-send -t 0.13; sleep 0.13; }
 		done
 	done
 } &
@@ -21,3 +22,4 @@ trap 'kill -9 $SPINNER_PID' 0 1 2 3 6 15
 echo "$stdin" | sh &
 
 xwin-window-wait
+sfx-play -c img03 | sox - -t wav - pitch -1000 speed 5 vol .5 | paplay -p &

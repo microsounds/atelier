@@ -23,7 +23,8 @@ udev_psu_query() (
 # randomly pitched startup sound
 # likely to play at xinit startup
 rand=$(( ($(tr -cd '0-9' < /dev/random | dd bs=1 count=1 2>/dev/null) % 10) * 100))
-sfx-play -c btn14 | sox - -t wav - pitch -$rand | paplay -p &
+sfx-play -c btn14 | sox - -t wav - pitch -$rand vol .75 | paplay -p &
+sfx-play -c img10 | sox - -t wav - pitch -$rand speed 4 vol 2 | paplay -p &
 
 udevadm monitor --udev --subsystem-match=usb \
 	--subsystem-match=power_supply --subsystem-match=msr \
@@ -34,6 +35,7 @@ udevadm monitor --udev --subsystem-match=usb \
 		*"remove"*"msr"*)
 			sfx-play -c btn11 | sox - -t wav - pitch -400 vol 0.5 | paplay -p &
 			sfx-play -c btn06 | sox - -t wav - pitch -1000 vol 0.5 | paplay -p &
+			sfx-play -c img10 | sox - -t wav - pitch -2000 speed 4  | paplay -p &
 			;;
 
 		# hardware connect/disconnect
@@ -41,11 +43,13 @@ udevadm monitor --udev --subsystem-match=usb \
 			device="$(udev_usb_query "$line")" > /dev/null 2>&1
 			case "$line" in
 				*"add"*)
-					{ printf '✚✚✚ USB✨ device: '; lsusb -d "$device"; } | notify-send -t 1.6
-					sfx-play othr01;;
+					{ printf '✚✚✚ USB device: '; lsusb -d "$device"; } | notify-send -t 1.6
+					sfx-play -c img10 | sox - -t wav - pitch -3000 speed 4 | paplay -p &
+					sfx-play othr01 &;;
 				*"remove"*)
 					echo "❌❌❌ $line" | notify-send -t 1.2
-					sfx-play othr02;;
+					sfx-play -c img10 | sox - -t wav - pitch -3000 speed 4 reverse | paplay -p &
+					sfx-play othr02 &;;
 			esac;;
 
 		# AC adapter connect/disconnect
@@ -53,10 +57,12 @@ udevadm monitor --udev --subsystem-match=usb \
 			sleep 1 # charging state updates pretty slowly
 			if [ "$(udev_psu_query "$line")" = 'Discharging' ]; then
 				notify-send -t 1.2 '↯ Battery discharging.'
-				sfx-play btn11
+				sfx-play -c img10 | sox - -t wav - pitch -2000 speed 4 reverse | paplay -p &
+				sfx-play btn11 &
 			else
 				notify-send -t 1.2 '🔌 Connected to power supply.'
-				sfx-play btn12
-			fi;;
+				sfx-play -c img10 | sox - -t wav - pitch -2000 speed 4 | paplay -p &
+				sfx-play btn12 &
+		fi;;
 	esac
 done

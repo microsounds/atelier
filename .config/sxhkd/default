@@ -4,31 +4,31 @@
 #include <colors/nightdrive.h>
 
 ## implements randomly pitch-shifted sfx
-#define PITCHED_SFX(name) \
-	sfx-play -c name | sox - -t wav - pitch \
-		-$((( $(tr -cd '0-9' < /dev/urandom | dd bs=1 count=1 2>/dev/null) % 10) * 100)) \
+#define PITCHED_SFX(_name, _spd, _vol) \
+	sfx-play -c _name | sox - -t wav - speed _spd vol _vol \
+		pitch -$((( $(tr -cd '0-9' < /dev/urandom | dd bs=1 count=1 2>/dev/null) % 10) * 100)) \
 		 | paplay -p & \
 
 ## essential
 # terminate X session
 ctrl + shift + q
-	PITCHED_SFX(btn13) \
+	PITCHED_SFX(btn13, 2, .75) \
 	sfx-synth attn & \
 	printf '✓\n✘' | dmenu -f \
 		-p 'Terminate X session?' -sb str(COLOR6) -sf str(COLOR0) \
 		| fgrep -q '✓' && pkill -t "tty$XDG_VTNR" X &
 # launcher
 super + p
-	PITCHED_SFX(cncl07) \
+	PITCHED_SFX(btn13, 3, 1) \
 	sfx-synth btn & \
 	dmenu_path | dmenu -f | x-sh &
 # terminal
 super + Return
-	PITCHED_SFX(cncl01) \
+	PITCHED_SFX(cncl01, 1, 1) \
 	urxvtc || urxvt
 # file manager
 {super + e,XF86Explorer}
-	PITCHED_SFX(cncl01) \
+	PITCHED_SFX(cncl01, 1, 1) \
 	sfx-synth btn & \
 	pcmanfm
 # take screenshot
@@ -38,7 +38,7 @@ super + Return
 	notify-send -t 1 'Screenshot saved.'
 # ssh-agent
 super + BackSpace
-	PITCHED_SFX(cncl06) \
+	PITCHED_SFX(img02, 4, 0.75) \
 	sfx-synth attn & \
 	! ssh-add -l && ssh-add || ssh-add -D; \
 	ssh-add -l | notify-send -t 2
@@ -48,7 +48,7 @@ ctrl + alt + {Delete,Insert}
 	visual {htop,watch -c -n 0.1 'dmesg -e -Lalways | tac'}
 # rotate display orientation
 shift + super + {Up,Down,Left,Right}
-	PITCHED_SFX(cncl03) \
+	PITCHED_SFX(img03, 4, .75) \
 	sfx-synth btn & \
 	echo '{bottom-up,normal,right-up,left-up}' \
 		> "$XDG_RUNTIME_DIR/.rotate.$XDG_SESSION_ID"

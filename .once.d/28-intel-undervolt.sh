@@ -5,19 +5,18 @@
 # undervolt daemon must still be configured and enabled manually with systemctl
 
 # Usage Notes
-# -100mV is usually enough to control thermal throttling or runaway thermals
-# on aging 2012-2018 hyper-threaded Intel desktop CPUs mfd. with non-soldered
-# heat spreaders that, over time, degrade their thermal performance at
-# sustained full load unless you physically remove the heat spreader at your
-# own risk to repaste it or increase physical cooler size.
+
+# -100mV is usually enough to control thermal throttling or runaway thermals on
+# aging 2012-2018 hyper-threaded Intel desktop CPUs manufactured with
+# non-soldered heat spreaders that, over time, degrade their thermal
+# performance at sustained full load unless you physically remove the heat
+# spreader at your own risk to repaste it or increase physical cooler size.
 
 # Note on Skylake and newer
 # 7th-gen Skylake or newer architectures may or may not have had their
 # undocumented undervolt instructions purposefully disabled with recent
 # microcode updates, the same "security mitigations" that demonstrably
 # kneecap performance.
-# Intel has tried their hardest to turn a decade's worth of their products
-# into literal e-waste, you have been warned.
 
 REPO='https://github.com/kitsunyan/intel-undervolt'
 CONF='/etc/intel-undervolt.conf'
