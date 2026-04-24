@@ -62,6 +62,6 @@ vrms
 wget curl aria2
 *wine-stable cabextract
 xorg xdotool xsel xbacklight sxhkd arandr slop
-xinput onboard
+xinput libinput-tools onboard
 xxd
 zip unzip gzip bzip2 xz-utils p7zip pigz pbzip2
