@@ -14,6 +14,7 @@ cpp
 dc
 dconf-cli
 dkms
+gvfs udisks2
 enscript ttf2ufm zathura zathura-ps
 expect faketime dateutils
 fcitx5 fcitx5-mozc dbus-x11
