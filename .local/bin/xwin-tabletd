@@ -3,8 +3,9 @@
 # xwin-tabletd v0.3
 # rotates display and digitizer input based on accelerometer
 
-# detect primary display
-dpy="$(xrandr | grep '[^dis]connected' | tr -s ' ' '\t' | cut -f1)"
+# detect primary device display
+# on multi-monitor setups, only primary display should rotate/transform
+dpy="$(xrandr | grep '[^dis]connected' | tr -s ' ' '\t' | cut -f1 | head -n 1)"
 
 # detect digitizer devices
 dpy_digitizer="$(xinput list --name-only | grep -i wacom)"
