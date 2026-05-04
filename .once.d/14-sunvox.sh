@@ -22,7 +22,7 @@ scrape="$(wget -q -O - "$SOURCE")" || exit 1
 
 mkdir -v "$TMP"
 echo "$scrape" | grep 'title_version' \
-     | egrep -o 'v([0-9.])+[a-z]?' | while read VERSION; do
+     | egrep -o '([0-9.])+[a-z]?' | head -n 1 | while read VERSION; do
 
 	# version check
 	sunvox -? | fgrep -q "$VERSION" && \
