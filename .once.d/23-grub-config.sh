@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# grub configuration
+# GRUB2 configuration
 
 CONF='/etc/default/grub'
 
@@ -23,4 +23,9 @@ conf-append "$KEY=$OPTION" "$CONF"
 
 # dual-boot: enable os-prober by default
 conf-append "GRUB_DISABLE_OS_PROBER=false" "$CONF"
+
+# dual-boot: remember last OS chosen between reboots
+conf-append "GRUB_INIT_TUNE=1000 720 1" "$CONF"
+conf-append "GRUB_SAVEDEFAULT=true" "$CONF"
+conf-append "GRUB_DEFAULT=saved" "$CONF"
 sudo update-grub
