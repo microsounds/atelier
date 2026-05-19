@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+# sideloads backported in-tree linux 6.14 drivers for realtek rtw88* devices
+# requires linux 5.4 or later
+
+# this replaced a post-install script that sideloaded out-of-tree Realtek
+# RTL8812AU dkms modules from the Kali Linux repos from 08/2020 to 06/2026,
+# it's been 6 long years but my stupid realtek wifi dongle finally has in-tree
+# linux drivers that support 802.11ac 5GHz speeds ^^
+
+is-installed dkms | xargs -r sudo apt-get -y install
+
+sudo dkms install .
+sudo make install_fw
+sudo cp rtw88.conf /etc/modprobe.d
+
+# short-circuit ~/.once.d/10-git-upstream.sh
+cat <<- EOF > Makefile
+	install:
+		:
+EOF
