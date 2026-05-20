@@ -1,24 +1,21 @@
 #!/usr/bin/env sh
 
-# launch or install UltimMC offline minecraft launcher if not installed
+# launch or install PineconeMC offline minecraft launcher if not installed
 # launcher will download minecraft from mojang directly
 # prerequisite OpenJDK Java runtime environment will also be installed
 
-APP='UltimMC'
+APP='ElyPrismLauncher'
 PREREQS='default-jre'
-DL_URL='https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-lin64.zip'
-INSTALL_DIR="$HOME/.local/opt"
+DL_URL='https://github.com/ElyPrismLauncher/Launcher/releases/download/11.0.2/PineconeMC-Linux-Qt6-Portable-11.0.2.tar.gz'
+INSTALL_DIR="$HOME/.local/opt/$APP"
 
 mkdir -p "$INSTALL_DIR"
-[ ! -d "$INSTALL_DIR/$APP" ] && {
-	TEMP="$XDG_RUNTIME_DIR/$APP.zip"
+[ ! -x "$INSTALL_DIR/$APP" ] && {
 	user-confirm "Download and install $APP?" || exit 1
-	wget -O- "$DL_URL" > "$TEMP"
-	unzip "$TEMP" -d "$INSTALL_DIR"
-	rm -rf "$TEMP"
-	chmod 755 "$INSTALL_DIR/$APP/$APP"
+	wget -O- "$DL_URL" | pigz -d | tar -xv -C "$INSTALL_DIR"
+	chmod 755 "$INSTALL_DIR/$APP"
 }
 
 is-installed $PREREQS | xargs -r sudo apt-get -y install || exit 1
 
-"$INSTALL_DIR/$APP/$APP"
+exec "$INSTALL_DIR/$APP"

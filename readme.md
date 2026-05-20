@@ -731,9 +731,9 @@ Because these scripts install proprietary software they are not included during 
 Proprietary games will be installed to `~/.local/opt`, configuration beyond the initial installation is outside the scope of this repo.
 
 ### `minecraft`
-[`minecraft`](.local/bin/minecraft) launches or installs [UltimMC offline launcher](https://github.com/UltimMC/Launcher), and a Java runtime environment if not already installed.
+[`minecraft`](.local/bin/minecraft) launches or installs [PineconeMC launcher](https://github.com/ElyPrismLauncher/Launcher), and a Java runtime environment if not already installed.
 
-UltimMC is a fork of MultiMC which allows you to play any version of **Minecraft Java Edition** offline _with or without_ a paid Minecraft account, it can manage your mods, resource packs and saved worlds as "instances" you can import or export freely.
+PineconeMC _(a fork of Prism Launcher (a fork of PolyMC (a fork of MultiMC)))_ allows you to play any version of **Minecraft Java Edition** offline _with or without_ a paid Minecraft account, it can manage your mods, resource packs and saved worlds as "instances" you can import or export freely.
 
 While you can play online multiplayer normally with a legitimate paid account, you can also login with just a username on 3rd-party servers that specifically allow unauthenticated ("pirate" or "cracked") clients.
 
