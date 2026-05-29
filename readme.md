@@ -229,7 +229,7 @@ and piped to `xsetroot` at startup to provide a concise `dwm` status bar conditi
 * ∿ Avg. CPU temperature in ˚F / ↻ Fan speed in RPM
 	* _On laptops with active cooling, CPU temps are replaced with fan speed when fans spin up._
 * 📶 Network status
-	* _Lists name of first active network device reported by `network-manager`._
+	* _Loops between naming first active network device reported by `nmcli` and estimated network throughput._
 * ↯ `acpi` status and battery life / 🔌 Power draw
 	* _Reports `acpi` battery life information, including net energy-rate in watts as reported by UPower._
 * 🔉 PulseAudio sink status

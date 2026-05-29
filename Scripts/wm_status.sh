@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# wm_status.sh v0.6
+# wm_status.sh v0.7
 # non-blocking status line daemon
 # prints formatted status information to stdout
 
@@ -153,14 +153,44 @@ public_ip() (
 	echo "IP ☍${ip:-none}"
 )
 
+net_throughput() (
+	# guess throughput in bytes/s using 0.1s measurements
+	read -r bytes_prev < /sys/class/net/$2/statistics/$1_bytes
+	sleep 0.1
+	read -r bytes_now < /sys/class/net/$2/statistics/$1_bytes
+	diff=$(((bytes_now - bytes_prev) * 10))
+
+	scale=1; b_factor=$((1024 * 1024 * 1024))
+	for unit in ㎇ ㎆ ㎅ Ｂ; do
+		[ "$unit" = '㎅' ] && scale=0 # no floats for values below 1㎆
+		if [ $diff -gt $b_factor ]; then
+			 diff="$(echo "scale=$scale; $diff / $b_factor" | bc)"
+			 break
+		fi
+		b_factor=$((b_factor / 1024))
+	done
+	echo "$diff$unit"
+)
+
 network() (
 	# show networking status for first active connection
-	net="$(nmcli -t device | grep '[^dis]connected' | head -n 1 | \
-		cut -d ':' -f2,4 | sed 's/:/& /')"
+	# show sustained rx/tx throughput speeds, eg. '📶 wifi: ↘188㎅↖3.1㎆'
+	net="$(nmcli -t device | grep '[^dis]connected' | head -n 1)"
+	interface="$(echo "$net" | cut -d ':' -f1)"
+	net="$(echo "$net" | cut -d ':' -f2,4 | sed 's/:/& /')"
+
 	if [ -z "$net" ]; then # disconnected or networking disabled
 		net="$(nmcli -t networking)"
 		net="$(echo "${net%${net#?}}" | tr 'a-z' 'A-Z')${net#?}"
+	else
+		for f in rx tx; do
+			eval $f="$(net_throughput $f $interface)"
+			eval "case \$${f} in 0*) echo "ok" && unset $f;; esac"
+		done
+		[ ! -z "$tx" ] || [ ! -z "$rx" ] \
+			&& net="${net%${net#* }}${rx:+↘$rx}${tx:+↖$tx}"
 	fi
+
 	ico='📶' # connected but no internet
 	ping -c 1 'google.com' > /dev/null 2>&1 || ico='❌'
 	echo "NET $ico $net"
@@ -180,8 +210,8 @@ power() (
 	# extract net energy-rate in W if supported
 	# reported as combined (-) battery draw and (+) AC power draw
 	watts="$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 \
-		| grep 'energy-rate' | egrep -o '([0-9]+.?)+' | xargs printf '%.2fw')"
-	load="$(tr ' ' '\t' < /proc/loadavg | cut -f1)/$(grep -c '^proc' < /proc/cpuinfo)"
+		| grep 'energy-rate' | egrep -o '([0-9]+.?)+' | xargs printf '%.2fᵂ')"
+	load="$(tr ' ' '\t' < /proc/loadavg | cut -f1)/$(grep -c '^proc' < /proc/cpuinfo)ₜ"
 
 	# rewrite approx. time remaining if available
 	if [ ! -z "$btime" ]; then
@@ -242,7 +272,7 @@ launch temps 15
 launch weather 60
 #launch cpu_speed 1
 #launch public_ip 30
-launch network 15
+launch network 5
 launch power 15
 launch sound 5
 launch current_date 60
