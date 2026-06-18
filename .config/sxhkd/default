@@ -91,7 +91,9 @@ shift + super + {Up,Down,Left,Right}
 # F8: mute, configure audio
 {super + F8,XF86AudioMute}
 	sfx-synth btn & \
-	pactl set-sink-mute '@DEFAULT_SINK@' toggle
+	pactl set-sink-mute '@DEFAULT_SINK@' toggle; \
+	pactl get-sink-mute '@DEFAULT_SINK@' \
+		| xargs -I '*' notify-send -t 0.5 '🔉 [*]'
 
 shift + {super + F8,XF86AudioMute}
 	sfx-synth btn & \
@@ -103,7 +105,7 @@ shift + {super + F8,XF86AudioMute}
 	pactl set-sink-volume '@DEFAULT_SINK@' {-5%,+5%}; \
 	pactl get-sink-volume '@DEFAULT_SINK@' \
 		| egrep -o '[0-9]+%' | head -n 1 \
-		| xargs -I '*' notify-send -t 0.4 '🔉 [*]' &
+		| xargs -I '*' notify-send -t 0.4 '🔉 [*]'
 
 super + F{9,10}
 	VOLUME_CMD
