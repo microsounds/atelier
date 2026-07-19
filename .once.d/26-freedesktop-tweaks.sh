@@ -37,12 +37,13 @@ yes y | sudo apt-get autoremove --purge pulseaudio
 # deliberately excluded from libspa-0.2-bluetooth on Debian 12+
 # See 'https://tookmund.com/2024/02/aac-and-debian' and
 # 'https://blog.fernvenue.com/archives/airpods-pro-2-on-debian/' for more info.
-
 SOURCE='https://blog.fernvenue.com/others/libspa-codec-bluez5-aac_0.3.65_amd64.deb'
 TEMP="$(mk-tempdir)"
 
-wget -O "$TEMP" "$SOURCE"
-sudo dpkg -i "$TEMP"
-rm -rf "$TEMP"
-systemctl --user restart wireplumber pipewire pipewire-pulse | :
+! is-installed libspa-codec-bluez5-aac && {
+	wget -O "$TEMP" "$SOURCE"
+	sudo dpkg -i "$TEMP"
+	rm -rf "$TEMP"
+	systemctl --user restart wireplumber pipewire pipewire-pulse | :
+}
 
