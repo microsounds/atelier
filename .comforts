@@ -4,6 +4,7 @@ alsa-utils pipewire pipewire-pulse pulseaudio-utils pavucontrol
 android-tools-adb autossh netcat-openbsd
 *audacity
 bash bash-completion shellcheck
+bluez libspa-0.2-bluetooth libfdk-aac-dev
 beep sox libsox-fmt-all laptop-detect
 bind9-dnsutils
 *blender
@@ -56,7 +57,7 @@ screen
 screenfetch
 scrot
 sudo
-task-laptop acpi lm-sensors network-manager bluez libspa-0.2-bluetooth
+task-laptop acpi lm-sensors network-manager 
 *valgrind
 *virt-manager
 vrms
