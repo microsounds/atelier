@@ -46,4 +46,3 @@ TEMP="$(mk-tempdir)"
 	rm -rf "$TEMP"
 	systemctl --user restart wireplumber pipewire pipewire-pulse | :
 }
-

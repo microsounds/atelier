@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# wrapper for /bin/sh that adds audible and visual feedback when launching
+# naive wrapper for /bin/sh that adds audible and visual feedback when launching
 # large and bloated applications from dmenu on slow machines by spamming
 # notify-send calls to xwin-statusd to draw an animated spinner
 
@@ -21,5 +21,9 @@ trap 'kill -9 $SPINNER_PID' 0 1 2 3 6 15
 
 echo "$stdin" | sh &
 
-xwin-window-wait
+# stupid hack: some applications will refuse to open multiple copies and send
+# urgent WM hints instead, if program name is currently running, assume this is
+# what happened and focus on urgent window immediately instead of waiting
+sleep 0.02 && ps -t "$XDG_SESSION_TYPE$XDG_VTNR" -u "$USER" | fgrep "$stdin" \
+	&& xdotool key super+u || xwin-window-wait
 sfx-play -c img03 | sox - -t wav - pitch -1000 speed 5 vol .5 | paplay -p &
