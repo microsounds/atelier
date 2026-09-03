@@ -113,6 +113,9 @@ alias diff='git diff --no-index'
 # use external overlay for GNU nano
 alias nano='nano-overlay'
 
+# default to ncal oldstyle format
+alias cal='ncal -b'
+
 ls() (
 	# files with full permissions
 	export LS_COLORS='ow=107;30;01'
