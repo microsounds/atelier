@@ -54,6 +54,8 @@ sed -ni ~/.profile -e '/## login shell/q;p'
 	# android 11+ kills background daemons, run ssh-agent as parent process
 	sed -i ~/.bashrc \
 		-e '1s/^/[ ! -z "$TERMUX" ] || \\\n\t{ export TERMUX=1; exec ssh-agent -t 3600 bash -l; }\n/'
+	# changes to android 15+ break ssh-agent if this dir doesn't exist
+	mkdir -p ~/.ssh/agent
 
 	# use fingerprint lock and android keystore instead of passphrase
 	cat <<- EOF >> ~/.profile
