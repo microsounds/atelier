@@ -485,10 +485,11 @@ If you don't mind the limitations of `Termux:Widget`, you can also run long-runn
 
 ### `ssh-agent` fingerprint SSH authentication
 > **WARNING** <br/>
-> _This is an ongoing experiment in balancing convenience and security, your threat model may find the barebones security provided by fingerprint sensors unacceptable._
+> _This is an ongoing ~~stupid hack~~ experiment in easing the use of SSH key authentication on smartphones, your threat model may find the barebones security provided by fingerprint sensors unacceptable._
 
-`ssh-agent` is set up to call [`termux-ssh-askpass`](.local/lib/termux-ssh-askpass) which uses
+`ssh-add` is set up to call [`termux-ssh-askpass`](.local/lib/termux-ssh-askpass) which uses
 Android's [hardware-backed keystore](https://developer.android.com/privacy-and-security/keystore) to generate an OpenSSH key passphrase using the fingerprint lock on your Android device.
+
 
 Specifically, a hardware-backed inaccessible RSA 4096-bit private key named `default` is generated during post-install
 and stored in the security chip on the device which is only made available during a short validity period after a successful fingerprint unlock.
@@ -513,6 +514,9 @@ To setup your existing OpenSSH keys for fingerprint-based SSH authentication, us
 new_pass="$(termux-ssh-askpass ~/.ssh/id_rsa)"
 ssh-keygen -p -f ~/.ssh/id_rsa -N "$new_pass" -F 'old passphrase'
 ```
+
+#### Errata
+If you're having issues with `git` mistakenly trying to use `termux-ssh-askpass` when performing operations over SSH even though you have already unlocked your keys, eg. cloning from a `ssh://` address, use `unset SSH_ASKPASS_REQUIRE`.
 
 ## `cd`
 * The contents of `$OLDPWD` is preserved across `bash` sessions.

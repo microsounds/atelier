@@ -37,6 +37,8 @@ termux-keystore list | jq -r '.[].alias' | fgrep -q 'default' || \
 
 # setup internal and external storage symlinks
 yes y | termux-setup-storage
+ln -s ~/storage/shared ~/internal
+ln -s ~/storage/external-1 ~/external
 
 # prevent termux from sourcing .bashrc twice every login
 # note: termux sources .bashrc before .profile on all logins
