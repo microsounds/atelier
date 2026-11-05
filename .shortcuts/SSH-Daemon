@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# launches SSH daemon for sharing resources from android
-# generates usage instructions to make connecting easier
+# launches sshd in foreground with wakelock enabled for easier resource sharing
+# on android devices running termux, generates usage instructions for most
+# common uses
 
 port=8022
 user=$(whoami)
@@ -11,8 +12,8 @@ user=$(whoami)
 #ip=$(ip -o addr | grep -F 'wlan' | grep -Eo '([0-9]{1,3}\.?){4}' | head -n 1)
 ip="$(ifconfig | grep -A1 'wlan' | tail -n 1 | egrep -o '([0-9]{1,3}\.?){4}' | head -n 1)" 2> /dev/null
 
-# get path to external sdcard if it exists
-# paths take the form /storage/XXXX-XXXX
+# get path to external microSD card if it exists
+# paths take the form '/storage/XXXX-XXXX'
 int_path="$(readlink ~/storage/shared)"
 ext_path="$(readlink ~/storage/external* | head -n 1)"
 if [ ! -z "$ext_path" ]; then
@@ -36,7 +37,7 @@ EOF
 # quick start QR code
 if [ ! -z "$ip" ]; then
 	qrencode -m 2 -t ANSIUTF8 "sshfs -p $port -o reconnect $user@$ip:$int_path /media/sftp_tunnel"
-	printf '%s\n\n' 'usage (on PC): qr -d | sh'
+	printf '%s\n\n' 'usage (on PC): qr -d | sh -v'
 fi
 
 # release wakelock and return 0 on SIGINT
@@ -46,7 +47,7 @@ quit() {
 }
 
 # acquire wakelock
-# run in foreground, android hates forking daemons
+# run in foreground, android 11+ hates forking daemons
 stty -echo
 trap quit 2
 termux-wake-lock &

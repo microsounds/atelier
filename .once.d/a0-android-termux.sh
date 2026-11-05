@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# android-termux.sh v1.1
+# android-termux.sh v1.2
 
 # collection of hackjobs to enable basic functionality on Termux for Android
 # and paper over inconsistencies between standard Linux environments and the
@@ -9,6 +9,11 @@
 # applied manually so as to not pollute other scripts
 
 ! is-termux && exit 0
+
+# update existing
+for f in update full-upgrade autoremove autoclean clean; do
+	yes y | apt $f
+done
 
 # install prerequisites
 cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
@@ -25,20 +30,26 @@ cat <<- EOF | sed 's/#.*$//g' | xargs apt install -y
 	libqrencode
 EOF
 
-# update existing
-for f in update upgrade autoremove autoclean clean; do
-	yes y | apt $f
-done
-
 # setup hardware keystore with 'default' key for use with termux-ssh-askpass
 # assumes you've already installed Termux:API add-on app
 termux-keystore list | jq -r '.[].alias' | fgrep -q 'default' || \
 	termux-keystore generate 'default' -a RSA -s 4096 -u 10
 
-# setup internal and external storage symlinks
+# setup internal and removable storage symlinks
+# termux assumes root of microSD card isn't accessible
 yes y | termux-setup-storage
-ln -s ~/storage/shared ~/internal
-ln -s ~/storage/external-1 ~/external
+rm -fv ~/internal && ln -sv ~/storage/shared ~/internal
+rm -fv ~/external && {
+	# get path to external microSD card if it exists
+	# paths take the form '/storage/XXXX-XXXX'
+	ext_path="$(readlink ~/storage/external* | head -n 1)"
+	if [ ! -z "$ext_path" ]; then
+		while [ "$(echo "$ext_path" | tr -cd '/' | wc -c)" -gt 2 ]; do
+			ext_path="${ext_path%/*}"
+		done
+		ln -sv "$ext_path" ~/external
+	fi
+}
 
 # prevent termux from sourcing .bashrc twice every login
 # note: termux sources .bashrc before .profile on all logins
