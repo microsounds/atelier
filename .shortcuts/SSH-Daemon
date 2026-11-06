@@ -14,6 +14,7 @@ ip="$(ifconfig | grep -A1 'wlan' | tail -n 1 | egrep -o '([0-9]{1,3}\.?){4}' | h
 
 # get path to external microSD card if it exists
 # paths take the form '/storage/XXXX-XXXX'
+# shorten paths as much as possible
 int_path="$(readlink ~/storage/shared)"
 ext_path="$(readlink ~/storage/external* | head -n 1)"
 if [ ! -z "$ext_path" ]; then
@@ -34,9 +35,9 @@ cat <<- EOF
 
 EOF
 
-# quick start QR code
+# sshfs quick start QR code
 if [ ! -z "$ip" ]; then
-	qrencode -m 2 -t ANSIUTF8 "sshfs -p $port -o reconnect $user@$ip:$int_path /media/sftp_tunnel"
+	qrencode -m 2 -t ANSIUTF8 "sshfs -p$port -oreconnect $user@$ip:$int_path /media/sftp_tunnel"
 	printf '%s\n\n' 'usage (on PC): qr -d | sh -v'
 fi
 
